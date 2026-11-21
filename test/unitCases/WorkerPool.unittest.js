@@ -5,6 +5,7 @@ const Worker = require("../../lib/worker/Worker");
 const WorkerPool = require("../../lib/worker/WorkerPool");
 
 const TARGET = path.resolve(__dirname, "../fixtures/worker-pool/worker.js");
+const OTHER = path.resolve(__dirname, "../fixtures/worker-pool/other.js");
 const BROKEN = path.resolve(__dirname, "../fixtures/worker-pool/broken.js");
 const SLOW = path.resolve(__dirname, "../fixtures/worker-pool/slow.js");
 
@@ -996,7 +997,6 @@ describe("WorkerPool", () => {
 	});
 
 	describeThreads("reuse", () => {
-		const OTHER = path.resolve(__dirname, "../fixtures/worker-pool/other.js");
 
 		/** @typedef {import("../../lib/worker/Worker")<{ info: () => { threadId: number } }>} InfoWorker */
 
@@ -1280,6 +1280,190 @@ describe("WorkerPool", () => {
 				multi.close((err) => (err ? reject(err) : resolve(undefined)));
 			});
 			expect(pool.ending).toBe(true);
+		});
+	});
+
+	describeThreads("numWorkers", () => {
+		/** @typedef {import("../../lib/worker/Worker")<{ info: () => { threadId: number, isMainThread: boolean } }>} InfoWorker */
+
+		const os = require("os");
+
+		const cores = Math.max(
+			// eslint-disable-next-line n/no-unsupported-features/node-builtins
+			(typeof os.availableParallelism === "function"
+				? // eslint-disable-next-line n/no-unsupported-features/node-builtins
+					os.availableParallelism()
+				: (os.cpus() || { length: 1 }).length) - 1,
+			0
+		);
+		const itWithCores = cores > 0 ? it : it.skip;
+
+		/**
+		 * @param {number} ms milliseconds
+		 * @returns {Promise<void>} settled after `ms`
+		 */
+		const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+		/**
+		 * @param {import("../../declarations/WebpackOptions").WebpackOptions=} options extra options
+		 * @param {((compiler: import("../../lib/Compiler")) => Promise<void>)=} task runs in processAssets
+		 * @returns {import("../../lib/Compiler")} the compiler
+		 */
+		const createCompiler = (options, task) => {
+			const { createFsFromVolume, Volume } = require("memfs");
+			const webpack = require("../../lib/webpack");
+			const compiler = /** @type {import("../../lib/Compiler")} */ (
+				webpack({
+					entry: "data:text/javascript,1",
+					plugins: task
+						? [
+								{
+									/**
+									 * @param {import("../../lib/Compiler")} compiler the compiler
+									 */
+									apply(compiler) {
+										compiler.hooks.thisCompilation.tap("test", (compilation) => {
+											compilation.hooks.processAssets.tapPromise("test", () =>
+												task(compiler)
+											);
+										});
+									}
+								}
+							]
+						: [],
+					...options
+				})
+			);
+			compiler.outputFileSystem =
+				/** @type {import("../../").OutputFileSystem} */ (
+					/** @type {unknown} */ (createFsFromVolume(new Volume()))
+				);
+			return compiler;
+		};
+
+		/**
+		 * @param {import("../../lib/Compiler")} compiler the compiler
+		 * @returns {Promise<void>} settled when it closed
+		 */
+		const close = (compiler) =>
+			new Promise((resolve, reject) => {
+				compiler.close((err) => (err ? reject(err) : resolve()));
+			});
+
+		itWithCores("runs on threads without experiments.threads", async () => {
+			const compiler = createCompiler();
+			try {
+				const threaded = /** @type {InfoWorker} */ (
+					compiler.worker(TARGET, { numWorkers: 1 })
+				);
+				const inline = /** @type {InfoWorker} */ (compiler.worker(TARGET));
+
+				expect(threaded).not.toBe(inline);
+				expect(compiler.worker(TARGET, { numWorkers: 1 })).toBe(threaded);
+				expect((await threaded.run("info")).isMainThread).toBe(false);
+				expect(await inline.run("info")).toEqual(callerThread());
+				expect(
+					await /** @type {InfoWorker} */ (
+						compiler.worker(TARGET, { numWorkers: 0 })
+					).run("info")
+				).toEqual(callerThread());
+				// the configured pool is still the inline one
+				expect(compiler._getWorkerPool()).toBe(inline._pool);
+			} finally {
+				await close(compiler);
+			}
+		});
+
+		itWithCores("shares the threads of compilers with experiments.threads", async () => {
+			const forced = createCompiler();
+			const configured = createCompiler({
+				experiments: { threads: { max: 1 } }
+			});
+			try {
+				const pool = configured.worker(TARGET)._pool;
+
+				expect(forced.worker(TARGET, { numWorkers: 1 })._pool).toBe(pool);
+				// configured threads ignore numWorkers
+				expect(configured.worker(TARGET, { numWorkers: 4 })._pool).toBe(pool);
+				expect(pool.options.max).toBe(1);
+				await close(configured);
+				expect(pool.ending).toBe(false);
+			} finally {
+				await close(configured);
+				await close(forced);
+			}
+		});
+
+		itWithCores("keeps the threads for the build and retires them after", async () => {
+			/** @type {number[]} */
+			const threadIds = [];
+			const compiler = createCompiler(undefined, async (compiler) => {
+				const worker = /** @type {InfoWorker} */ (
+					compiler.worker(TARGET, { numWorkers: 1 })
+				);
+				// created mid-build: the gap must not cost a respawn
+				worker._pool.options.idleTimeout = 20;
+				threadIds.push((await worker.run("info")).threadId);
+				await sleep(100);
+				const other = /** @type {InfoWorker} */ (
+					compiler.worker(OTHER, { numWorkers: 1 })
+				);
+				threadIds.push((await other.run("info")).threadId);
+			});
+			try {
+				await new Promise((resolve, reject) => {
+					compiler.run((err) => (err ? reject(err) : resolve(undefined)));
+				});
+				const pool = compiler.worker(TARGET, { numWorkers: 1 })._pool;
+
+				expect(new Set(threadIds).size).toBe(1);
+				expect(pool.stats.spawned).toBe(1);
+				await waitFor(() => pool.stats.workers === 0);
+			} finally {
+				await close(compiler);
+			}
+		});
+
+		itWithCores("keeps the threads between watch rebuilds", async () => {
+			const compiler = createCompiler(undefined, async (compiler) => {
+				await compiler.worker(TARGET, { numWorkers: 1 }).run("add", 1, 2);
+			});
+			try {
+				/** @type {import("../../lib/watch/Watching") | undefined} */
+				let watching;
+				await new Promise((resolve, reject) => {
+					watching = compiler.watch({}, (err) =>
+						err ? reject(err) : resolve(undefined)
+					);
+				});
+				const pool = compiler.worker(TARGET, { numWorkers: 1 })._pool;
+
+				expect(pool._keepAlive).toBe(true);
+				await new Promise((resolve) =>
+					/** @type {import("../../lib/watch/Watching")} */ (watching).close(
+						() => resolve(undefined)
+					)
+				);
+				expect(pool._keepAlive).toBe(false);
+			} finally {
+				await close(compiler);
+			}
+		});
+
+		it("rejects an invalid numWorkers", async () => {
+			const compiler = createCompiler();
+			try {
+				expect(() =>
+					compiler.worker(TARGET, {
+						numWorkers: /** @type {number} */ (/** @type {unknown} */ ("2"))
+					})
+				).toThrow(/numWorkers/);
+				expect(() => compiler.worker(TARGET, { numWorkers: -1 })).toThrow(
+					/numWorkers/
+				);
+			} finally {
+				await close(compiler);
+			}
 		});
 	});
 });
