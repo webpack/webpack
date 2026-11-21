@@ -103,11 +103,14 @@ module.exports = (env, { testPath }) =>
 									symlink: { target: outputPath, isDirectory: true }
 								});
 							}
-							// emitted after the file below it, as a plugin may
+							// emitted after the file below it, as a plugin may; with
+							// "nested-link", its name holds a query that is not written
 							if (mode === "emitted-link" || mode === "nested-link") {
-								compilation.emitAsset("linked", new RawSource(""), {
-									symlink: { target: elsewhere, isDirectory: true }
-								});
+								compilation.emitAsset(
+									mode === "nested-link" ? "linked?cache=/a/b" : "linked",
+									new RawSource(""),
+									{ symlink: { target: elsewhere, isDirectory: true } }
+								);
 							}
 						});
 					});
