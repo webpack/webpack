@@ -9,3 +9,7 @@
 .c { animation: spin 1s }
 .d { animation: slide v\61 r(--duration) }
 .e { animation: "\61" }
+@\6b eyframes bounceIn { from { top: 0 } }
+.f { animation: 1s bounceIn }
+@keyframes spinX { from { top: 0 } }
+.g { animation: spinX --duration() }

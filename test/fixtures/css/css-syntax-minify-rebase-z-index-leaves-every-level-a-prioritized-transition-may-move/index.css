@@ -1,0 +1,3 @@
+.a { z-index: 10; transition: 1s linear !important }
+.b { z-index: 100 }
+.c { z-index: 1000 }
