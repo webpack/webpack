@@ -15097,7 +15097,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-230 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-230 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){var r=2;var e;return[e,r]}function g(){h();var e,r,n;return[e,r,n]}"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-230 prints {"mode":"minify","compress":{"toplevel":false},"mangle":{"toplevel":false}} 1`] = `"function f(){var e=2;return[void 0,e]}function g(){h();var e,r,n;return[e,r,n]}"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-230 prints {"mode":"minify"} 1`] = `"function f(){if(0){var a=1}else{var b=2}return[a,b]}function g(){if(1)h();else{var c=h(),[d,{e:k=1}]=[2]}return[c,d,k]}"`;
 
@@ -21070,7 +21070,7 @@ exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-730 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-730 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"function a(){var r=7,n=8;var f,t,u;return[r,f,t,n,u]}function d(){if(0)var r=1;return 2}function f(r){return[r,void 0]}function h(){for(var r in o);return[r,void 0]}function k(){function r(){}return r}function m(r){var{v:[n=1]}=r;return[r,n]}function n(){if(0)var r;return 1}g();var t=h();g(t);"`;
+exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-730 prints {"mode":"minify","compress":{},"mangle":{"toplevel":false}} 1`] = `"function a(){var r=7,n=8;var f,t,u;return[r,f,t,n,u]}function d(){if(0)var r;return 2}function f(r){return[r,void 0]}function h(){for(var r in o);return[r,void 0]}function k(){function r(){}return r}function m(r){var{v:[n=1]}=r;return[r,n]}function n(){if(0)var r;return 1}g();var t=h();g(t);"`;
 
 exports[`JavaScript syntax — invariants javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-730 prints {"mode":"minify"} 1`] = `"function a(){var b=7,y=8;if(0)var c=1,[x,y,z]=[2,3,4],b=5;return[b,c,x,y,z]}function d(){if(0)var e=1;e=2;return e}function f(p){if(0)var p=1,q;return[p,q]}function h(){for(var k in o);if(0)var k,m;return[k,m]}function k(){if(0)var q;function q(){}return q}function m(z){if(0)var u;var{v:[u=1]}=z;return[z,u]}function n(){if(0)var w;(function(){var w})();class C{m(){var w}}w=1;return w}if(0)var t;g();var t=h();g(t);"`;
 
