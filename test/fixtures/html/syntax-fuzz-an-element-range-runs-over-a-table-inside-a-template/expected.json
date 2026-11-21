@@ -5,7 +5,7 @@
 		"presets": [
 			"parse"
 		],
-		"why": "known bug: inside a template, `t`'s range runs over a `<table>` the tree does not put inside it, so its own bytes reparse with one"
+		"why": "after `<thead>` the template is read in the in table mode, which ignores the `<table>` inside `t`, as Chrome does; read on its own in its parent context, the same bytes run in body mode and make a table"
 	},
 	{
 		"relation": "cut slices",
@@ -13,6 +13,6 @@
 		"presets": [
 			"parse"
 		],
-		"why": "known bug: inside a template, `t`'s range runs over a `<table>` the tree does not put inside it, so its own bytes reparse with one"
+		"why": "after `<thead>` the template is read in the in table mode, which ignores the `<table>` inside `t`, as Chrome does; read on its own in its parent context, the same bytes run in body mode and make a table"
 	}
 ]

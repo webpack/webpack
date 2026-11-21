@@ -5,7 +5,7 @@
 		"presets": [
 			"default"
 		],
-		"why": "not a defect: an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
+		"why": "an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
 	},
 	{
 		"relation": "respelling quote-single",
@@ -13,7 +13,7 @@
 		"presets": [
 			"default"
 		],
-		"why": "not a defect: an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
+		"why": "an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
 	},
 	{
 		"relation": "respelling references",
@@ -21,6 +21,6 @@
 		"presets": [
 			"default"
 		],
-		"why": "not a defect: an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
+		"why": "an unquoted value holding a backtick is a parse error the printer writes back as authored, as `coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet` files, so each quoted spelling prints two bytes longer"
 	}
 ]

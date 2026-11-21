@@ -1,0 +1,18 @@
+[
+	{
+		"relation": "slices",
+		"contains": "      -> Element:a[0,14)",
+		"presets": [
+			"parse"
+		],
+		"why": "`<a>` is fostered while the in table mode stays, which inserts `<form>` into it and pops it at once, as Chrome does; read on its own in body mode, the `<form>` stays open and `</a>` reorders the two"
+	},
+	{
+		"relation": "cut slices",
+		"contains": "      -> Element:form[3,13) Element:a[0,13)",
+		"presets": [
+			"parse"
+		],
+		"why": "`<a>` is fostered while the in table mode stays, which inserts `<form>` into it and pops it at once, as Chrome does; read on its own in body mode, the `<form>` stays open and `</a>` reorders the two"
+	}
+]

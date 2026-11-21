@@ -55537,6 +55537,21 @@ exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints
 
 exports[`HTML syntax — invariants syntax-fuzz-a-document-with-plaintext-prints-a-quoted-value-as-written tokenizes 1`] = `"open[0,8|1,7] open[8,14|9,13] close[14,23|16,22] warning[25,26]:missing-end-tag-name attr[30,31|33,34]\\" open[26,36|27,29] open[36,40|37,39] open[40,51|41,50] text[51,52] end=52"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a-form-the-table-mode-popped parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       <form>
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a-form-the-table-mode-popped parses 2`] = `"warning[0,8]:expected-doctype-but-got-start-tag warning[8,11]:unexpected-start-tag-implies-table-voodoo warning[11,18]:unexpected-form-in-table warning[18,22]:unexpected-end-tag-implies-table-voodoo warning[22,22]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a-form-the-table-mode-popped prints {"mode":"minify"} 1`] = `"<a><form></form></a><table></table>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-element-range-holds-a-form-the-table-mode-popped tokenizes 1`] = `"open[0,8|1,6] open[8,11|9,10] open[11,18|12,16] close[18,22|20,21] end=22"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-by-its-spelling parses 1`] = `
 "| <html>
 |   <head>
