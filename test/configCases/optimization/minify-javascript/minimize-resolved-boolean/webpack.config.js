@@ -5,6 +5,14 @@
 /** @type {{ minimize?: Optimization["minimize"], minimizeOptions?: Optimization["minimizeOptions"] }} */
 const observed = {};
 
+// The JavaScript minimizer's options carry the compressor's own types:
+// `unused` is a switch, so a string is refused.
+/** @type {Optimization["minimizeOptions"]} */
+const mistyped = {
+	// @ts-expect-error `unused` is a boolean
+	javascript: { compress: { unused: "yes" } }
+};
+
 /** @type {import("../../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -36,6 +44,7 @@ module.exports = {
 	plugins: [
 		(compiler) => {
 			compiler.hooks.done.tap("ObserveMinimizePlugin", () => {
+				expect(mistyped).toBeDefined();
 				expect(observed.minimize).toBe(true);
 				expect(observed.minimizeOptions).toEqual({
 					css: {},

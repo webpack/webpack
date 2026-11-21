@@ -5274,6 +5274,151 @@ type ComplexSerializableType =
 	| object
 	| Buffer
 	| (() => ComplexSerializableType[] | Promise<ComplexSerializableType[]>);
+
+/**
+ * terser's compress options, defaulted, as the compressor reads them.
+ */
+declare interface CompressOptions {
+	/**
+	 * whether constant computed keys become plain
+	 */
+	computedProps: boolean;
+
+	/**
+	 * whether conditionals are simplified
+	 */
+	conditionals: boolean;
+
+	/**
+	 * whether unreachable code is dropped
+	 */
+	deadCode: boolean;
+
+	/**
+	 * whether `console` calls are dropped, or which of its methods
+	 */
+	dropConsole: boolean | string[];
+
+	/**
+	 * whether `debugger` statements are dropped
+	 */
+	dropDebugger: boolean;
+
+	/**
+	 * which edition the output may use
+	 */
+	ecma: number;
+
+	/**
+	 * which edition's builtins may be assumed, the compressor's `ecma` where not given
+	 */
+	builtinsEcma: number;
+
+	/**
+	 * the globals replaced, by name
+	 */
+	globalDefs: false | { [index: string]: EvaluatedValue };
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8: boolean;
+
+	/**
+	 * whether functions are inlined where called, `0` read as `false`
+	 */
+	inline: number | boolean;
+
+	/**
+	 * whether neighboring declarations are joined
+	 */
+	joinVars: boolean;
+
+	/**
+	 * which class names survive
+	 */
+	keepClassnames: boolean | RegExp;
+
+	/**
+	 * whether a function's trailing parameters nothing reads stay
+	 */
+	keepFargs: boolean;
+
+	/**
+	 * which function names survive
+	 */
+	keepFnames: boolean | RegExp;
+
+	/**
+	 * whether `Infinity` is kept as written
+	 */
+	keepInfinity: boolean;
+
+	/**
+	 * whether the source is a module
+	 */
+	module: boolean;
+
+	/**
+	 * whether an immediately called function is negated
+	 */
+	negateIife: boolean;
+
+	/**
+	 * the calls assumed pure
+	 */
+	pureFuncs: null | string[];
+
+	/**
+	 * whether conversions are assumed to have no side effect
+	 */
+	pureConversions: boolean;
+
+	/**
+	 * whether a property read is assumed to run no getter: "strict" but where the value may be `null`, `undefined` or an object literal with a getter, true but where it may be `null` or `undefined`
+	 */
+	pureGetters: boolean | "strict";
+
+	/**
+	 * whether the built-ins are taken as native but where the program names a write to one; false where it may replace any, as `globalThis[k] = C` or a polyfill may
+	 */
+	pristineGlobals: boolean;
+
+	/**
+	 * whether side-effect-free statements are dropped
+	 */
+	sideEffects: boolean;
+
+	/**
+	 * the top-level names kept
+	 */
+	topRetain:
+		| null
+		| string
+		| RegExp
+		| string[]
+		| ((definition: NamedDefinition) => boolean);
+
+	/**
+	 * whether top-level names may be dropped, or which kinds
+	 */
+	toplevel: string | boolean;
+
+	/**
+	 * whether unsafe transforms run
+	 */
+	unsafe: boolean;
+
+	/**
+	 * whether `unsafe` drops the description a symbol is called with
+	 */
+	unsafeSymbols: boolean;
+
+	/**
+	 * whether unused names are dropped
+	 */
+	unused: boolean;
+}
 declare class ConcatSource extends Source {
 	constructor(...args: Child[]);
 	getChildren(): Source[];
@@ -9370,6 +9515,101 @@ declare interface DotenvPluginOptions {
 	template?: string[];
 }
 
+/**
+ * terser's `mangle` options, as terser's `minify` defaults them.
+ */
+declare interface DriverMangleOptions {
+	/**
+	 * the names given so far, where names are cached
+	 */
+	cache: null | NameCacheEntry;
+
+	/**
+	 * whether names a scope reading `eval` sees are mangled
+	 */
+	eval: boolean;
+
+	/**
+	 * whether the output works around that engine
+	 */
+	ie8: boolean;
+
+	/**
+	 * which class names survive
+	 */
+	keepClassnames: boolean | RegExp;
+
+	/**
+	 * which function names survive
+	 */
+	keepFnames: boolean | RegExp;
+
+	/**
+	 * whether the source is a module
+	 */
+	module: boolean;
+
+	/**
+	 * where mangled names come from
+	 */
+	nthIdentifier: IdentifierSource;
+
+	/**
+	 * how property names are mangled, false where they are kept
+	 */
+	properties: false | GivenPropertyMangleOptions;
+
+	/**
+	 * the names never given
+	 */
+	reserved: string[];
+
+	/**
+	 * whether the output works around that engine
+	 */
+	safari10: boolean;
+
+	/**
+	 * whether top-level names are mangled
+	 */
+	toplevel: boolean;
+}
+
+/**
+ * terser's `sourceMap` options, as terser's `minify` defaults them.
+ */
+declare interface DriverSourceMapOptions {
+	/**
+	 * whether `map` is answered as an object rather than as JSON
+	 */
+	asObject: boolean;
+
+	/**
+	 * the input's map or its JSON, `"inline"` for the one the source ends in
+	 */
+	content: null | string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+
+	/**
+	 * the minified file's name
+	 */
+	filename: null | string;
+
+	/**
+	 * whether the map holds the sources' content
+	 */
+	includeSources: boolean;
+
+	/**
+	 * the sources' root
+	 */
+	root: null | string;
+
+	/**
+	 * where the code says its map is, `"inline"` for the map itself
+	 */
+	url: null | string;
+}
+
 declare interface DualModeResolve {
 	(
 		context: string,
@@ -10720,6 +10960,18 @@ declare class EvalSourceMapDevToolPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
+type EvaluatedValue =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| symbol
+	| RegExp
+	| EvaluatedValue[]
+	| { [index: string]: EvaluatedValue }
+	| ((...args: EvaluatedValue[]) => EvaluatedValue);
 type ExcludeModulesType = "module" | "chunk" | "root-of-chunk" | "nested";
 
 /**
@@ -12766,7 +13018,7 @@ declare interface GetOptionsMethod<OptionsType> {
 		check?: PrecompiledCheck<OptionsType>
 	): OptionsType;
 }
-type GivenCompressOptions = Omit<Partial<any>, "globalDefs"> & {
+type GivenCompressOptions = Omit<Partial<CompressOptions>, "globalDefs"> & {
 	globalDefs?: false | object;
 } & TerserCompressAliases &
 	TerserOnlyCompressOptions;
@@ -12961,10 +13213,17 @@ declare interface GivenFormatOptions {
 	wrap_iife?: boolean;
 	spidermonkey?: boolean;
 }
-type GivenMangleOptions = Omit<Partial<any>, "properties"> & {
-	properties?: boolean | any;
+type GivenMangleOptions = Omit<Partial<DriverMangleOptions>, "properties"> & {
+	properties?: boolean | GivenPropertyMangleOptions;
 } & TerserMangleAliases;
-type GivenSourceMapOptions = Omit<Partial<any>, "content"> & {
+type GivenPropertyMangleOptions = Omit<
+	Partial<PropertyMangleOptions>,
+	"cache"
+> & { cache?: null | NameCacheEntry } & TerserPropertyAliases;
+type GivenSourceMapOptions = Omit<
+	Partial<DriverSourceMapOptions>,
+	"content"
+> & {
 	content?:
 		null | string | object | RawSourceMap | DecodedSourceMap | IndexSourceMap;
 };
@@ -22078,7 +22337,7 @@ declare interface MinifyOptions {
 	/**
 	 * names held across assets, which this writes into
 	 */
-	nameCache?: null | { vars?: any; props?: any };
+	nameCache?: null | { vars?: NameCacheEntry; props?: NameCacheEntry };
 
 	/**
 	 * which class names survive
@@ -24224,6 +24483,14 @@ declare interface MutableToken {
 	 */
 	unitStart: number;
 }
+
+/**
+ * Names held across minifies, which a minify reads as a map and writes back
+ * as an object.
+ */
+declare interface NameCacheEntry {
+	props?: Record<string, string> | Map<string, string>;
+}
 declare class NamedChunkIdsPlugin {
 	/**
 	 * Creates an instance of NamedChunkIdsPlugin.
@@ -24597,7 +24864,7 @@ type NodePrintOptions = Omit<JavascriptProcessOptions, "compress"> & {
 	leading?: { tables: TokenTables; token: number };
 	inlinesNames?: boolean;
 	names?: null | TreeNames;
-	compress?: null | Partial<any>;
+	compress?: null | Partial<CompressOptions>;
 	mapsFrom?: { offset: number; length: number };
 };
 
@@ -29524,6 +29791,61 @@ declare interface ProgressPluginOptionsProgressBarBranch3Object {
 	 * Width of the progress bar in characters. Default: 25.
 	 */
 	width?: number;
+}
+
+/**
+ * terser's `mangle.properties` options, as `propertyNames` defaults them.
+ */
+declare interface PropertyMangleOptions {
+	/**
+	 * whether names builtins have are mangled too
+	 */
+	builtins: boolean;
+
+	/**
+	 * the names given so far, where names are cached
+	 */
+	cache: null | { props: Map<string, string> };
+
+	/**
+	 * false, or the suffix a debug name ends in
+	 */
+	debug: string | boolean;
+
+	/**
+	 * whether quoted names are kept
+	 */
+	keepQuoted: boolean | "strict";
+
+	/**
+	 * where mangled names come from
+	 */
+	nthIdentifier: IdentifierSource;
+
+	/**
+	 * whether only cached names are mangled
+	 */
+	onlyCache: boolean;
+
+	/**
+	 * which names are mangled
+	 */
+	regex: null | string | RegExp;
+
+	/**
+	 * the names never mangled
+	 */
+	reserved: string[];
+
+	/**
+	 * whether names read off undeclared globals are mangled
+	 */
+	undeclared: boolean;
+
+	/**
+	 * whether only names marked for mangling are mangled
+	 */
+	onlyAnnotated: boolean;
 }
 
 /**
@@ -36511,6 +36833,32 @@ declare interface TerserOnlyCompressOptions {
 	 * read `undefined` from a variable
 	 */
 	unsafe_undefined?: boolean;
+}
+
+/**
+ * terser's names for `mangle.properties` options webpack spells in camelCase,
+ * each read as its camelCase name so that terser's options work unchanged.
+ */
+declare interface TerserPropertyAliases {
+	/**
+	 * terser's name for `keepQuoted`
+	 */
+	keep_quoted?: boolean | "strict";
+
+	/**
+	 * terser's name for `nthIdentifier`
+	 */
+	nth_identifier?: IdentifierSource;
+
+	/**
+	 * terser's name for `onlyAnnotated`
+	 */
+	only_annotated?: boolean;
+
+	/**
+	 * terser's name for `onlyCache`
+	 */
+	only_cache?: boolean;
 }
 
 /**
