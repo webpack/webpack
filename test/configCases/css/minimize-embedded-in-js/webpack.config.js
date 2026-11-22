@@ -14,7 +14,7 @@ module.exports = {
 			}
 		]
 	},
-	// The defaults wire `minimizer-webpack-plugin` with terser / cssMinify /
+	// The defaults wire `minimizer-webpack-plugin` with jsMinify / cssMinify /
 	// htmlMinify, so this is what a user gets from `mode: "production"` alone.
 	optimization: {
 		minimize: { css: { extractComments: false } },

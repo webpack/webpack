@@ -2,6 +2,7 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../../");
+const jsMinify = require("../../../../../lib/javascript/jsMinify");
 
 const { htmlMinify } = webpack.html;
 
@@ -30,7 +31,7 @@ module.exports = {
 					new MinimizerPlugin({
 						test: /\.(?:[cm]?js|html)(\?.*)?$/i,
 						parallel: false,
-						minify: [MinimizerPlugin.terserMinify, htmlMinify],
+						minify: [jsMinify, htmlMinify],
 						minimizerOptions: [{}, {}]
 					}).apply(compiler);
 				}

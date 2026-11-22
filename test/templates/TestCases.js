@@ -154,9 +154,10 @@ const describeCases = (config) => {
 							testConfig = { ...testConfig, ...require(testConfigPath) };
 						}
 
-						const TerserPlugin = require("minimizer-webpack-plugin");
+						const MinimizerPlugin = require("minimizer-webpack-plugin");
 
-						const terserForTesting = new TerserPlugin({
+						const minimizerForTesting = new MinimizerPlugin({
+							minify: require("../../lib/javascript/jsMinify"),
 							parallel: false
 						});
 						/** @type {import("../../").Configuration} */
@@ -169,7 +170,7 @@ const describeCases = (config) => {
 							optimization: config.mode
 								? {
 										emitOnErrors: true,
-										minimizer: [terserForTesting],
+										minimizer: [minimizerForTesting],
 										...config.optimization
 									}
 								: {
@@ -185,7 +186,7 @@ const describeCases = (config) => {
 										concatenateModules: false,
 										moduleIds: "size",
 										chunkIds: "size",
-										minimizer: [terserForTesting],
+										minimizer: [minimizerForTesting],
 										...config.optimization
 									},
 							performance: {

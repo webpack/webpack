@@ -2,6 +2,7 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const htmlMinify = require("../../../../../lib/html/htmlMinify");
+const jsMinify = require("../../../../../lib/javascript/jsMinify");
 
 /** @type {import("../../../../../").Configuration} */
 module.exports = {
@@ -29,7 +30,7 @@ module.exports = {
 				apply: (compiler) => {
 					new MinimizerPlugin({
 						test: /\.(?:[cm]?js|html)(\?.*)?$/i,
-						minify: [MinimizerPlugin.terserMinify, htmlMinify],
+						minify: [jsMinify, htmlMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
 				}

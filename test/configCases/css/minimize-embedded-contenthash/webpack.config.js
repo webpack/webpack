@@ -2,6 +2,7 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const cssMinify = require("../../../../lib/css/cssMinify");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 
 /**
  * Two builds alike but for one CSS minifier option, which rewrites `16px` to
@@ -30,7 +31,7 @@ const config = (convertLengthUnits) => ({
 				apply: (compiler) => {
 					new MinimizerPlugin({
 						test: /\.(?:[cm]?js|css)(\?.*)?$/i,
-						minify: [MinimizerPlugin.terserMinify, cssMinify],
+						minify: [jsMinify, cssMinify],
 						minimizerOptions: [
 							{ compress: { passes: 2 } },
 							{ convertLengthUnits }

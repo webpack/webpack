@@ -1,6 +1,7 @@
 "use strict";
 
-const TerserPlugin = require("minimizer-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -21,18 +22,21 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new TerserPlugin({
+			new MinimizerPlugin({
+				minify: jsMinify,
 				parallel: false,
 				extractComments: false,
 				exclude: ["vendors.js", "compress.js", "extract.js"]
 			}),
-			new TerserPlugin({
+			new MinimizerPlugin({
+				minify: jsMinify,
 				parallel: false,
 				include: ["extract.js"]
 			}),
-			new TerserPlugin({
+			new MinimizerPlugin({
+				minify: jsMinify,
 				parallel: false,
-				terserOptions: {
+				minimizerOptions: {
 					compress: {
 						passes: 2
 					}

@@ -44,8 +44,8 @@ it("emits a page whose every script parses", () => {
 });
 
 // The entry chunk opens with one, and a fold would leave it behind the runtime
-// where it is a plain string rather than a directive.
+// where it is a plain string rather than a directive; comments may precede it.
 it("leaves the entry chunk's `use strict` where it is a directive", () => {
 	const entry = bodies.find((body) => body.includes("console.log"));
-	expect(/^\s*"use strict"/.test(entry)).toBe(true);
+	expect(/^\s*(?:\/\*[\s\S]*?\*\/\s*)*"use strict"/.test(entry)).toBe(true);
 });

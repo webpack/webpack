@@ -1,7 +1,8 @@
 "use strict";
 
-const TerserPlugin = require("minimizer-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 
 /** @type {import("../../../../types").Configuration} */
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
 		filename: "[name].js"
 	},
 	optimization: {
-		minimizer: [new TerserPlugin()]
+		minimizer: [new MinimizerPlugin({ minify: jsMinify })]
 	},
 	plugins: [
 		new webpack.SourceMapDevToolPlugin({
