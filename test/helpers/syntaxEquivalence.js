@@ -2203,7 +2203,7 @@ const compareStyles = async ({ pairs, types }) => {
 					}
 					// `light-dark()` shows its second color only under a dark color scheme.
 					const darkened = /light-dark\(/i.test(text);
-					if (darkened) addAll(out.atLength, "dark", own);
+					if (darkened) addAll(out.atLength, "light-dark", own);
 					for (let i = 0; i < style.length; i++) {
 						const property = style.item(i);
 						const entry = `${where}\u0001${
@@ -3104,10 +3104,13 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 			for (const key of [...keys].sort()) {
 				const found = /^(box)?(width|height)(\d+)$/.exec(key);
-				if ((found === null && key !== "dark") || conditioned.length === 0) {
-					continue;
-				}
-				if (key === "dark" && relax.has("color-scheme")) continue;
+				const dark = key === "dark" || key === "light-dark";
+				if ((found === null && !dark) || conditioned.length === 0) continue;
+				// A lowered `light-dark()` cannot see a scheme set from outside the
+				// sheet, so the relaxation skips its rules; a `prefers-color-scheme`
+				// query's other rules still can, so they are sampled.
+				const unseen = dark && relax.has("color-scheme");
+				if (unseen && key === "light-dark") continue;
 				if (sampled + 3 > MAX_SAMPLES || moved.length >= KEPT) break;
 				/** @type {Set<string>} */
 				const reached = new Set();
@@ -3115,6 +3118,14 @@ const compareStyles = async ({ pairs, types }) => {
 					for (const selector of reading.atLength.get(key) || []) {
 						if (chains.has(selector)) reached.add(selector);
 					}
+				}
+				if (unseen) {
+					for (const reading of readings) {
+						for (const selector of reading.atLength.get("light-dark") || []) {
+							reached.delete(selector);
+						}
+					}
+					if (reached.size === 0) continue;
 				}
 				const part = populate([...reached]);
 				await measure(
