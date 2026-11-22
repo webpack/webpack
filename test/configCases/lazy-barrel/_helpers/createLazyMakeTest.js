@@ -1,9 +1,9 @@
 "use strict";
 
 const path = require("path");
-const LazyBarrels = require("../../../../lib/optimize/LazyBarrels");
+const LazyMake = require("../../../../lib/optimize/LazyMake");
 
-/** @import { AsyncDependenciesBlock, Compilation, Compiler, Configuration, Dependency, Module, NormalModule } from "../../../../" */
+/** @import { AsyncDependenciesBlock, Compilation, Compiler, Configuration, Dependency, Module, NormalModule } from "../../../../types" */
 /** @import LibDependency from "../../../../lib/graph/Dependency" */
 /** @import LibModuleGraph from "../../../../lib/graph/ModuleGraph" */
 
@@ -14,7 +14,7 @@ const LazyBarrels = require("../../../../lib/optimize/LazyBarrels");
  * @returns {boolean} true while deferred
  */
 const isLazy = (compilation, dependency) =>
-	LazyBarrels.isLazy(
+	LazyMake.isLazy(
 		/** @type {LibModuleGraph} */ (
 			/** @type {unknown} */ (compilation.moduleGraph)
 		),
@@ -75,7 +75,7 @@ const getForwardIds = (dependencies) => {
  * @param {Compilation} compilation the compilation, read before seal
  * @returns {string} the printed graph
  */
-const printLazyBarrelGraph = (compilation) => {
+const printGraph = (compilation) => {
 	const { moduleGraph, requestShortener } = compilation;
 	/** @type {string[]} */
 	const lines = [];
@@ -154,19 +154,19 @@ const printLazyBarrelGraph = (compilation) => {
  * @param {string=} hint snapshot hint, to tell configurations of one case apart
  * @returns {(compiler: Compiler) => void} plugin
  */
-const createLazyBarrelPlugin = (lazyModules, hint) => (compiler) => {
+const createPlugin = (lazyModules, hint) => (compiler) => {
 	const lazyResources = lazyModules.map((file) =>
 		path.resolve(compiler.context, file)
 	);
 	/** @type {Set<string>} */
 	const built = new Set();
-	compiler.hooks.thisCompilation.tap("createLazyBarrelTest", (compilation) => {
-		compilation.hooks.buildModule.tap("createLazyBarrelTest", (module) => {
+	compiler.hooks.thisCompilation.tap("createLazyMakeTest", (compilation) => {
+		compilation.hooks.buildModule.tap("createLazyMakeTest", (module) => {
 			built.add(/** @type {NormalModule} */ (module).resource);
 		});
 		// before seal: concatenation re-points connections
-		compilation.hooks.finishModules.tap("createLazyBarrelTest", () => {
-			const graph = printLazyBarrelGraph(compilation);
+		compilation.hooks.finishModules.tap("createLazyMakeTest", () => {
+			const graph = printGraph(compilation);
 			if (hint === undefined) {
 				expect(graph).toMatchSnapshot();
 			} else {
@@ -174,7 +174,7 @@ const createLazyBarrelPlugin = (lazyModules, hint) => (compiler) => {
 			}
 		});
 	});
-	compiler.hooks.done.tap("createLazyBarrelTest", () => {
+	compiler.hooks.done.tap("createLazyMakeTest", () => {
 		for (const resource of lazyResources) {
 			expect(built.has(resource)).toBe(false);
 		}
@@ -188,11 +188,11 @@ const createLazyBarrelPlugin = (lazyModules, hint) => (compiler) => {
  * @param {string=} hint snapshot hint
  * @returns {Configuration} the configuration with the plugin applied
  */
-const applyLazyBarrelPlugin = (options, lazyModules, hint) => ({
+const applyPlugin = (options, lazyModules, hint) => ({
 	...options,
 	plugins: [
 		...(options.plugins || []),
-		createLazyBarrelPlugin(lazyModules, hint)
+		createPlugin(lazyModules, hint)
 	]
 });
 
@@ -203,18 +203,17 @@ const applyLazyBarrelPlugin = (options, lazyModules, hint) => ({
  * @param {T=} options extra configuration, or one per build
  * @returns {T} the configuration(s)
  */
-const createLazyBarrelTest = (lazyModules, options) =>
+const createLazyMakeTest = (lazyModules, options) =>
 	/** @type {T} */ (
 		Array.isArray(options)
 			? options.map((config, index) =>
-					applyLazyBarrelPlugin(
+					applyPlugin(
 						config,
 						lazyModules,
 						config.name === undefined ? String(index) : config.name
 					)
 				)
-			: applyLazyBarrelPlugin(options || {}, lazyModules)
+			: applyPlugin(options || {}, lazyModules)
 	);
 
-module.exports = createLazyBarrelTest;
-module.exports.printLazyBarrelGraph = printLazyBarrelGraph;
+module.exports = createLazyMakeTest;

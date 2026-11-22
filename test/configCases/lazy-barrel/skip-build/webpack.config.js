@@ -1,8 +1,8 @@
 "use strict";
 
-const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
+const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
-module.exports = createLazyBarrelTest(
+module.exports = createLazyMakeTest(
 	// modules of `heavy-lib` that must stay deferred when only `used` is imported
 	["node_modules/heavy-lib/unused.js", "node_modules/heavy-lib/deep.js"],
 	{

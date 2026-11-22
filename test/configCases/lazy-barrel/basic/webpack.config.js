@@ -1,8 +1,8 @@
 "use strict";
 
-const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
+const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
-module.exports = createLazyBarrelTest([
+module.exports = createLazyMakeTest([
 	"named-barrel/b.js",
 	"named-barrel/d.js",
 	"mixed-barrel/a.js",
