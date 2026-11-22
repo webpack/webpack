@@ -34,4 +34,4 @@ These stay in the registry, by design or until future work lifts them:
 Other limits:
 
 - **Timing:** a linked effect runs when its chunk's file evaluates, not inside the `import()` callback. Order among modules holds; interleaving with unrelated async code can differ.
-- **Bytes:** about neutral. A namespace used as a value also exports every named binding.
+- **Bytes:** named imports cost about nothing. A namespace used as a value costs an inline namespace object, and the scope then also exports every named binding: in a two-export example the shared chunk grows from 162 to 248 bytes gzipped. Exporting only the names an importer reads would trim part of that.
