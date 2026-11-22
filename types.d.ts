@@ -6123,6 +6123,10 @@ declare class ConstDependency extends NullDependency {
 declare class ConstDependencyTemplate extends NullDependencyTemplate {
 	constructor();
 }
+
+/**
+ * A class a serializer can be registered for; it finds one by an object's.
+ */
 type Constructor = abstract new (...params: never[]) => object;
 declare class ConsumeSharedPlugin {
 	/**
@@ -26103,7 +26107,7 @@ declare interface ObjectSerializer<T extends object = object> {
 		context: ObjectDeserializerContextObjectMiddlewareObject_3<
 			ReadonlyArray<ComplexSerializableType>
 		>
-	): object;
+	): T;
 }
 
 /**

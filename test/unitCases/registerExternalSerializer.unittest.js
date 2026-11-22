@@ -1,6 +1,11 @@
 "use strict";
 
 const {
+	javascript: {
+		syntax: {
+			parser: { ParserPosition }
+		}
+	},
 	sources: { RawSource },
 	util: {
 		serialization: { buffersSerializer }
@@ -22,5 +27,16 @@ describe("registerExternalSerializer", () => {
 		restored.clearCache({ maps: false, source: true });
 		expect(restored.size()).toBe(content.length);
 		expect(restored.source()).toBe(content);
+	});
+
+	it("restores a ParserPosition as a ParserPosition", async () => {
+		const restored = /** @type {InstanceType<typeof ParserPosition>} */ (
+			await buffersSerializer.deserialize(
+				await buffersSerializer.serialize(new ParserPosition(3, 7), {}),
+				{}
+			)
+		);
+		expect(restored).toBeInstanceOf(ParserPosition);
+		expect(restored.offset(2)).toEqual(new ParserPosition(3, 9));
 	});
 });
