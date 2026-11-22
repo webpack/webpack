@@ -27,6 +27,8 @@ module.exports = {
 						// "日" is no character of windows-1252
 						{ tag: "meta", attrs: { name: "word", content: "日" } },
 						{ tag: "script", children: 'window.__word = "日";' },
+						// a tagged template reads its raw text, which no escape keeps
+						{ tag: "script", children: "window.__raw = String.raw`日`;" },
 						{ tag: "template", children: 'window.__late = "日";' }
 					]
 				);
