@@ -1333,6 +1333,10 @@ const compareRenders = async ({ pairs, width }) => {
 	// for good on a page whose subresource the policy blocks, so each wait is
 	// bounded; what is read then is the page as far as it got.
 	const PATIENCE = 3000;
+	// WHY: on a busy runner Firefox took longer than `PATIENCE` to replace a
+	// frame's initial `about:blank`, read then as a page of 3 elements; nothing
+	// fetched decides when that happens, so this bound only catches a hang.
+	const COMMIT_PATIENCE = 30000;
 	/** @type {HTMLIFrameElement} */
 	let frame = document.createElement("iframe");
 
@@ -1349,25 +1353,55 @@ const compareRenders = async ({ pairs, width }) => {
 		]);
 
 	/**
+	 * Whether the frame holds its `srcdoc` document, parsed, rather than the
+	 * `about:blank` it starts with.
+	 * @param {HTMLIFrameElement} of the frame
+	 * @returns {boolean} true once the document is the frame's own and parsed
+	 */
+	const committed = (of) => {
+		const doc = of.contentDocument;
+		return (
+			doc !== null && doc.URL === "about:srcdoc" && doc.readyState !== "loading"
+		);
+	};
+
+	/**
+	 * Resolves once the frame holds its own parsed document, or after
+	 * `COMMIT_PATIENCE`.
+	 * @param {HTMLIFrameElement} of the frame
+	 * @returns {Promise<void>} settles when the document is in or the wait ends
+	 */
+	const commit = (of) =>
+		new Promise((resolve) => {
+			const until = Date.now() + COMMIT_PATIENCE;
+			const poll = () => {
+				if (committed(of) || Date.now() > until) resolve(undefined);
+				else setTimeout(poll, 20);
+			};
+			poll();
+		});
+
+	/**
 	 * A fresh frame per document, so a late event of one cannot be the next one's.
 	 * @param {string} html a document
 	 * @returns {Promise<boolean>} whether the frame finished loading it
 	 */
-	const render = (html) => {
+	const render = async (html) => {
 		frame.remove();
 		frame = document.createElement("iframe");
 		frame.setAttribute("sandbox", "allow-same-origin");
 		frame.style.cssText = `width:${width}px;height:800px;border:0`;
-		const loaded = settled(
-			new Promise((resolve) => {
-				frame.addEventListener("load", () => resolve(undefined), {
-					once: true
-				});
-			})
-		);
+		const load = new Promise((resolve) => {
+			frame.addEventListener("load", () => resolve(undefined), {
+				once: true
+			});
+		});
 		frame.srcdoc = html;
 		document.body.append(frame);
-		return loaded;
+		// `load` gets its patience from when the document is in, not from when
+		// it was asked for.
+		await commit(frame);
+		return settled(load);
 	};
 
 	/**
