@@ -423,8 +423,8 @@ const knownV8Bugs = [
 ];
 
 // The JavaScript minimizer each minified mode builds with: terser as the plugin
-// publishes it, and webpack's printer, which `futureDefaults` switches to. Both
-// read the same options but the printer's own switches below.
+// publishes it, and webpack's printer, the default. Both read the same options
+// but the printer's own switches below.
 const MINIFIERS = {
 	terser: MinimizerPlugin.terserMinify,
 	printer: jsMinify

@@ -36,7 +36,7 @@ describe("default minimizers", () => {
 		const implementations = getImplementations({
 			experiments: { css: true, html: true }
 		});
-		expect(implementations).toContain(MinimizerPlugin.terserMinify);
+		expect(implementations).toContain(require("../../lib/javascript/jsMinify"));
 		expect(implementations).toContain(require("../../lib/css/cssMinify"));
 		expect(implementations).toContain(require("../../lib/html/htmlMinify"));
 		for (const implementation of implementations) {
@@ -44,9 +44,9 @@ describe("default minimizers", () => {
 		}
 	});
 
-	it("passes webpack's own JavaScript minifier as a function under futureDefaults", () => {
-		expect(
-			getImplementations({ experiments: { futureDefaults: true } })
-		).toContain(require("../../lib/javascript/jsMinify"));
+	it("passes webpack's own JavaScript minifier as a function by default", () => {
+		expect(getImplementations({})).toContain(
+			require("../../lib/javascript/jsMinify")
+		);
 	});
 });

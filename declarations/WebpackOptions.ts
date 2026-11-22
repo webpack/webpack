@@ -3512,7 +3512,7 @@ export interface OptimizationMinimizeHtml {
 }
 
 /**
- * Options handed as-is to the JavaScript minimizer (terser-compatible). Defaults to `{ compress: { passes: 2 } }`.
+ * Options handed as-is to the JavaScript minimizer, webpack's own, which also reads terser's option names. Defaults to `{ compress: { passes: 2 } }`.
  * @since 5.110.0
  * @additionalProperties
  */

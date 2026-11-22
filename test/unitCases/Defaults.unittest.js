@@ -6552,9 +6552,8 @@ describe("optimization.minimize", () => {
 			return Array.isArray(implementation) ? implementation[0] : implementation;
 		};
 
-		// terser as the plugin publishes it, until the printer is proven on real
-		// builds; the printer writes what it writes, so neither needs an option.
-		expect(wiredMinify(false)).toBe(MinimizerPlugin.terserMinify);
+		// webpack's own minifier with or without `futureDefaults`.
+		expect(wiredMinify(false)).toBe(require("../../lib/javascript/jsMinify"));
 		expect(wiredMinify(true)).toBe(require("../../lib/javascript/jsMinify"));
 
 		/**
