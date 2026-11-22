@@ -3318,6 +3318,23 @@ declare interface ClearCacheOptions {
 	 */
 	parsedMap?: boolean;
 }
+declare interface CloneableObject {
+	[index: string]: CloneableValue;
+}
+type CloneableValue =
+	| undefined
+	| null
+	| string
+	| number
+	| bigint
+	| boolean
+	| RegExp
+	| ArrayBuffer
+	| Error
+	| Date
+	| ArrayBufferView
+	| CloneableValue[]
+	| CloneableObject;
 
 /**
  * Defines the code gen map overloads type used by this module.
@@ -5249,6 +5266,16 @@ declare class Compiler {
 	 * Processes the provided compilation.
 	 */
 	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
+
+	/**
+	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close. Without `experiments.threads`, calls run directly on the main thread unless `options.numWorkers` asks for threads; without `worker_threads`, they always do.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	worker<M extends WorkerModule = WorkerDefaultModule>(
+		workerPath: string | URL,
+		options?: WorkerOptions
+	): Worker<M>;
 
 	/**
 	 * Processes the provided error callback.
@@ -11174,6 +11201,13 @@ declare interface Experiments {
 	syncWebAssembly?: boolean;
 
 	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: boolean | ThreadsOptions;
+
+	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
 	 * @since 5.107.0
 	 * @experimental
@@ -11261,6 +11295,13 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	syncWebAssembly?: boolean;
+
+	/**
+	 * Run CPU-heavy plugin work, such as minimization, on worker threads webpack keeps for the whole compiler.
+	 * @since 5.113.0
+	 * @experimental
+	 */
+	threads?: false | ThreadsOptions;
 
 	/**
 	 * Enable typescript support. `"auto"` (the default) enables the built-in TypeScript support when no loader is registered for TypeScript files.
@@ -36927,6 +36968,17 @@ declare interface TerserPropertyAliases {
 }
 
 /**
+ * Options for running CPU-heavy plugin work on the worker threads webpack keeps for a compiler.
+ */
+declare interface ThreadsOptions {
+	/**
+	 * Number of worker threads, at most one less than the number of CPUs, which is also the default; `0` runs the work on the main thread.
+	 * @since 5.113.0
+	 */
+	max?: number;
+}
+
+/**
  * Defines the timestamp and hash type used by this module.
  */
 declare interface TimestampAndHash {
@@ -38863,6 +38915,62 @@ declare interface WithOptions {
 	withOptions: (
 		options: Partial<ResolveOptionsWithDependencyType>
 	) => ResolverWithOptions;
+}
+
+/**
+ * A module path bound to the compiler's worker pool. Calls run on a thread when available, inline otherwise.
+ * @since 5.113.0
+ * @experimental
+ */
+declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
+	/**
+	 * Calls one export of the module.
+	 */
+	run<K extends string>(
+		method: K,
+		...args: Parameters<Extract<M[K], (...args: never[]) => void>>
+	): Promise<Awaited<ReturnType<Extract<M[K], (...args: never[]) => void>>>>;
+}
+
+/**
+ * Untyped facade: every method takes and returns cloneable values.
+ */
+declare interface WorkerDefaultModule {
+	[index: string]: (
+		...args: CloneableValue[]
+	) =>
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| ArrayBuffer
+		| Error
+		| Date
+		| ArrayBufferView
+		| CloneableValue[]
+		| CloneableObject
+		| Promise<CloneableValue>;
+}
+
+/**
+ * Constraint for a worker module: any exports. Only the ones a caller runs
+ * need to be functions.
+ */
+declare interface WorkerModule {
+	[index: string]: unknown;
+}
+
+/**
+ * Options for `compiler.worker()`. Fields reuse the jest-worker or thread-loader name when the purpose matches.
+ */
+declare interface WorkerOptions {
+	/**
+	 * without `experiments.threads`, run on up to this many threads (at most one less than the CPUs) instead of inline; `0` runs inline. Ignored when `experiments.threads` is set, which configures the threads.
+	 */
+	numWorkers?: number;
 }
 
 /**
