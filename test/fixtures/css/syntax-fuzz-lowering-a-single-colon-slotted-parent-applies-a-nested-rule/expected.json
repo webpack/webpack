@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "styles",
+		"contains": "border-top-style: none -> solid",
+		"presets": ["legacy"],
+		"why": "known bug: lowering a parent list holding a single-colon :slotted() and an attribute selector into :is() applies a nested rule's declarations somewhere the source does not; not fixed here, left for a follow-up"
+	}
+]

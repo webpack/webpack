@@ -30,7 +30,7 @@ const {
 /**
  * The rewrites an opt-in makes on purpose, each set aside in the comparison
  * that would otherwise read it as a difference.
- * @typedef {"custom-properties" | "length-units" | "approximate-colors" | "prefixes" | "whitespace" | "redundant-attributes" | "empty-elements" | "merged-styles"} Relaxation
+ * @typedef {"custom-properties" | "length-units" | "approximate-colors" | "prefixes" | "color-scheme" | "whitespace" | "redundant-attributes" | "empty-elements" | "merged-styles"} Relaxation
  */
 /** @typedef {{ name: string, raw: string, min: string, relax?: Relaxation[] }} Fixture */
 
@@ -233,6 +233,7 @@ const benchmarkDocuments = (minify) => {
  * @property {(value: string) => string} paintedColors a value with every color it holds painted
  * @property {(list: string) => string} unquoteFamilies a font family list with every name the bare spelling also names left unquoted
  * @property {(text: string) => string} spacedOnce text as its tokens, spaced one way
+ * @property {(text: string) => string} spelledOnce a media query as what it spells
  * @property {(element: Element) => string} whereIs an element and its nearest ancestors, for a report
  * @property {(property: string, value: string) => string} cascadeValue a computed value in the one spelling rules are compared in
  */
@@ -1166,6 +1167,23 @@ const installHelpers = (generics) => {
 			.replace(/ ?([{}()[\],:;/*]) ?/g, "$1");
 
 	/**
+	 * A media query as what it spells: escapes written out, in one case, spaced
+	 * one way, a comparison's spaces included.
+	 * @param {string} text a media query as the engine echoes it
+	 * @returns {string} it, spelled one way
+	 */
+	const spelledOnce = (text) =>
+		spacedOnce(
+			text.replace(/\\(?:([\da-f]{1,6})\s?|([\s\S]))/gi, (escape, hex, char) =>
+				hex === undefined
+					? char
+					: String.fromCodePoint(Number.parseInt(hex, 16) || 0xfffd)
+			)
+		)
+			.toLowerCase()
+			.replace(/ ?([<>=]) ?/g, "$1");
+
+	/**
 	 * A custom property as what substituting it computes in each reader, since
 	 * only a reader gives its tokens a meaning. One no reader takes is read as
 	 * its text, comments and every space beside a delimiter dropped.
@@ -1225,6 +1243,7 @@ const installHelpers = (generics) => {
 			unquoteFamilies,
 			cascadeValue,
 			spacedOnce,
+			spelledOnce,
 			whereIs
 		};
 };
@@ -1626,6 +1645,18 @@ const compareStyles = async ({ pairs, types }) => {
 	// so the two spellings of one selector are rewritten alike.
 	const STATES =
 		/(^|[^:\\]):(hover|active|focus|focus-visible|focus-within|visited|link|any-link|local-link|target|target-within|checked|indeterminate|default|disabled|enabled|required|optional|valid|invalid|user-valid|user-invalid|in-range|out-of-range|placeholder-shown|autofill|-webkit-autofill|read-only|read-write|open|closed|popover-open|modal|fullscreen|picture-in-picture|playing|paused|seeking|buffering|stalled|muted|volume-locked|current|past|future|blank|defined)(?![\w-])/gi;
+	/**
+	 * A `STATES` match's replacement: the attribute built for its pseudo.
+	 * Selectors 4 names `:-webkit-autofill` a legacy alias of `:autofill`.
+	 * @param {string} match the whole match
+	 * @param {string} before what `STATES` captured before the pseudo
+	 * @param {string} name the pseudo's name
+	 * @returns {string} the attribute selector naming it
+	 */
+	const stateAttribute = (match, before, name) =>
+		/^-webkit-autofill$/i.test(name)
+			? `${before}[data-eq-autofill]`
+			: `${before}[data-eq-${name}]`;
 	// WHY: a theme is a class on `html` or `body`, and a document has one of
 	// each — so both sheets also let a built `div` stand for one, at the same
 	// specificity, which is what reaches `body.dark` beside `body.light`.
@@ -1635,7 +1666,7 @@ const compareStyles = async ({ pairs, types }) => {
 		/::(marker|placeholder|first-line|first-letter|selection|backdrop|file-selector-button)(?![\w-])/gi;
 	// What `content` computes to on a pseudo-element that renders nothing.
 	const NO_CONTENT = /^(?:none|normal)$/;
-	const { cascadeValue, spacedOnce, whereIs } =
+	const { cascadeValue, spacedOnce, spelledOnce, whereIs } =
 		/** @type {{ __eq: PageHelpers }} */ (/** @type {unknown} */ (window)).__eq;
 
 	/**
@@ -2130,7 +2161,7 @@ const compareStyles = async ({ pairs, types }) => {
 					let listed = "&";
 					if (kind === "CSSStyleRule") {
 						const mapped = any.selectorText
-							.replace(STATES, "$1[data-eq-$2]")
+							.replace(STATES, stateAttribute)
 							.replace(
 								/:(dir|lang)\(\s*["']?([\w-]+)["']?\s*\)/gi,
 								"[data-eq-$1-$2]"
@@ -2203,7 +2234,13 @@ const compareStyles = async ({ pairs, types }) => {
 							kind === "CSSMediaRule"
 								? "media"
 								: `container ${any.containerName}`
-						} ${spacedOnce(condition)}`,
+						} ${
+							// An engine echoes a media query part it cannot read as written, and
+							// reads it false however it is spelled, so it is read for what it spells.
+							kind === "CSSMediaRule"
+								? spelledOnce(condition)
+								: spacedOnce(condition)
+						}`,
 						parents,
 						scope,
 						[
@@ -2222,9 +2259,13 @@ const compareStyles = async ({ pairs, types }) => {
 				) {
 					walk(
 						any.cssRules,
+						// A condition holds or not in every frame alike, and an engine echoes it as
+						// written, so a test is read for its answer, not its spelling.
 						`${context}@${
-							kind === "CSSSupportsRule" ? "supports" : "-moz-document"
-						} ${spacedOnce(any.conditionText)}`,
+							kind === "CSSSupportsRule"
+								? `supports ${CSS.supports(any.conditionText)}`
+								: `-moz-document ${spacedOnce(any.conditionText)}`
+						}`,
 						parents,
 						scope,
 						lengths
@@ -3066,6 +3107,7 @@ const compareStyles = async ({ pairs, types }) => {
 				if ((found === null && key !== "dark") || conditioned.length === 0) {
 					continue;
 				}
+				if (key === "dark" && relax.has("color-scheme")) continue;
 				if (sampled + 3 > MAX_SAMPLES || moved.length >= KEPT) break;
 				/** @type {Set<string>} */
 				const reached = new Set();

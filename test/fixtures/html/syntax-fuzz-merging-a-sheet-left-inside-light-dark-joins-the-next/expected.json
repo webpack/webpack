@@ -1,7 +1,7 @@
 [
 	{
 		"relation": "meaning",
-		"contains": "    {a:var(--webpack-light,)var(--webpack-dark,)}:where(:root){--webpack-light:…  ->  {a:var(--webpack-light,)var(--webpack-dark,);a}:where(:root){--webpack-ligh…",
+		"contains": "    {a:var(--webpack-light,a)var(--webpack-dark,a)}:where(:root){--webpack-ligh…  ->  {a:var(--webpack-light,a)var(--webpack-dark,a);a}:where(:root){--webpack-li…",
 		"presets": [
 			"embedded+legacy"
 		],

@@ -137,7 +137,9 @@ const CSS_SETS = [
 	{
 		name: "legacy",
 		print: cssPrinter({ environment: { browsers: LEGACY_BROWSERS } }),
-		relax: ["prefixes"]
+		// A lowered `light-dark()` switches on the sheet's own color scheme, which
+		// one the page sets from outside it, as the dark samples do, never reaches.
+		relax: ["prefixes", "color-scheme"]
 	}
 ];
 const beautifyCss = cssPrinter({ mode: "beautify" });
@@ -444,6 +446,23 @@ const holdsStyles = (documents) =>
 // A string the CSSOM serializes, always double-quoted.
 const CSS_STRING = /"(?:[^"\\]|\\.)*"/g;
 
+// A comment no two tokens would join across once it is gone: one after a
+// space or an opener, or before a space or a closer. An engine echoes one where
+// it keeps a condition's text, and a beautified print drops it.
+const LOOSE_COMMENT =
+	/(?<=^|[\s([{,;:)\]}])\s*\/\*(?:[^*]|\*(?!\/))*\*\/\s*|\s*\/\*(?:[^*]|\*(?!\/))*\*\/\s*(?=$|[\s)\]},;])/g;
+
+/**
+ * A serialized rule's text outside its strings, each comment no tokens would
+ * join across dropped, with the space around it.
+ * @param {string} rule a rule
+ * @returns {string} what it says outside its strings
+ */
+const ruleTokens = (rule) =>
+	rule.replace(CSS_STRING, '""').replace(LOOSE_COMMENT, (comment) =>
+		/^\s|\s$/.test(comment) ? " " : ""
+	);
+
 /**
  * Two serialized rules alike: their strings exactly, the rest within the
  * printer's numeric rounding.
@@ -454,7 +473,7 @@ const CSS_STRING = /"(?:[^"\\]|\\.)*"/g;
 const sameRule = (one, other) =>
 	(one.match(CSS_STRING) || []).join("\n") ===
 		(other.match(CSS_STRING) || []).join("\n") &&
-	numericallyEqual(one.replace(CSS_STRING, '""'), other.replace(CSS_STRING, '""'));
+	numericallyEqual(ruleTokens(one), ruleTokens(other));
 
 /**
  * @param {string[]} before one sheet's rules
