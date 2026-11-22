@@ -206,17 +206,17 @@ module.exports = "<h1>Headers</h1>\n<h1>h1 Heading 8-)</h1>\n<h2>h2 Heading</h2>
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -232,16 +232,14 @@ module.exports = "<h1>Headers</h1>\n<h1>h1 Heading 8-)</h1>\n<h2>h2 Heading</h2>
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/to binary */
 /******/ 	(() => {
 /******/ 		// define to binary helper
-/******/ 		const toImmutableBytes = (value) => {
+/******/ 		var toImmutableBytes = (value) => {
 /******/ 			let {buffer} = value;
-/******/ 			const throwErr = () => {
+/******/ 			var throwErr = () => {
 /******/ 				throw new TypeError('ArrayBuffer is immutable');
 /******/ 			};
 /******/ 			Object.defineProperties(buffer, { immutable: { value: true },  resize: { value: throwErr }, transfer: { value: throwErr }, transferToFixedLength: { value: throwErr } });
@@ -249,13 +247,13 @@ module.exports = "<h1>Headers</h1>\n<h1>h1 Heading 8-)</h1>\n<h2>h2 Heading</h2>
 /******/ 			return value;
 /******/ 		}
 /******/ 		__webpack_require__.tb =  (() => {
-/******/ 			const table = new Uint8Array(128);
+/******/ 			var table = new Uint8Array(128);
 /******/ 			for (var i = 0; i < 64; i++) table[i < 26 ? i + 65 : i < 52 ? i + 71 : i < 62 ? i - 4 : i * 4 - 205] = i;
 /******/ 			return (base64) => {
-/******/ 				const n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0);
+/******/ 				var n = base64.length, bytes = new Uint8Array((n - (base64[n - 1] == '=') - (base64[n - 2] == '=')) * 3 / 4 | 0);
 /******/ 				for (var i = 0, j = 0; i < n;) {
-/******/ 					const c0 = table[base64.charCodeAt(i++)], c1 = table[base64.charCodeAt(i++)];
-/******/ 					const c2 = table[base64.charCodeAt(i++)], c3 = table[base64.charCodeAt(i++)];
+/******/ 					var c0 = table[base64.charCodeAt(i++)], c1 = table[base64.charCodeAt(i++)];
+/******/ 					var c2 = table[base64.charCodeAt(i++)], c3 = table[base64.charCodeAt(i++)];
 /******/ 					bytes[j++] = (c0 << 2) | (c1 >> 4);
 /******/ 					bytes[j++] = (c1 << 4) | (c2 >> 2);
 /******/ 					bytes[j++] = (c2 << 6) | c3;
@@ -380,12 +378,12 @@ toRawContainerUsingString.appendChild(markdownToRawText);
 ## Unoptimized
 
 ```
-asset output.js 16.3 KiB [emitted] (name: main)
+asset output.js 16.2 KiB [emitted] (name: main)
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 11.1 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) 1.21 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.1 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) 1.19 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 8.7 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) [dependent] 8 modules
-  runtime modules 1.21 KiB 2 modules
+  runtime modules 1.19 KiB 2 modules
   ./example.js 2.39 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -398,10 +396,10 @@ webpack X.X.X compiled successfully
 ```
 asset 89a353e9c515885abd8e.png 14.6 KiB [emitted] [immutable] [from: file.png] (auxiliary name: main)
 asset output.js 10.8 KiB [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 11.1 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) 1.03 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 11.1 KiB (javascript) 14.6 KiB (asset) 210 bytes (asset-url) 1.01 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 14.6 KiB (asset) 210 bytes (asset-url) [dependent] 5 modules
-  runtime modules 1.03 KiB 1 module
+  runtime modules 1.01 KiB 1 module
   ./example.js + 3 modules 11.1 KiB [built] [code generated]
     [no exports]
     [no exports used]

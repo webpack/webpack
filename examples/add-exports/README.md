@@ -159,17 +159,17 @@ function add(first, second) {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -186,7 +186,7 @@ function add(first, second) {
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -208,9 +208,7 @@ function add(first, second) {
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /************************************************************************/
 ```
@@ -248,10 +246,10 @@ console.log(new (_legacy_global__WEBPACK_IMPORTED_MODULE_0___default())().versio
 ## Unoptimized
 
 ```
-asset output.js 4.81 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 856 bytes (runtime) [entry] [rendered]
+asset output.js 4.78 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 417 bytes (javascript) 850 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 856 bytes 4 modules
+  runtime modules 850 bytes 4 modules
   dependent modules 297 bytes [dependent] 2 modules
   ./example.js 120 bytes [built] [code generated]
     [no exports]
@@ -263,10 +261,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 514 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) output.js (main) 417 bytes (javascript) 672 bytes (runtime) [entry] [rendered]
+asset output.js 502 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) output.js (main) 417 bytes (javascript) 670 bytes (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 672 bytes 3 modules
+  runtime modules 670 bytes 3 modules
   dependent modules 141 bytes [dependent] 1 module
   ./example.js + 1 modules 276 bytes [built] [code generated]
     [no exports]

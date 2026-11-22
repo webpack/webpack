@@ -71,17 +71,17 @@ module.exports = Math.random();
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			id: moduleId,
 /******/ 			loaded: false,
 /******/ 			exports: {}
@@ -134,7 +134,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 317 bytes [emitted] [minimized] (name: main)
+asset output.js 307 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 313 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 31 bytes [dependent] 1 module

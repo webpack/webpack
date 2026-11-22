@@ -79,17 +79,17 @@ console.log(lodash, isomorphicFetch);
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -108,7 +108,7 @@ console.log(lodash, isomorphicFetch);
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
-/******/ 		const deferred = [];
+/******/ 		var deferred = [];
 /******/ 		__webpack_require__.O = (result, chunkIds, fn) => {
 /******/ 			if(chunkIds) {
 /******/ 				deferred.push([chunkIds, fn]);
@@ -116,7 +116,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 			}
 /******/ 			for (var i = 0; i < deferred.length; i++) {
 /******/ 				let [chunkIds, fn] = deferred[i];
-/******/ 				let fulfilled = true;
+/******/ 				var fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
 /******/ 					if (__webpack_require__.O.j(chunkIds[j])) {
 /******/ 						chunkIds.splice(j--, 1);
@@ -126,7 +126,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 				}
 /******/ 				if(fulfilled) {
 /******/ 					deferred.splice(i--, 1)
-/******/ 					const r = fn();
+/******/ 					var r = fn();
 /******/ 					if (r !== undefined) result = r;
 /******/ 				}
 /******/ 			}
@@ -137,7 +137,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -159,7 +159,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		const promises = [];
+/******/ 		var promises = [];
 /******/ 		__webpack_require__.f.j(chunkId, promises);
 /******/ 		return Promise.all(promises);
 /******/ 	};
@@ -173,16 +173,16 @@ console.log(lodash, isomorphicFetch);
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		const inProgress = {};
+/******/ 		var inProgress = {};
 /******/ 		// data-webpack is not used as build has no uniqueName
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
-/******/ 			let script, needAttach;
+/******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
-/******/ 				const scripts = document.getElementsByTagName("script");
+/******/ 				var scripts = document.getElementsByTagName("script");
 /******/ 				for(var i = 0; i < scripts.length; i++) {
-/******/ 					const s = scripts[i];
+/******/ 					var s = scripts[i];
 /******/ 					if(s.getAttribute("src") == url) { script = s; break; }
 /******/ 				}
 /******/ 			}
@@ -199,17 +199,17 @@ console.log(lodash, isomorphicFetch);
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
-/******/ 			const onScriptComplete = (prev, event) => {
+/******/ 			var onScriptComplete = (prev, event) => {
 /******/ 				// avoid mem leaks in IE.
 /******/ 				script.onerror = script.onload = null;
 /******/ 				clearTimeout(timeout);
-/******/ 				const doneFns = inProgress[url];
+/******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode?.removeChild(script);
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
@@ -218,9 +218,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	__webpack_require__.p = "dist/";
@@ -232,13 +230,13 @@ console.log(lodash, isomorphicFetch);
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"runtime": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
-/******/ 				let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
@@ -247,18 +245,18 @@ console.log(lodash, isomorphicFetch);
 /******/ 					} else {
 /******/ 						if("runtime" != chunkId) {
 /******/ 							// setup Promise in chunk cache
-/******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							const error = new Error();
-/******/ 							const loadingEnded = (event) => {
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
-/******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event?.target?.src;
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -285,11 +283,11 @@ console.log(lodash, isomorphicFetch);
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -299,8 +297,7 @@ console.log(lodash, isomorphicFetch);
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -309,9 +306,10 @@ console.log(lodash, isomorphicFetch);
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunk"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -525,7 +523,7 @@ module.exports = 'prop-types';
 ## Unoptimized
 
 ```
-asset runtime.js 10.1 KiB [emitted] (name: runtime)
+asset runtime.js 10 KiB [emitted] (name: runtime)
 asset other-vendors.js 2.14 KiB [emitted] (name: other-vendors)
 asset page1.js 1.9 KiB [emitted] (name: page1)
 asset app.js 1.45 KiB [emitted] (name: app)
@@ -533,8 +531,8 @@ asset react-vendors.js 1.34 KiB [emitted] (name: react-vendors)
 asset lazy_js.js 1.14 KiB [emitted]
 Entrypoint app 1.45 KiB = app.js
 Entrypoint page1 1.9 KiB = page1.js
-Entrypoint react-vendors 11.5 KiB = runtime.js 10.1 KiB react-vendors.js 1.34 KiB
-Entrypoint other-vendors 12.3 KiB = runtime.js 10.1 KiB other-vendors.js 2.14 KiB
+Entrypoint react-vendors 11.4 KiB = runtime.js 10 KiB react-vendors.js 1.34 KiB
+Entrypoint other-vendors 12.2 KiB = runtime.js 10 KiB other-vendors.js 2.14 KiB
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -585,19 +583,19 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
       harmony import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.15 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.09 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.15 KiB 10 modules
+  runtime modules 6.09 KiB 10 modules
 webpack X.X.X compiled successfully
 ```
 
 ## Production mode
 
 ```
-asset runtime.js 2.22 KiB [emitted] [minimized] (name: runtime)
+asset runtime.js 2.1 KiB [emitted] [minimized] (name: runtime)
 asset page1.js 303 bytes [emitted] [minimized] (name: page1)
 asset other-vendors.js 264 bytes [emitted] [minimized] (name: other-vendors)
 asset react-vendors.js 229 bytes [emitted] [minimized] (name: react-vendors)
@@ -605,8 +603,8 @@ asset app.js 225 bytes [emitted] [minimized] (name: app)
 asset lazy_js.js 189 bytes [emitted] [minimized]
 Entrypoint app 225 bytes = app.js
 Entrypoint page1 303 bytes = page1.js
-Entrypoint react-vendors 2.44 KiB = runtime.js 2.22 KiB react-vendors.js 229 bytes
-Entrypoint other-vendors 2.47 KiB = runtime.js 2.22 KiB other-vendors.js 264 bytes
+Entrypoint react-vendors 2.33 KiB = runtime.js 2.1 KiB react-vendors.js 229 bytes
+Entrypoint other-vendors 2.36 KiB = runtime.js 2.1 KiB other-vendors.js 264 bytes
 chunk (runtime: runtime) app.js (app) 116 bytes <{other-vendors}> <{runtime}> >{page1}< [initial] [rendered]
   > ./app.js app
   ./app.js 116 bytes [built] [code generated]
@@ -656,11 +654,11 @@ chunk (runtime: runtime) react-vendors.js (react-vendors) 87 bytes ={runtime}= >
       harmony import specifier react ./page1.js 5:29-34
     cjs self exports reference ./node_modules/react.js 1:0-14
     entry react react-vendors
-chunk (runtime: runtime) runtime.js (runtime) 6.15 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
+chunk (runtime: runtime) runtime.js (runtime) 6.09 KiB ={other-vendors}= ={react-vendors}= >{app}< >{page1}< [entry] [rendered]
   > ./other-vendors other-vendors
   > prop-types react-vendors
   > react react-vendors
   > react-dom react-vendors
-  runtime modules 6.15 KiB 10 modules
+  runtime modules 6.09 KiB 10 modules
 webpack X.X.X compiled successfully
 ```

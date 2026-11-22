@@ -117,17 +117,17 @@ module.exports = function() {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -173,7 +173,7 @@ console.log(getTemplate("b"));
 ## Unoptimized
 
 ```
-asset output.js 3.75 KiB [emitted] (name: main)
+asset output.js 3.74 KiB [emitted] (name: main)
 chunk (runtime: main) output.js (main) 603 bytes (javascript) 89 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules
@@ -187,7 +187,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 830 bytes [emitted] [minimized] (name: main)
+asset output.js 820 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) output.js (main) 603 bytes (javascript) 89 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 457 bytes [dependent] 4 modules

@@ -482,17 +482,17 @@ module.exports = __webpack_require__.p + "logo.svg";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -511,23 +511,23 @@ module.exports = __webpack_require__.p + "logo.svg";
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		const webpackQueues = Symbol("webpack queues");
-/******/ 		const webpackExports = Symbol("webpack exports");
-/******/ 		const webpackError = Symbol("webpack error");
+/******/ 		var webpackQueues = Symbol("webpack queues");
+/******/ 		var webpackExports = Symbol("webpack exports");
+/******/ 		var webpackError = Symbol("webpack error");
 /******/ 		
-/******/ 		const resolveQueue = (queue) => {
+/******/ 		var resolveQueue = (queue) => {
 /******/ 			if(queue?.d < 1) {
 /******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
 /******/ 			}
 /******/ 		}
-/******/ 		const wrapDeps = (deps) => (deps.map((dep) => {
+/******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
 /******/ 			if(dep && typeof dep === "object") {
 /******/ 		
 /******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
-/******/ 					const queue = [];
+/******/ 					var queue = [];
 /******/ 					queue.d = 0;
 /******/ 					dep.then((r) => {
 /******/ 						obj[webpackExports] = r;
@@ -536,7 +536,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 						obj[webpackError] = e;
 /******/ 						resolveQueue(queue);
 /******/ 					});
-/******/ 					const obj = {};
+/******/ 					var obj = {};
 /******/ 		
 /******/ 					obj[webpackQueues] = (fn) => (fn(queue));
 /******/ 					return obj;
@@ -545,37 +545,37 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 			return { [webpackQueues]: x => {}, [webpackExports]: dep };
 /******/ 		}));
 /******/ 		__webpack_require__.a = (module, body, hasAwait) => {
-/******/ 			let queue;
+/******/ 			var queue;
 /******/ 			hasAwait && ((queue = []).d = -1);
-/******/ 			const depQueues = new Set();
-/******/ 			const exports = module.exports;
-/******/ 			let currentDeps;
-/******/ 			let outerResolve;
-/******/ 			let reject;
-/******/ 			const promise = new Promise((resolve, rej) => {
+/******/ 			var depQueues = new Set();
+/******/ 			var exports = module.exports;
+/******/ 			var currentDeps;
+/******/ 			var outerResolve;
+/******/ 			var reject;
+/******/ 			var promise = new Promise((resolve, rej) => {
 /******/ 				reject = rej;
 /******/ 				outerResolve = resolve;
 /******/ 			});
 /******/ 			promise[webpackExports] = exports;
 /******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
 /******/ 			module.exports = promise;
-/******/ 			const handle = (deps) => {
+/******/ 			var handle = (deps) => {
 /******/ 				currentDeps = wrapDeps(deps);
-/******/ 				let fn;
-/******/ 				const getResult = () => (currentDeps.map((d) => {
+/******/ 				var fn;
+/******/ 				var getResult = () => (currentDeps.map((d) => {
 /******/ 		
 /******/ 					if(d[webpackError]) throw d[webpackError];
 /******/ 					return d[webpackExports];
 /******/ 				}))
-/******/ 				const promise = new Promise((resolve) => {
+/******/ 				var promise = new Promise((resolve) => {
 /******/ 					fn = () => (resolve(getResult));
 /******/ 					fn.r = 0;
-/******/ 					const fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
+/******/ 					var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
 /******/ 					currentDeps.forEach((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
 /******/ 			}
-/******/ 			const done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 			var done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
 /******/ 		
 /******/ 			body(handle, done);
 /******/ 			queue?.d < 0 && (queue.d = 0);
@@ -597,7 +597,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 	// This file contains only the entry chunk.
 /******/ 	// The chunk loading function for additional chunks
 /******/ 	__webpack_require__.e = (chunkId) => {
-/******/ 		const promises = [];
+/******/ 		var promises = [];
 /******/ 		__webpack_require__.f.require(chunkId, promises);
 /******/ 		return Promise.all(promises);
 /******/ 	};
@@ -611,9 +611,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/publicPath */
 /******/ 	__webpack_require__.p = "dist/";
@@ -624,14 +622,14 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 		
 /******/ 		// object to store loaded chunks
 /******/ 		// "1" means "loaded", otherwise not loaded yet
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			0: 1
 /******/ 		};
 /******/ 		
 /******/ 		// no on chunks loaded
 /******/ 		
-/******/ 		const installChunk = (chunk) => {
-/******/ 			const moreModules = chunk.modules, chunkIds = chunk.ids, runtime = chunk.runtime;
+/******/ 		var installChunk = (chunk) => {
+/******/ 			var moreModules = chunk.modules, chunkIds = chunk.ids, runtime = chunk.runtime;
 /******/ 			for(var moduleId in moreModules) {
 /******/ 				if(__webpack_require__.o(moreModules, moduleId)) {
 /******/ 					__webpack_require__.m[moduleId] = moreModules[moduleId];
@@ -648,7 +646,7 @@ module.exports = __webpack_require__.p + "logo.svg";
 /******/ 			// "1" is the signal for "already loaded"
 /******/ 			if(!installedChunks[chunkId]) {
 /******/ 				if(true) { // all chunks have JS
-/******/ 					const installedChunk = require("./" + __webpack_require__.u(chunkId));
+/******/ 					var installedChunk = require("./" + __webpack_require__.u(chunkId));
 /******/ 					if (!installedChunks[chunkId]) {
 /******/ 						installChunk(installedChunk);
 /******/ 					}
@@ -688,10 +686,10 @@ asset output.js 19.6 KiB [emitted] (name: main)
 asset 1.output.js 787 bytes [emitted]
 asset 2.output.js 787 bytes [emitted]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 3.88 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.98 KiB (javascript) 78 bytes (asset) 3.84 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 617 bytes (javascript) 78 bytes (asset) [dependent] 12 modules
-  runtime modules 3.88 KiB 8 modules
+  runtime modules 3.84 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -714,7 +712,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.55 KiB [emitted] [minimized] (name: main)
+asset output.js 2.48 KiB [emitted] [minimized] (name: main)
 asset 263.output.js 93 bytes [emitted] [minimized]
 asset 722.output.js 93 bytes [emitted] [minimized]
 asset logo.svg 78 bytes [emitted] [from: virtual:logo.svg] (auxiliary name: main)
@@ -728,10 +726,10 @@ chunk (runtime: main) 722.output.js 20 bytes [rendered]
   ./routes/b.js 20 bytes [built] [code generated]
     [exports: default]
     import() ./routes/b.js virtual:routes 2:9-32
-chunk (runtime: main) output.js (main) 1.85 KiB (javascript) 78 bytes (asset) 4.24 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.85 KiB (javascript) 78 bytes (asset) 4.19 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 482 bytes (javascript) 78 bytes (asset) [dependent] 8 modules
-  runtime modules 4.24 KiB 8 modules
+  runtime modules 4.19 KiB 8 modules
   ./example.js 1.38 KiB [built] [code generated]
     [no exports]
     [no exports used]

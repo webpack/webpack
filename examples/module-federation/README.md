@@ -432,17 +432,17 @@ module.exports = new Promise((resolve, reject) => {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -465,7 +465,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -474,8 +474,8 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
-/******/ 		const getProto = Object.getPrototypeOf;
-/******/ 		let leafPrototypes;
+/******/ 		var getProto = Object.getPrototypeOf;
+/******/ 		var leafPrototypes;
 /******/ 		// create a fake namespace object
 /******/ 		// mode & 1: value is a module id, require it
 /******/ 		// mode & 2: merge all properties of value into the ns
@@ -489,9 +489,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				if((mode & 4) && value.__esModule) return value;
 /******/ 				if((mode & 16) && typeof value.then === 'function') return value;
 /******/ 			}
-/******/ 			const ns = Object.create(null);
+/******/ 			var ns = Object.create(null);
 /******/ 			__webpack_require__.r(ns);
-/******/ 			const def = Object.create(null);
+/******/ 			var def = Object.create(null);
 /******/ 			leafPrototypes = leafPrototypes || [null, getProto({}), getProto([]), getProto(getProto)];
 /******/ 			for(var current = mode & 2 && value; (typeof current == 'object' || typeof current == 'function') && !~leafPrototypes.indexOf(current); current = getProto(current)) {
 /******/ 				Object.getOwnPropertyNames(current).forEach((key) => (def[key] = () => (value[key])));
@@ -542,16 +542,16 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		const inProgress = {};
-/******/ 		const dataWebpackPrefix = "module-federation-aaa:";
+/******/ 		var inProgress = {};
+/******/ 		var dataWebpackPrefix = "module-federation-aaa:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
-/******/ 			let script, needAttach;
+/******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
-/******/ 				const scripts = document.getElementsByTagName("script");
+/******/ 				var scripts = document.getElementsByTagName("script");
 /******/ 				for(var i = 0; i < scripts.length; i++) {
-/******/ 					const s = scripts[i];
+/******/ 					var s = scripts[i];
 /******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
 /******/ 				}
 /******/ 			}
@@ -568,17 +568,17 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
-/******/ 			const onScriptComplete = (prev, event) => {
+/******/ 			var onScriptComplete = (prev, event) => {
 /******/ 				// avoid mem leaks in IE.
 /******/ 				script.onerror = script.onload = null;
 /******/ 				clearTimeout(timeout);
-/******/ 				const doneFns = inProgress[url];
+/******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode?.removeChild(script);
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
@@ -587,13 +587,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/remotes loading */
 /******/ 	(() => {
-/******/ 		const chunkMapping = {
+/******/ 		var chunkMapping = {
 /******/ 			"src_bootstrap_js": [
 /******/ 				8,
 /******/ 				10
@@ -602,7 +600,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				26
 /******/ 			]
 /******/ 		};
-/******/ 		const idToExternalAndNameMapping = {
+/******/ 		var idToExternalAndNameMapping = {
 /******/ 			"8": [
 /******/ 				"default",
 /******/ 				"./Component",
@@ -622,12 +620,12 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		__webpack_require__.f.remotes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
-/******/ 					const getScope = __webpack_require__.R || [];
-/******/ 					const data = idToExternalAndNameMapping[id];
+/******/ 					var getScope = __webpack_require__.R || [];
+/******/ 					var data = idToExternalAndNameMapping[id];
 /******/ 					if(getScope.indexOf(data) >= 0) return;
 /******/ 					getScope.push(data);
 /******/ 					if(data.p) return promises.push(data.p);
-/******/ 					const onError = (error) => {
+/******/ 					var onError = (error) => {
 /******/ 						if(!error) error = new Error("Container missing");
 /******/ 						if(typeof error.message === "string")
 /******/ 							error.message += '\nwhile loading "' + data[1] + '" from ' + data[2];
@@ -636,11 +634,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 						}
 /******/ 						data.p = 0;
 /******/ 					};
-/******/ 					const handleFunction = (fn, arg1, arg2, d, next, first) => {
+/******/ 					var handleFunction = (fn, arg1, arg2, d, next, first) => {
 /******/ 						try {
-/******/ 							const promise = fn(arg1, arg2);
+/******/ 							var promise = fn(arg1, arg2);
 /******/ 							if(promise?.then) {
-/******/ 								const p = promise.then((result) => (next(result, d)), onError);
+/******/ 								var p = promise.then((result) => (next(result, d)), onError);
 /******/ 								if(first) promises.push(data.p = p); else return p;
 /******/ 							} else {
 /******/ 								return next(promise, d, first);
@@ -649,9 +647,9 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 							onError(error);
 /******/ 						}
 /******/ 					}
-/******/ 					const onExternal = (external, _, first) => (external ? handleFunction(__webpack_require__.I, data[0], 0, external, onInitialized, first) : onError());
-/******/ 					const onInitialized = (_, external, first) => (handleFunction(external.get, data[1], getScope, 0, onFactory, first));
-/******/ 					const onFactory = (factory) => {
+/******/ 					var onExternal = (external, _, first) => (external ? handleFunction(__webpack_require__.I, data[0], 0, external, onInitialized, first) : onError());
+/******/ 					var onInitialized = (_, external, first) => (handleFunction(external.get, data[1], getScope, 0, onFactory, first));
+/******/ 					var onFactory = (factory) => {
 /******/ 						data.p = 1;
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							module.exports = factory();
@@ -666,12 +664,12 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 	/* webpack/runtime/sharing */
 /******/ 	(() => {
 /******/ 		__webpack_require__.S = {};
-/******/ 		const initPromises = {};
-/******/ 		const initTokens = {};
+/******/ 		var initPromises = {};
+/******/ 		var initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
 /******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
+/******/ 			var initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -679,28 +677,28 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			// creates a new share scope if needed
 /******/ 			if(!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
 /******/ 			// runs all init snippets from all modules reachable
-/******/ 			const scope = __webpack_require__.S[name];
-/******/ 			const warn = (msg) => {
+/******/ 			var scope = __webpack_require__.S[name];
+/******/ 			var warn = (msg) => {
 /******/ 				if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 			};
-/******/ 			const uniqueName = "module-federation-aaa";
-/******/ 			const register = (name, version, factory, eager) => {
-/******/ 				const versions = scope[name] = scope[name] || {};
-/******/ 				const activeVersion = versions[version];
+/******/ 			var uniqueName = "module-federation-aaa";
+/******/ 			var register = (name, version, factory, eager) => {
+/******/ 				var versions = scope[name] = scope[name] || {};
+/******/ 				var activeVersion = versions[version];
 /******/ 				if(!activeVersion || (!activeVersion.loaded && (!eager != !activeVersion.eager ? eager : uniqueName > activeVersion.from))) versions[version] = { get: factory, from: uniqueName, eager: !!eager };
 /******/ 			};
-/******/ 			const initExternal = (id) => {
-/******/ 				const handleError = (err) => (warn("Initialization of sharing external failed: " + err));
+/******/ 			var initExternal = (id) => {
+/******/ 				var handleError = (err) => (warn("Initialization of sharing external failed: " + err));
 /******/ 				try {
-/******/ 					const module = __webpack_require__(id);
+/******/ 					var module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
+/******/ 					var initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
-/******/ 					const initResult = initFn(module);
+/******/ 					var initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
 /******/ 				} catch(err) { handleError(err); }
 /******/ 			}
-/******/ 			const promises = [];
+/******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
 /******/ 					register("react", "19.3.1", () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/react/index.js */ 24))))));
@@ -735,14 +733,14 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			if(0 in range){var e=parseVersion(version),r=range[0],n=r<0;n&&(r=-r-1);for(var i=0,a=1,f=!0;;a++,i++){var s,g,t=a<range.length?(typeof range[a])[0]:"";if(i>=e.length||"o"==(g=(typeof(s=e[i]))[0]))return!f||("u"==t?a>r&&!n:""==t!=n);if("u"==g){if(!f||"u"!=t)return!1}else if(f)if(t==g)if(a<=r){if(s!=range[a])return!1}else{if(n?s>range[a]:s<range[a])return!1;s!=range[a]&&(f=!1)}else if("s"!=t&&"n"!=t){if(n||a<=r)return!1;f=!1,a--}else{if(a<=r||g<t!=n)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,a--)}}var u=[],o=u.pop.bind(u);for(i=1;i<range.length;i++){var l=range[i];u.push(1==l?o()|o():2==l?o()&o():l?satisfy(l,version):!o())}return!!o();
 /******/ 		}
-/******/ 		const exists = (scope, key) => {
+/******/ 		var exists = (scope, key) => {
 /******/ 			return scope && __webpack_require__.o(scope, key);
 /******/ 		}
-/******/ 		const get = (entry) => {
+/******/ 		var get = (entry) => {
 /******/ 			entry.loaded = 1;
 /******/ 			return entry.get()
 /******/ 		};
-/******/ 		const eagerOnly = (versions) => {
+/******/ 		var eagerOnly = (versions) => {
 /******/ 			return Object.keys(versions).reduce((filtered, version) => {
 /******/ 					if (versions[version].eager) {
 /******/ 						filtered[version] = versions[version];
@@ -750,115 +748,115 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 					return filtered;
 /******/ 			}, {});
 /******/ 		};
-/******/ 		const findLatestVersion = (scope, key, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findLatestVersion = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key];
 /******/ 		};
-/******/ 		const findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
 /******/ 				if (!satisfy(requiredVersion, b)) return a;
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		const findSingletonVersionKey = (scope, key, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findSingletonVersionKey = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			return Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
 /******/ 		};
-/******/ 		const getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
+/******/ 		var getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
 /******/ 			return "Unsatisfied version " + version + " from " + (version && scope[key][version].from) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
-/******/ 		const getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
-/******/ 			const versions = scope[key];
+/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
+/******/ 			var versions = scope[key];
 /******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ")" + (eager ? " for eager consumption" : "") + " of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
 /******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
-/******/ 		const fail = (msg) => {
+/******/ 		var fail = (msg) => {
 /******/ 			throw new Error(msg);
 /******/ 		}
-/******/ 		const failAsNotExist = (scopeName, key) => {
+/******/ 		var failAsNotExist = (scopeName, key) => {
 /******/ 			return fail("Shared module " + key + " doesn't exist in shared scope " + scopeName);
 /******/ 		}
-/******/ 		const warn = /*#__PURE__*/ (msg) => {
+/******/ 		var warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
-/******/ 			const promise = __webpack_require__.I(scopeName);
+/******/ 		var init = (fn) => ((scopeName, key, eager, c, d) => {
+/******/ 			var promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
 /******/ 			}
 /******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
 /******/ 		});
 /******/ 		
-/******/ 		const useFallback = (scopeName, key, fallback) => {
+/******/ 		var useFallback = (scopeName, key, fallback) => {
 /******/ 			return fallback ? fallback() : failAsNotExist(scopeName, key);
 /******/ 		}
-/******/ 		const load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
 /******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		const loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
 /******/ 			if (satisfyingVersion) return get(satisfyingVersion);
 /******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager))
 /******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		const loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
 /******/ 			if (satisfyingVersion) return get(satisfyingVersion);
 /******/ 			if (fallback) return fallback();
 /******/ 			fail(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager));
 /******/ 		});
-/******/ 		const loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			if (!satisfy(requiredVersion, version)) {
 /******/ 				warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			}
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			if (!satisfy(requiredVersion, version)) {
 /******/ 				fail(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			}
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const installedModules = {};
-/******/ 		const moduleToHandlerMapping = {
+/******/ 		var installedModules = {};
+/******/ 		var moduleToHandlerMapping = {
 /******/ 			5: () => (loadSingletonVersion("default", "react", false, [1,19,3,1], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24))))))),
 /******/ 			6: () => (loadSingletonVersion("default", "react", false, [1,19,2,7], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 24)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
-/******/ 		const chunkMapping = {
+/******/ 		var chunkMapping = {
 /******/ 			"src_bootstrap_js": [
 /******/ 				5,
 /******/ 				6
 /******/ 			]
 /******/ 		};
-/******/ 		const startedInstallModules = {};
+/******/ 		var startedInstallModules = {};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
 /******/ 					if(__webpack_require__.o(installedModules, id)) return promises.push(installedModules[id]);
 /******/ 					if(!startedInstallModules[id]) {
-/******/ 					const onFactory = (factory) => {
+/******/ 					var onFactory = (factory) => {
 /******/ 						installedModules[id] = 0;
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							delete __webpack_require__.c[id];
@@ -866,7 +864,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 						}
 /******/ 					};
 /******/ 					startedInstallModules[id] = true;
-/******/ 					const onError = (error) => {
+/******/ 					var onError = (error) => {
 /******/ 						delete installedModules[id];
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							delete __webpack_require__.c[id];
@@ -874,7 +872,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 						}
 /******/ 					};
 /******/ 					try {
-/******/ 						const promise = moduleToHandlerMapping[id]();
+/******/ 						var promise = moduleToHandlerMapping[id]();
 /******/ 						if(promise.then) {
 /******/ 							promises.push(installedModules[id] = promise.then(onFactory)['catch'](onError));
 /******/ 						} else onFactory(promise);
@@ -892,13 +890,13 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"app": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
-/******/ 				let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
@@ -907,18 +905,18 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 					} else {
 /******/ 						if("webpack_container_remote_mfe-c_Component2" != chunkId) {
 /******/ 							// setup Promise in chunk cache
-/******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							const error = new Error();
-/******/ 							const loadingEnded = (event) => {
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
-/******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event?.target?.src;
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -945,11 +943,11 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		// no on chunks loaded
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -959,8 +957,7 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -969,9 +966,10 @@ module.exports = new Promise((resolve, reject) => {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkmodule_federation_aaa"]) ? self["webpackChunkmodule_federation_aaa"] : (self["webpackChunkmodule_federation_aaa"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunkmodule_federation_aaa"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunkmodule_federation_aaa"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -1049,17 +1047,17 @@ __webpack_require__.d(exports, {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -1109,16 +1107,16 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		const inProgress = {};
-/******/ 		const dataWebpackPrefix = "module-federation-bbb:";
+/******/ 		var inProgress = {};
+/******/ 		var dataWebpackPrefix = "module-federation-bbb:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
-/******/ 			let script, needAttach;
+/******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
-/******/ 				const scripts = document.getElementsByTagName("script");
+/******/ 				var scripts = document.getElementsByTagName("script");
 /******/ 				for(var i = 0; i < scripts.length; i++) {
-/******/ 					const s = scripts[i];
+/******/ 					var s = scripts[i];
 /******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
 /******/ 				}
 /******/ 			}
@@ -1135,17 +1133,17 @@ __webpack_require__.d(exports, {
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
-/******/ 			const onScriptComplete = (prev, event) => {
+/******/ 			var onScriptComplete = (prev, event) => {
 /******/ 				// avoid mem leaks in IE.
 /******/ 				script.onerror = script.onload = null;
 /******/ 				clearTimeout(timeout);
-/******/ 				const doneFns = inProgress[url];
+/******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode?.removeChild(script);
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
@@ -1154,19 +1152,17 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
 /******/ 	(() => {
 /******/ 		__webpack_require__.S = {};
-/******/ 		const initPromises = {};
-/******/ 		const initTokens = {};
+/******/ 		var initPromises = {};
+/******/ 		var initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
 /******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
+/******/ 			var initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -1174,28 +1170,28 @@ __webpack_require__.d(exports, {
 /******/ 			// creates a new share scope if needed
 /******/ 			if(!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
 /******/ 			// runs all init snippets from all modules reachable
-/******/ 			const scope = __webpack_require__.S[name];
-/******/ 			const warn = (msg) => {
+/******/ 			var scope = __webpack_require__.S[name];
+/******/ 			var warn = (msg) => {
 /******/ 				if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 			};
-/******/ 			const uniqueName = "module-federation-bbb";
-/******/ 			const register = (name, version, factory, eager) => {
-/******/ 				const versions = scope[name] = scope[name] || {};
-/******/ 				const activeVersion = versions[version];
+/******/ 			var uniqueName = "module-federation-bbb";
+/******/ 			var register = (name, version, factory, eager) => {
+/******/ 				var versions = scope[name] = scope[name] || {};
+/******/ 				var activeVersion = versions[version];
 /******/ 				if(!activeVersion || (!activeVersion.loaded && (!eager != !activeVersion.eager ? eager : uniqueName > activeVersion.from))) versions[version] = { get: factory, from: uniqueName, eager: !!eager };
 /******/ 			};
-/******/ 			const initExternal = (id) => {
-/******/ 				const handleError = (err) => (warn("Initialization of sharing external failed: " + err));
+/******/ 			var initExternal = (id) => {
+/******/ 				var handleError = (err) => (warn("Initialization of sharing external failed: " + err));
 /******/ 				try {
-/******/ 					const module = __webpack_require__(id);
+/******/ 					var module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
+/******/ 					var initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
-/******/ 					const initResult = initFn(module);
+/******/ 					var initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
 /******/ 				} catch(err) { handleError(err); }
 /******/ 			}
-/******/ 			const promises = [];
+/******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
 /******/ 					register("date-fns", "4.4.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 8))))));
@@ -1229,14 +1225,14 @@ __webpack_require__.d(exports, {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			if(0 in range){var e=parseVersion(version),r=range[0],n=r<0;n&&(r=-r-1);for(var i=0,a=1,f=!0;;a++,i++){var s,g,t=a<range.length?(typeof range[a])[0]:"";if(i>=e.length||"o"==(g=(typeof(s=e[i]))[0]))return!f||("u"==t?a>r&&!n:""==t!=n);if("u"==g){if(!f||"u"!=t)return!1}else if(f)if(t==g)if(a<=r){if(s!=range[a])return!1}else{if(n?s>range[a]:s<range[a])return!1;s!=range[a]&&(f=!1)}else if("s"!=t&&"n"!=t){if(n||a<=r)return!1;f=!1,a--}else{if(a<=r||g<t!=n)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,a--)}}var u=[],o=u.pop.bind(u);for(i=1;i<range.length;i++){var l=range[i];u.push(1==l?o()|o():2==l?o()&o():l?satisfy(l,version):!o())}return!!o();
 /******/ 		}
-/******/ 		const exists = (scope, key) => {
+/******/ 		var exists = (scope, key) => {
 /******/ 			return scope && __webpack_require__.o(scope, key);
 /******/ 		}
-/******/ 		const get = (entry) => {
+/******/ 		var get = (entry) => {
 /******/ 			entry.loaded = 1;
 /******/ 			return entry.get()
 /******/ 		};
-/******/ 		const eagerOnly = (versions) => {
+/******/ 		var eagerOnly = (versions) => {
 /******/ 			return Object.keys(versions).reduce((filtered, version) => {
 /******/ 					if (versions[version].eager) {
 /******/ 						filtered[version] = versions[version];
@@ -1244,115 +1240,115 @@ __webpack_require__.d(exports, {
 /******/ 					return filtered;
 /******/ 			}, {});
 /******/ 		};
-/******/ 		const findLatestVersion = (scope, key, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findLatestVersion = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key];
 /******/ 		};
-/******/ 		const findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
 /******/ 				if (!satisfy(requiredVersion, b)) return a;
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		const findSingletonVersionKey = (scope, key, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findSingletonVersionKey = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			return Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
 /******/ 		};
-/******/ 		const getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
+/******/ 		var getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
 /******/ 			return "Unsatisfied version " + version + " from " + (version && scope[key][version].from) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
-/******/ 		const getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
-/******/ 			const versions = scope[key];
+/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
+/******/ 			var versions = scope[key];
 /******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ")" + (eager ? " for eager consumption" : "") + " of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
 /******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
-/******/ 		const fail = (msg) => {
+/******/ 		var fail = (msg) => {
 /******/ 			throw new Error(msg);
 /******/ 		}
-/******/ 		const failAsNotExist = (scopeName, key) => {
+/******/ 		var failAsNotExist = (scopeName, key) => {
 /******/ 			return fail("Shared module " + key + " doesn't exist in shared scope " + scopeName);
 /******/ 		}
-/******/ 		const warn = /*#__PURE__*/ (msg) => {
+/******/ 		var warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
-/******/ 			const promise = __webpack_require__.I(scopeName);
+/******/ 		var init = (fn) => ((scopeName, key, eager, c, d) => {
+/******/ 			var promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
 /******/ 			}
 /******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
 /******/ 		});
 /******/ 		
-/******/ 		const useFallback = (scopeName, key, fallback) => {
+/******/ 		var useFallback = (scopeName, key, fallback) => {
 /******/ 			return fallback ? fallback() : failAsNotExist(scopeName, key);
 /******/ 		}
-/******/ 		const load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
 /******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		const loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
 /******/ 			if (satisfyingVersion) return get(satisfyingVersion);
 /******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager))
 /******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		const loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
 /******/ 			if (satisfyingVersion) return get(satisfyingVersion);
 /******/ 			if (fallback) return fallback();
 /******/ 			fail(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager));
 /******/ 		});
-/******/ 		const loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			if (!satisfy(requiredVersion, version)) {
 /******/ 				warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			}
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			if (!satisfy(requiredVersion, version)) {
 /******/ 				fail(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			}
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const installedModules = {};
-/******/ 		const moduleToHandlerMapping = {
+/******/ 		var installedModules = {};
+/******/ 		var moduleToHandlerMapping = {
 /******/ 			4: () => (loadSingletonVersion("default", "react", false, [1,19,2,7], () => (__webpack_require__.e("vendors-node_modules_react_index_js").then(() => (() => (__webpack_require__(/*! react */ 311))))))),
 /******/ 			5: () => (loadStrictVersion("default", "date-fns", false, [1,4,4,0], () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! date-fns */ 8)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
-/******/ 		const chunkMapping = {
+/******/ 		var chunkMapping = {
 /******/ 			"src-b_Component_js": [
 /******/ 				4,
 /******/ 				5
 /******/ 			]
 /******/ 		};
-/******/ 		const startedInstallModules = {};
+/******/ 		var startedInstallModules = {};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
 /******/ 					if(__webpack_require__.o(installedModules, id)) return promises.push(installedModules[id]);
 /******/ 					if(!startedInstallModules[id]) {
-/******/ 					const onFactory = (factory) => {
+/******/ 					var onFactory = (factory) => {
 /******/ 						installedModules[id] = 0;
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							delete __webpack_require__.c[id];
@@ -1360,7 +1356,7 @@ __webpack_require__.d(exports, {
 /******/ 						}
 /******/ 					};
 /******/ 					startedInstallModules[id] = true;
-/******/ 					const onError = (error) => {
+/******/ 					var onError = (error) => {
 /******/ 						delete installedModules[id];
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							delete __webpack_require__.c[id];
@@ -1368,7 +1364,7 @@ __webpack_require__.d(exports, {
 /******/ 						}
 /******/ 					};
 /******/ 					try {
-/******/ 						const promise = moduleToHandlerMapping[id]();
+/******/ 						var promise = moduleToHandlerMapping[id]();
 /******/ 						if(promise.then) {
 /******/ 							promises.push(installedModules[id] = promise.then(onFactory)['catch'](onError));
 /******/ 						} else onFactory(promise);
@@ -1386,13 +1382,13 @@ __webpack_require__.d(exports, {
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"mfeBBB": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
-/******/ 				let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
@@ -1401,18 +1397,18 @@ __webpack_require__.d(exports, {
 /******/ 					} else {
 /******/ 						if(true) { // all chunks have JS
 /******/ 							// setup Promise in chunk cache
-/******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							const error = new Error();
-/******/ 							const loadingEnded = (event) => {
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
-/******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event?.target?.src;
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -1439,11 +1435,11 @@ __webpack_require__.d(exports, {
 /******/ 		// no on chunks loaded
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -1453,8 +1449,7 @@ __webpack_require__.d(exports, {
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -1463,9 +1458,10 @@ __webpack_require__.d(exports, {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkmodule_federation_bbb"]) ? self["webpackChunkmodule_federation_bbb"] : (self["webpackChunkmodule_federation_bbb"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunkmodule_federation_bbb"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunkmodule_federation_bbb"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -1547,17 +1543,17 @@ __webpack_require__.d(exports, {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -1580,7 +1576,7 @@ __webpack_require__.d(exports, {
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
 /******/ 	__webpack_require__.n = (module) => {
-/******/ 		const getter = module && module.__esModule ?
+/******/ 		var getter = module && module.__esModule ?
 /******/ 			() => (module['default']) :
 /******/ 			() => (module);
 /******/ 		__webpack_require__.d(getter, { a: getter });
@@ -1627,16 +1623,16 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/load script */
 /******/ 	(() => {
-/******/ 		const inProgress = {};
-/******/ 		const dataWebpackPrefix = "module-federation-ccc:";
+/******/ 		var inProgress = {};
+/******/ 		var dataWebpackPrefix = "module-federation-ccc:";
 /******/ 		// loadScript function to load a script via script tag
 /******/ 		__webpack_require__.l = (url, done, key, chunkId) => {
 /******/ 			if(inProgress[url]) { inProgress[url].push(done); return; }
-/******/ 			let script, needAttach;
+/******/ 			var script, needAttach;
 /******/ 			if(key !== undefined) {
-/******/ 				const scripts = document.getElementsByTagName("script");
+/******/ 				var scripts = document.getElementsByTagName("script");
 /******/ 				for(var i = 0; i < scripts.length; i++) {
-/******/ 					const s = scripts[i];
+/******/ 					var s = scripts[i];
 /******/ 					if(s.getAttribute("src") == url || s.getAttribute("data-webpack") == dataWebpackPrefix + key) { script = s; break; }
 /******/ 				}
 /******/ 			}
@@ -1653,17 +1649,17 @@ __webpack_require__.d(exports, {
 /******/ 				script.src = url;
 /******/ 			}
 /******/ 			inProgress[url] = [done];
-/******/ 			const onScriptComplete = (prev, event) => {
+/******/ 			var onScriptComplete = (prev, event) => {
 /******/ 				// avoid mem leaks in IE.
 /******/ 				script.onerror = script.onload = null;
 /******/ 				clearTimeout(timeout);
-/******/ 				const doneFns = inProgress[url];
+/******/ 				var doneFns = inProgress[url];
 /******/ 				delete inProgress[url];
 /******/ 				script.parentNode?.removeChild(script);
 /******/ 				doneFns?.forEach((fn) => (fn(event)));
 /******/ 				if(prev) return prev(event);
 /******/ 			}
-/******/ 			const timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
+/******/ 			var timeout = setTimeout(onScriptComplete.bind(0, 0, { type: 'timeout', target: script }), 120000);
 /******/ 			script.onerror = onScriptComplete.bind(0, script.onerror);
 /******/ 			script.onload = onScriptComplete.bind(0, script.onload);
 /******/ 			needAttach && document.head.appendChild(script);
@@ -1672,19 +1668,17 @@ __webpack_require__.d(exports, {
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/sharing */
 /******/ 	(() => {
 /******/ 		__webpack_require__.S = {};
-/******/ 		const initPromises = {};
-/******/ 		const initTokens = {};
+/******/ 		var initPromises = {};
+/******/ 		var initTokens = {};
 /******/ 		__webpack_require__.I = (name, initScope) => {
 /******/ 			initScope = initScope || [];
 /******/ 			// handling circular init calls
-/******/ 			const initToken = initTokens[name] = initTokens[name] || {};
+/******/ 			var initToken = initTokens[name] = initTokens[name] || {};
 /******/ 			if(initScope.indexOf(initToken) >= 0) return;
 /******/ 			initScope.push(initToken);
 /******/ 			// only runs once
@@ -1692,28 +1686,28 @@ __webpack_require__.d(exports, {
 /******/ 			// creates a new share scope if needed
 /******/ 			if(!__webpack_require__.o(__webpack_require__.S, name)) __webpack_require__.S[name] = {};
 /******/ 			// runs all init snippets from all modules reachable
-/******/ 			const scope = __webpack_require__.S[name];
-/******/ 			const warn = (msg) => {
+/******/ 			var scope = __webpack_require__.S[name];
+/******/ 			var warn = (msg) => {
 /******/ 				if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 			};
-/******/ 			const uniqueName = "module-federation-ccc";
-/******/ 			const register = (name, version, factory, eager) => {
-/******/ 				const versions = scope[name] = scope[name] || {};
-/******/ 				const activeVersion = versions[version];
+/******/ 			var uniqueName = "module-federation-ccc";
+/******/ 			var register = (name, version, factory, eager) => {
+/******/ 				var versions = scope[name] = scope[name] || {};
+/******/ 				var activeVersion = versions[version];
 /******/ 				if(!activeVersion || (!activeVersion.loaded && (!eager != !activeVersion.eager ? eager : uniqueName > activeVersion.from))) versions[version] = { get: factory, from: uniqueName, eager: !!eager };
 /******/ 			};
-/******/ 			const initExternal = (id) => {
-/******/ 				const handleError = (err) => (warn("Initialization of sharing external failed: " + err));
+/******/ 			var initExternal = (id) => {
+/******/ 				var handleError = (err) => (warn("Initialization of sharing external failed: " + err));
 /******/ 				try {
-/******/ 					const module = __webpack_require__(id);
+/******/ 					var module = __webpack_require__(id);
 /******/ 					if(!module) return;
-/******/ 					const initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
+/******/ 					var initFn = (module) => (module?.init?.(__webpack_require__.S[name], initScope))
 /******/ 					if(module.then) return promises.push(module.then(initFn, handleError));
-/******/ 					const initResult = initFn(module);
+/******/ 					var initResult = initFn(module);
 /******/ 					if(initResult?.then) return promises.push(initResult['catch'](handleError));
 /******/ 				} catch(err) { handleError(err); }
 /******/ 			}
-/******/ 			const promises = [];
+/******/ 			var promises = [];
 /******/ 			switch(name) {
 /******/ 				case "default": {
 /******/ 					register("date-fns", "4.4.0", () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! ../../node_modules/date-fns/index.js */ 10))))));
@@ -1747,14 +1741,14 @@ __webpack_require__.d(exports, {
 /******/ 			// see webpack/lib/sharing/semver.js for original code
 /******/ 			if(0 in range){var e=parseVersion(version),r=range[0],n=r<0;n&&(r=-r-1);for(var i=0,a=1,f=!0;;a++,i++){var s,g,t=a<range.length?(typeof range[a])[0]:"";if(i>=e.length||"o"==(g=(typeof(s=e[i]))[0]))return!f||("u"==t?a>r&&!n:""==t!=n);if("u"==g){if(!f||"u"!=t)return!1}else if(f)if(t==g)if(a<=r){if(s!=range[a])return!1}else{if(n?s>range[a]:s<range[a])return!1;s!=range[a]&&(f=!1)}else if("s"!=t&&"n"!=t){if(n||a<=r)return!1;f=!1,a--}else{if(a<=r||g<t!=n)return!1;f=!1}else"s"!=t&&"n"!=t&&(f=!1,a--)}}var u=[],o=u.pop.bind(u);for(i=1;i<range.length;i++){var l=range[i];u.push(1==l?o()|o():2==l?o()&o():l?satisfy(l,version):!o())}return!!o();
 /******/ 		}
-/******/ 		const exists = (scope, key) => {
+/******/ 		var exists = (scope, key) => {
 /******/ 			return scope && __webpack_require__.o(scope, key);
 /******/ 		}
-/******/ 		const get = (entry) => {
+/******/ 		var get = (entry) => {
 /******/ 			entry.loaded = 1;
 /******/ 			return entry.get()
 /******/ 		};
-/******/ 		const eagerOnly = (versions) => {
+/******/ 		var eagerOnly = (versions) => {
 /******/ 			return Object.keys(versions).reduce((filtered, version) => {
 /******/ 					if (versions[version].eager) {
 /******/ 						filtered[version] = versions[version];
@@ -1762,104 +1756,104 @@ __webpack_require__.d(exports, {
 /******/ 					return filtered;
 /******/ 			}, {});
 /******/ 		};
-/******/ 		const findLatestVersion = (scope, key, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findLatestVersion = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key];
 /******/ 		};
-/******/ 		const findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findSatisfyingVersion = (scope, key, requiredVersion, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			var key = Object.keys(versions).reduce((a, b) => {
 /******/ 				if (!satisfy(requiredVersion, b)) return a;
 /******/ 				return !a || versionLt(a, b) ? b : a;
 /******/ 			}, 0);
 /******/ 			return key && versions[key]
 /******/ 		};
-/******/ 		const findSingletonVersionKey = (scope, key, eager) => {
-/******/ 			const versions = eager ? eagerOnly(scope[key]) : scope[key];
+/******/ 		var findSingletonVersionKey = (scope, key, eager) => {
+/******/ 			var versions = eager ? eagerOnly(scope[key]) : scope[key];
 /******/ 			return Object.keys(versions).reduce((a, b) => {
 /******/ 				return !a || (!versions[a].loaded && versionLt(a, b)) ? b : a;
 /******/ 			}, 0);
 /******/ 		};
-/******/ 		const getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
+/******/ 		var getInvalidSingletonVersionMessage = (scope, key, version, requiredVersion) => {
 /******/ 			return "Unsatisfied version " + version + " from " + (version && scope[key][version].from) + " of shared singleton module " + key + " (required " + rangeToString(requiredVersion) + ")"
 /******/ 		};
-/******/ 		const getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
-/******/ 			const versions = scope[key];
+/******/ 		var getInvalidVersionMessage = (scope, scopeName, key, requiredVersion, eager) => {
+/******/ 			var versions = scope[key];
 /******/ 			return "No satisfying version (" + rangeToString(requiredVersion) + ")" + (eager ? " for eager consumption" : "") + " of shared module " + key + " found in shared scope " + scopeName + ".\n" +
 /******/ 				"Available versions: " + Object.keys(versions).map((key) => {
 /******/ 				return key + " from " + versions[key].from;
 /******/ 			}).join(", ");
 /******/ 		};
-/******/ 		const fail = (msg) => {
+/******/ 		var fail = (msg) => {
 /******/ 			throw new Error(msg);
 /******/ 		}
-/******/ 		const failAsNotExist = (scopeName, key) => {
+/******/ 		var failAsNotExist = (scopeName, key) => {
 /******/ 			return fail("Shared module " + key + " doesn't exist in shared scope " + scopeName);
 /******/ 		}
-/******/ 		const warn = /*#__PURE__*/ (msg) => {
+/******/ 		var warn = /*#__PURE__*/ (msg) => {
 /******/ 			if (typeof console !== "undefined" && console.warn) console.warn(msg);
 /******/ 		};
-/******/ 		const init = (fn) => ((scopeName, key, eager, c, d) => {
-/******/ 			const promise = __webpack_require__.I(scopeName);
+/******/ 		var init = (fn) => ((scopeName, key, eager, c, d) => {
+/******/ 			var promise = __webpack_require__.I(scopeName);
 /******/ 			if (promise?.then && !eager) {
 /******/ 				return promise.then(fn.bind(fn, scopeName, __webpack_require__.S[scopeName], key, false, c, d));
 /******/ 			}
 /******/ 			return fn(scopeName, __webpack_require__.S[scopeName], key, eager, c, d);
 /******/ 		});
 /******/ 		
-/******/ 		const useFallback = (scopeName, key, fallback) => {
+/******/ 		var useFallback = (scopeName, key, fallback) => {
 /******/ 			return fallback ? fallback() : failAsNotExist(scopeName, key);
 /******/ 		}
-/******/ 		const load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 		var load = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
 /******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		const loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
 /******/ 			if (satisfyingVersion) return get(satisfyingVersion);
 /******/ 			warn(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager))
 /******/ 			return get(findLatestVersion(scope, key, eager));
 /******/ 		});
-/******/ 		const loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadStrictVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
+/******/ 			var satisfyingVersion = findSatisfyingVersion(scope, key, requiredVersion, eager);
 /******/ 			if (satisfyingVersion) return get(satisfyingVersion);
 /******/ 			if (fallback) return fallback();
 /******/ 			fail(getInvalidVersionMessage(scope, scopeName, key, requiredVersion, eager));
 /******/ 		});
-/******/ 		const loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
+/******/ 		var loadSingleton = /*#__PURE__*/ init((scopeName, scope, key, eager, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			if (!satisfy(requiredVersion, version)) {
 /******/ 				warn(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			}
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
+/******/ 		var loadStrictSingletonVersion = /*#__PURE__*/ init((scopeName, scope, key, eager, requiredVersion, fallback) => {
 /******/ 			if (!exists(scope, key)) return useFallback(scopeName, key, fallback);
-/******/ 			const version = findSingletonVersionKey(scope, key, eager);
+/******/ 			var version = findSingletonVersionKey(scope, key, eager);
 /******/ 			if (!satisfy(requiredVersion, version)) {
 /******/ 				fail(getInvalidSingletonVersionMessage(scope, key, version, requiredVersion));
 /******/ 			}
 /******/ 			return get(scope[key][version]);
 /******/ 		});
-/******/ 		const installedModules = {};
-/******/ 		const moduleToHandlerMapping = {
+/******/ 		var installedModules = {};
+/******/ 		var moduleToHandlerMapping = {
 /******/ 			4: () => (loadSingletonVersion("default", "react", false, [1,19,2,7])),
 /******/ 			5: () => (loadStrictVersion("default", "date-fns", false, [1,4,4,0], () => (__webpack_require__.e("vendors-node_modules_date-fns_index_js").then(() => (() => (__webpack_require__(/*! date-fns */ 10))))))),
 /******/ 			9: () => (loadStrictVersion("default", "lodash/random", false, [1,4,17,19], () => (__webpack_require__.e("vendors-node_modules_lodash_random_js").then(() => (() => (__webpack_require__(/*! lodash/random */ 313)))))))
 /******/ 		};
 /******/ 		// no consumes in initial chunks
-/******/ 		const chunkMapping = {
+/******/ 		var chunkMapping = {
 /******/ 			"webpack_sharing_consume_default_react": [
 /******/ 				4
 /******/ 			],
@@ -1870,13 +1864,13 @@ __webpack_require__.d(exports, {
 /******/ 				9
 /******/ 			]
 /******/ 		};
-/******/ 		const startedInstallModules = {};
+/******/ 		var startedInstallModules = {};
 /******/ 		__webpack_require__.f.consumes = (chunkId, promises) => {
 /******/ 			if(__webpack_require__.o(chunkMapping, chunkId)) {
 /******/ 				chunkMapping[chunkId].forEach((id) => {
 /******/ 					if(__webpack_require__.o(installedModules, id)) return promises.push(installedModules[id]);
 /******/ 					if(!startedInstallModules[id]) {
-/******/ 					const onFactory = (factory) => {
+/******/ 					var onFactory = (factory) => {
 /******/ 						installedModules[id] = 0;
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							delete __webpack_require__.c[id];
@@ -1884,7 +1878,7 @@ __webpack_require__.d(exports, {
 /******/ 						}
 /******/ 					};
 /******/ 					startedInstallModules[id] = true;
-/******/ 					const onError = (error) => {
+/******/ 					var onError = (error) => {
 /******/ 						delete installedModules[id];
 /******/ 						__webpack_require__.m[id] = (module) => {
 /******/ 							delete __webpack_require__.c[id];
@@ -1892,7 +1886,7 @@ __webpack_require__.d(exports, {
 /******/ 						}
 /******/ 					};
 /******/ 					try {
-/******/ 						const promise = moduleToHandlerMapping[id]();
+/******/ 						var promise = moduleToHandlerMapping[id]();
 /******/ 						if(promise.then) {
 /******/ 							promises.push(installedModules[id] = promise.then(onFactory)['catch'](onError));
 /******/ 						} else onFactory(promise);
@@ -1910,13 +1904,13 @@ __webpack_require__.d(exports, {
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"mfeCCC": 0
 /******/ 		};
 /******/ 		
 /******/ 		__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 				// JSONP chunk loading for javascript
-/******/ 				let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 				var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 				if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 		
 /******/ 					// a Promise means "currently loading".
@@ -1925,18 +1919,18 @@ __webpack_require__.d(exports, {
 /******/ 					} else {
 /******/ 						if("webpack_sharing_consume_default_react" != chunkId) {
 /******/ 							// setup Promise in chunk cache
-/******/ 							const promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
+/******/ 							var promise = new Promise((resolve, reject) => (installedChunkData = installedChunks[chunkId] = [resolve, reject]));
 /******/ 							promises.push(installedChunkData[2] = promise);
 /******/ 		
 /******/ 							// create error before stack unwound to get useful stacktrace later
-/******/ 							const error = new Error();
-/******/ 							const loadingEnded = (event) => {
+/******/ 							var error = new Error();
+/******/ 							var loadingEnded = (event) => {
 /******/ 								if(__webpack_require__.o(installedChunks, chunkId)) {
 /******/ 									installedChunkData = installedChunks[chunkId];
 /******/ 									if(installedChunkData !== 0) installedChunks[chunkId] = undefined;
 /******/ 									if(installedChunkData) {
-/******/ 										const errorType = event && (event.type === 'load' ? 'missing' : event.type);
-/******/ 										const realSrc = event?.target?.src;
+/******/ 										var errorType = event && (event.type === 'load' ? 'missing' : event.type);
+/******/ 										var realSrc = event?.target?.src;
 /******/ 										error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
 /******/ 										error.name = 'ChunkLoadError';
 /******/ 										error.type = errorType;
@@ -1963,11 +1957,11 @@ __webpack_require__.d(exports, {
 /******/ 		// no on chunks loaded
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -1977,8 +1971,7 @@ __webpack_require__.d(exports, {
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -1987,9 +1980,10 @@ __webpack_require__.d(exports, {
 /******/ 		
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunkmodule_federation_ccc"]) ? self["webpackChunkmodule_federation_ccc"] : (self["webpackChunkmodule_federation_ccc"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunkmodule_federation_ccc"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunkmodule_federation_ccc"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -2016,11 +2010,11 @@ __webpack_require__.d(exports, {
 ```
 app:
   asset src_bootstrap_js.js 46.9 KiB [emitted]
-  asset app.js 30.2 KiB [emitted] (name: app)
+  asset app.js 30 KiB [emitted] (name: app)
   asset vendors-node_modules_react_index_js.js 29.8 KiB [emitted] (id hint: vendors)
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19 KiB (runtime) [entry] [rendered]
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 18.8 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19 KiB 14 modules
+    runtime modules 18.8 KiB 14 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2045,11 +2039,11 @@ mfe-b:
   assets by chunk 1 MiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 998 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_react_index_js.js 29.8 KiB [emitted] (id hint: vendors)
-  asset mfeBBB.js 23.7 KiB [emitted] (name: mfeBBB)
+  asset mfeBBB.js 23.5 KiB [emitted] (name: mfeBBB)
   asset src-b_Component_js.js 4.08 KiB [emitted]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.8 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.6 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 15.8 KiB 10 modules
+    runtime modules 15.6 KiB 10 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2074,12 +2068,12 @@ mfe-c:
   assets by chunk 1020 KiB (id hint: vendors)
     asset vendors-node_modules_date-fns_index_js.js 998 KiB [emitted] (id hint: vendors)
     asset vendors-node_modules_lodash_random_js.js 24.8 KiB [emitted] (id hint: vendors)
-  asset mfeCCC.js 25.1 KiB [emitted] (name: mfeCCC)
+  asset mfeCCC.js 24.9 KiB [emitted] (name: mfeCCC)
   asset src-c_LazyComponent_js.js 4.01 KiB [emitted]
   asset src-c_Component_js.js 3.8 KiB [emitted]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.3 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.5 KiB 12 modules
+    runtime modules 16.3 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2114,11 +2108,11 @@ mfe-c:
 ```
 app:
   asset src_bootstrap_js.js 13.1 KiB [emitted] [minimized] 1 related asset
-  asset app.js 8.01 KiB [emitted] [minimized] (name: app)
   asset node_modules_react_index_js.js 7.84 KiB [emitted] [minimized] 1 related asset
-  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.3 KiB (runtime) [entry] [rendered]
+  asset app.js 7.82 KiB [emitted] [minimized] (name: app)
+  chunk (runtime: app) app.js (app) 672 bytes (javascript) 42 bytes (share-init) 19.1 KiB (runtime) [entry] [rendered]
     > ./src/index.js app
-    runtime modules 19.3 KiB 15 modules
+    runtime modules 19.1 KiB 15 modules
     built modules 672 bytes (javascript) 42 bytes (share-init) [built]
       ./src/index.js 588 bytes [built] [code generated]
       external "mfeBBB@/dist/bbb/mfeBBB.js" 42 bytes [built] [code generated]
@@ -2142,11 +2136,11 @@ app:
 mfe-b:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
   asset node_modules_react_index_js.js 7.84 KiB [emitted] [minimized] 1 related asset
-  asset mfeBBB.js 6.33 KiB [emitted] [minimized] (name: mfeBBB)
+  asset mfeBBB.js 6.22 KiB [emitted] [minimized] (name: mfeBBB)
   asset src-b_Component_js.js 669 bytes [emitted] [minimized]
-  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 16 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeBBB) mfeBBB.js (mfeBBB) 42 bytes (javascript) 84 bytes (share-init) 15.9 KiB (runtime) [entry] [rendered]
     > mfeBBB
-    runtime modules 16 KiB 11 modules
+    runtime modules 15.9 KiB 11 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]
@@ -2168,13 +2162,13 @@ mfe-b:
 
 mfe-c:
   asset vendors-node_modules_date-fns_index_js.js 70.4 KiB [emitted] [minimized] (id hint: vendors)
-  asset mfeCCC.js 7 KiB [emitted] [minimized] (name: mfeCCC)
+  asset mfeCCC.js 6.88 KiB [emitted] [minimized] (name: mfeCCC)
   asset node_modules_lodash_random_js.js 3.13 KiB [emitted] [minimized]
   asset src-c_LazyComponent_js.js 704 bytes [emitted] [minimized]
   asset src-c_Component_js.js 648 bytes [emitted] [minimized]
-  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.7 KiB (runtime) [entry] [rendered]
+  chunk (runtime: mfeCCC) mfeCCC.js (mfeCCC) 42 bytes (javascript) 84 bytes (share-init) 16.5 KiB (runtime) [entry] [rendered]
     > mfeCCC
-    runtime modules 16.7 KiB 12 modules
+    runtime modules 16.5 KiB 12 modules
     built modules 42 bytes (javascript) 84 bytes (share-init) [built]
       container entry 42 bytes [built] [code generated]
       provide shared module (default) date-fns@4.4.0 = ../../node_modules/dat...(truncated) 42 bytes [built] [code generated]

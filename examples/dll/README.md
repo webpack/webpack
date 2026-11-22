@@ -41,7 +41,7 @@ module.exports = config;
 # dist/MyDll.alpha.js
 
 ```javascript
-var alpha_18bc6b1aecb50e5d3209;
+var alpha_63bb1af11b2938d4bc90;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -100,17 +100,17 @@ module.exports = "module";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -134,7 +134,7 @@ module.exports = "module";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	alpha_18bc6b1aecb50e5d3209 = __webpack_exports__;
+/******/ 	alpha_63bb1af11b2938d4bc90 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -143,7 +143,7 @@ module.exports = "module";
 # dist/alpha-manifest.json
 
 ```javascript
-{"name":"alpha_18bc6b1aecb50e5d3209","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
+{"name":"alpha_63bb1af11b2938d4bc90","content":{"./alpha.js":{"id":1,"buildMeta":{"treatAsCommonJs":true}},"./a.js":{"id":2,"buildMeta":{"treatAsCommonJs":true}},"../node_modules/module.js":{"id":3,"buildMeta":{"treatAsCommonJs":true}}}}
 ```
 
 # Info
@@ -173,8 +173,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyDll.alpha.js 321 bytes [emitted] [minimized] (name: alpha)
-asset MyDll.beta.js 315 bytes [emitted] [minimized] (name: beta)
+asset MyDll.alpha.js 311 bytes [emitted] [minimized] (name: alpha)
+asset MyDll.beta.js 305 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyDll.beta.js (beta) 81 bytes [entry] [rendered]
   > beta
   dependent modules 69 bytes [dependent] 3 modules

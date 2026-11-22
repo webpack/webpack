@@ -165,17 +165,17 @@ export const add = (content, from) => {
 ``` js
 /************************************************************************/
 /******/ // The module cache
-/******/ const __webpack_module_cache__ = {};
+/******/ var __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -207,7 +207,7 @@ export const add = (content, from) => {
 /******/ // This file contains only the entry chunk.
 /******/ // The chunk loading function for additional chunks
 /******/ __webpack_require__.e = (chunkId) => {
-/******/ 	const promises = [];
+/******/ 	var promises = [];
 /******/ 	__webpack_require__.f.j(chunkId, promises);
 /******/ 	return Promise.all(promises);
 /******/ };
@@ -217,35 +217,29 @@ export const add = (content, from) => {
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
-/******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ };
+/******/ __webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
 /******/ 	// no baseURI
 /******/ 	
-/******/ 	const chunkImports = {
+/******/ 	var chunkImports = {
 /******/ 		"129": () => (import("/dist/129.js"))
 /******/ 	};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
-/******/ 	const installedChunks = {
+/******/ 	var installedChunks = {
 /******/ 		792: 0
 /******/ 	};
 /******/ 	
-/******/ 	const installChunk = (data) => {
+/******/ 	var installChunk = (data) => {
 /******/ 		let {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
 /******/ 		// add "modules" to the modules object,
 /******/ 		// then flag all "ids" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0;
-/******/ 		for(moduleId in __webpack_esm_modules__) {
-/******/ 			if(__webpack_require__.o(__webpack_esm_modules__, moduleId)) {
-/******/ 				__webpack_require__.m[moduleId] = __webpack_esm_modules__[moduleId];
-/******/ 			}
-/******/ 		}
+/******/ 		Object.assign(__webpack_require__.m, __webpack_esm_modules__);
 /******/ 		if(__webpack_esm_runtime__) __webpack_esm_runtime__(__webpack_require__);
 /******/ 		for(;i < __webpack_esm_ids__.length; i++) {
 /******/ 			chunkId = __webpack_esm_ids__[i];
@@ -259,7 +253,7 @@ export const add = (content, from) => {
 /******/ 	
 /******/ 	__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 			// import() chunk loading for javascript
-/******/ 			let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 	
 /******/ 				// a Promise means "currently loading".
@@ -268,7 +262,7 @@ export const add = (content, from) => {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						var promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
 /******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
@@ -412,17 +406,17 @@ fibWorker.onmessage = event => {
 ``` js
 /************************************************************************/
 /******/ // The module cache
-/******/ const __webpack_module_cache__ = {};
+/******/ var __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -454,7 +448,7 @@ fibWorker.onmessage = event => {
 /******/ // This file contains only the entry chunk.
 /******/ // The chunk loading function for additional chunks
 /******/ __webpack_require__.e = (chunkId) => {
-/******/ 	const promises = [];
+/******/ 	var promises = [];
 /******/ 	__webpack_require__.f.j(chunkId, promises);
 /******/ 	return Promise.all(promises);
 /******/ };
@@ -464,35 +458,29 @@ fibWorker.onmessage = event => {
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
-/******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ };
+/******/ __webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
 /******/ 	// no baseURI
 /******/ 	
-/******/ 	const chunkImports = {
+/******/ 	var chunkImports = {
 /******/ 		"936": () => (import("/dist/936.js"))
 /******/ 	};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
-/******/ 	const installedChunks = {
+/******/ 	var installedChunks = {
 /******/ 		377: 0
 /******/ 	};
 /******/ 	
-/******/ 	const installChunk = (data) => {
+/******/ 	var installChunk = (data) => {
 /******/ 		let {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
 /******/ 		// add "modules" to the modules object,
 /******/ 		// then flag all "ids" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0;
-/******/ 		for(moduleId in __webpack_esm_modules__) {
-/******/ 			if(__webpack_require__.o(__webpack_esm_modules__, moduleId)) {
-/******/ 				__webpack_require__.m[moduleId] = __webpack_esm_modules__[moduleId];
-/******/ 			}
-/******/ 		}
+/******/ 		Object.assign(__webpack_require__.m, __webpack_esm_modules__);
 /******/ 		if(__webpack_esm_runtime__) __webpack_esm_runtime__(__webpack_require__);
 /******/ 		for(;i < __webpack_esm_ids__.length; i++) {
 /******/ 			chunkId = __webpack_esm_ids__[i];
@@ -506,7 +494,7 @@ fibWorker.onmessage = event => {
 /******/ 	
 /******/ 	__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 			// import() chunk loading for javascript
-/******/ 			let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 	
 /******/ 				// a Promise means "currently loading".
@@ -515,7 +503,7 @@ fibWorker.onmessage = event => {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						var promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
 /******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
@@ -572,7 +560,7 @@ onconnect = function (e) {
 ```
 
 ```javascript
-var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;const n=t[s]={exports:{}};return e[s](n,n.exports,o),n.exports}o.m=e,o.d=(e,t)=>{if(Array.isArray(t))for(var s=0;s<t.length;){var r=t[s++],n=t[s++],a=n?{enumerable:!0,get:n}:{enumerable:!0,value:t[s++]};o.o(e,r)||Object.defineProperty(e,r,a)}else for(var r in t)o.o(t,r)&&!o.o(e,r)&&Object.defineProperty(e,r,{enumerable:!0,get:t[r]})},o.f={},o.e=e=>{const t=[];return o.f.j(e,t),Promise.all(t)},o.o=(e,t)=>Object.hasOwn(e,t),(()=>{const e={936:()=>import("/dist/936.js")},t={377:0},s=e=>{let{__webpack_esm_ids__:s,__webpack_esm_modules__:r,__webpack_esm_runtime__:n}=e;var a,i,c=0;for(a in r)o.o(r,a)&&(o.m[a]=r[a]);for(n&&n(o);c<s.length;c++)i=s[c],o.o(t,i)&&t[i]&&t[i][0](),t[i]=0};o.f.j=(r,n)=>{let a=o.o(t,r)?t[r]:void 0;if(0!==a)if(a)n.push(a[1]);else{const o=Promise.race([e[r]().then(s,e=>{throw 0!==t[r]&&(t[r]=void 0),e}),new Promise(e=>a=t[r]=[e])]);n.push(a[1]=o)}}})(),onconnect=function(e){for(const t of e.ports)t.onmessage=async e=>{const s=e.data;switch(s.type){case"message":const{add:e}=await o.e(936).then(()=>o(936));e(s.content,s.from);case"history":const{history:r}=await o.e(936).then(()=>o(936));t.postMessage({type:"history",history:r})}}};
+var e,r,t,o={},s={};function a(e){var r=s[e];if(void 0!==r)return r.exports;var t=s[e]={exports:{}};return o[e](t,t.exports,a),t.exports}a.m=o,a.d=(e,r)=>{if(Array.isArray(r))for(var t=0;t<r.length;){var o=r[t++],s=r[t++],n={enumerable:!0,[s?"get":"value"]:s||r[t++]};a.o(e,o)||Object.defineProperty(e,o,n)}else for(var o in r)a.o(r,o)&&!a.o(e,o)&&Object.defineProperty(e,o,{enumerable:!0,get:r[o]})},a.f={},a.e=e=>{var r=[];return a.f.j(e,r),Promise.all(r)},a.o=(e,r)=>Object.hasOwn(e,r),e={936:()=>import("/dist/936.js")},r={377:0},t=e=>{let{__webpack_esm_ids__:t,__webpack_esm_modules__:o,__webpack_esm_runtime__:s}=e;var n,i=0;for(Object.assign(a.m,o),s&&s(a);i<t.length;i++)n=t[i],a.o(r,n)&&r[n]&&r[n][0](),r[n]=0},a.f.j=(o,s)=>{var n=a.o(r,o)?r[o]:void 0;if(0!==n)if(n)s.push(n[1]);else{var i=Promise.race([e[o]().then(t,e=>{throw 0!==r[o]&&(r[o]=void 0),e}),new Promise(e=>n=r[o]=[e])]);s.push(n[1]=i)}},onconnect=function(e){for(const r of e.ports)r.onmessage=async e=>{const t=e.data;switch(t.type){case"message":const{add:e}=await a.e(936).then(()=>a(936));e(t.content,t.from);case"history":const{history:o}=await a.e(936).then(()=>a(936));r.postMessage({type:"history",history:o})}}};
 ```
 
 # dist/workers/fibonacci.js
@@ -586,17 +574,17 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 ``` js
 /************************************************************************/
 /******/ // The module cache
-/******/ const __webpack_module_cache__ = {};
+/******/ var __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -628,7 +616,7 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ // This file contains only the entry chunk.
 /******/ // The chunk loading function for additional chunks
 /******/ __webpack_require__.e = (chunkId) => {
-/******/ 	const promises = [];
+/******/ 	var promises = [];
 /******/ 	__webpack_require__.f.j(chunkId, promises);
 /******/ 	return Promise.all(promises);
 /******/ };
@@ -638,35 +626,29 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
-/******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ };
+/******/ __webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
 /******/ 	// no baseURI
 /******/ 	
-/******/ 	const chunkImports = {
+/******/ 	var chunkImports = {
 /******/ 		"129": () => (import("/dist/129.js"))
 /******/ 	};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
-/******/ 	const installedChunks = {
+/******/ 	var installedChunks = {
 /******/ 		721: 0
 /******/ 	};
 /******/ 	
-/******/ 	const installChunk = (data) => {
+/******/ 	var installChunk = (data) => {
 /******/ 		let {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
 /******/ 		// add "modules" to the modules object,
 /******/ 		// then flag all "ids" as loaded and fire callback
 /******/ 		var moduleId, chunkId, i = 0;
-/******/ 		for(moduleId in __webpack_esm_modules__) {
-/******/ 			if(__webpack_require__.o(__webpack_esm_modules__, moduleId)) {
-/******/ 				__webpack_require__.m[moduleId] = __webpack_esm_modules__[moduleId];
-/******/ 			}
-/******/ 		}
+/******/ 		Object.assign(__webpack_require__.m, __webpack_esm_modules__);
 /******/ 		if(__webpack_esm_runtime__) __webpack_esm_runtime__(__webpack_require__);
 /******/ 		for(;i < __webpack_esm_ids__.length; i++) {
 /******/ 			chunkId = __webpack_esm_ids__[i];
@@ -680,7 +662,7 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ 	
 /******/ 	__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 			// import() chunk loading for javascript
-/******/ 			let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 	
 /******/ 				// a Promise means "currently loading".
@@ -689,7 +671,7 @@ var e={};const t={};function o(s){const r=t[s];if(void 0!==r)return r.exports;co
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						var promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
 /******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
@@ -731,14 +713,14 @@ onmessage = async event => {
 ```
 
 ```javascript
-var e={};const o={};function s(t){const r=o[t];if(void 0!==r)return r.exports;const n=o[t]={exports:{}};return e[t](n,n.exports,s),n.exports}s.m=e,s.d=(e,o)=>{for(var t in o)s.o(o,t)&&!s.o(e,t)&&Object.defineProperty(e,t,{enumerable:!0,get:o[t]})},s.f={},s.e=e=>{const o=[];return s.f.j(e,o),Promise.all(o)},s.o=(e,o)=>Object.hasOwn(e,o),(()=>{const e={129:()=>import("/dist/129.js")},o={721:0},t=e=>{let{__webpack_esm_ids__:t,__webpack_esm_modules__:r,__webpack_esm_runtime__:n}=e;var i,a,_=0;for(i in r)s.o(r,i)&&(s.m[i]=r[i]);for(n&&n(s);_<t.length;_++)a=t[_],s.o(o,a)&&o[a]&&o[a][0](),o[a]=0};s.f.j=(r,n)=>{let i=s.o(o,r)?o[r]:void 0;if(0!==i)if(i)n.push(i[1]);else{const s=Promise.race([e[r]().then(t,e=>{throw 0!==o[r]&&(o[r]=void 0),e}),new Promise(e=>i=o[r]=[e])]);n.push(i[1]=s)}}})(),onmessage=async e=>{const{fibonacci:o}=await s.e(129).then(()=>s(129)),t=JSON.parse(e.data);postMessage(`fib(${t}) = ${o(t)}`)};
+var e,r,s,o={},a={};function t(e){var r=a[e];if(void 0!==r)return r.exports;var s=a[e]={exports:{}};return o[e](s,s.exports,t),s.exports}t.m=o,t.d=(e,r)=>{for(var s in r)t.o(r,s)&&!t.o(e,s)&&Object.defineProperty(e,s,{enumerable:!0,get:r[s]})},t.f={},t.e=e=>{var r=[];return t.f.j(e,r),Promise.all(r)},t.o=(e,r)=>Object.hasOwn(e,r),e={129:()=>import("/dist/129.js")},r={721:0},s=e=>{let{__webpack_esm_ids__:s,__webpack_esm_modules__:o,__webpack_esm_runtime__:a}=e;var i,n=0;for(Object.assign(t.m,o),a&&a(t);n<s.length;n++)i=s[n],t.o(r,i)&&r[i]&&r[i][0](),r[i]=0},t.f.j=(o,a)=>{var i=t.o(r,o)?r[o]:void 0;if(0!==i)if(i)a.push(i[1]);else{var n=Promise.race([e[o]().then(s,e=>{throw 0!==r[o]&&(r[o]=void 0),e}),new Promise(e=>i=r[o]=[e])]);a.push(i[1]=n)}},onmessage=async e=>{const{fibonacci:r}=await t.e(129).then(()=>t(129)),s=JSON.parse(e.data);postMessage(`fib(${s}) = ${r(s)}`)};
 ```
 
 # dist/129.js
 
 ```javascript
-export const __webpack_esm_ids__ = [129];
-export const __webpack_esm_modules__ = {
+export const __webpack_esm_ids__ = [129],
+__webpack_esm_modules__ = {
 
 /***/ 3
 /*!**********************!*\
@@ -769,11 +751,11 @@ function fibonacci(n) {
 ## Unoptimized
 
 ```
-asset main.js 7.72 KiB [emitted] [javascript module] (name: main)
-asset chat.js 5.94 KiB [emitted] [javascript module] (name: chat)
-asset workers/fibonacci.js 5.6 KiB [emitted] [javascript module] (name: fibonacci)
-asset 936.js 1020 bytes [emitted] [javascript module]
-asset 129.js 842 bytes [emitted] [javascript module]
+asset main.js 7.53 KiB [emitted] [javascript module] (name: main)
+asset chat.js 5.75 KiB [emitted] [javascript module] (name: chat)
+asset workers/fibonacci.js 5.41 KiB [emitted] [javascript module] (name: fibonacci)
+asset 936.js 1010 bytes [emitted] [javascript module]
+asset 129.js 829 bytes [emitted] [javascript module]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./example.js 70:30-51
   > ./fibonacci ./fib-worker.js 2:29-50
@@ -782,21 +764,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [used exports unknown]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.74 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.6 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 2.74 KiB 5 modules
+  runtime modules 2.6 KiB 5 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.74 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.6 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 2.74 KiB 5 modules
+  runtime modules 2.6 KiB 5 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [used exports unknown]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.74 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.6 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.74 KiB 5 modules
+  runtime modules 2.6 KiB 5 modules
   ./example.js 2.25 KiB [built] [code generated]
     [used exports unknown]
     entry ./example.js main
@@ -814,11 +796,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset main.js 2.29 KiB [emitted] [javascript module] [minimized] (name: main)
-asset chat.js 1.21 KiB [emitted] [javascript module] [minimized] (name: chat)
-asset workers/fibonacci.js 922 bytes [emitted] [javascript module] [minimized] (name: fibonacci)
-asset 936.js 185 bytes [emitted] [javascript module] [minimized]
-asset 129.js 163 bytes [emitted] [javascript module] [minimized]
+asset main.js 2.25 KiB [emitted] [javascript module] [minimized] (name: main)
+asset chat.js 1.17 KiB [emitted] [javascript module] [minimized] (name: chat)
+asset workers/fibonacci.js 882 bytes [emitted] [javascript module] [minimized] (name: fibonacci)
+asset 936.js 172 bytes [emitted] [javascript module] [minimized]
+asset 129.js 150 bytes [emitted] [javascript module] [minimized]
 chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
   > ./fibonacci ./fib-worker.js 2:29-50
   > ./fibonacci ./example.js 70:30-51
@@ -827,21 +809,21 @@ chunk (runtime: 9a81d90cfd0dfd13d748, main) 129.js 103 bytes [rendered]
     [all exports used]
     import() ./fibonacci ./example.js 70:30-51
     import() ./fibonacci ./fib-worker.js 2:29-50
-chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.92 KiB (runtime) [entry] [rendered]
+chunk (runtime: 1fad8bf8de78b0a77bfd) chat.js (chat) 442 bytes (javascript) 2.78 KiB (runtime) [entry] [rendered]
   > ./example.js 25:19-31:1
-  runtime modules 2.92 KiB 4 modules
+  runtime modules 2.78 KiB 4 modules
   ./chat-worker.js 442 bytes [built] [code generated]
     [no exports used]
     new Worker() ./chat-worker.js ./example.js 25:19-31:1
-chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: 9a81d90cfd0dfd13d748) workers/fibonacci.js (fibonacci) 176 bytes (javascript) 2.43 KiB (runtime) [entry] [rendered]
   > ./example.js 80:18-84:2
-  runtime modules 2.56 KiB 4 modules
+  runtime modules 2.43 KiB 4 modules
   ./fib-worker.js 176 bytes [built] [code generated]
     [no exports used]
     new Worker() ./fib-worker.js ./example.js 80:18-84:2
-chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.56 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) main.js (main) 2.25 KiB (javascript) 2.43 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.56 KiB 4 modules
+  runtime modules 2.43 KiB 4 modules
   ./example.js 2.25 KiB [built] [code generated]
     [no exports used]
     entry ./example.js main

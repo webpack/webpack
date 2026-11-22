@@ -189,17 +189,17 @@ const b = "b";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -228,9 +228,7 @@ const b = "b";
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /************************************************************************/
 ```
@@ -273,11 +271,11 @@ console.log(
 ## Unoptimized
 
 ```
-asset output.js 8.31 KiB [emitted] (name: main)
-chunk (runtime: main) output.js (main) 354 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
+asset output.js 8.28 KiB [emitted] (name: main)
+chunk (runtime: main) output.js (main) 354 bytes (javascript) 583 bytes (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 214 bytes [dependent] 6 modules
-  runtime modules 587 bytes 3 modules
+  runtime modules 583 bytes 3 modules
   ./example.js 140 bytes [built] [code generated]
     [no exports]
     [used exports unknown]

@@ -131,17 +131,17 @@ __webpack_unused_export__ = function decrement(val) {
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -191,14 +191,14 @@ inc2(a); // 2
 
 ```javascript
 /*! For license information please see output.js.LICENSE.txt */
-(()=>{var n=[(n,t)=>{t.add=function(){for(var n=0,t=0,r=arguments,e=r.length;t<e;)n+=r[t++];return n}},(n,t,r)=>{const e=r(0).add;t.increment=function(n){return e(n,1)}}];const t={};function r(e){const o=t[e];if(void 0!==o)return o.exports;const c=t[e]={exports:{}};return n[e](c,c.exports,r),c.exports}(0,r(1).increment)(1);const{add:e}=r(0);e(1,2);const{increment:o}=r(1);o(1)})();
+(()=>{var n=[(n,r)=>{r.add=function(){for(var n=0,r=0,t=arguments,e=t.length;r<e;)n+=t[r++];return n}},(n,r,t)=>{const e=t(0).add;r.increment=function(n){return e(n,1)}}],r={};function t(e){var o=r[e];if(void 0!==o)return o.exports;var c=r[e]={exports:{}};return n[e](c,c.exports,t),c.exports}(0,t(1).increment)(1);const{add:e}=t(0);e(1,2);const{increment:o}=t(1);o(1)})();
 ```
 
 # dist/without.js (same without tree shaking)
 
 ```javascript
 /*! For license information please see without.js.LICENSE.txt */
-(()=>{var n=[(n,t)=>{t.add=function(){for(var n=0,t=0,r=arguments,e=r.length;t<e;)n+=r[t++];return n},t.multiply=function(){for(var n=0,t=arguments,r=t.length;n<r;)sum*=t[n++];return sum}},(n,t,r)=>{const e=r(0).add;t.increment=function(n){return e(n,1)},t.incrementBy2=function(n){return e(n,2)},t.decrement=function(n){return e(n,1)}}];const t={};function r(e){const o=t[e];if(void 0!==o)return o.exports;const c=t[e]={exports:{}};return n[e](c,c.exports,r),c.exports}(0,r(1).increment)(1);const{add:e}=r(0);e(1,2);const{increment:o}=r(1);o(1)})();
+(()=>{var n=[(n,r)=>{r.add=function(){for(var n=0,r=0,t=arguments,e=t.length;r<e;)n+=t[r++];return n},r.multiply=function(){for(var n=0,r=arguments,t=r.length;n<t;)sum*=r[n++];return sum}},(n,r,t)=>{const e=t(0).add;r.increment=function(n){return e(n,1)},r.incrementBy2=function(n){return e(n,2)},r.decrement=function(n){return e(n,1)}}],r={};function t(e){var o=r[e];if(void 0!==o)return o.exports;var u=r[e]={exports:{}};return n[e](u,u.exports,t),u.exports}(0,t(1).increment)(1);const{add:e}=t(0);e(1,2);const{increment:o}=t(1);o(1)})();
 ```
 
 # Info
@@ -228,7 +228,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 447 bytes [emitted] [minimized] (name: main) 1 related asset
+asset output.js 437 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) output.js (main) 841 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules
@@ -237,7 +237,7 @@ chunk (runtime: main) output.js (main) 841 bytes [entry] [rendered]
     entry ./example.js main
 webpack X.X.X compiled successfully
 
-asset without.js 615 bytes [emitted] [minimized] (name: main) 1 related asset
+asset without.js 605 bytes [emitted] [minimized] (name: main) 1 related asset
 chunk (runtime: main) without.js (main) 841 bytes [entry] [rendered]
   > ./example.js main
   dependent modules 564 bytes [dependent] 2 modules

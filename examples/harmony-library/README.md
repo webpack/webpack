@@ -36,7 +36,7 @@ module.exports = config;
 return /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	// The require scope
-/******/ 	const __webpack_require__ = {};
+/******/ 	var __webpack_require__ = {};
 /******/ 	
 ```
 
@@ -59,9 +59,7 @@ return /******/ (() => { // webpackBootstrap
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /************************************************************************/
 ```
@@ -102,10 +100,10 @@ function increment() {
 ## Unoptimized
 
 ```
-asset MyLibrary.umd.js 2.65 KiB [emitted] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 2.63 KiB [emitted] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 583 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 587 bytes 3 modules
+  runtime modules 583 bytes 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     [used exports unknown]
@@ -117,10 +115,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.umd.js 609 bytes [emitted] [minimized] (name: main)
-chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
+asset MyLibrary.umd.js 605 bytes [emitted] [minimized] (name: main)
+chunk (runtime: main) MyLibrary.umd.js (main) 92 bytes (javascript) 583 bytes (runtime) [entry] [rendered]
   > ./example main
-  runtime modules 587 bytes 3 modules
+  runtime modules 583 bytes 3 modules
   ./example.js 92 bytes [built] [code generated]
     [exports: default, increment, value]
     entry ./example main

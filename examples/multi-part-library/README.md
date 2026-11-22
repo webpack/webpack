@@ -72,17 +72,17 @@ module.exports = "alpha";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -149,17 +149,17 @@ module.exports = "beta";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -195,7 +195,7 @@ module.exports = "beta";
 ## Unoptimized
 
 ```
-asset MyLibrary.beta.js 2.07 KiB [emitted] (name: beta)
+asset MyLibrary.beta.js 2.06 KiB [emitted] (name: beta)
 asset MyLibrary.alpha.js 2.06 KiB [emitted] (name: alpha)
 chunk (runtime: alpha) MyLibrary.alpha.js (alpha) 25 bytes [entry] [rendered]
   > ./alpha alpha
@@ -217,8 +217,8 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset MyLibrary.alpha.js 434 bytes [emitted] [minimized] (name: alpha)
-asset MyLibrary.beta.js 432 bytes [emitted] [minimized] (name: beta)
+asset MyLibrary.alpha.js 420 bytes [emitted] [minimized] (name: alpha)
+asset MyLibrary.beta.js 418 bytes [emitted] [minimized] (name: beta)
 chunk (runtime: beta) MyLibrary.beta.js (beta) 24 bytes [entry] [rendered]
   > ./beta beta
   ./beta.js 24 bytes [built] [code generated]

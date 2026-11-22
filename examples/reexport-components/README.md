@@ -381,12 +381,12 @@ const Login = () => {
 
 ```
 asset vendors-node_modules_react_jsx-dev-runtime_js.output.js 87.2 KiB [emitted] (id hint: vendors)
-asset output.js 11.1 KiB [emitted] (name: main)
+asset output.js 11 KiB [emitted] (name: main)
 asset pages_Dashboard_js.output.js 7.46 KiB [emitted]
 asset pages_Login_js.output.js 7.43 KiB [emitted]
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.38 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.32 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.38 KiB 9 modules
+  runtime modules 5.32 KiB 9 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]
@@ -435,12 +435,12 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.65 KiB [emitted] [minimized] (name: main)
+asset output.js 2.54 KiB [emitted] [minimized] (name: main)
 asset pages_Dashboard_js.output.js 1 KiB [emitted] [minimized] 1 related asset
 asset pages_Login_js.output.js 1010 bytes [emitted] [minimized] 1 related asset
-chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.62 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 208 bytes (javascript) 5.55 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 5.62 KiB 8 modules
+  runtime modules 5.55 KiB 8 modules
   dependent modules 160 bytes [dependent] 1 module
   ./example.js 48 bytes [built] [code generated]
     [no exports used]

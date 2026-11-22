@@ -58,9 +58,9 @@ module.exports = config;
 asset output.js 3.66 MiB [emitted] (name: main)
 asset output.css 120 bytes [emitted] (name: main)
 Entrypoint main 3.66 MiB = output.js 3.66 MiB output.css 120 bytes
-chunk (runtime: main) output.js, output.css (main) 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [entry]
+chunk (runtime: main) output.js, output.css (main) 2.29 MiB (javascript) 27 bytes (css) 927 bytes (runtime) [entry]
   > ./example.js main
-  cached modules 2.29 MiB (javascript) 27 bytes (css) 931 bytes (runtime) [cached] 1531 modules
+  cached modules 2.29 MiB (javascript) 27 bytes (css) 927 bytes (runtime) [cached] 1531 modules
 webpack X.X.X compiled successfully
 ```
 
