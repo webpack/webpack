@@ -194,17 +194,17 @@ module.exports = "utility1";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -223,7 +223,7 @@ module.exports = "utility1";
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
-/******/ 		const deferred = [];
+/******/ 		var deferred = [];
 /******/ 		__webpack_require__.O = (result, chunkIds, fn) => {
 /******/ 			if(chunkIds) {
 /******/ 				deferred.push([chunkIds, fn]);
@@ -231,7 +231,7 @@ module.exports = "utility1";
 /******/ 			}
 /******/ 			for (var i = 0; i < deferred.length; i++) {
 /******/ 				let [chunkIds, fn] = deferred[i];
-/******/ 				let fulfilled = true;
+/******/ 				var fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
 /******/ 					if (__webpack_require__.O.j(chunkIds[j])) {
 /******/ 						chunkIds.splice(j--, 1);
@@ -241,7 +241,7 @@ module.exports = "utility1";
 /******/ 				}
 /******/ 				if(fulfilled) {
 /******/ 					deferred.splice(i--, 1)
-/******/ 					const r = fn();
+/******/ 					var r = fn();
 /******/ 					if (r !== undefined) result = r;
 /******/ 				}
 /******/ 			}
@@ -259,7 +259,7 @@ module.exports = "utility1";
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"pageA": 0
 /******/ 		};
 /******/ 		
@@ -276,11 +276,11 @@ module.exports = "utility1";
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -290,8 +290,7 @@ module.exports = "utility1";
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -300,9 +299,10 @@ module.exports = "utility1";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunk"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -354,17 +354,17 @@ module.exports = "pageB";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -383,7 +383,7 @@ module.exports = "pageB";
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
-/******/ 		const deferred = [];
+/******/ 		var deferred = [];
 /******/ 		__webpack_require__.O = (result, chunkIds, fn) => {
 /******/ 			if(chunkIds) {
 /******/ 				deferred.push([chunkIds, fn]);
@@ -391,7 +391,7 @@ module.exports = "pageB";
 /******/ 			}
 /******/ 			for (var i = 0; i < deferred.length; i++) {
 /******/ 				let [chunkIds, fn] = deferred[i];
-/******/ 				let fulfilled = true;
+/******/ 				var fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
 /******/ 					if (__webpack_require__.O.j(chunkIds[j])) {
 /******/ 						chunkIds.splice(j--, 1);
@@ -401,7 +401,7 @@ module.exports = "pageB";
 /******/ 				}
 /******/ 				if(fulfilled) {
 /******/ 					deferred.splice(i--, 1)
-/******/ 					const r = fn();
+/******/ 					var r = fn();
 /******/ 					if (r !== undefined) result = r;
 /******/ 				}
 /******/ 			}
@@ -419,7 +419,7 @@ module.exports = "pageB";
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"pageB": 0
 /******/ 		};
 /******/ 		
@@ -436,11 +436,11 @@ module.exports = "pageB";
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -450,8 +450,7 @@ module.exports = "pageB";
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -460,9 +459,10 @@ module.exports = "pageB";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunk"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -512,17 +512,17 @@ module.exports = "pageC";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -541,7 +541,7 @@ module.exports = "pageC";
 /************************************************************************/
 /******/ 	/* webpack/runtime/chunk loaded */
 /******/ 	(() => {
-/******/ 		const deferred = [];
+/******/ 		var deferred = [];
 /******/ 		__webpack_require__.O = (result, chunkIds, fn) => {
 /******/ 			if(chunkIds) {
 /******/ 				deferred.push([chunkIds, fn]);
@@ -549,7 +549,7 @@ module.exports = "pageC";
 /******/ 			}
 /******/ 			for (var i = 0; i < deferred.length; i++) {
 /******/ 				let [chunkIds, fn] = deferred[i];
-/******/ 				let fulfilled = true;
+/******/ 				var fulfilled = true;
 /******/ 				for (var j = 0; j < chunkIds.length; j++) {
 /******/ 					if (__webpack_require__.O.j(chunkIds[j])) {
 /******/ 						chunkIds.splice(j--, 1);
@@ -559,7 +559,7 @@ module.exports = "pageC";
 /******/ 				}
 /******/ 				if(fulfilled) {
 /******/ 					deferred.splice(i--, 1)
-/******/ 					const r = fn();
+/******/ 					var r = fn();
 /******/ 					if (r !== undefined) result = r;
 /******/ 				}
 /******/ 			}
@@ -577,7 +577,7 @@ module.exports = "pageC";
 /******/ 		// object to store loaded and loading chunks
 /******/ 		// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 		// [resolve, reject, Promise] = chunk loading, 0 = chunk loaded
-/******/ 		const installedChunks = {
+/******/ 		var installedChunks = {
 /******/ 			"pageC": 0
 /******/ 		};
 /******/ 		
@@ -594,11 +594,11 @@ module.exports = "pageC";
 /******/ 		__webpack_require__.O.j = (chunkId) => (installedChunks[chunkId] === 0);
 /******/ 		
 /******/ 		// install a JSONP callback for chunk loading
-/******/ 		const webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
+/******/ 		var webpackJsonpCallback = (parentChunkLoadingFunction, data) => {
 /******/ 			let [chunkIds, moreModules, runtime] = data;
 /******/ 			// add "moreModules" to the modules object,
 /******/ 			// then flag all "chunkIds" as loaded and fire callback
-/******/ 			var moduleId, chunkId, i = 0;
+/******/ 			var moduleId, chunkId;
 /******/ 			if(chunkIds.some((id) => (installedChunks[id] !== 0))) {
 /******/ 				for(moduleId in moreModules) {
 /******/ 					if(__webpack_require__.o(moreModules, moduleId)) {
@@ -608,8 +608,7 @@ module.exports = "pageC";
 /******/ 				if(runtime) var result = runtime(__webpack_require__);
 /******/ 			}
 /******/ 			if(parentChunkLoadingFunction) parentChunkLoadingFunction(data);
-/******/ 			for(;i < chunkIds.length; i++) {
-/******/ 				chunkId = chunkIds[i];
+/******/ 			for(chunkId of chunkIds) {
 /******/ 				if(__webpack_require__.o(installedChunks, chunkId) && installedChunks[chunkId]) {
 /******/ 					installedChunks[chunkId][0]();
 /******/ 				}
@@ -618,9 +617,10 @@ module.exports = "pageC";
 /******/ 			return __webpack_require__.O(result);
 /******/ 		}
 /******/ 		
-/******/ 		const chunkLoadingGlobal = Array.isArray(self["webpackChunk"]) ? self["webpackChunk"] : (self["webpackChunk"] = []);
-/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(null, 0));
-/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(null, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
+/******/ 		var chunkLoadingGlobal = self["webpackChunk"];
+/******/ 		if(!Array.isArray(chunkLoadingGlobal)) chunkLoadingGlobal = self["webpackChunk"] = [];
+/******/ 		chunkLoadingGlobal.forEach(webpackJsonpCallback.bind(0, 0));
+/******/ 		chunkLoadingGlobal.push = webpackJsonpCallback.bind(0, chunkLoadingGlobal.push.bind(chunkLoadingGlobal));
 /******/ 	})();
 /******/ 	
 /************************************************************************/
@@ -648,13 +648,13 @@ module.exports = "pageC";
 assets by chunk 822 bytes (id hint: commons)
   asset commons-utility2_js.js 411 bytes [emitted] (id hint: commons)
   asset commons-utility3_js.js 411 bytes [emitted] (id hint: commons)
-asset pageA.js 5.7 KiB [emitted] (name: pageA)
-asset pageB.js 5.41 KiB [emitted] (name: pageB)
-asset pageC.js 5.35 KiB [emitted] (name: pageC)
+asset pageA.js 5.66 KiB [emitted] (name: pageA)
+asset pageB.js 5.37 KiB [emitted] (name: pageB)
+asset pageC.js 5.31 KiB [emitted] (name: pageC)
 asset vendor.js 752 bytes [emitted] (name: vendor) (id hint: vendor)
-Entrypoint pageA 6.83 KiB = vendor.js 752 bytes commons-utility2_js.js 411 bytes pageA.js 5.7 KiB
-Entrypoint pageB 6.95 KiB = vendor.js 752 bytes commons-utility2_js.js 411 bytes commons-utility3_js.js 411 bytes pageB.js 5.41 KiB
-Entrypoint pageC 6.16 KiB = commons-utility2_js.js 411 bytes commons-utility3_js.js 411 bytes pageC.js 5.35 KiB
+Entrypoint pageA 6.79 KiB = vendor.js 752 bytes commons-utility2_js.js 411 bytes pageA.js 5.66 KiB
+Entrypoint pageB 6.91 KiB = vendor.js 752 bytes commons-utility2_js.js 411 bytes commons-utility3_js.js 411 bytes pageB.js 5.37 KiB
+Entrypoint pageC 6.12 KiB = commons-utility2_js.js 411 bytes commons-utility3_js.js 411 bytes pageC.js 5.31 KiB
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -673,24 +673,24 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.16 KiB 3 modules
+  runtime modules 2.12 KiB 3 modules
   dependent modules 28 bytes [dependent] 1 module
   ./pageA.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.16 KiB 3 modules
+  runtime modules 2.12 KiB 3 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.16 KiB 3 modules
+  runtime modules 2.12 KiB 3 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14
@@ -715,13 +715,13 @@ webpack X.X.X compiled successfully
 assets by chunk 274 bytes (id hint: commons)
   asset commons-utility2_js.js 137 bytes [emitted] [minimized] (id hint: commons)
   asset commons-utility3_js.js 137 bytes [emitted] [minimized] (id hint: commons)
-asset pageA.js 963 bytes [emitted] [minimized] (name: pageA)
-asset pageB.js 958 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 942 bytes [emitted] [minimized] (name: pageC)
+asset pageA.js 898 bytes [emitted] [minimized] (name: pageA)
+asset pageB.js 893 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 877 bytes [emitted] [minimized] (name: pageC)
 asset vendor.js 151 bytes [emitted] [minimized] (name: vendor) (id hint: vendor)
-Entrypoint pageA 1.22 KiB = vendor.js 151 bytes commons-utility2_js.js 137 bytes pageA.js 963 bytes
-Entrypoint pageB 1.35 KiB = vendor.js 151 bytes commons-utility2_js.js 137 bytes commons-utility3_js.js 137 bytes pageB.js 958 bytes
-Entrypoint pageC 1.19 KiB = commons-utility2_js.js 137 bytes commons-utility3_js.js 137 bytes pageC.js 942 bytes
+Entrypoint pageA 1.16 KiB = vendor.js 151 bytes commons-utility2_js.js 137 bytes pageA.js 898 bytes
+Entrypoint pageB 1.29 KiB = vendor.js 151 bytes commons-utility2_js.js 137 bytes commons-utility3_js.js 137 bytes pageB.js 893 bytes
+Entrypoint pageC 1.12 KiB = commons-utility2_js.js 137 bytes commons-utility3_js.js 137 bytes pageC.js 877 bytes
 chunk (runtime: pageA, pageB, pageC) commons-utility2_js.js (id hint: commons) 28 bytes [initial] [rendered] split chunk (cache group: commons)
   > ./pageA pageA
   > ./pageB pageB
@@ -740,24 +740,24 @@ chunk (runtime: pageB, pageC) commons-utility3_js.js (id hint: commons) 28 bytes
     cjs require ./utility3 ./pageB.js 3:15-36
     cjs require ./utility3 ./pageC.js 2:15-36
     cjs self exports reference ./utility3.js 1:0-14
-chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageA) pageA.js (pageA) 165 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
   > ./pageA pageA
-  runtime modules 2.16 KiB 3 modules
+  runtime modules 2.12 KiB 3 modules
   dependent modules 28 bytes [dependent] 1 module
   ./pageA.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageA.js 5:0-14
     entry ./pageA pageA
-chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageB) pageB.js (pageB) 137 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
   > ./pageB pageB
-  runtime modules 2.16 KiB 3 modules
+  runtime modules 2.12 KiB 3 modules
   ./pageB.js 137 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageB.js 5:0-14
     entry ./pageB pageB
-chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.16 KiB (runtime) [entry] [rendered]
+chunk (runtime: pageC) pageC.js (pageC) 102 bytes (javascript) 2.12 KiB (runtime) [entry] [rendered]
   > ./pageC pageC
-  runtime modules 2.16 KiB 3 modules
+  runtime modules 2.12 KiB 3 modules
   ./pageC.js 102 bytes [built] [code generated]
     [used exports unknown]
     cjs self exports reference ./pageC.js 4:0-14

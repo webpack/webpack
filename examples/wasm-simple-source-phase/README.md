@@ -225,17 +225,17 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			id: moduleId,
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -251,23 +251,23 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /************************************************************************/
 /******/ 	/* webpack/runtime/async module */
 /******/ 	(() => {
-/******/ 		const webpackQueues = Symbol("webpack queues");
-/******/ 		const webpackExports = Symbol("webpack exports");
-/******/ 		const webpackError = Symbol("webpack error");
+/******/ 		var webpackQueues = Symbol("webpack queues");
+/******/ 		var webpackExports = Symbol("webpack exports");
+/******/ 		var webpackError = Symbol("webpack error");
 /******/ 		
-/******/ 		const resolveQueue = (queue) => {
+/******/ 		var resolveQueue = (queue) => {
 /******/ 			if(queue?.d < 1) {
 /******/ 				queue.d = 1;
 /******/ 				queue.forEach((fn) => (fn.r--));
 /******/ 				queue.forEach((fn) => (fn.r-- ? fn.r++ : fn()));
 /******/ 			}
 /******/ 		}
-/******/ 		const wrapDeps = (deps) => (deps.map((dep) => {
+/******/ 		var wrapDeps = (deps) => (deps.map((dep) => {
 /******/ 			if(dep && typeof dep === "object") {
 /******/ 		
 /******/ 				if(dep[webpackQueues]) return dep;
 /******/ 				if(dep.then) {
-/******/ 					const queue = [];
+/******/ 					var queue = [];
 /******/ 					queue.d = 0;
 /******/ 					dep.then((r) => {
 /******/ 						obj[webpackExports] = r;
@@ -276,7 +276,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 						obj[webpackError] = e;
 /******/ 						resolveQueue(queue);
 /******/ 					});
-/******/ 					const obj = {};
+/******/ 					var obj = {};
 /******/ 		
 /******/ 					obj[webpackQueues] = (fn) => (fn(queue));
 /******/ 					return obj;
@@ -285,37 +285,37 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 			return { [webpackQueues]: x => {}, [webpackExports]: dep };
 /******/ 		}));
 /******/ 		__webpack_require__.a = (module, body, hasAwait) => {
-/******/ 			let queue;
+/******/ 			var queue;
 /******/ 			hasAwait && ((queue = []).d = -1);
-/******/ 			const depQueues = new Set();
-/******/ 			const exports = module.exports;
-/******/ 			let currentDeps;
-/******/ 			let outerResolve;
-/******/ 			let reject;
-/******/ 			const promise = new Promise((resolve, rej) => {
+/******/ 			var depQueues = new Set();
+/******/ 			var exports = module.exports;
+/******/ 			var currentDeps;
+/******/ 			var outerResolve;
+/******/ 			var reject;
+/******/ 			var promise = new Promise((resolve, rej) => {
 /******/ 				reject = rej;
 /******/ 				outerResolve = resolve;
 /******/ 			});
 /******/ 			promise[webpackExports] = exports;
 /******/ 			promise[webpackQueues] = (fn) => (queue && fn(queue), depQueues.forEach(fn), promise["catch"](x => {}));
 /******/ 			module.exports = promise;
-/******/ 			const handle = (deps) => {
+/******/ 			var handle = (deps) => {
 /******/ 				currentDeps = wrapDeps(deps);
-/******/ 				let fn;
-/******/ 				const getResult = () => (currentDeps.map((d) => {
+/******/ 				var fn;
+/******/ 				var getResult = () => (currentDeps.map((d) => {
 /******/ 		
 /******/ 					if(d[webpackError]) throw d[webpackError];
 /******/ 					return d[webpackExports];
 /******/ 				}))
-/******/ 				const promise = new Promise((resolve) => {
+/******/ 				var promise = new Promise((resolve) => {
 /******/ 					fn = () => (resolve(getResult));
 /******/ 					fn.r = 0;
-/******/ 					const fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
+/******/ 					var fnQueue = (q) => (q !== queue && !depQueues.has(q) && (depQueues.add(q), q && !q.d && (fn.r++, q.push(fn))));
 /******/ 					currentDeps.forEach((dep) => (dep[webpackQueues](fnQueue)));
 /******/ 				});
 /******/ 				return fn.r ? promise : getResult();
 /******/ 			}
-/******/ 			const done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
+/******/ 			var done = (err) => ((err ? reject(promise[webpackError] = err) : outerResolve(exports)), resolveQueue(queue))
 /******/ 		
 /******/ 			body(handle, done);
 /******/ 			queue?.d < 0 && (queue.d = 0);
@@ -337,9 +337,7 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /******/ 	/* webpack/runtime/wasm compile */
 /******/ 	(() => {
@@ -389,13 +387,13 @@ __webpack_require__.a(module, async (__webpack_handle_async_dependencies__, __we
 ## Unoptimized
 
 ```
-asset output.js 13.7 KiB [emitted] (name: main)
+asset output.js 13.6 KiB [emitted] (name: main)
 asset 690d0ef01c3f29042287.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset f215af0bd9b5ea85aee7.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 0bb22d2508a3f5746503.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.24 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.21 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 3.24 KiB 5 modules
+  runtime modules 3.21 KiB 5 modules
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
@@ -407,14 +405,14 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.js 2.99 KiB [emitted] [minimized] (name: main)
+asset output.js 2.95 KiB [emitted] [minimized] (name: main)
 asset cf7e85ed8e63f4d888d1.wasm 67 bytes [emitted] [immutable] (auxiliary name: main)
 asset a2f8efa4d5c0dcec35af.wasm 62 bytes [emitted] [immutable] (auxiliary name: main)
 asset 8c504d8ec13ead0a0a07.wasm 41 bytes [emitted] [immutable] (auxiliary name: main)
-chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.06 KiB (runtime) [entry] [rendered]
+chunk (runtime: main) output.js (main) 1.56 KiB (javascript) 170 bytes (webassembly) 3.03 KiB (runtime) [entry] [rendered]
   > ./example.js main
   dependent modules 775 bytes (javascript) 170 bytes (webassembly) [dependent] 4 modules
-  runtime modules 3.06 KiB 4 modules
+  runtime modules 3.03 KiB 4 modules
   ./example.js 826 bytes [built] [code generated]
     [no exports]
     [no exports used]

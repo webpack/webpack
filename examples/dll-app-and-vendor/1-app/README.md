@@ -60,7 +60,7 @@ console.log(new square(7));
 /* 0 */,
 /* 1 */
 /*!******************************************************************************************************!*\
-  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_c3737c4a3a645b2d08c5 ***!
+  !*** delegated ../node_modules/example-vendor.js from dll-reference vendor_lib_6ca38d0233aa92c43ec2 ***!
   \******************************************************************************************************/
 /*! namespace exports */
 /*! export square [provided] [no usage info] [provision prevents renaming (no use info)] */
@@ -68,12 +68,12 @@ console.log(new square(7));
 /*! runtime requirements: module, __webpack_require__ */
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
-module.exports = (__webpack_require__(/*! dll-reference vendor_lib_c3737c4a3a645b2d08c5 */ 2))(1);
+module.exports = (__webpack_require__(/*! dll-reference vendor_lib_6ca38d0233aa92c43ec2 */ 2))(1);
 
 /***/ }),
 /* 2 */
 /*!**************************************************!*\
-  !*** external "vendor_lib_c3737c4a3a645b2d08c5" ***!
+  !*** external "vendor_lib_6ca38d0233aa92c43ec2" ***!
   \**************************************************/
 /*! dynamic exports */
 /*! exports [maybe provided (runtime-defined)] [no usage info] */
@@ -81,7 +81,7 @@ module.exports = (__webpack_require__(/*! dll-reference vendor_lib_c3737c4a3a645
 /***/ ((module) => {
 
 "use strict";
-module.exports = vendor_lib_c3737c4a3a645b2d08c5;
+module.exports = vendor_lib_6ca38d0233aa92c43ec2;
 
 /***/ })
 /******/ 	]);
@@ -92,17 +92,17 @@ module.exports = vendor_lib_c3737c4a3a645b2d08c5;
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -118,9 +118,7 @@ module.exports = vendor_lib_c3737c4a3a645b2d08c5;
 /************************************************************************/
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /************************************************************************/
 ```
@@ -156,11 +154,11 @@ console.log(new example_vendor__WEBPACK_IMPORTED_MODULE_0__.square(7));
 ## Unoptimized
 
 ```
-asset app.js 3.29 KiB [emitted] (name: main)
-chunk (runtime: main) app.js (main) 178 bytes (javascript) 184 bytes (runtime) [entry] [rendered]
+asset app.js 3.26 KiB [emitted] (name: main)
+chunk (runtime: main) app.js (main) 178 bytes (javascript) 180 bytes (runtime) [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules
-  runtime modules 184 bytes 1 module
+  runtime modules 180 bytes 1 module
   ./example-app.js 94 bytes [built] [code generated]
     [no exports]
     [used exports unknown]
@@ -171,7 +169,7 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset app.js 337 bytes [emitted] [minimized] (name: main)
+asset app.js 329 bytes [emitted] [minimized] (name: main)
 chunk (runtime: main) app.js (main) 178 bytes [entry] [rendered]
   > ./example-app main
   dependent modules 84 bytes [dependent] 2 modules

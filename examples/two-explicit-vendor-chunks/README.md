@@ -65,17 +65,17 @@ module.exports = "Vendor1";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -143,17 +143,17 @@ __webpack_require__(/*! ./vendor1 */ 0);
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -236,17 +236,17 @@ __webpack_require__(/*! ./vendor2 */ 1);
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -281,8 +281,8 @@ __webpack_require__(/*! ./vendor2 */ 1);
 
 ```
 asset pageA.js 2.43 KiB [emitted] (name: pageA)
-asset vendor2.js 2.01 KiB [emitted] (name: vendor2)
-asset vendor1.js 1.62 KiB [emitted] (name: vendor1)
+asset vendor2.js 2 KiB [emitted] (name: vendor2)
+asset vendor1.js 1.61 KiB [emitted] (name: vendor1)
 asset pageB.js 1.6 KiB [emitted] (name: pageB)
 asset pageC.js 1.6 KiB [emitted] (name: pageC)
 chunk (runtime: pageA) pageA.js (pageA) 147 bytes [entry] [rendered]
@@ -326,11 +326,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset vendor1.js 185 bytes [emitted] [minimized] (name: vendor1)
-asset vendor2.js 185 bytes [emitted] [minimized] (name: vendor2)
-asset pageB.js 183 bytes [emitted] [minimized] (name: pageB)
-asset pageC.js 183 bytes [emitted] [minimized] (name: pageC)
-asset pageA.js 181 bytes [emitted] [minimized] (name: pageA)
+asset vendor1.js 175 bytes [emitted] [minimized] (name: vendor1)
+asset vendor2.js 175 bytes [emitted] [minimized] (name: vendor2)
+asset pageB.js 173 bytes [emitted] [minimized] (name: pageB)
+asset pageC.js 173 bytes [emitted] [minimized] (name: pageC)
+asset pageA.js 171 bytes [emitted] [minimized] (name: pageA)
 chunk (runtime: vendor2) vendor2.js (vendor2) 50 bytes [entry] [rendered]
   > ./vendor2 vendor2
   ./vendor2.js 50 bytes [built] [code generated]

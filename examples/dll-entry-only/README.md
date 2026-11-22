@@ -68,7 +68,7 @@ module.exports = config;
 # dist/dll.js
 
 ```javascript
-var dll_3e08aa6d2ce880a91c06;
+var dll_cc8adc3a550e7cd56c10;
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ([
 /* 0 */
@@ -150,17 +150,17 @@ exports.c = "c";
 ``` js
 /************************************************************************/
 /******/ 	// The module cache
-/******/ 	const __webpack_module_cache__ = {};
+/******/ 	var __webpack_module_cache__ = {};
 /******/ 	
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
 /******/ 		// Check if module is in cache
-/******/ 		const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 		var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 		if (cachedModule !== undefined) {
 /******/ 			return cachedModule.exports;
 /******/ 		}
 /******/ 		// Create a new module (and put it into the cache)
-/******/ 		const module = __webpack_module_cache__[moduleId] = {
+/******/ 		var module = __webpack_module_cache__[moduleId] = {
 /******/ 			// no module.id needed
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
@@ -189,9 +189,7 @@ exports.c = "c";
 /******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	// define __esModule on exports
-/******/ 	__webpack_require__.r = (exports) => {
-/******/ 		Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ 	};
+/******/ 	__webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 	
 /************************************************************************/
 ```
@@ -204,7 +202,7 @@ exports.c = "c";
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module doesn't tell about it's top-level declarations so it can't be inlined
 /******/ 	let __webpack_exports__ = __webpack_require__(0);
-/******/ 	dll_3e08aa6d2ce880a91c06 = __webpack_exports__;
+/******/ 	dll_cc8adc3a550e7cd56c10 = __webpack_exports__;
 /******/ 	
 /******/ })()
 ;
@@ -213,7 +211,7 @@ exports.c = "c";
 # dist/dll-manifest.json
 
 ```javascript
-{"name":"dll_3e08aa6d2ce880a91c06","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
+{"name":"dll_cc8adc3a550e7cd56c10","content":{"./example.js":{"id":1,"buildMeta":{"exportsType":"namespace"},"exports":["a","b","c"]}}}
 ```
 
 # Info
@@ -221,10 +219,10 @@ exports.c = "c";
 ## Unoptimized
 
 ```
-asset dll.js 4.4 KiB [emitted] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
+asset dll.js 4.38 KiB [emitted] (name: dll)
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 583 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 587 bytes 3 modules
+  runtime modules 583 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     [used exports unknown]
@@ -236,10 +234,10 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset dll.js 626 bytes [emitted] [minimized] (name: dll)
-chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 587 bytes (runtime) [entry] [rendered]
+asset dll.js 614 bytes [emitted] [minimized] (name: dll)
+chunk (runtime: dll) dll.js (dll) 211 bytes (javascript) 583 bytes (runtime) [entry] [rendered]
   > dll
-  runtime modules 587 bytes 3 modules
+  runtime modules 583 bytes 3 modules
   dependent modules 199 bytes [dependent] 2 modules
   dll dll 12 bytes [built] [code generated]
     dll entry

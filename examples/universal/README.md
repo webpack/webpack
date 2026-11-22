@@ -148,17 +148,17 @@ function platform() {
 ``` js
 /************************************************************************/
 /******/ // The module cache
-/******/ const __webpack_module_cache__ = {};
+/******/ var __webpack_module_cache__ = {};
 /******/ 
 /******/ // The require function
 /******/ function __webpack_require__(moduleId) {
 /******/ 	// Check if module is in cache
-/******/ 	const cachedModule = __webpack_module_cache__[moduleId];
+/******/ 	var cachedModule = __webpack_module_cache__[moduleId];
 /******/ 	if (cachedModule !== undefined) {
 /******/ 		return cachedModule.exports;
 /******/ 	}
 /******/ 	// Create a new module (and put it into the cache)
-/******/ 	const module = __webpack_module_cache__[moduleId] = {
+/******/ 	var module = __webpack_module_cache__[moduleId] = {
 /******/ 		// no module.id needed
 /******/ 		// no module.loaded needed
 /******/ 		exports: {}
@@ -190,7 +190,7 @@ function platform() {
 /******/ // This file contains only the entry chunk.
 /******/ // The chunk loading function for additional chunks
 /******/ __webpack_require__.e = (chunkId) => {
-/******/ 	const promises = [];
+/******/ 	var promises = [];
 /******/ 	__webpack_require__.f.j(chunkId, promises);
 /******/ 	return Promise.all(promises);
 /******/ };
@@ -200,26 +200,24 @@ function platform() {
 /******/ 
 /******/ /* webpack/runtime/make namespace object */
 /******/ // define __esModule on exports
-/******/ __webpack_require__.r = (exports) => {
-/******/ 	Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } });
-/******/ };
+/******/ __webpack_require__.r = (exports) => (Object.defineProperties(exports, { [Symbol.toStringTag]: { value: 'Module' }, __esModule: { value: true } }));
 /******/ 
 /******/ /* webpack/runtime/import chunk loading */
 /******/ (() => {
 /******/ 	// no baseURI
 /******/ 	
-/******/ 	const chunkImports = {
+/******/ 	var chunkImports = {
 /******/ 		"render_js": () => (import("./render_js.mjs"))
 /******/ 	};
 /******/ 	
 /******/ 	// object to store loaded and loading chunks
 /******/ 	// undefined = chunk not loaded, null = chunk preloaded/prefetched
 /******/ 	// [resolve, Promise] = chunk loading, 0 = chunk loaded
-/******/ 	const installedChunks = {
+/******/ 	var installedChunks = {
 /******/ 		"main": 0
 /******/ 	};
 /******/ 	
-/******/ 	const installChunk = (data) => {
+/******/ 	var installChunk = (data) => {
 /******/ 		let {__webpack_esm_ids__, __webpack_esm_modules__, __webpack_esm_runtime__} = data;
 /******/ 		// add "modules" to the modules object,
 /******/ 		// then flag all "ids" as loaded and fire callback
@@ -242,7 +240,7 @@ function platform() {
 /******/ 	
 /******/ 	__webpack_require__.f.j = (chunkId, promises) => {
 /******/ 			// import() chunk loading for javascript
-/******/ 			let installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
+/******/ 			var installedChunkData = __webpack_require__.o(installedChunks, chunkId) ? installedChunks[chunkId] : undefined;
 /******/ 			if(installedChunkData !== 0) { // 0 means "already installed".
 /******/ 	
 /******/ 				// a Promise means "currently loading".
@@ -251,7 +249,7 @@ function platform() {
 /******/ 				} else {
 /******/ 					if(true) { // all chunks have JS
 /******/ 						// setup Promise in chunk cache
-/******/ 						const promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
+/******/ 						var promise = Promise.race([chunkImports[chunkId]().then(installChunk, (e) => {
 /******/ 							if(installedChunks[chunkId] !== 0) installedChunks[chunkId] = undefined;
 /******/ 							throw e;
 /******/ 						}), new Promise((resolve) => (installedChunkData = installedChunks[chunkId] = [resolve]))]);
@@ -314,8 +312,8 @@ main();
 # dist/render_js.mjs
 
 ```javascript
-export const __webpack_esm_ids__ = ["render_js"];
-export const __webpack_esm_modules__ = {
+export const __webpack_esm_ids__ = ["render_js"],
+__webpack_esm_modules__ = {
 
 /***/ 2
 /*!*******************!*\
@@ -352,11 +350,11 @@ function render(message) {
 ## Unoptimized
 
 ```
-asset output.mjs 7.62 KiB [emitted] [javascript module] (name: main)
-asset render_js.mjs 998 bytes [emitted] [javascript module]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.77 KiB (runtime) [entry] [rendered]
+asset output.mjs 7.58 KiB [emitted] [javascript module] (name: main)
+asset render_js.mjs 985 bytes [emitted] [javascript module]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.76 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.77 KiB 5 modules
+  runtime modules 2.76 KiB 5 modules
   dependent modules 562 bytes [dependent] 1 module
   ./example.js 629 bytes [built] [code generated]
     [no exports]
@@ -374,11 +372,11 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
-asset output.mjs 1.12 KiB [emitted] [javascript module] [minimized] (name: main)
-asset render_js.mjs 206 bytes [emitted] [javascript module] [minimized]
-chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.59 KiB (runtime) [entry] [rendered]
+asset output.mjs 1.09 KiB [emitted] [javascript module] [minimized] (name: main)
+asset render_js.mjs 193 bytes [emitted] [javascript module] [minimized]
+chunk (runtime: main) output.mjs (main) 1.16 KiB (javascript) 2.58 KiB (runtime) [entry] [rendered]
   > ./example.js main
-  runtime modules 2.59 KiB 4 modules
+  runtime modules 2.58 KiB 4 modules
   ./example.js + 1 modules 1.16 KiB [built] [code generated]
     [no exports]
     [no exports used]
