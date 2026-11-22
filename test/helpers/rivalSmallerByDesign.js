@@ -67,7 +67,6 @@ const BY_DESIGN = [
 			"terser compress: dead-code/dead_code_2_should_warn",
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
 			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
-			"terser compress: evaluate/issue_2926_1",
 			"terser compress: functions/empty_body",
 			"terser compress: functions/issue_1841_2",
 			"terser compress: functions/issue_2620_1",

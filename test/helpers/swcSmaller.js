@@ -32,7 +32,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/yui/9/input.js",
 			"swc minifier: fixture/terser/issue-2535-2/2/input.js",
 			"terser compress: collapse_vars/collapse_rhs_conditional_2",
-			"terser compress: comparing/self_comparison_2",
 			"terser compress: conditionals/cond_7_1",
 			"terser compress: conditionals/ifs_3_should_warn",
 			"terser compress: const/issue_1396",
@@ -41,7 +40,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_186_beautify_braces",
 			"terser compress: loops/issue_186_braces",
 			"terser compress: pure_getters/set_immutable_5",
-			"terser compress: dead-code/collapse_vars_lvalues_drop_assign",
 			"terser compress: destructuring/issue_t111_1",
 			"terser compress: destructuring/issue_t111_3",
 			"terser compress: functions/issue_2476",
@@ -114,10 +112,8 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `reduce_vars` tests cover",
 		[
 			"terser compress: reduce_vars/defun_call",
-			"terser compress: reduce_vars/issue_1670_6",
 			"terser compress: reduce_vars/redefine_farg_3",
 			"terser compress: reduce_vars/side_effects_assign",
-			"terser compress: reduce_vars/func_arg_1",
 			"terser compress: reduce_vars/issue_2423_2",
 			"terser compress: reduce_vars/issue_2423_5",
 			"terser compress: reduce_vars/issue_2423_6",
@@ -126,7 +122,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/issue_2757_2",
 			"terser compress: reduce_vars/chained_assignments",
 			"terser compress: reduce_vars/issue_3042_2",
-			"terser compress: reduce_vars/issue_2919",
 			"terser compress: reduce_vars/issue_3140_2",
 			"terser compress: reduce_vars/variables_collision_in_immediately_invoked_func",
 			"terser compress: reduce_vars/issue_308",
@@ -286,7 +281,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: issue-1639/issue_1639_3",
 			"terser compress: issue-t120/issue_t120_1",
 			"terser compress: issue-t120/issue_t120_2",
-			"terser compress: loops/dead_code_condition",
 			"terser compress: sequences/lift_sequences_2",
 			"terser compress: sequences/lift_sequences_5",
 			"terser compress: sequences/lift_sequences_6",
@@ -419,9 +413,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `destructuring` tests cover",
 		[
 			"terser compress: destructuring/destructuring_with_undefined_as_default_assignment",
-			"terser compress: destructuring/unused_destructuring_function_param",
-			"terser compress: destructuring/unused_destructuring_object_method_param",
-			"terser compress: destructuring/unused_destructuring_class_method_param",
 			"terser compress: destructuring/empty_object_destructuring_3",
 			"terser compress: destructuring/empty_object_destructuring_4",
 			"terser compress: destructuring/destructure_empty_array_3"
@@ -551,7 +542,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `dead-code` tests cover",
 		[
-			"terser compress: dead-code/issue_2383_3",
 			"terser compress: dead-code/try_catch_finally",
 			"terser compress: dead-code/collapse_vars_assignment",
 			"terser compress: dead-code/throw_assignment"
@@ -862,10 +852,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `inline` tests cover",
 		["terser compress: inline/inline_annotation_2"]
-	],
-	[
-		"swc goes further than webpack on what terser's `issue-1275` tests cover",
-		["terser compress: issue-1275/string_plus_optimization"]
 	],
 	[
 		"swc goes further than webpack on what terser's `issue-208` tests cover",
