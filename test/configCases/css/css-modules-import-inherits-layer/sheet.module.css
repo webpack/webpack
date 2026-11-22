@@ -5,3 +5,7 @@
 	composes: other from "./sheet-composed.module.css";
 	color: accent;
 }
+
+.ordered {
+	composes: sheet-ordered from "./sheet-ordered.module.css";
+}

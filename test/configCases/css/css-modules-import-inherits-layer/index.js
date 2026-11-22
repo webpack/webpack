@@ -23,3 +23,9 @@ it("should put the modules a sheet composes from in the sheet, once each", () =>
 	const css = fs.readFileSync(path.join(__dirname, "bundle0.css"), "utf-8");
 	expect(css).not.toContain("purple");
 });
+
+it("should keep a repeated @import of a composed module last in a sheet", () => {
+	const text = Array.from(sheet.cssRules, (rule) => rule.cssText).join("\n");
+	expect(text.lastIndexOf("maroon")).toBeGreaterThan(text.indexOf("olive"));
+	expect(text.indexOf("olive")).toBeGreaterThan(-1);
+});

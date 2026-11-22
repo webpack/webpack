@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Put composed rules and external @import into CSS text and sheet modules.
+Put composed rules in CSS text and sheet modules, and external @import in text.
