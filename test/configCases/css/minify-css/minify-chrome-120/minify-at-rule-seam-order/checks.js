@@ -15,12 +15,12 @@ module.exports = {
 		// Every at-rule whose block holds rules reaches the same seam, so each is
 		// held to the printer's own order rather than the order the two were in.
 		expect(css).toContain("@media print{.a,.b{color:red}}");
-		expect(css).toContain("@supports (color:red){.c,.d{top:0}}");
+		expect(css).toContain("@supports(color:red){.c,.d{top:0}}");
 		expect(css).toContain("@layer named{.e,.f{left:0}}");
 		expect(css).toContain("@starting-style{.g,.h{opacity:0}}");
 		// A run of joins ends in one list, ordered once the sheet leaves nothing
 		// further to append.
-		expect(css).toContain("@container (width>0px){.s1,.s2,.s3,.s4{right:0}}");
+		expect(css).toContain("@container(width>0px){.s1,.s2,.s3,.s4{right:0}}");
 		// A seam that joins nothing leaves both rules where they were written.
 		expect(css).toContain(
 			"@media screen{.keep-first{color:red}.keep-second{color:blue}}"

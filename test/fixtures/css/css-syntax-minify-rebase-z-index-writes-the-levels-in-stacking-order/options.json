@@ -1,0 +1,12 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"rebaseZIndex": true
+		}
+	},
+	{
+		"print": "cssMinify",
+		"rebaseZIndex": true
+	}
+]

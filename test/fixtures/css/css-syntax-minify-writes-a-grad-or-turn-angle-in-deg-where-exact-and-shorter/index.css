@@ -1,0 +1,4 @@
+a{transform:rotate(.25turn) rotate(100grad) rotate(1.5TURN) skewX(-.1turn)}
+b{transform:rotate(33grad) rotate(1rad) rotate(1turn) rotate(.123456789turn)}
+c{transform:rotate(calc(.25turn * 2));--angle:.25turn}
+@supports (rotate:.25turn){d{rotate:.5turn}}

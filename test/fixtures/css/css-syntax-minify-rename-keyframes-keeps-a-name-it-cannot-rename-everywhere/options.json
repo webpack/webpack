@@ -1,0 +1,16 @@
+[
+	{
+		"mode": "minify",
+		"transforms": {
+			"renameKeyframes": true
+		}
+	},
+	{
+		"mode": "minify",
+		"unusedSymbols": ["unusedName", "a"],
+		"transforms": {
+			"renameKeyframes": true,
+			"foldCase": false
+		}
+	}
+]

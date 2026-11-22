@@ -1968,7 +1968,7 @@ const LOWERING_FIXTURES = [
 		browsers: ["chrome 130"],
 		produces: [
 			"@media (width>=1px)",
-			"@supports (color:red){",
+			"@supports(color:red){",
 			"border:none",
 			"transition:opacity.3s",
 			"color:#333",

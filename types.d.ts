@@ -7938,7 +7938,7 @@ declare interface CssPrintOptions {
 	declareCharset?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
+	 * give a rule the selectors of a later one printing the same block, a rule the declarations of a later one under the same selectors, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
@@ -8015,7 +8015,7 @@ declare interface CssProcessOptions {
 	convertApproximateColors?: boolean;
 
 	/**
-	 * give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
+	 * give a rule the selectors of a later one printing the same block, a rule the declarations of a later one under the same selectors, and an at-rule the block of a later one stating the same condition, past the rules between them; off by default, since it reorders the cascade and is sound only where nothing between declares what the block being moved does for an element it can match - a condition between counting for what its own rules declare
 	 */
 	mergeDistantRules?: boolean;
 
@@ -8231,6 +8231,16 @@ declare interface CssTransformOptions {
 	 * write the selector list a `@custom-selector` names as `:is(...)` wherever a selector asks for it, and drop the rule that named it
 	 */
 	customSelectors?: boolean;
+
+	/**
+	 * write the positive `z-index` levels the stylesheet uses as `1`, `2`, ... in the order they stack; off by default, since a level set elsewhere stacks against the old ones
+	 */
+	rebaseZIndex?: boolean;
+
+	/**
+	 * give each `@keyframes` the stylesheet defines a shorter name, and write that name wherever an `animation` value names it; off by default, since a name read elsewhere is no longer defined
+	 */
+	renameKeyframes?: boolean;
 
 	/**
 	 * write a family of longhands as the one shorthand that sets them
@@ -26359,7 +26369,7 @@ declare interface OptimizationMinimizeCss {
 	customSelectors?: boolean;
 
 	/**
-	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
+	 * Drop a declaration a later one in the same block overrides even where no target is selected, assuming the engines shipping today: wherever Chromium, Gecko and WebKit each read the later value. Off by default. With a `browserslist` target this is already done wherever every browser it names is known to read the later value, so the option only widens the case where no target is selected and there are no engines to name — which is what csso and cssnano do unconditionally. What it gives up is the fallback pair: `color:#c65d06;color:lab(50% 100 -100)` loses the hex, so an engine that cannot read `lab()` is left with nothing. A `margin` or `padding` written in CSS 2.1 lengths also drops an earlier declaration of a longhand it sets: `margin-top:1px;margin:0` becomes `margin:0`. A selection naming a browser the compat tables do not cover is still answered for the whole of it rather than by this option, since naming a browser states a target the option does not override.
 	 * @since 5.112.0
 	 */
 	dropOverriddenDeclarations?: boolean;
@@ -26387,7 +26397,7 @@ declare interface OptimizationMinimizeCss {
 	lowerUnsupported?: boolean;
 
 	/**
-	 * Give a rule the selectors of a later one printing the same block, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, `h3` between two rules for `h1` and `h2`, never can) — a condition between counts for what its own rules declare, while `@layer` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named `@layer` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. `mergeRules` is the safe half of this, joining only what nothing stands between.
+	 * Give a rule the selectors of a later one printing the same block, a rule the declarations of a later one under the same selectors, and an at-rule the block of a later one stating the same condition, past the rules standing between them. Off by default because it reorders the cascade, so it holds only where nothing between the two declares a property the block being moved does for an element its selectors can match (a rule whose selectors all name other element types, `h3` between two rules for `h1` and `h2`, never can) — a condition between counts for what its own rules declare, while `@layer` and anything else whose declarations cannot be read stands in the way whatever it says. A block repeated at a distance already compresses on its own, so a selector join is taken only where the copy of the block it drops is worth more than twice the selector it writes instead; an at-rule join writes no selector and drops the repeated prelude outright. A named `@layer` is not joined this way — its place in the cascade is where its name is first written, not what its prelude states. `mergeRules` is the safe half of this, joining only what nothing stands between; writing a later rule's declarations into an earlier one also needs it on.
 	 * @since 5.111.0
 	 */
 	mergeDistantRules?: boolean;
@@ -26417,6 +26427,12 @@ declare interface OptimizationMinimizeCss {
 	pseudoClasses?: { [index: string]: string };
 
 	/**
+	 * Write the positive `z-index` levels the stylesheet uses as `1`, `2`, `3`, … in the order they stack: `z-index:1000` and `z-index:2000` become `z-index:1` and `z-index:2`. Off by default, because it only keeps the order of the levels this stylesheet writes: a level set anywhere else — another stylesheet, an inline `style`, a script — now stacks against different numbers. Nothing is rebased when any `z-index` is other than an integer or a keyword (a `var()`, a `calc()`), or when a keyframe or a transition (of `all`, of `z-index`, or of a property it does not name) may animate one, since a level between two rebased ones then passes others the rebase moved, a zero or negative level keeps its value, and a `@supports` test keeps the number it asks about.
+	 * @since 5.114.0
+	 */
+	rebaseZIndex?: boolean;
+
+	/**
 	 * Compute a call into the shorter call naming the same value: `calc()` and every math function over constants, a transform naming one axis or an identity, a gradient's default direction and its implied stops, an easing function that has a keyword, and a filter function given the amount an omitted argument already means. On by default.
 	 * @since 5.110.0
 	 */
@@ -26427,6 +26443,12 @@ declare interface OptimizationMinimizeCss {
 	 * @since 5.110.0
 	 */
 	removeDeadRules?: boolean;
+
+	/**
+	 * Give each `@keyframes` the stylesheet defines a shorter name, and write that name wherever an `animation` or `animation-name` value names it: `@keyframes fadeIn` with `animation:fadeIn 1s` becomes `@keyframes a` with `animation:a 1s`. Off by default, because a name read anywhere else — another stylesheet, an inline `style`, a script setting `animationName` or listening for `animationend` by name — no longer names anything. A name a custom property or a substituted value (`var()`, `env()`, `attr()`) spells is kept, as is one quoted or matching an `animation` keyword, and a new name never takes one the stylesheet already uses.
+	 * @since 5.114.0
+	 */
+	renameKeyframes?: boolean;
 
 	/**
 	 * Print a style rule's declarations in one order by property family, the properties no family names first where they were written, so blocks setting the same things read alike and compress smaller. Only declarations whose order nothing can see move: two spellings of one property, a shorthand and what it sets, two shorthands sharing a longhand, and a flow-relative side and a physical one keep theirs, and a block holding a property no dataset names or a nested rule is printed as written. On by default.

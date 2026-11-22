@@ -1,0 +1,10 @@
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+@-webkit-keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes a { from { top: 0 } }
+@keyframes keptByProperty { from { top: 0 } }
+@keyframes keptByFallback { from { top: 0 } }
+@keyframes "quoted" { from { top: 0 } }
+.one { animation: fadeIn 1s ease-in; -webkit-animation-name: fadeIn }
+.two { animation-name: missing, fadeIn }
+.three { animation: var(--motion, keptByFallback) 1s }
+:root { --motion: keptByProperty }

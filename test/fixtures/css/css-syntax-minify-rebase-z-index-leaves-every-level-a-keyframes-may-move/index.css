@@ -1,0 +1,3 @@
+@keyframes rise { from { z-index: 1 } to { z-index: 1000 } }
+.a { z-index: 10 }
+.b { z-index: 2000 }

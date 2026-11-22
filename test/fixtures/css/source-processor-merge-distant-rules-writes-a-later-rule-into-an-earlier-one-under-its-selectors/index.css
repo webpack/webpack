@@ -1,0 +1,20 @@
+.a { color: red }
+@media print { .a { top: 0 } }
+.a { left: 0 }
+.b { color: red }
+@media print { .b { left: 1px } }
+.b { left: 0 }
+.c { font-family: x }
+@media print { .c { font-family: y } }
+.c { font-weight: 700 }
+.d { color: red }
+@font-face { font-family: x }
+.d { top: 0 }
+.e { color: red }
+.f { top: 1px }
+.e { top: 0 }
+.p { left: 0 }
+.q { top: 0 }
+.r { height: 0 }
+.q { color: red }
+.p { color: blue }

@@ -1,0 +1,6 @@
+@supports (display: grid) and (not (display: inline-grid)) { a { top: 0 } }
+@supports not (display: grid) { b { top: 0 } }
+@container (width > 1px) { c { top: 0 } }
+@container card (width > 1px) { d { top: 0 } }
+@media (min-width: 1px) { e { top: 0 } }
+.f { @supports (display: grid) { top: 0 } }

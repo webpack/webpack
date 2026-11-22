@@ -1,0 +1,2 @@
+.a { z-index: 10; transition: 1s }
+.b { z-index: 2000; transition: opacity 1s }
