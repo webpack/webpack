@@ -322,12 +322,6 @@ jobs:
             jest-test262-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
             jest-test262-${{ runner.os }}-
 
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: tc39/test262
-          path: test/js/test262
-          ref: f2d59ea6e4b2f6f87de9f0d18a41d73782b6a9bc
-
       # One file, one part per core of the runner at once (`--parts=auto`,
       # TESTING_DOCS.md), where it took two runners one core each.
       - run: yarn cover:test262 --parts=auto --maxWorkers=100% --ci --cacheDirectory .jest-cache
@@ -620,8 +614,9 @@ jobs:
           git apply test/patches/jest-runner+30.4.2.patch
 
       # Both runtimes run the same suites with jest's parallel workers, the
-      # HotTestCases and Chrome-driven ones included.
-      - run: yarn test:${{ matrix.runtime }} --ci
+      # HotTestCases and Chrome-driven ones included. Deno takes a worker per
+      # core; Bun's threads share one `--smol` heap, so it keeps the default.
+      - run: yarn test:${{ matrix.runtime }} ${{ matrix.runtime == 'deno' && '--maxWorkers=100%' || '' }} --ci
 
   integration:
     needs: [lint, basic, unit]
@@ -743,7 +738,8 @@ jobs:
             jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
             jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-
 
-      - run: yarn cover:integration${{ matrix.part && ':a' || '' }} --ci --cacheDirectory .jest-cache
+      # Jest's default leaves one of the macOS runner's 3 cores idle.
+      - run: yarn cover:integration${{ matrix.part && ':a' || '' }} ${{ matrix.os == 'macos-latest' && '--maxWorkers=100%' || '' }} --ci --cacheDirectory .jest-cache
         env:
           MAIN_BRANCHES: ${{ matrix.use_main_branches }}
         if: matrix.coverage || matrix.use_main_branches
