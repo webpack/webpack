@@ -95,6 +95,7 @@
     "test:test262-parser": "yarn test:base --testMatch \"<rootDir>/test/specCases/test262-parser.spectest.js\"",
     "test:minify-corpora": "yarn test:base --testMatch \"<rootDir>/test/specCases/minify-corpora.spectest.js\"",
     "test:js-fuzz": "yarn test:base --testMatch \"<rootDir>/test/specCases/js-fuzz.spectest.js\"",
+    "test:xml-fuzz": "yarn test:base --testMatch \"<rootDir>/test/specCases/xml-fuzz.spectest.js\"",
     "test:syntax-fuzz": "yarn test:base --testMatch \"<rootDir>/test/specCases/syntax-fuzz.spectest.js\"",
     "test:html5lib": "yarn test:base --testMatch \"<rootDir>/test/specCases/html5lib.spectest.js\"",
     "test:syntax-equivalence": "yarn test:base --testMatch \"<rootDir>/test/specCases/syntaxEquivalence.spectest.js\"",
