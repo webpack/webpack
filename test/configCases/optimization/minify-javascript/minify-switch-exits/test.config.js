@@ -11,7 +11,7 @@ module.exports = {
 		);
 		expect(code).not.toContain("dead");
 		expect(code).toContain(
-			"case 1:log.push(`one`);break;default:log.push(`other`)"
+			"return x===1?log.push(`one`):log.push(`other`),log"
 		);
 		expect(code).toContain("log.push(`tested`),log.push(`first`)");
 		expect(code).toContain(
