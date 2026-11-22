@@ -3,6 +3,7 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const cssMinify = require("../../../../lib/css/cssMinify");
 const htmlMinify = require("../../../../lib/html/htmlMinify");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 const svgMinify = require("../../../helpers/svgMinify");
 
 /** @type {import("../../../../").Configuration} */
@@ -29,7 +30,7 @@ module.exports = {
 					new MinimizerPlugin({
 						test: /\.(?:[cm]?js|css|html|json|svg)(\?.*)?$/i,
 						minify: [
-							MinimizerPlugin.terserMinify,
+							jsMinify,
 							cssMinify,
 							htmlMinify,
 							MinimizerPlugin.jsonMinify,

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`StatsTestCases custom-terser should print correct stats for custom-terser 1`] = `
+exports[`StatsTestCases custom-minimizer should print correct stats for custom-minimizer 1`] = `
 "asset bundle.js X bytes [emitted] [minimized] (name: main)
 ./index.js X bytes [built] [code generated]
   [no exports used]

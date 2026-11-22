@@ -10,7 +10,7 @@ const expectAnnotation = (compiler) => {
 				(
 					/** @type {Record<string, import("webpack-sources").Source>} */ assets
 				) => {
-					// Terser strips annotations unless the library defaults ask it
+					// The minifier strips annotations unless the library defaults ask it
 					// not to; asserted on the asset, which needs no `node:module`.
 					expect(assets["bundle0.mjs"].source()).toMatch(
 						/\/\*#__PURE__\*\/\w+\(/
@@ -36,7 +36,7 @@ module.exports = {
 	optimization: {
 		minimize: true,
 		// `"..."` keeps webpack's own default minimizer, so the case runs the
-		// terser options `defaults.js` picks for a library.
+		// minifier options `defaults.js` picks for a library.
 		minimizer: ["..."]
 	},
 	plugins: [expectAnnotation],

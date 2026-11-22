@@ -3,7 +3,7 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const jsMinify = require("../../../../../lib/javascript/jsMinify");
 
-/** @type {import("terser").MinifyOptions[]} */
+/** @type {import("../../../../../lib/javascript/syntax-printer").MinifyOptions[]} */
 const minimizerOptions = [
 	{ compress: { passes: 2 }, mangle: false },
 	{},

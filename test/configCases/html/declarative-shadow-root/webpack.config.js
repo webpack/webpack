@@ -2,6 +2,7 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const htmlMinify = require("../../../../lib/html/htmlMinify");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
@@ -31,7 +32,7 @@ module.exports = {
 						// In-process, so the coverage instrument sees the minify run:
 						// the worker pool is another process and reports nothing.
 						parallel: false,
-						minify: [MinimizerPlugin.terserMinify, htmlMinify],
+						minify: [jsMinify, htmlMinify],
 						minimizerOptions: [{ compress: { passes: 2 } }, {}]
 					}).apply(/** @type {EXPECTED_ANY} */ (compiler));
 				}

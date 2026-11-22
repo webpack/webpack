@@ -1,14 +1,16 @@
 "use strict";
 
-const TerserPlugin = require("minimizer-webpack-plugin");
+const MinimizerPlugin = require("minimizer-webpack-plugin");
 const { BannerPlugin, Compilation } = require("../../../../");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	optimization: {
 		minimize: true,
 		minimizer: [
-			new TerserPlugin({
+			new MinimizerPlugin({
+				minify: jsMinify,
 				extractComments: {
 					filename: "LICENSES.txt"
 				}

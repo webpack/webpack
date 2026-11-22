@@ -4,18 +4,17 @@ const require = createRequire(import.meta.url);
 
 const { minify, transform } = require("minimizer-webpack-plugin/dist/minify");
 const serialize = require("minimizer-webpack-plugin/dist/serialize-javascript");
-const { terserMinify } = require("minimizer-webpack-plugin/dist/utils");
+const { jsMinify } = require("../../../lib/index.js").javascript;
 
 const implementationPath = {
-	path: require.resolve("minimizer-webpack-plugin/dist/utils"),
-	export: "terserMinify"
+	path: require.resolve("../../../lib/javascript/jsMinify.js")
 };
 const input = "function add(a, b) { return a + b; } console.log(add(1, 2));";
 const options = {
 	name: "bundle.js",
 	input,
 	minimizer: {
-		implementation: terserMinify,
+		implementation: jsMinify,
 		options: { compress: true, mangle: true }
 	},
 	extractComments: false

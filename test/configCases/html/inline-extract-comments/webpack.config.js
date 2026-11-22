@@ -4,6 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
+const jsMinify = require("../../../../lib/javascript/jsMinify");
 
 /** @type {import("../../../../").WebpackPluginInstance} */
 const copyTest = {
@@ -61,7 +62,7 @@ const forgetBanner = {
 const minimizersWithBanner = (banner) => [
 	new MinimizerPlugin({
 		test: /\.js$/,
-		minify: MinimizerPlugin.terserMinify,
+		minify: jsMinify,
 		extractComments: { banner }
 	}),
 	new MinimizerPlugin({

@@ -4190,6 +4190,17 @@ declare interface CommentSyntax {
 	 */
 	unstated: (comment: string) => boolean;
 }
+
+/**
+ * A comment the minifier asks a condition about, in the shape terser hands one.
+ */
+declare interface CommentToken {
+	value: string;
+	type: "comment1" | "comment2" | "comment3" | "comment4";
+	pos: number;
+	line: number;
+	col: number;
+}
 type CommentsOption =
 	string | boolean | RegExp | ((comment: string) => boolean);
 
@@ -40298,6 +40309,31 @@ declare namespace exports {
 				entries: [Module, undefined | Entrypoint][];
 				runtimeChunk: null | Chunk;
 			};
+		}
+		export function jsMinify(
+			input: { [index: string]: string | Buffer },
+			sourceMap?: Partial<RawSourceMap>,
+			minimizerOptions?: MinifyOptions & {
+				as?: "module" | "commonjs" | "script" | "event-handler";
+			},
+			extractComments?:
+				| string
+				| boolean
+				| RegExp
+				| ((node: number, comment: CommentToken) => boolean)
+				| {
+						condition?:
+							| string
+							| boolean
+							| RegExp
+							| ((node: number, comment: CommentToken) => boolean);
+				  }
+		): Promise<{ code: string; map?: SourceMap; extractedComments?: string[] }>;
+		export namespace jsMinify {
+			export let supportsWorkerThreads: () => boolean;
+			export let getMinimizerVersion: () => string;
+			export let getTypes: () => string[];
+			export let filter: (name: string) => boolean;
 		}
 		export namespace syntax {
 			/** exposed as `webpack.javascript.syntax.parser`; unstable API @experimental */ export namespace parser {
