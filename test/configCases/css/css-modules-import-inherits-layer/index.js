@@ -1,5 +1,7 @@
 import "./style.css";
 import sheet from "./sheet.module.css" with { type: "css" };
+import repeatSheet from "./sheet-repeat.module.css" with { type: "css" };
+import edgeSheet from "./sheet-edge.module.css" with { type: "css" };
 
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
@@ -28,4 +30,17 @@ it("should keep a repeated @import of a composed module last in a sheet", () => 
 	const text = Array.from(sheet.cssRules, (rule) => rule.cssText).join("\n");
 	expect(text.lastIndexOf("maroon")).toBeGreaterThan(text.indexOf("olive"));
 	expect(text.indexOf("olive")).toBeGreaterThan(-1);
+});
+
+it("should keep a repeated @import inside a module composed twice over", () => {
+	const text = Array.from(repeatSheet.cssRules, (rule) => rule.cssText).join("\n");
+	expect(text.indexOf("olive")).toBeGreaterThan(-1);
+	expect(text.lastIndexOf("maroon")).toBeGreaterThan(text.indexOf("olive"));
+	expect(text.match(/color: navy/g)).toHaveLength(1);
+});
+
+it("should keep a repeated @import of a module that is also composed", () => {
+	const text = Array.from(edgeSheet.cssRules, (rule) => rule.cssText).join("\n");
+	expect(text.indexOf("indigo")).toBeGreaterThan(-1);
+	expect(text.lastIndexOf("sienna")).toBeGreaterThan(text.indexOf("indigo"));
 });
