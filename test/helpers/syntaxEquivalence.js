@@ -2237,7 +2237,7 @@ const compareStyles = async ({ pairs, types }) => {
 					}
 					// `light-dark()` shows its second color only under a dark color scheme.
 					const darkened = /light-dark\(/i.test(text);
-					if (darkened) addAll(out.atLength, "dark", own);
+					if (darkened) addAll(out.atLength, "light-dark", own);
 					for (let i = 0; i < style.length; i++) {
 						const property = style.item(i);
 						const entry = `${where}\u0001${
@@ -2907,8 +2907,9 @@ const compareStyles = async ({ pairs, types }) => {
 		 * @param {{ elements: Element[][], asked: string[][], through: string[][] }} built what was built
 		 * @param {{ width: number, height: number, box: number, dark?: boolean }[]} samples where to read
 		 * @param {Set<string> | null} only the properties these samples can move, or null for any
+		 * @param {boolean=} unseen whether a value only the used color scheme moves is left out
 		 */
-		const measure = async (built, samples, only) => {
+		const measure = async (built, samples, only, unseen) => {
 			await settle();
 			for (const sample of samples) {
 				if (moved.length >= KEPT) return;
@@ -3008,11 +3009,11 @@ const compareStyles = async ({ pairs, types }) => {
 					// Without a box in either frame nothing shows the value, and WebKit
 					// resolves such an element's style apart from the tree it stands in.
 					if (!(rendered[0][i] || rendered[1][i])) continue;
-					const asked =
-						only === null
-							? built.asked[i]
-							: built.asked[i].filter((name) => only.has(name));
 					for (const pseudo of built.through[i]) {
+						const asked =
+							only === null
+								? built.asked[i]
+								: built.asked[i].filter((name) => only.has(name));
 						const changed = differ(i, pseudo, asked);
 						if (changed === null || changed.length === 0) continue;
 						found.push({
@@ -3071,6 +3072,34 @@ const compareStyles = async ({ pairs, types }) => {
 						if (changed === null || changed.length === 0) return false;
 						entry.changed = changed;
 						return true;
+					});
+				}
+				if (unseen && sample.dark && found.length > 0) {
+					// WHY: a lowered `light-dark()` always reads its light half, so a value
+					// apart only while the used scheme is dark is left out; the frames keep
+					// matching dark queries, so a winning query's value is still compared.
+					for (const doc of docs) {
+						doc.documentElement.style.setProperty("color-scheme", "light");
+					}
+					await settleFrames();
+					const light = found.map(({ i, pseudo, changed }) =>
+						changed.map(([name]) =>
+							[0, 1].map((at) =>
+								windows[at]
+									.getComputedStyle(read[at][i], pseudo || null)
+									.getPropertyValue(name)
+							)
+						)
+					);
+					for (const doc of docs) {
+						doc.documentElement.style.setProperty("color-scheme", "dark");
+					}
+					await settleFrames();
+					found = found.filter((entry, k) => {
+						entry.changed = entry.changed.filter(
+							([name], n) => name === "box" || light[k][n][0] !== light[k][n][1]
+						);
+						return entry.changed.length > 0;
 					});
 				}
 				for (const { at, changed } of found) {
@@ -3138,10 +3167,13 @@ const compareStyles = async ({ pairs, types }) => {
 			}
 			for (const key of [...keys].sort()) {
 				const found = /^(box)?(width|height)(\d+)$/.exec(key);
-				if ((found === null && key !== "dark") || conditioned.length === 0) {
-					continue;
-				}
-				if (key === "dark" && relax.has("color-scheme")) continue;
+				const dark = key === "dark" || key === "light-dark";
+				if ((found === null && !dark) || conditioned.length === 0) continue;
+				// A lowered `light-dark()` cannot see a scheme set from outside the
+				// sheet, so the relaxation leaves out what one sets; a query's other
+				// properties still can, so they are sampled.
+				const unseen = dark && relax.has("color-scheme");
+				if (unseen && key === "light-dark") continue;
 				if (sampled + 3 > MAX_SAMPLES || moved.length >= KEPT) break;
 				/** @type {Set<string>} */
 				const reached = new Set();
@@ -3171,7 +3203,8 @@ const compareStyles = async ({ pairs, types }) => {
 									found[1] !== "box" && found[2] === "height" ? size : 800,
 								box: found[1] === "box" ? size : 0
 							})),
-					onlyConditioned
+					onlyConditioned,
+					unseen
 				);
 				clear();
 				sampled += 3;

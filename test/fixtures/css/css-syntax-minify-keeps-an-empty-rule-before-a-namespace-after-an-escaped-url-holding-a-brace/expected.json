@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@import[1]: css-tree @import",
+		"why": "an ident-like token decodes its name before asking whether it is `url`, so `u\\72 l(` opens a url token whose `{` is no block (§4.3.4); css-tree reads the escaped name as a function and the `{` as a block"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/@namespace[1]: css-tree nothing",
+		"why": "css-tree's `@import` runs on past the url token's `;`, so it reads no `@namespace` after it"
+	}
+]

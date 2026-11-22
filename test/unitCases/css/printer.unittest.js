@@ -2402,3 +2402,37 @@ describe("SourceProcessor — a run inside a run", () => {
 		expect(alone.seen[alone.seen.length - 1]).toBe(String(count + 1));
 	});
 });
+
+describe("CssSyntax minify — the attribute selectors a lowered parent holds", () => {
+	const lower = (/** @type {string} */ css) =>
+		minifyFor(css, ["chrome 100", "firefox 100", "safari 15.4"]);
+
+	it("keeps the child of a valid attribute selector", () => {
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-child-of-an-attribute-named-with-a-hex-escape"))).toBe(
+			"[data\\3a foo] .child{color:red}"
+		);
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-keeps-a-child-of-a-case-modifier-after-a-quoted-value"))).toBe(
+			'[a="x y"i] .child{color:red}'
+		);
+	});
+
+	it("drops the child of a long invalid attribute selector without stalling", () => {
+		expect(lower(fixture("css", "css-syntax-minify-lowering-nesting-reads-a-long-invalid-attribute-name-in-linear-time"))).toBe("");
+	});
+});
+
+describe("CssSyntax minify — a namespace after a url or an escaped brace", () => {
+	// The `{` is part of a token, so the `@namespace` after it stays invalid
+	// behind `.a{}`, and dropping `.a{}` would bring it to life.
+	it("keeps the empty rule the namespace follows", () => {
+		expect(minifyFor(fixture("css", "css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-a-url-holding-a-brace"))).toBe(
+			'.a{}@unknown url({);@namespace "urn:x";div{color:red}'
+		);
+		expect(minifyFor(fixture("css", "css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace"))).toBe(
+			'.a{}@unknown (\\{);@namespace "urn:x";div{color:red}'
+		);
+		expect(minifyFor(fixture("css", "css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace"))).toBe(
+			'.a{}@import u\\72 l(a{b);@namespace "urn:x";div{color:red}'
+		);
+	});
+});

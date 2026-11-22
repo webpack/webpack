@@ -12592,6 +12592,30 @@ exports[`CSS syntax — invariants css-syntax-minify-keeps-a-layered-value-with-
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-a-layered-value-with-an-empty-layer tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] comma[13,14] ident[14,18] whitespace[18,19] ident[19,30] whitespace[30,31] ident[31,41] right-curly-bracket[41,42] end=42"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-a-url-holding-a-brace parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[]],[\\"at-rule\\",\\"unknown\\",[\\" \\",[\\"url\\",\\"{\\"]],null],[\\"at-rule\\",\\"namespace\\",[\\" \\",[\\"string\\",\\"urn:x\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"div\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-a-url-holding-a-brace parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-a-url-holding-a-brace prints {"mode":"minify"} 1`] = `".a{}@unknown url({);@namespace \\"urn:x\\";div{color:red}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-a-url-holding-a-brace tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] right-curly-bracket[3,4] at-keyword[4,12] whitespace[12,13] url[13,19|17,18] semicolon[19,20] at-keyword[20,30] whitespace[30,31] string[31,38] semicolon[38,39] ident[39,42] left-curly-bracket[42,43] ident[43,48] colon[48,49] ident[49,52] right-curly-bracket[52,53] whitespace[53,54] end=54"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[]],[\\"at-rule\\",\\"unknown\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"{\\"]]],null],[\\"at-rule\\",\\"namespace\\",[\\" \\",[\\"string\\",\\"urn:x\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"div\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace prints {"mode":"minify"} 1`] = `".a{}@unknown (\\\\{);@namespace \\"urn:x\\";div{color:red}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] right-curly-bracket[3,4] at-keyword[4,12] whitespace[12,13] left-parenthesis[13,14] ident[14,16] right-parenthesis[16,17] semicolon[17,18] at-keyword[18,28] whitespace[28,29] string[29,36] semicolon[36,37] ident[37,40] left-curly-bracket[40,41] ident[41,46] colon[46,47] ident[47,50] right-curly-bracket[50,51] whitespace[51,52] end=52"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[]],[\\"at-rule\\",\\"import\\",[\\" \\",[\\"url\\",\\"a{b\\"]],null],[\\"at-rule\\",\\"namespace\\",[\\" \\",[\\"string\\",\\"urn:x\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"div\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace prints {"mode":"minify"} 1`] = `".a{}@import u\\\\72 l(a{b);@namespace \\"urn:x\\";div{color:red}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] right-curly-bracket[3,4] at-keyword[4,11] whitespace[11,12] url[12,23|19,22] semicolon[23,24] at-keyword[24,34] whitespace[34,35] string[35,42] semicolon[42,43] ident[43,46] left-curly-bracket[46,47] ident[47,52] colon[52,53] ident[53,56] right-curly-bracket[56,57] whitespace[57,58] end=58"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-drops-the-source-mapping-url parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"v\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-drops-the-source-mapping-url parses 2`] = `""`;
@@ -13400,6 +13424,22 @@ exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-drops-the-
 
 exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-drops-the-universal-the-parent-implies tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] delim[3,4] delim[4,5] left-curly-bracket[5,6] ident[6,11] colon[11,12] ident[12,15] right-curly-bracket[15,16] right-curly-bracket[16,17] delim[17,18] ident[18,19] left-curly-bracket[19,20] ident[20,21] whitespace[21,22] delim[22,23] delim[23,24] left-curly-bracket[24,25] ident[25,30] colon[30,31] ident[31,34] right-curly-bracket[34,35] right-curly-bracket[35,36] delim[36,37] ident[37,38] left-curly-bracket[38,39] colon[39,40] function[40,43] delim[43,44] delim[44,45] right-parenthesis[45,46] left-curly-bracket[46,47] ident[47,52] colon[52,53] ident[53,56] right-curly-bracket[56,57] right-curly-bracket[57,58] ident[58,61] left-curly-bracket[61,62] delim[62,63] delim[63,64] left-curly-bracket[64,65] ident[65,70] colon[70,71] ident[71,74] right-curly-bracket[74,75] right-curly-bracket[75,76] colon[76,77] ident[77,81] left-curly-bracket[81,82] delim[82,83] delim[83,84] left-curly-bracket[84,85] ident[85,90] colon[90,91] ident[91,94] right-curly-bracket[94,95] right-curly-bracket[95,96] delim[96,97] ident[97,98] comma[98,99] delim[99,100] ident[100,101] left-curly-bracket[101,102] delim[102,103] delim[103,104] left-curly-bracket[104,105] ident[105,110] colon[110,111] ident[111,114] right-curly-bracket[114,115] right-curly-bracket[115,116] delim[116,117] ident[117,118] left-curly-bracket[118,119] ident[119,121] delim[121,122] delim[122,123] delim[123,124] left-curly-bracket[124,125] ident[125,130] colon[130,131] ident[131,134] right-curly-bracket[134,135] right-curly-bracket[135,136] delim[136,137] ident[137,138] left-curly-bracket[138,139] delim[139,140] number[140,142] comma[142,143] delim[143,144] url[144,150|148,149] left-curly-bracket[150,151] ident[151,156] colon[156,157] ident[157,160] right-curly-bracket[160,161] right-curly-bracket[161,162] left-curly-bracket[162,163] delim[163,164] delim[164,165] left-curly-bracket[165,166] ident[166,171] colon[171,172] ident[172,175] right-curly-bracket[175,176] right-curly-bracket[176,177] end=177"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-a-case-modifier-after-a-quoted-value parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"a\\"],\\"=\\",[\\"string\\",\\"x y\\"],[\\"ident\\",\\"i\\"]]],[\\"&\\",\\" \\",\\".\\",[\\"ident\\",\\"child\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-a-case-modifier-after-a-quoted-value parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-a-case-modifier-after-a-quoted-value prints {"mode":"minify"} 1`] = `"[a=\\"x y\\"i]{& .child{color:red}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-a-case-modifier-after-a-quoted-value tokenizes 1`] = `"left-square-bracket[0,1] ident[1,2] delim[2,3] string[3,8] ident[8,9] right-square-bracket[9,10] left-curly-bracket[10,11] delim[11,12] whitespace[12,13] delim[13,14] ident[14,19] left-curly-bracket[19,20] ident[20,25] colon[25,26] ident[26,29] right-curly-bracket[29,30] right-curly-bracket[30,31] whitespace[31,32] end=32"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-an-attribute-named-with-a-hex-escape parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"data:foo\\"]]],[\\"&\\",\\" \\",\\".\\",[\\"ident\\",\\"child\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-an-attribute-named-with-a-hex-escape parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-an-attribute-named-with-a-hex-escape prints {"mode":"minify"} 1`] = `"[data\\\\3a foo]{& .child{color:red}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-child-of-an-attribute-named-with-a-hex-escape tokenizes 1`] = `"left-square-bracket[0,1] ident[1,12] right-square-bracket[12,13] left-curly-bracket[13,14] delim[14,15] whitespace[15,16] delim[16,17] ident[17,22] left-curly-bracket[22,23] ident[23,28] colon[28,29] ident[29,32] right-curly-bracket[32,33] right-curly-bracket[33,34] whitespace[34,35] end=35"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-namespaced-parent-in-is-for-the-universal parses 1`] = `"[[\\"at-rule\\",\\"namespace\\",[\\" \\",[\\"function\\",\\"url\\",[\\"string\\",\\"urn:html\\"]]],null],[\\"at-rule\\",\\"namespace\\",[\\" \\",[\\"ident\\",\\"s\\"],\\" \\",[\\"function\\",\\"url\\",[\\"string\\",\\"urn:svg\\"]]],null],[\\"qualified rule\\",[[\\"ident\\",\\"s\\"],\\"|\\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"*\\",\\"&\\",\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\" \\"],\\" \\"]],[\\"qualified rule\\",[\\"*\\",\\"|\\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",\\"*\\",\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\" \\"],\\" \\"]],[\\"qualified rule\\",[\\"|\\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"b\\"],\\" \\",\\"*\\",\\"&\\",\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"red\\"],\\" \\"],\\" \\"]],[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"*\\",\\"&\\",\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"ident\\",\\"blue\\"],\\" \\"],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-keeps-a-namespaced-parent-in-is-for-the-universal parses 2`] = `""`;
@@ -13447,6 +13487,14 @@ delim[0,1] ident[1,2] left-curly-bracket[2,3] delim[3,4] ident[4,5] left-curly-b
 …
 ly-bracket[191,192] delim[192,193] ident[193,195] left-curly-bracket[195,196] ident[196,200] colon[200,201] dimension[201,204|202,204] right-curly-bracket[204,205] right-curly-bracket[205,206] end=206"
 `;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-long-invalid-attribute-name-in-linear-time parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\"],\\"!\\"]],[\\"&\\",\\" \\",\\".\\",[\\"ident\\",\\"c\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"qualified rule\\",[[\\"[]\\",\\"-\\",\\"=\\",[\\"ident\\",\\"----------------------------------------\\"],\\"!\\"]],[\\"&\\",\\" \\",\\".\\",[\\"ident\\",\\"c\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-long-invalid-attribute-name-in-linear-time parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-long-invalid-attribute-name-in-linear-time prints {"mode":"minify"} 1`] = `"[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa!]{& .c{color:red}}[-=----------------------------------------!]{& .c{color:red}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-lowering-nesting-reads-a-long-invalid-attribute-name-in-linear-time tokenizes 1`] = `"left-square-bracket[0,1] ident[1,41] delim[41,42] right-square-bracket[42,43] left-curly-bracket[43,44] delim[44,45] whitespace[45,46] delim[46,47] ident[47,48] left-curly-bracket[48,49] ident[49,54] colon[54,55] ident[55,58] right-curly-bracket[58,59] right-curly-bracket[59,60] whitespace[60,61] left-square-bracket[61,62] delim[62,63] delim[63,64] ident[64,104] delim[104,105] right-square-bracket[105,106] left-curly-bracket[106,107] delim[107,108] whitespace[108,109] delim[109,110] ident[110,111] left-curly-bracket[111,112] ident[112,117] colon[117,118] ident[118,121] right-curly-bracket[121,122] right-curly-bracket[122,123] whitespace[123,124] end=124"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-math-and-numbers-past-what-a-double-says-exactly-clamps-a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"function\\",\\"color-mix\\",[\\"ident\\",\\"in\\"],\\" \\",[\\"ident\\",\\"srgb\\"],\\",\\",[\\"function\\",\\"rgb\\",[\\"number\\",\\"300\\",300,\\"integer\\"],\\" \\",[\\"number\\",\\"-5\\",-5,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]],\\",\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
@@ -53970,30 +54018,6 @@ exports[`CSS syntax — invariants svg-data-urls-should-minify-the-ones-an-inlin
 
 exports[`CSS syntax — invariants svg-data-urls-should-minify-the-ones-an-inline-stylesheet-holds-and-only-those tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] function[13,17] string[17,110] right-parenthesis[110,111] right-curly-bracket[111,112] ident[112,113] left-curly-bracket[113,114] ident[114,124] colon[124,125] function[125,129] string[129,162] right-parenthesis[162,163] right-curly-bracket[163,164] end=164"`;
 
-exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again parses 1`] = `"[[\\"qualified rule\\",[\\":\\",[\\"ident\\",\\"autofill\\"],\\" \\"],[]],[\\"at-rule\\",\\"namespace\\",[\\" \\"],null]]"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again parses 2`] = `""`;
-
-exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again prints {"mode":"minify"} 1`] = `":autofill{}@namespace;"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again tokenizes 1`] = `"colon[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] right-curly-bracket[11,12] at-keyword[12,22] whitespace[22,23] end=23"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again parses 1`] = `"[[\\"qualified rule\\",[],[[\\"{}\\",[\\"{}\\",[\\"{}\\"]]],[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"{}\\",\\"-\\"]]]]"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again parses 2`] = `"error[12,12]:eof-in-qualified-rule"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again prints {"mode":"minify"} 1`] = `"{{-}}"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again tokenizes 1`] = `"left-curly-bracket[0,1] left-curly-bracket[1,2] left-curly-bracket[2,3] left-curly-bracket[3,4] right-curly-bracket[4,5] right-curly-bracket[5,6] right-curly-bracket[6,7] ident[7,8] colon[8,9] semicolon[9,10] left-curly-bracket[10,11] delim[11,12] end=12"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"a\\"],\\"=\\",[\\"string\\",\\"\\\\\\"\\"]],\\",\\",\\":\\",[\\"function\\",\\"slotted\\",[\\"ident\\",\\"a\\"]],[\\"hash\\",\\" \\",\\"id\\"]],[[\\"{}\\"],\\"*\\",[\\"{}\\",[\\"ident\\",\\"border-style\\"],\\":\\",[\\"ident\\",\\"solid\\"],\\" \\",[\\"ident\\",\\"ridge\\"]]]]]"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule parses 2`] = `""`;
-
-exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule prints {"mode":"minify"} 1`] = `":slotted(a)#\\\\ ,[a='\\"']{*{border-style:solid ridge}}"`;
-
-exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule tokenizes 1`] = `"left-square-bracket[0,1] ident[1,2] delim[2,3] string[3,7] right-square-bracket[7,8] comma[8,9] colon[9,10] function[10,18] ident[18,19] right-parenthesis[19,20] hash[20,23]# left-curly-bracket[23,24] left-curly-bracket[24,25] right-curly-bracket[25,26] delim[26,27] left-curly-bracket[27,28] ident[28,40] colon[40,41] ident[41,46] whitespace[46,47] ident[47,52] right-curly-bracket[52,53] right-curly-bracket[53,54] end=54"`;
-
 exports[`CSS syntax — invariants syntax-fuzz-a-layered-background-drops-each-layers-boxes parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"PaDDING-BOX\\"],\\" \\",[\\"ident\\",\\"border-box\\"],\\" \\",[\\"ident\\",\\"a\\"],\\",\\",\\" \\",[\\"ident\\",\\"padding-box\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"padding-box\\"],\\" \\",[\\"ident\\",\\"border-box\\"],\\",\\",[\\"ident\\",\\"padding-box\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"url\\",\\"a\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"ident\\",\\"padding-box\\"],\\" \\",[\\"ident\\",\\"border-box\\"],\\",\\",\\" \\",[\\"url\\",\\"b\\"],\\" \\",[\\"ident\\",\\"left\\"],\\" \\",[\\"ident\\",\\"top\\"]]]]"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-a-layered-background-drops-each-layers-boxes parses 2`] = `""`;
@@ -54001,6 +54025,14 @@ exports[`CSS syntax — invariants syntax-fuzz-a-layered-background-drops-each-l
 exports[`CSS syntax — invariants syntax-fuzz-a-layered-background-drops-each-layers-boxes prints {"mode":"minify"} 1`] = `"a{background:a,padding-box}b{background:none,padding-box}c{background:url(a)0 0,url(b)}"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-a-layered-background-drops-each-layers-boxes tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] ident[13,24] whitespace[24,25] ident[25,35] whitespace[35,36] ident[36,37] comma[37,38] whitespace[38,39] ident[39,50] right-curly-bracket[50,51] ident[51,52] left-curly-bracket[52,53] ident[53,63] colon[63,64] ident[64,75] whitespace[75,76] ident[76,86] comma[86,87] ident[87,98] right-curly-bracket[98,99] ident[99,100] left-curly-bracket[100,101] ident[101,111] colon[111,112] url[112,118|116,117] whitespace[118,119] number[119,120] whitespace[120,121] number[121,122] whitespace[122,123] ident[123,134] whitespace[134,135] ident[135,145] comma[145,146] whitespace[146,147] url[147,153|151,152] whitespace[153,154] ident[154,158] whitespace[158,159] ident[159,162] right-curly-bracket[162,163] end=163"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again parses 1`] = `"[[\\"qualified rule\\",[\\":\\",[\\"ident\\",\\"autofill\\"],\\" \\"],[]],[\\"at-rule\\",\\"namespace\\",[\\" \\"],null]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again prints {"mode":"minify"} 1`] = `":autofill{}@namespace;"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-a-lowered-autofill-rule-before-namespace-prints-shorter-again tokenizes 1`] = `"colon[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] right-curly-bracket[11,12] at-keyword[12,22] whitespace[22,23] end=23"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-a-stray-closer-leaves-a-selector-list-whole parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"p\\"],\\",\\",[\\"ident\\",\\"b\\"],[\\"error\\",\\"]\\"]],[[\\"ident\\",\\"x\\"],\\"&\\",[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"p\\"],\\",\\",[\\"ident\\",\\"b\\"],[\\"error\\",\\"]\\"]],[[\\"ident\\",\\"x\\"],\\" \\",\\"&\\",[\\"{}\\",[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"x\\"],\\" \\",\\":\\",[\\"function\\",\\"is\\",[\\"ident\\",\\"b\\"],[\\"error\\",\\"]\\"],\\",\\",[\\"ident\\",\\"p\\"]]],[[\\"ident\\",\\"c\\"],\\":\\",[\\"ident\\",\\"d\\"]]]]"`;
 
@@ -54019,6 +54051,14 @@ exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repe
 exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repeat-its-doubled-parentheses-hid prints {"mode":"minify"} 1`] = `"@supports(){@font-feature-values\\"\\",a{}}"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-a-supports-condition-drops-a-repeat-its-doubled-parentheses-hid tokenizes 1`] = `"at-keyword[0,9] left-parenthesis[9,10] right-parenthesis[10,11] ident[11,13] whitespace[13,14] left-parenthesis[14,15] left-parenthesis[15,16] left-parenthesis[16,17] left-parenthesis[17,18] left-parenthesis[18,19] right-parenthesis[19,20] right-parenthesis[20,21] right-parenthesis[21,22] right-parenthesis[22,23] right-parenthesis[23,24] ident[24,26] whitespace[26,27] left-parenthesis[27,28] left-parenthesis[28,29] right-parenthesis[29,30] right-parenthesis[30,31] left-curly-bracket[31,32] at-keyword[32,52] string[52,54] comma[54,55] ident[55,56] left-curly-bracket[56,57] end=57"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again parses 1`] = `"[[\\"qualified rule\\",[],[[\\"{}\\",[\\"{}\\",[\\"{}\\"]]],[\\"ident\\",\\"a\\"],\\":\\",\\";\\",[\\"{}\\",\\"-\\"]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again parses 2`] = `"error[12,12]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again prints {"mode":"minify"} 1`] = `"{{-}}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-block-in-unclosed-blocks-prints-shorter-again tokenizes 1`] = `"left-curly-bracket[0,1] left-curly-bracket[1,2] left-curly-bracket[2,3] left-curly-bracket[3,4] right-curly-bracket[4,5] right-curly-bracket[5,6] right-curly-bracket[6,7] ident[7,8] colon[8,9] semicolon[9,10] left-curly-bracket[10,11] delim[11,12] end=12"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-an-unclosed-legal-comment-prints-once parses 1`] = `"[[\\"qualified rule\\",[],[\\"&\\"]]]"`;
 
@@ -54086,6 +54126,14 @@ exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supp
 exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition prints {"mode":"minify"} 1`] = `"@supports([=\\"a\\"]){@view-transition{}}"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-keeps-a-string-in-an-unknown-supports-condition tokenizes 1`] = `"at-keyword[0,9] whitespace[9,10] left-parenthesis[10,11] left-square-bracket[11,12] delim[12,13] string[13,16] right-square-bracket[16,17] right-parenthesis[17,18] left-curly-bracket[18,19] at-keyword[19,35] comment[35,39] left-curly-bracket[39,40] end=40"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"a\\"],\\"=\\",[\\"string\\",\\"\\\\\\"\\"]],\\",\\",\\":\\",[\\"function\\",\\"slotted\\",[\\"ident\\",\\"a\\"]],[\\"hash\\",\\" \\",\\"id\\"]],[[\\"{}\\"],\\"*\\",[\\"{}\\",[\\"ident\\",\\"border-style\\"],\\":\\",[\\"ident\\",\\"solid\\"],\\" \\",[\\"ident\\",\\"ridge\\"]]]]]"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule parses 2`] = `""`;
+
+exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule prints {"mode":"minify"} 1`] = `":slotted(a)#\\\\ ,[a='\\"']{*{border-style:solid ridge}}"`;
+
+exports[`CSS syntax — invariants syntax-fuzz-lowering-a-single-colon-slotted-parent-applies-a-nested-rule tokenizes 1`] = `"left-square-bracket[0,1] ident[1,2] delim[2,3] string[3,7] right-square-bracket[7,8] comma[8,9] colon[9,10] function[10,18] ident[18,19] right-parenthesis[19,20] hash[20,23]# left-curly-bracket[23,24] left-curly-bracket[24,25] right-curly-bracket[25,26] delim[26,27] left-curly-bracket[27,28] ident[28,40] colon[40,41] ident[41,46] whitespace[46,47] ident[47,52] right-curly-bracket[52,53] right-curly-bracket[53,54] end=54"`;
 
 exports[`CSS syntax — invariants syntax-fuzz-lowering-drops-what-an-invalid-selector-list-holds parses 1`] = `"[[\\"qualified rule\\",[],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"overscroll-behavior-block\\"],\\":\\",[\\"ident\\",\\"none\\"]]]],[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"a\\"],\\"=\\",[\\"string\\",\\"\\\\\\"\\"]],\\",\\"],[[\\"{}\\",[\\"ident\\",\\"border-style\\"],\\":\\",[\\"ident\\",\\"solid\\"],\\" \\",[\\"ident\\",\\"ridge\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[[\\"ident\\",\\"y\\"],\\",\\",[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]],[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]]"`;
 
