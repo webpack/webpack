@@ -1,18 +1,10 @@
 [
 	{
 		"relation": "idempotence",
-		"contains": "{return 1})());",
-		"presets": [
-			"default"
-		],
-		"why": "known bug: under `toplevel`, a call printing as the value its moved function returns keeps parentheses the value took where it was written, which a second pass leaves out"
-	},
-	{
-		"relation": "idempotence",
 		"contains": "e=e=>console.log(\"log\",e",
 		"presets": [
 			"default"
 		],
-		"why": "known bug: under `toplevel`, a call printing as the value its moved function returns keeps parentheses the value took where it was written, which a second pass leaves out"
+		"why": "known bug: under `toplevel`, the function moved into its one call prints as an arrow called in place, `(()=>1)()`, which a second pass folds to its value"
 	}
 ]
