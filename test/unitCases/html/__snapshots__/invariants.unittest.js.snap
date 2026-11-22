@@ -72484,17 +72484,17 @@ exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-ligh
 "| <html>
 |   <head>
 |     <style>
-|       \\"{a:light-dark(,\\"
+|       \\"{a:light-dark(a,a\\"
 |     <style>
 |       \\"{a\\"
 |   <body>"
 `;
 
-exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[39,39]:expected-named-closing-tag-but-got-eof"`;
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[41,41]:expected-named-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next prints {"mode":"minify"} 1`] = `"<style>{a:light-dark(,</style><style>{a</style>"`;
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next prints {"mode":"minify"} 1`] = `"<style>{a:light-dark(a,a</style><style>{a</style>"`;
 
-exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next tokenizes 1`] = `"open[0,7|1,6] text[7,22] close[22,30|24,29] open[30,37|31,36] text[37,39] end=39"`;
+exports[`HTML syntax — invariants syntax-fuzz-merging-a-sheet-left-inside-light-dark-joins-the-next tokenizes 1`] = `"open[0,7|1,6] text[7,24] close[24,32|26,31] open[32,39|33,38] text[39,41] end=41"`;
 
 exports[`HTML syntax — invariants syntax-fuzz-omits-an-html-start-tag-whose-attributes-the-print-drops parses 1`] = `
 "| <html>

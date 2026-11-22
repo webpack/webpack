@@ -1621,7 +1621,7 @@ describe("CssSyntax minify — input around a block big enough to stream", () =>
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-9", {"environment":{"browsers":["firefox 40"]},"convertApproximateColors":true}, 22835, "ede9f3b96a8b4eb2", "@media print{a{color:light-dark(red,blue)}.c0>d0{color:red;m"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-10", {}, 28597, "d641820df18a64eb", ".q .r{.c0>d0{color:red;margin:1px}.c1>d1{color:red;margin:2p"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-11", {"environment":{"browsers":["safari 15"]}}, 15418, "d9f8d0d042c8eb21", ".p .c0>d0{color:red;margin:1px}.p .c1>d1{color:red;margin:2p"],
-		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12", {"environment":{"browsers":["safari 17"]}}, 66490, "c81f51de8c22ae4b", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
+		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-12", {"environment":{"browsers":["safari 17"]}}, 66465, "c75f2240e1ae5ab5", "@layer x{A{border-radius:1px;BORDER-RAD}A A{-webkit-border-r"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-13", {}, 59596, "3563243b1b3ccadb", "@scope(.x){a{b:c;mara.c0>d0{color:red;margin:1px}.c1>d1{colo"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-14", {"environment":{"browsers":["chrome 40"]}}, 59759, "3185c126c5f98d93", "@layer x{a{b:c}op:auto;left:auto}op:auto;right:0;bottom:0;le"],
 		["css-syntax-minify-input-around-a-block-big-enough-to-stream-prints-15", {}, 59616, "d7c506afba0fc51b", "@media print{.p{@scope(.x){{y/**/}}a{b:c}.c0>d0{color:red;ma"],

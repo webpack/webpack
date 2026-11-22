@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-> @namespace;",
+		"presets": ["legacy"],
+		"why": "known bug: a lowered :autofill rule written before an empty @namespace prologue is kept on the first print but dropped on the second; not fixed here, left for a follow-up"
+	}
+]

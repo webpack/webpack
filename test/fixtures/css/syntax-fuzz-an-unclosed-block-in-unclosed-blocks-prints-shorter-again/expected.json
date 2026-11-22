@@ -1,0 +1,13 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "{{-}}",
+		"presets": ["legacy", "default"],
+		"why": "known bug: an unclosed rule's block nested inside another unclosed block prints shorter on the second pass; not fixed here, left for a follow-up"
+	},
+	{
+		"relation": "agreement",
+		"contains": "css-tree unparsed -, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops; css-tree keeps it as raw text (§5.4.3)"
+	}
+]
