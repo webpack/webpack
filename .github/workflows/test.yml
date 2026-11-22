@@ -738,12 +738,13 @@ jobs:
             jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
             jest-integration-${{ runner.os }}-node-${{ matrix.node-version }}-${{ matrix.part }}-
 
-      - run: yarn cover:integration${{ matrix.part && ':a' || '' }} --maxWorkers=100% --ci --cacheDirectory .jest-cache
+      # Jest's default leaves one of the macOS runner's 3 cores idle.
+      - run: yarn cover:integration${{ matrix.part && ':a' || '' }} ${{ matrix.os == 'macos-latest' && '--maxWorkers=100%' || '' }} --ci --cacheDirectory .jest-cache
         env:
           MAIN_BRANCHES: ${{ matrix.use_main_branches }}
         if: matrix.coverage || matrix.use_main_branches
 
-      - run: yarn test:integration${{ matrix.part && ':a' || '' }} --maxWorkers=100% --ci --cacheDirectory .jest-cache
+      - run: yarn test:integration${{ matrix.part && ':a' || '' }} --ci --cacheDirectory .jest-cache
         if: ${{ !matrix.coverage && !matrix.use_main_branches }}
 
       - run: yarn report:cover:merge
