@@ -36,7 +36,9 @@ module.exports = (env, { testPath }) =>
 			name,
 			output: {
 				path: outputPath,
-				clean: true
+				clean: true,
+				// "static" is a link out of output.path, written through on purpose
+				allowOutside: [outside]
 			},
 			plugins: [
 				/**
