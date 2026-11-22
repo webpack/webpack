@@ -10,7 +10,8 @@ const bailouts = {
 	keys: ["one", "two"],
 	context: "context",
 	anonymous: "anonymous",
-	anonymousName: "default"
+	anonymousName: "default",
+	load: "function"
 };
 
 it("should run pages whose shared modules are linked across chunks", async () => {
@@ -96,4 +97,39 @@ it("should hoist the linkable shared modules into one scope with native exports"
 			expect(specifier).toContain(" as __webpack_linked_");
 		}
 	}
+});
+
+it("should report why each module another chunk imports stays in the registry", () => {
+	/** @type {Record<string, string[]>} */
+	const reasons = {};
+	/**
+	 * Collects the cross-chunk bailouts of the modules and the modules they concatenate.
+	 * @param {import("../../../../types").StatsModule[]} modules the modules
+	 */
+	const collect = (modules) => {
+		for (const module of modules) {
+			const bailouts = (module.optimizationBailout || []).filter((reason) =>
+				reason.startsWith("Cross-chunk imports bailout: ")
+			);
+			if (bailouts.length > 0) reasons[module.name] = bailouts;
+			if (module.modules) collect(module.modules);
+		}
+	};
+	collect(__STATS__.modules);
+	const prefix = "Cross-chunk imports bailout: ";
+	expect(reasons).toEqual({
+		"./shared/public-path.js": [`${prefix}module uses the webpack runtime`],
+		"./shared/string-name.js": [
+			`${prefix}export "with-dash" is not an identifier`
+		],
+		"./shared/cjs.js": [`${prefix}Module is not an ECMAScript module`],
+		"./shared/required.js": [
+			`${prefix}./shared/cjs.js imports it through cjs full require`
+		],
+		"./shared/url.js": [`${prefix}new URL() needs the module registry`],
+		"./shared/loader.js": [`${prefix}module has async blocks`],
+		"./shared/effect.js": [
+			`${prefix}module has side effects that its chunk's loads don't all run first`
+		]
+	});
 });

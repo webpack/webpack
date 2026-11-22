@@ -5,6 +5,7 @@ module.exports = {
 	mode: "production",
 	// a namespace member call keeps the namespace as `this`
 	module: { strictThisContextOnImports: true },
+	stats: { optimizationBailout: true },
 	target: "node",
 	output: {
 		module: true,
