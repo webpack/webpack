@@ -116,7 +116,7 @@ describeIf("scriptToDocument", () => {
 	it("should declare its names after the directives", () => {
 		const code = '"use strict"\nthis.result = [String.raw`★`, (function () { return this; })()];';
 		const written = scriptToDocument(code, "windows-1252");
-		expect(written).toMatch(/^"use strict";var __webpack_template_\w+_0__;/);
+		expect(written).toMatch(/^"use strict";var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = Object;/);
 		expect(run(written)).toEqual(["★", undefined]);
 	});
 
@@ -140,7 +140,7 @@ describeIf("scriptToDocument", () => {
 	it("should read a module", () => {
 		const code = "export const value = String.raw`★`;";
 		expect(scriptToDocument(code, "windows-1252")).toMatch(
-			/^var __webpack_template_\w+_0__;export const value = \(\(String\.raw\)/
+			/^var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = Object;export const value = \(\(String\.raw\)/
 		);
 	});
 
