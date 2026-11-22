@@ -9,8 +9,12 @@ const page = () =>
 	);
 
 const run = () => {
-	// every inline script the page holds, which webpack writes as `<script>`
-	const scripts = [...page().matchAll(/<script\b[^>]*>([^]*?)<\/script\b[^>]*>/gi)];
+	const html = page();
+	// every inline script the page holds, whatever the case of its tags
+	const scriptRegExp = /<script\b[^>]*>([^]*?)<\/script\b[^>]*>/gi;
+	const scripts = [];
+	let match;
+	while ((match = scriptRegExp.exec(html)) !== null) scripts.push(match);
 	const window = {};
 	const context = vm.createContext({ window, self: window });
 	for (const [, code] of scripts) vm.runInContext(code, context);
@@ -30,6 +34,9 @@ it("should keep what a tagged template reads", () => {
 	expect(results.rawStrings).toEqual(["★", "☆"]);
 	expect(results.nested).toBe("<★>");
 	expect(results.member).toBe("m★");
+	expect(results.sequence).toEqual([2]);
+	expect(results.closing).toBe("★</script>");
+	expect(results.shadowed).toBe("s★");
 });
 
 it("should keep a tagged template's strings the same at one call site", () => {

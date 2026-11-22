@@ -80,6 +80,16 @@ describeIf("documentEncoding", () => {
 	});
 });
 
+const supportsPrivateFields = (() => {
+	try {
+		// eslint-disable-next-line no-new-func
+		new Function("class A { #a = 1; }");
+		return true;
+	} catch (_err) {
+		return false;
+	}
+})();
+
 describeIf("scriptToDocument", () => {
 	/**
 	 * @param {string} code a script
@@ -123,7 +133,8 @@ describeIf("scriptToDocument", () => {
 		const code = "class A { #𝑥 = 1; get() { return this.#𝑥; } }\nresult = new A().get();";
 		const written = scriptToDocument(code, "windows-1252");
 		expect(written).toContain("#\\u{1d465}");
-		expect(run(written)).toBe(1);
+		// private names run from Node.js 12
+		if (supportsPrivateFields) expect(run(written)).toBe(1);
 	});
 
 	it("should read a module", () => {
