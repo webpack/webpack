@@ -372,6 +372,21 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(decodeLine(joined.map.mappings).get(4)).toEqual([2, 1]);
 	});
 
+	it("should map what a reduced call holds where a loop's head cuts its parentheses", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const unwrapped = /** @type {{ code: string, map: { mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "minify-maps-a-reduced-call-a-loop-head-unwraps"),
+				{ mode: "minify", mangle: false, source: "a.js" }
+			)
+		);
+		expect(unwrapped.code).toBe("while(tick(),ready())work();");
+		const segments = decodeLine(unwrapped.map.mappings);
+		expect(segments.get(6)).toEqual([2, 2]);
+		expect(segments.get(13)).toEqual([3, 9]);
+		expect(segments.get(21)).toEqual([6, 1]);
+	});
+
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
 		expect(() => minifyOnePass(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), { mangle: /** @type {EXPECTED_ANY} */ ({ nope: 1 }) })).toThrow(
 			"`nope` is not a supported option"
