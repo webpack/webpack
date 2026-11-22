@@ -1470,9 +1470,15 @@ const collectTypes = ({ program, checker, options }) => {
 					args[i].aliasSymbol === defaultValue.aliasSymbol &&
 					!defaultValue.aliasTypeArguments &&
 					!args[i].aliasTypeArguments;
+				// A JS file's reference that leaves a defaulted parameter out gets
+				// `any` there, not the default; print it left out as well.
+				const omittedInJs =
+					defaultValue !== undefined &&
+					(args[i].getFlags() & ts.TypeFlags.Any) !== 0;
 				if (
 					args[i] === defaultValue ||
 					sameAlias ||
+					omittedInJs ||
 					(defaultValue !== undefined && args[i] === parameter)
 				) {
 					argsWithoutDefaults.length--;
