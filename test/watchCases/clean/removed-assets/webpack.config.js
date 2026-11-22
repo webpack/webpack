@@ -13,6 +13,8 @@ module.exports = {
 				);
 				/** @type {string[]} */
 				const checked = [];
+				// the emit that follows the clean step checks its own files with lstat
+				let cleaning = false;
 				// records what CleanPlugin inspects without touching the shared fs module
 				compiler.outputFileSystem = Object.create(fs, {
 					lstat: {
@@ -20,13 +22,14 @@ module.exports = {
 							/** @type {string} */ file,
 							/** @type {EXPECTED_ANY} */ callback
 						) => {
-							checked.push(path.basename(file));
+							if (cleaning) checked.push(path.basename(file));
 							/** @type {EXPECTED_ANY} */ (fs).lstat(file, callback);
 						}
 					}
 				});
 				compiler.hooks.thisCompilation.tap("Test", (compilation) => {
 					checked.length = 0;
+					cleaning = true;
 					compilation.hooks.processAssets.tap("Test", () => {
 						compilation.emitAsset(
 							`extra.${currentWatchStep.step}.txt`,
@@ -38,6 +41,9 @@ module.exports = {
 							new compiler.webpack.sources.RawSource("kept")
 						);
 					});
+				});
+				compiler.hooks.emit.tap({ name: "Test", stage: Infinity }, () => {
+					cleaning = false;
 				});
 				compiler.hooks.afterEmit.tap("Test", (compilation) => {
 					const step = Number(currentWatchStep.step);
