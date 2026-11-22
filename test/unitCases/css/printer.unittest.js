@@ -2431,5 +2431,8 @@ describe("CssSyntax minify — a namespace after a url or an escaped brace", () 
 		expect(minifyFor(fixture("css", "css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace"))).toBe(
 			'.a{}@unknown (\\{);@namespace "urn:x";div{color:red}'
 		);
+		expect(minifyFor(fixture("css", "css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace"))).toBe(
+			'.a{}@import u\\72 l(a{b);@namespace "urn:x";div{color:red}'
+		);
 	});
 });

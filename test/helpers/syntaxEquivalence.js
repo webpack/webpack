@@ -2100,6 +2100,7 @@ const compareStyles = async ({ pairs, types }) => {
 	 * @property {Map<string, Set<string>>} selectors per property, every selector a rule declaring it applies under, nesting resolved
 	 * @property {Map<string, Set<string>>} atLength per `<dimension><px>` a query names, the selectors of the rules under it
 	 * @property {Set<string>} conditioned every property a rule under a media or container query declares
+	 * @property {Map<string, Set<string>>} darkened per property a `light-dark()` value sets, the selectors of the rules setting it
 	 * @property {Map<string, Set<string>>} reads per custom property, the properties that substitute it
 	 * @property {Set<string>} referenced every custom property a `var()` names with no fallback
 	 * @property {Set<string>} defaulted every custom property a `var()` names with a fallback
@@ -2123,6 +2124,7 @@ const compareStyles = async ({ pairs, types }) => {
 			selectors: new Map(),
 			atLength: new Map(),
 			conditioned: new Set(),
+			darkened: new Map(),
 			reads: new Map(),
 			referenced: new Set(),
 			defaulted: new Set(),
@@ -2214,6 +2216,12 @@ const compareStyles = async ({ pairs, types }) => {
 						else sequence.push(entry);
 						addAll(out.selectors, property, own);
 						if (lengths.length > 0 || darkened) out.conditioned.add(property);
+						if (
+							darkened &&
+							/light-dark\(/i.test(style.getPropertyValue(property) || text)
+						) {
+							addAll(out.darkened, property, own);
+						}
 						for (const name of substitutes) addAll(out.reads, name, [property]);
 					}
 					if (any.cssRules !== undefined) {
@@ -2869,12 +2877,35 @@ const compareStyles = async ({ pairs, types }) => {
 		};
 
 		/**
+		 * Whether element `i` of either frame, or an element it inherits from, matches
+		 * one of `selectors`; one no element can match, such as a pseudo-element, counts.
+		 * @param {Element[][]} read each frame's elements
+		 * @param {number} i the element's index
+		 * @param {Set<string> | undefined} selectors the selectors
+		 * @returns {boolean} true when one reaches it
+		 */
+		const reachedBy = (read, i, selectors) => {
+			if (selectors === undefined) return false;
+			for (const selector of selectors) {
+				for (const side of read) {
+					try {
+						if (side[i].closest(selector) !== null) return true;
+					} catch (_error) {
+						return true;
+					}
+				}
+			}
+			return false;
+		};
+
+		/**
 		 * Reads both frames at each sample and records what the two compute apart.
 		 * @param {{ elements: Element[][], asked: string[][], through: string[][] }} built what was built
 		 * @param {{ width: number, height: number, box: number, dark?: boolean }[]} samples where to read
 		 * @param {Set<string> | null} only the properties these samples can move, or null for any
+		 * @param {Map<string, Set<string>>=} unseen per property, the selectors whose elements leave it out
 		 */
-		const measure = async (built, samples, only) => {
+		const measure = async (built, samples, only, unseen) => {
 			await settle();
 			for (const sample of samples) {
 				if (moved.length >= KEPT) return;
@@ -2974,10 +3005,11 @@ const compareStyles = async ({ pairs, types }) => {
 					// Without a box in either frame nothing shows the value, and WebKit
 					// resolves such an element's style apart from the tree it stands in.
 					if (!(rendered[0][i] || rendered[1][i])) continue;
-					const asked =
-						only === null
-							? built.asked[i]
-							: built.asked[i].filter((name) => only.has(name));
+					const asked = built.asked[i].filter(
+						(name) =>
+							(only === null || only.has(name)) &&
+							!(unseen && reachedBy(read, i, unseen.get(name)))
+					);
 					for (const pseudo of built.through[i]) {
 						const changed = differ(i, pseudo, asked);
 						if (changed === null || changed.length === 0) continue;
@@ -3107,8 +3139,8 @@ const compareStyles = async ({ pairs, types }) => {
 				const dark = key === "dark" || key === "light-dark";
 				if ((found === null && !dark) || conditioned.length === 0) continue;
 				// A lowered `light-dark()` cannot see a scheme set from outside the
-				// sheet, so the relaxation skips its rules; a `prefers-color-scheme`
-				// query's other rules still can, so they are sampled.
+				// sheet, so the relaxation leaves out what one sets; a query's other
+				// properties still can, so they are sampled.
 				const unseen = dark && relax.has("color-scheme");
 				if (unseen && key === "light-dark") continue;
 				if (sampled + 3 > MAX_SAMPLES || moved.length >= KEPT) break;
@@ -3119,13 +3151,17 @@ const compareStyles = async ({ pairs, types }) => {
 						if (chains.has(selector)) reached.add(selector);
 					}
 				}
+				/** @type {Map<string, Set<string>> | undefined} */
+				let darkened;
 				if (unseen) {
+					darkened = new Map();
 					for (const reading of readings) {
-						for (const selector of reading.atLength.get("light-dark") || []) {
-							reached.delete(selector);
+						for (const [name, selectors] of reading.darkened) {
+							const set = darkened.get(name);
+							if (set === undefined) darkened.set(name, new Set(selectors));
+							else for (const selector of selectors) set.add(selector);
 						}
 					}
-					if (reached.size === 0) continue;
 				}
 				const part = populate([...reached]);
 				await measure(
@@ -3148,7 +3184,8 @@ const compareStyles = async ({ pairs, types }) => {
 									found[1] !== "box" && found[2] === "height" ? size : 800,
 								box: found[1] === "box" ? size : 0
 							})),
-					onlyConditioned
+					onlyConditioned,
+					darkened
 				);
 				clear();
 				sampled += 3;

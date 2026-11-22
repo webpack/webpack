@@ -12608,6 +12608,14 @@ exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-brace tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] right-curly-bracket[3,4] at-keyword[4,12] whitespace[12,13] left-parenthesis[13,14] ident[14,16] right-parenthesis[16,17] semicolon[17,18] at-keyword[18,28] whitespace[28,29] string[29,36] semicolon[36,37] ident[37,40] left-curly-bracket[40,41] ident[41,46] colon[46,47] ident[47,50] right-curly-bracket[50,51] whitespace[51,52] end=52"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[]],[\\"at-rule\\",\\"import\\",[\\" \\",[\\"url\\",\\"a{b\\"]],null],[\\"at-rule\\",\\"namespace\\",[\\" \\",[\\"string\\",\\"urn:x\\"]],null],[\\"qualified rule\\",[[\\"ident\\",\\"div\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace prints {"mode":"minify"} 1`] = `".a{}@import u\\\\72 l(a{b);@namespace \\"urn:x\\";div{color:red}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-an-empty-rule-before-a-namespace-after-an-escaped-url-holding-a-brace tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] right-curly-bracket[3,4] at-keyword[4,11] whitespace[11,12] url[12,23|19,22] semicolon[23,24] at-keyword[24,34] whitespace[34,35] string[35,42] semicolon[42,43] ident[43,46] left-curly-bracket[46,47] ident[47,52] colon[52,53] ident[53,56] right-curly-bracket[56,57] whitespace[57,58] end=58"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-drops-the-source-mapping-url parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"v\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-drops-the-source-mapping-url parses 2`] = `""`;
