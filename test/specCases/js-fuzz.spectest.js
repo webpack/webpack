@@ -34,6 +34,23 @@ const PROGRAMS_PER_SEED = Number(process.env.JS_FUZZ_PROGRAMS) || 50;
 const SEED_TIMEOUT = 300000;
 const REGEXPS_PER_SEED = 400;
 const REQUIRE_SOURCES_PER_SEED = 200;
+/**
+ * @param {string | undefined} raw what `JS_FUZZ_RANDOM_OPTION_SETS` is set to
+ * @returns {number} the random option sets per generated program
+ */
+const randomOptionSetsPerProgram = (raw) => {
+	if (raw === undefined || raw === "") return 4;
+	const count = Number(raw);
+	if (!Number.isSafeInteger(count) || count < 0) {
+		throw new Error(
+			`JS_FUZZ_RANDOM_OPTION_SETS must be a non-negative integer, not ${raw}`
+		);
+	}
+	return count;
+};
+const RANDOM_OPTION_SETS_PER_PROGRAM = randomOptionSetsPerProgram(
+	process.env.JS_FUZZ_RANDOM_OPTION_SETS
+);
 // A program's synchronous part, bounded so an output that loops fails the case
 // instead of hanging the suite.
 const RUN_TIMEOUT = 5000;
@@ -929,11 +946,10 @@ describe("JavaScript fuzzer", () => {
 				const failures = [];
 				for (let round = 1; round <= PROGRAMS_PER_SEED; round++) {
 					const program = next();
-					const optionSets = [
-						...OPTION_SETS,
-						randomOptions(random),
-						randomOptions(random)
-					];
+					const optionSets = [...OPTION_SETS];
+					for (let i = 0; i < RANDOM_OPTION_SETS_PER_PROGRAM; i++) {
+						optionSets.push(randomOptions(random));
+					}
 					// Each part generates every program, so the seed's stream stays
 					// the same, and checks only its own rounds.
 					if (!checksInPart(`${seed}/${round}`)) continue;
