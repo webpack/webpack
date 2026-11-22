@@ -1,5 +1,6 @@
 import * as barrel from "./barrel.js";
 import * as registry from "./registry-barrel.js";
+import { ns } from "./effect-barrel-b.js";
 
 /**
  * Returns what a barrel re-exports.
@@ -15,4 +16,10 @@ const read = (source) => [
 	Object.keys(source.ns).join()
 ];
 
-export const run = () => [read(barrel), read(registry), registry.evaluated];
+// concatenation resolves `ns.n1` to the leaf's own binding
+export const run = () => [
+	read(barrel),
+	read(registry),
+	registry.evaluated,
+	ns.n1()
+];
