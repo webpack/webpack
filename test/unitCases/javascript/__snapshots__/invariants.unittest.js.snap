@@ -40892,9 +40892,9 @@ exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-val
 
 exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-value prints {"mode":"minify","compress":{"toplevel":true},"mangle":false} 1`] = `"let foo={name:1},bar={a:!0};var pattern;({a:pattern}=bar),console.log(foo.name,bar.a,pattern);"`;
 
-exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-value prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"const name=1,foo={name:1},flag=!0,bar={a:!0};var pattern;({a:pattern}=bar),console.log(foo.name,bar.a,pattern);"`;
+exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-value prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"const name=1,foo={name:name},flag=!0,bar={a:!0};var pattern;({a:pattern}=bar),console.log(foo.name,bar.a,pattern);"`;
 
-exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-value prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"const name=1,foo={name:1},flag=!0,bar={a:!0};var pattern;({a:pattern}=bar),console.log(foo.name,bar.a,pattern);"`;
+exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-value prints {"mode":"minify","compress":{},"mangle":true} 1`] = `"const name=1,foo={name:name},flag=!0,bar={a:!0};var pattern;({a:pattern}=bar),console.log(foo.name,bar.a,pattern);"`;
 
 exports[`JavaScript syntax — invariants one-pass-kept-constant-in-property-value prints {"mode":"minify"} 1`] = `"const name=1,foo={name:name};const flag=!0,bar={a:flag};var pattern;({a:pattern}=bar);console.log(foo.name,bar.a,pattern);"`;
 
