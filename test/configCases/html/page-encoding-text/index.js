@@ -28,6 +28,31 @@ it("should hash an injected script as the page holds it", () => {
 	expect(html).toContain(`'sha256-${hash}'`);
 });
 
+it("should keep the raw text of a tagged template a plugin injects", () => {
+	const html = page();
+	const body = /<script>(var [^<]*window\.__raw[^<]*)<\/script>/.exec(html)[1];
+	expect(body).not.toMatch(/[^\0-\x7f]/);
+	const window = {};
+	__non_webpack_require__("vm").runInNewContext(body, { window });
+	expect(window.__raw).toBe("日");
+	const hash = crypto.createHash("sha256").update(body, "utf8").digest("base64");
+	expect(html).toContain(`'sha256-${hash}'`);
+});
+
+it("should keep the templates of two equal scripts apart", () => {
+	const html = page();
+	const window = {};
+	const context = __non_webpack_require__("vm").createContext({ window });
+	const scriptRegExp = /<script\b[^>]*>([^<]*window\.__sites[^<]*)<\/script\b[^>]*>/gi;
+	let match;
+	while ((match = scriptRegExp.exec(html)) !== null) {
+		__non_webpack_require__("vm").runInContext(match[1], context);
+	}
+	expect(window.__sites).toHaveLength(2);
+	expect(window.__sites[0]).not.toBe(window.__sites[1]);
+	expect(window.__sites[0].raw).toEqual(["日"]);
+});
+
 it("should hash a tag a plugin turned into a script as it is written", () => {
 	const html = page();
 	const body = /<script>(window\.__late[^<]*)<\/script>/.exec(html)[1];

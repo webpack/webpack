@@ -2,6 +2,8 @@
 
 const { HtmlModulesPlugin } = require("../../../../").html;
 
+const SITE = "(window.__sites = window.__sites || []).push(((s) => s)`日`);";
+
 /** @type {import("../../../../").Configuration} */
 module.exports = {
 	target: "web",
@@ -27,6 +29,11 @@ module.exports = {
 						// "日" is no character of windows-1252
 						{ tag: "meta", attrs: { name: "word", content: "日" } },
 						{ tag: "script", children: 'window.__word = "日";' },
+						// a tagged template reads its raw text, which no escape keeps
+						{ tag: "script", children: "window.__raw = String.raw`日`;" },
+						// two equal scripts, whose templates are separate sites
+						{ tag: "script", children: SITE },
+						{ tag: "script", children: SITE },
 						{ tag: "template", children: 'window.__late = "日";' }
 					]
 				);

@@ -9,8 +9,10 @@ const {
 	escapeJsCodePoint,
 	fromDocument,
 	fromDocumentWithMap,
+	scriptToDocument,
 	toDocument
 } = require("../../lib/html/documentEncoding");
+const vm = require("vm");
 
 /**
  * @param {string} encoding an encoding
@@ -75,6 +77,106 @@ describeIf("documentEncoding", () => {
 	it("should leave a UTF-16 page's characters as they are", () => {
 		expect(fromDocument("日", "utf-16le")).toBe("日");
 		expect(toDocument("日", "utf-16le", escapeHtmlCodePoint)).toBe("日");
+	});
+});
+
+const supportsPrivateFields = (() => {
+	try {
+		// eslint-disable-next-line no-new-func
+		new Function("class A { #a = 1; }");
+		return true;
+	} catch (_err) {
+		return false;
+	}
+})();
+
+describeIf("scriptToDocument", () => {
+	/**
+	 * @param {string} code a script
+	 * @returns {unknown} what it leaves in `result`
+	 */
+	const run = (code) => {
+		/** @type {{ result?: unknown }} */
+		const context = {};
+		vm.runInNewContext(code, context);
+		return context.result;
+	};
+
+	it("should leave a script the encoding holds as toDocument writes it", () => {
+		const code = 'result = String.raw`€`;';
+		expect(scriptToDocument(code, "windows-1252")).toBe(
+			toDocument(code, "windows-1252", escapeJsCodePoint)
+		);
+		expect(scriptToDocument(code, "utf-16le")).toBe(code);
+		expect(scriptToDocument("result = 1;", "windows-1252")).toBe(
+			"result = 1;"
+		);
+	});
+
+	it("should declare its names after the directives", () => {
+		const code = '"use strict"\nthis.result = [String.raw`★`, (function () { return this; })()];';
+		const written = scriptToDocument(code, "windows-1252");
+		expect(written).toMatch(/^"use strict";var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = \(\{\}\)\.constructor;/);
+		expect(run(written)).toEqual(["★", undefined]);
+	});
+
+	it("should keep a cooked string an invalid escape has none of", () => {
+		const code =
+			"const tag = (s) => [s[0], s.raw[0]];\nresult = tag`\\unicode★`;";
+		expect(run(scriptToDocument(code, "windows-1252"))).toEqual([
+			undefined,
+			"\\unicode★"
+		]);
+	});
+
+	it("should escape an astral character of a private name", () => {
+		const code = "class A { #𝑥 = 1; get() { return this.#𝑥; } }\nresult = new A().get();";
+		const written = scriptToDocument(code, "windows-1252");
+		expect(written).toContain("#\\u{1d465}");
+		// private names run from Node.js 12
+		if (supportsPrivateFields) expect(run(written)).toBe(1);
+	});
+
+	it("should not read a binding the script names `Object`", () => {
+		const code = "const Object = null;\nthis.result = String.raw`★`;";
+		expect(run(scriptToDocument(code, "windows-1252"))).toBe("★");
+	});
+
+	it("should keep a `#!` line first", () => {
+		const code = "#!/usr/bin/env node\nthis.result = String.raw`★`;";
+		const written = scriptToDocument(code, "windows-1252");
+		expect(written).toMatch(/^#!\/usr\/bin\/env node\nvar __webpack_template_/);
+		expect(run(written.replace(/^#!.*\n/, ""))).toBe("★");
+	});
+
+	it("should keep a line separator that ends a line as a line break", () => {
+		for (const separator of ["\u2028", "\u2029"]) {
+			const code = `#!/usr/bin/env node${separator}// a comment${separator}this.result = [String.raw\`★\`, "a${separator}b"];`;
+			const written = scriptToDocument(code, "windows-1252");
+			expect(written).toMatch(/^#!\/usr\/bin\/env node\nvar /);
+			expect(written).toContain("// a comment\nthis.result");
+			expect(run(written.replace(/^#!.*\n/, ""))).toEqual(["★", `a${separator}b`]);
+		}
+		for (const terminator of ["\n", "\r\n"]) {
+			const code = `#!/usr/bin/env node${terminator}this.result = String.raw\`★\`;`;
+			expect(scriptToDocument(code, "windows-1252")).toMatch(
+				new RegExp(`^#!/usr/bin/env node${terminator}var `)
+			);
+		}
+	});
+
+	it("should read a module", () => {
+		const code = "export const value = String.raw`★`;";
+		expect(scriptToDocument(code, "windows-1252")).toMatch(
+			/^var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = \(\{\}\)\.constructor;export const value = \(\(String\.raw\)/
+		);
+	});
+
+	it("should escape a script it cannot parse as toDocument does", () => {
+		const code = "result = String.raw`★` +;";
+		expect(scriptToDocument(code, "windows-1252")).toBe(
+			toDocument(code, "windows-1252", escapeJsCodePoint)
+		);
 	});
 });
 
