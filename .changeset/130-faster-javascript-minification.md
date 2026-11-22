@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Speed up JavaScript minification.
+Reduce JavaScript printer work and retained memory.
