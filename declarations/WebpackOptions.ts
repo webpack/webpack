@@ -337,6 +337,12 @@ export interface ConcatenateModulesOptions {
 	 * Also concatenate CommonJS modules with statically analyzable exports. Defaults to 'true'.
 	 */
 	commonjs?: boolean;
+	/**
+	 * Link side-effect-free ES modules that only other chunks import across async chunks with native 'import'/'export', instead of the module registry. Applies to 'output.module' builds only. Defaults to 'false'.
+	 * @since 5.114.0
+	 * @experimental
+	 */
+	crossChunkImports?: boolean;
 }
 
 /**

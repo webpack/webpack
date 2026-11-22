@@ -11298,6 +11298,19 @@ Object {
     "multiple": false,
     "simpleType": "boolean",
   },
+  "optimization-concatenate-modules-cross-chunk-imports": Object {
+    "configs": Array [
+      Object {
+        "description": "Link side-effect-free ES modules that only other chunks import across async chunks with native 'import'/'export', instead of the module registry. Applies to 'output.module' builds only. Defaults to 'false'.",
+        "multiple": false,
+        "path": "optimization.concatenateModules.crossChunkImports",
+        "type": "boolean",
+      },
+    ],
+    "description": "Link side-effect-free ES modules that only other chunks import across async chunks with native 'import'/'export', instead of the module registry. Applies to 'output.module' builds only. Defaults to 'false'.",
+    "multiple": false,
+    "simpleType": "boolean",
+  },
   "optimization-emit-on-errors": Object {
     "configs": Array [
       Object {
