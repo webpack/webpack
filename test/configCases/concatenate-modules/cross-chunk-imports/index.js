@@ -10,7 +10,8 @@ const bailouts = {
 	keys: ["one", "two"],
 	context: "context",
 	anonymous: "anonymous",
-	anonymousName: "default"
+	anonymousName: "default",
+	load: "function"
 };
 
 it("should run pages whose shared modules are linked across chunks", async () => {
@@ -18,7 +19,12 @@ it("should run pages whose shared modules are linked across chunks", async () =>
 	const b = await import(/* webpackChunkName: "page-b" */ "./page-b.js");
 	expect(a.run()).toEqual({ html: "[<a>X</a>]", count: 1, ...bailouts });
 	// `count` is a live binding both pages share
-	expect(b.run()).toEqual({ html: "[<b>RANK: 5</b>]", count: 2, ...bailouts });
+	expect(b.run()).toEqual({
+		html: "[<b>RANK: 5</b>]",
+		count: 2,
+		...bailouts,
+		registry: { evaluated: 1, keys: ["one", "two"], context: "context", label: "n: 1" }
+	});
 	expect(globalThis.crossChunkImportsEffectRuns).toBe(1);
 });
 
@@ -38,10 +44,20 @@ it("should hoist the linkable shared modules into one scope with native exports"
 		"const formatValue = ",
 		"const bracket = ",
 		"function wrap(",
-		"let count = 0;"
+		"let count = 0;",
+		// effect.js stays in the registry and imports it from the same chunk
+		"const lonely = () => ",
+		// an anonymous default function is named without the runtime's `.dn`
+		'"name", { value: "default", configurable: true });',
+		// namespace importers bind an inline namespace object
+		"const one = 1;",
+		"return this.value;",
+		'[Symbol.toStringTag]: { value: "Module" },'
 	]) {
 		expect(scope).toContain(declaration);
 	}
+	// the scope runs at the chunk's top level, where the runtime is unbound
+	expect(scope).not.toContain("__webpack_require__");
 	const exportMatch = /^export \{ .* \};$/m.exec(scope);
 	expect(exportMatch).not.toBeNull();
 	const [exported] = /** @type {RegExpExecArray} */ (exportMatch);
@@ -51,18 +67,20 @@ it("should hoist the linkable shared modules into one scope with native exports"
 	// each bailout keeps its module in the registry
 	for (const bailout of [
 		"globalThis.crossChunkImportsEffectRuns",
-		"const one = 1;",
-		"__webpack_require__.dn(",
-		"return this.value;",
 		"typeof __webpack_require__.p",
 		"const dashed = () => ",
 		"module.exports = {",
 		"const required = () => ",
-		"const lonely = () => ",
 		"new URL("
 	]) {
 		expect(registry).toContain(bailout);
 	}
+
+	expect(shared).not.toContain("__webpack_require__.dn(");
+	// a registry module binds a scope of its own chunk through a self-import
+	expect(shared.split("\n")[0]).toMatch(
+		/^import \{ \$\d+\w+ as __webpack_linked_\S+ \} from "\.\/shared\.chunk\.mjs";$/
+	);
 
 	// a module in both pages' chunks stays in each
 	expect(shared).not.toContain("dup");
@@ -79,4 +97,39 @@ it("should hoist the linkable shared modules into one scope with native exports"
 			expect(specifier).toContain(" as __webpack_linked_");
 		}
 	}
+});
+
+it("should report why each module another chunk imports stays in the registry", () => {
+	/** @type {Record<string, string[]>} */
+	const reasons = {};
+	/**
+	 * Collects the cross-chunk bailouts of the modules and the modules they concatenate.
+	 * @param {import("../../../../types").StatsModule[]} modules the modules
+	 */
+	const collect = (modules) => {
+		for (const module of modules) {
+			const bailouts = (module.optimizationBailout || []).filter((reason) =>
+				reason.startsWith("Cross-chunk imports bailout: ")
+			);
+			if (bailouts.length > 0) reasons[module.name] = bailouts;
+			if (module.modules) collect(module.modules);
+		}
+	};
+	collect(__STATS__.modules);
+	const prefix = "Cross-chunk imports bailout: ";
+	expect(reasons).toEqual({
+		"./shared/public-path.js": [`${prefix}module uses the webpack runtime`],
+		"./shared/string-name.js": [
+			`${prefix}export "with-dash" is not an identifier`
+		],
+		"./shared/cjs.js": [`${prefix}Module is not an ECMAScript module`],
+		"./shared/required.js": [
+			`${prefix}./shared/cjs.js imports it through cjs full require`
+		],
+		"./shared/url.js": [`${prefix}new URL() needs the module registry`],
+		"./shared/loader.js": [`${prefix}module has async blocks`],
+		"./shared/effect.js": [
+			`${prefix}module has side effects that its chunk's loads don't all run first`
+		]
+	});
 });

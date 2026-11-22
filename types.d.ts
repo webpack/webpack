@@ -5466,7 +5466,7 @@ declare interface ConcatenateModulesOptions {
 	commonjs?: boolean;
 
 	/**
-	 * Link side-effect-free ES modules that only other chunks import across async chunks with native 'import'/'export', instead of the module registry. Applies to 'output.module' builds only. Defaults to 'false'.
+	 * Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it. Applies to 'output.module' builds only. Defaults to 'false'.
 	 * @since 5.114.0
 	 * @experimental
 	 */
