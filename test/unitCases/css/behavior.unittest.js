@@ -44,3 +44,84 @@ describe("CSS behavior relation", () => {
 		expect(await renders.difference(large, source)).toBeNull();
 	});
 });
+
+describe("CSS styles compared under the color-scheme relaxation", () => {
+	/** @type {import("playwright-core").Browser} */
+	let browser;
+	/** @type {import("playwright-core").Page} */
+	let page;
+
+	beforeAll(async () => {
+		const { GENERIC_FONT_FAMILIES } = require("../../../lib/css/data");
+		const { POLICED_PAGE, installHelpers } = require("../../helpers/syntaxEquivalence");
+
+		browser = await require("../../helpers/launchBrowser")();
+		page = await browser.newPage();
+		await page.setContent(POLICED_PAGE);
+		await page.evaluate(installHelpers, [...GENERIC_FONT_FAMILIES]);
+	}, 120000);
+
+	afterAll(async () => {
+		if (browser) await browser.close();
+	});
+
+	/**
+	 * @param {[string, string, string][]} pairs per pair its name and both sheets
+	 * @returns {Promise<Record<string, number>>} per pair how many lines differ
+	 */
+	const differences = async (pairs) => {
+		const { cascadeLines, compareStyles } = require("../../helpers/syntaxEquivalence");
+		/** @type {import("../../helpers/syntaxEquivalence").StyleReport[]} */
+		/** @type {import("../../helpers/syntaxEquivalence").StylePair[]} */
+		const compared = pairs.map(([name, before, after]) => ({
+			name,
+			before,
+			after,
+			relax: ["color-scheme"]
+		}));
+		const reports = await page.evaluate(compareStyles, {
+			pairs: compared,
+			types: []
+		});
+		return Object.fromEntries(
+			reports.map((report) => [report.name, cascadeLines(report).length])
+		);
+	};
+
+	it("leaves out only what the used color scheme alone moves", async () => {
+		const lowered =
+			":where(:root){--webpack-light:initial;--webpack-dark:}";
+		const counts = await differences([
+			[
+				"lowered",
+				"div{color:light-dark(red,blue)}@media (prefers-color-scheme:dark){b{color:light-dark(green,yellow)}}",
+				`div{color:var(--webpack-light,red)var(--webpack-dark,blue)}@media (prefers-color-scheme:dark){b{color:var(--webpack-light,green)var(--webpack-dark,#ff0)}}${lowered}`
+			],
+			[
+				"before",
+				"div::before{content:'x';color:light-dark(red,blue)}@media (prefers-color-scheme:dark){div{margin-left:0}}",
+				`div::before{content:'x';color:var(--webpack-light,red)var(--webpack-dark,blue)}@media (prefers-color-scheme:dark){div{margin-left:0}}${lowered}`
+			],
+			[
+				"query",
+				"@media (prefers-color-scheme:dark){div{color:red}}",
+				"@media (prefers-color-scheme:dark){div{color:blue}}"
+			],
+			[
+				"beside",
+				".a{color:light-dark(red,blue)}@media (prefers-color-scheme:dark){.a{margin-left:1px}}",
+				".a{color:light-dark(red,blue)}@media (prefers-color-scheme:dark){.a{margin-left:2px}}"
+			],
+			[
+				"winning",
+				"div{color:light-dark(red,blue)}@media (prefers-color-scheme:dark){div{color:green}}",
+				"div{color:red}@media (prefers-color-scheme:dark){div{color:purple}}"
+			]
+		]);
+		expect(counts.lowered).toBe(0);
+		expect(counts.before).toBe(0);
+		expect(counts.query).toBeGreaterThan(0);
+		expect(counts.beside).toBeGreaterThan(0);
+		expect(counts.winning).toBeGreaterThan(0);
+	}, 120000);
+});
