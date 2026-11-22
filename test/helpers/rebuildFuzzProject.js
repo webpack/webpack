@@ -599,9 +599,11 @@ module.exports = function loader() {
 
 /**
  * @param {Project} project project
+ * @param {boolean=} hot whether the entry accepts its own updates and hands the
+ * root module and its `module.hot` to the fuzzer instead of logging them
  * @returns {Map<string, string>} path from the root to source, of every file that exists
  */
-const renderFiles = (project) => {
+const renderFiles = (project, hot) => {
 	/** @type {Map<string, string>} */
 	const files = new Map();
 	for (const [id, record] of project.modules) {
@@ -630,7 +632,9 @@ const renderFiles = (project) => {
 	);
 	files.set(
 		"index.js",
-		'import * as root from "./app/m0.js";\nconsole.log(root, root.use());\n'
+		hot
+			? 'import * as root from "./app/m0.js";\nimport.meta.webpackHot.accept();\nglobalThis.root = root;\nglobalThis.hot = import.meta.webpackHot;\n'
+			: 'import * as root from "./app/m0.js";\nconsole.log(root, root.use());\n'
 	);
 	return files;
 };

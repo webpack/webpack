@@ -3,10 +3,13 @@
 // Applies seeded edit sequences to a small project and, after every step,
 // holds the watch rebuild and a build restored from the persistent cache to a
 // fresh build, and a second cached build with no edit to writing nothing.
+// Hot variants also run the bundle and apply each update, and hold what the
+// running bundle then exports to what a fresh build's bundle exports.
 
 const fs = require("fs");
 const os = require("os");
 const path = require("path");
+const vm = require("vm");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../../");
 const NodeWatchFileSystem = require("../../lib/node/NodeWatchFileSystem");
@@ -25,8 +28,10 @@ const {
 /** @typedef {import("../../").Compilation} Compilation */
 /** @typedef {import("../../").Stats} Stats */
 /** @typedef {import("../../").InputFileSystem} InputFileSystem */
-/** @typedef {{ mode: "production" | "development", splitChunks?: boolean, watchCache?: "filesystem", cacheUnaffected?: boolean, concatenateModules?: boolean }} Variant */
-/** @typedef {{ assets: Record<string, string>, errors: string[], warnings: string[] }} Result */
+/** @typedef {import("memfs").IFs} IFs */
+/** @typedef {{ mode: "production" | "development", splitChunks?: boolean, watchCache?: "filesystem", cacheUnaffected?: boolean, concatenateModules?: boolean, hot?: boolean }} Variant */
+/** @typedef {{ assets: Record<string, string>, hash: string, entry: string | undefined, errors: string[], warnings: string[] }} Result */
+/** @typedef {{ context: vm.Context, error: string | undefined }} Runtime */
 /** @typedef {{ step: number, check: string, detail: string }} Failure */
 /** @typedef {{ files: Set<string>, directories: Set<string>, missing: Set<string>, callback: (...args: EXPECTED_ANY[]) => void, undelayed?: (...args: EXPECTED_ANY[]) => void }} PendingWatch */
 
@@ -51,7 +56,12 @@ const VARIANTS = [
 	{ mode: "production", concatenateModules: true, cacheUnaffected: true },
 	{ mode: "development", concatenateModules: true, cacheUnaffected: true },
 	// splitChunks and cacheUnaffected have never been fuzzed together either
-	{ mode: "production", splitChunks: true, cacheUnaffected: true }
+	{ mode: "production", splitChunks: true, cacheUnaffected: true },
+	{ mode: "development", hot: true },
+	{ mode: "development", hot: true, watchCache: "filesystem" },
+	{ mode: "development", hot: true, cacheUnaffected: true },
+	{ mode: "development", hot: true, splitChunks: true },
+	{ mode: "production", hot: true }
 ];
 
 /** @type {number[]} */
@@ -207,10 +217,12 @@ const createConfig = (dir, variant, cache, logs) => ({
 	context: dir,
 	entry: "./index.js",
 	mode: variant.mode,
+	target: variant.hot ? "node" : undefined,
 	devtool: false,
 	output: {
 		path: "/out",
-		filename: "[name].[contenthash].js",
+		// the entry holds the hash HotModuleReplacementPlugin changes per update
+		filename: variant.hot ? "[name].js" : "[name].[contenthash].js",
 		chunkFilename: "[id].[contenthash].js"
 	},
 	optimization: {
@@ -225,6 +237,7 @@ const createConfig = (dir, variant, cache, logs) => ({
 			: undefined
 	},
 	module: { rules: [{ test: /\.txt$/, type: "asset/source" }] },
+	plugins: variant.hot ? [new webpack.HotModuleReplacementPlugin()] : undefined,
 	cache,
 	experiments: variant.cacheUnaffected ? { cacheUnaffected: true } : undefined,
 	infrastructureLogging: {
@@ -249,9 +262,11 @@ const createConfig = (dir, variant, cache, logs) => ({
  * Records each asset's source at `emit`, before webpack frees it.
  * @param {Compiler} compiler compiler
  * @param {WeakMap<Compilation, Record<string, string>>} assets sink
+ * @returns {IFs} the in-memory output file system
  */
 const recordAssets = (compiler, assets) => {
-	compiler.outputFileSystem = createFsFromVolume(new Volume());
+	const outputFileSystem = createFsFromVolume(new Volume());
+	compiler.outputFileSystem = /** @type {EXPECTED_ANY} */ (outputFileSystem);
 	compiler.hooks.emit.tap("RebuildFuzz", (compilation) => {
 		/** @type {Record<string, string>} */
 		const sources = {};
@@ -260,6 +275,7 @@ const recordAssets = (compiler, assets) => {
 		}
 		assets.set(compilation, sources);
 	});
+	return outputFileSystem;
 };
 
 // WHY: the closest-name hint lists a folder no watcher reports a change of
@@ -285,8 +301,11 @@ const toResult = (stats, dir, assets) => {
 				`${error.message}`.split(dir).join("<dir>").replace(CLOSEST_NAME_HINT, "")
 			)
 			.sort();
+	const main = compilation.namedChunks.get("main");
 	return {
 		assets: assets.get(compilation) || {},
+		hash: /** @type {string} */ (compilation.hash),
+		entry: main && [...main.files].find((file) => file.endsWith(".js")),
 		errors: messages(compilation.errors),
 		warnings: messages(compilation.warnings)
 	};
@@ -332,22 +351,138 @@ const compare = (got, expected) => {
 	if (expected.errors.some((error) => error.includes("Module parse failed"))) {
 		return messages("errors");
 	}
-	const names = new Set([
-		...Object.keys(got.assets),
-		...Object.keys(expected.assets)
-	]);
+	// a fresh build writes no hot update, and HotModuleReplacementPlugin folds
+	// its update count into the hash the hot runtime prints
+	const names = new Set(
+		[...Object.keys(got.assets), ...Object.keys(expected.assets)].filter(
+			(name) => !HOT_UPDATE.test(name)
+		)
+	);
 	for (const name of [...names].sort()) {
 		if (!(name in got.assets)) return `asset ${name} missing`;
 		if (!(name in expected.assets)) return `asset ${name} unexpected`;
-		if (got.assets[name] !== expected.assets[name]) {
-			const gotLines = got.assets[name].split("\n");
-			const expectedLines = expected.assets[name].split("\n");
+		const gotSource = got.assets[name].split(got.hash).join("<hash>");
+		const expectedSource = expected.assets[name]
+			.split(expected.hash)
+			.join("<hash>");
+		if (gotSource !== expectedSource) {
+			const gotLines = gotSource.split("\n");
+			const expectedLines = expectedSource.split("\n");
 			let line = 0;
 			while (gotLines[line] === expectedLines[line]) line++;
 			return `asset ${name} differs at line ${line + 1}:\n  got:      ${gotLines[line]}\n  expected: ${expectedLines[line]}`;
 		}
 	}
 	return messages("errors") || messages("warnings");
+};
+
+const HOT_UPDATE = /\.hot-update\.(?:js|json)$/;
+
+/**
+ * Runs a bundle as node would, reading every file it requires from the output.
+ * @param {string | undefined} entry the entry chunk's file
+ * @param {(name: string) => string | undefined} readFile reads an emitted file
+ * @returns {Runtime} the running bundle, or what its startup threw
+ */
+const startRuntime = (entry, readFile) => {
+	const context = vm.createContext({
+		setTimeout,
+		clearTimeout,
+		console: { log() {}, warn() {}, error() {} }
+	});
+	/**
+	 * @param {string} request request from a file in the output folder
+	 * @returns {EXPECTED_ANY} what node's require would return
+	 */
+	const load = (request) => {
+		if (!request.startsWith(".")) return require(request);
+		const name = path.posix.normalize(request);
+		const source = readFile(name);
+		if (source === undefined) {
+			const error = /** @type {Error & { code: string }} */ (
+				new Error(`Cannot find module '${request}'`)
+			);
+			error.code = "MODULE_NOT_FOUND";
+			throw error;
+		}
+		if (name.endsWith(".json")) return JSON.parse(source);
+		const module = { exports: {} };
+		vm.runInContext(
+			`(function (exports, require, module, __filename, __dirname) {${source}\n})`,
+			context
+		)(module.exports, load, module, `/out/${name}`, "/out");
+		return module.exports;
+	};
+	try {
+		load(`./${entry}`);
+		return { context, error: undefined };
+	} catch (err) {
+		return { context, error: String(/** @type {Error} */ (err).message) };
+	}
+};
+
+/**
+ * Reads what the running bundle exports, calling every `use()` and dynamic
+ * import it reaches, so modules loaded and updated later are read too.
+ * @param {Runtime} runtime runtime
+ * @returns {Promise<string>} the state as JSON
+ */
+const snapshot = async (runtime) => {
+	if (runtime.error) return `startup threw: ${runtime.error}`;
+	let budget = 400;
+	/** @type {Set<unknown>} */
+	const seen = new Set();
+	/**
+	 * @param {unknown} value value
+	 * @param {number} depth how many reads led here
+	 * @returns {Promise<unknown>} a JSON-able copy
+	 */
+	const read = async (value, depth) => {
+		if (typeof value !== "object" && typeof value !== "function") {
+			return value;
+		}
+		if (value === null) return null;
+		if (depth > 4 || --budget < 0) return "<cut>";
+		if (seen.has(value)) return "<seen>";
+		seen.add(value);
+		if (typeof value === "function") {
+			try {
+				return { called: await read(await value(), depth + 1) };
+			} catch (err) {
+				return `threw: ${/** @type {Error} */ (err).message}`;
+			}
+		}
+		if (Array.isArray(value)) {
+			const items = [];
+			for (const item of value) items.push(await read(item, depth + 1));
+			return items;
+		}
+		const object = /** @type {Record<string | symbol, unknown>} */ (value);
+		/** @type {Record<string, unknown>} */
+		const result = {};
+		if (object[Symbol.toStringTag] === "Module") result["<module>"] = true;
+		for (const key of Object.keys(object).sort()) {
+			try {
+				result[key] = await read(object[key], depth + 1);
+			} catch (err) {
+				result[key] = `threw: ${/** @type {Error} */ (err).message}`;
+			}
+		}
+		return result;
+	};
+	return JSON.stringify(await read(runtime.context.root, 0));
+};
+
+/**
+ * @param {string} got the updated bundle's state
+ * @param {string} expected the fresh bundle's state
+ * @returns {string} both around their first difference
+ */
+const stateDifference = (got, expected) => {
+	let index = 0;
+	while (got[index] === expected[index]) index++;
+	const start = Math.max(0, index - 80);
+	return `state differs at ${index}:\n  got:      ${got.slice(start, index + 80)}\n  expected: ${expected.slice(start, index + 80)}`;
 };
 
 /**
@@ -436,8 +571,10 @@ const runSequence = async (steps, variant) => {
 	let compiler;
 	/** @type {import("../../").Watching | undefined} */
 	let watching;
+	/** @type {Runtime | undefined} */
+	let runtime;
 	try {
-		writeStep(dir, renderFiles(project), project, 0);
+		writeStep(dir, renderFiles(project, variant.hot), project, 0);
 		compiler = webpack(
 			createConfig(
 				dir,
@@ -454,12 +591,26 @@ const runSequence = async (steps, variant) => {
 		const watchCompiler = compiler;
 		/** @type {WeakMap<Compilation, Record<string, string>>} */
 		const assets = new WeakMap();
-		recordAssets(watchCompiler, assets);
+		const output = recordAssets(watchCompiler, assets);
+		/**
+		 * @param {string} name file name
+		 * @returns {string | undefined} what the watch build last wrote there
+		 */
+		const readOutput = (name) => {
+			try {
+				return String(output.readFileSync(`/out/${name}`, "utf8"));
+			} catch (_err) {
+				return undefined;
+			}
+		};
 		// WHY: watch reads records once, and RecordIdsPlugin then keeps chunk
 		// and module ids stable across rebuilds on purpose; a fresh build has
-		// none, so they are cleared to compare like with like.
+		// none, so they are cleared to compare like with like. The rest stays
+		// for HotModuleReplacementPlugin, which reads what changed from it.
 		watchCompiler.hooks.watchRun.tap("RebuildFuzz", () => {
-			watchCompiler.records = {};
+			watchCompiler.records = variant.hot
+				? { ...watchCompiler.records, modules: undefined, chunks: undefined }
+				: {};
 		});
 		const watchFileSystem = new FakeWatchFileSystem(
 			/** @type {InputFileSystem} */ (watchCompiler.inputFileSystem)
@@ -488,23 +639,47 @@ const runSequence = async (steps, variant) => {
 		let watched = await nextBuild();
 		const cacheDirectory = path.join(root, "cache");
 		for (let step = 0; step <= steps.length; step++) {
+			let rebuilt = false;
 			if (step > 0) {
 				project = cloneProject(project);
 				for (const edit of steps[step - 1]) applyEdit(project, edit);
 				const { touched, removed } = writeStep(
 					dir,
-					renderFiles(project),
+					renderFiles(project, variant.hot),
 					project,
 					step
 				);
 				if (watchFileSystem.trigger(touched, removed)) {
 					watched = await nextBuild();
+					rebuilt = true;
 				}
 			}
 			const fresh = await buildOnce(createConfig(dir, variant, false, []));
 			const watchDifference = compare(watched, fresh);
 			if (watchDifference) {
 				return { step, check: "watch", detail: watchDifference };
+			}
+			// as a dev server does, an errored build is reloaded, not applied
+			if (variant.hot && fresh.errors.length > 0) runtime = undefined;
+			if (variant.hot && fresh.errors.length === 0) {
+				const expected = await snapshot(
+					startRuntime(fresh.entry, (name) => fresh.assets[name])
+				);
+				if (!runtime) {
+					runtime = startRuntime(watched.entry, readOutput);
+				} else if (rebuilt) {
+					try {
+						await runtime.context.hot.check(true);
+					} catch (err) {
+						const { message } = /** @type {Error} */ (err);
+						return { step, check: "hot", detail: `update failed: ${message}` };
+					}
+				}
+				const got = await snapshot(runtime);
+				if (runtime.error) runtime = undefined;
+				if (got !== expected) {
+					return { step, check: "hot", detail: stateDifference(got, expected) };
+				}
 			}
 			const cacheConfig = /** @type {Configuration["cache"]} */ ({
 				type: "filesystem",
