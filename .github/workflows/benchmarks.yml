@@ -102,7 +102,7 @@ jobs:
         env:
           # A unit case's JS heap does not show in this count (parsing typescript.js
           # reports ~450 KB), so it holds V8's own native allocations, which move run to run.
-          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-unit$' || '-unit$' }}
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-local$|-unit$' || '-local$|-unit$' }}
 
       - name: Run benchmarks
         uses: CodSpeedHQ/action@af75f77f17a054769abefaa42fe8dc2975469b5f # v5.6.3
@@ -113,4 +113,4 @@ jobs:
           # the harness still supports it:
           # mode: "walltime"
         env:
-          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule' || '' }}
+          NEGATIVE_FILTER: ${{ github.event_name != 'schedule' && 'on-schedule|-local$' || '-local$' }}
