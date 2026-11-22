@@ -116,7 +116,7 @@ describeIf("scriptToDocument", () => {
 	it("should declare its names after the directives", () => {
 		const code = '"use strict"\nthis.result = [String.raw`★`, (function () { return this; })()];';
 		const written = scriptToDocument(code, "windows-1252");
-		expect(written).toMatch(/^"use strict";var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = Object;/);
+		expect(written).toMatch(/^"use strict";var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = \(\{\}\)\.constructor;/);
 		expect(run(written)).toEqual(["★", undefined]);
 	});
 
@@ -137,10 +137,22 @@ describeIf("scriptToDocument", () => {
 		if (supportsPrivateFields) expect(run(written)).toBe(1);
 	});
 
+	it("should not read a binding the script names `Object`", () => {
+		const code = "const Object = null;\nthis.result = String.raw`★`;";
+		expect(run(scriptToDocument(code, "windows-1252"))).toBe("★");
+	});
+
+	it("should keep a `#!` line first", () => {
+		const code = "#!/usr/bin/env node\nthis.result = String.raw`★`;";
+		const written = scriptToDocument(code, "windows-1252");
+		expect(written).toMatch(/^#!\/usr\/bin\/env node\nvar __webpack_template_/);
+		expect(run(written.replace(/^#!.*\n/, ""))).toBe("★");
+	});
+
 	it("should read a module", () => {
 		const code = "export const value = String.raw`★`;";
 		expect(scriptToDocument(code, "windows-1252")).toMatch(
-			/^var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = Object;export const value = \(\(String\.raw\)/
+			/^var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = \(\{\}\)\.constructor;export const value = \(\(String\.raw\)/
 		);
 	});
 
