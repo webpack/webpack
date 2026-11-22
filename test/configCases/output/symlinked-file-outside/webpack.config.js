@@ -7,7 +7,7 @@ const { RawSource } = require("webpack-sources");
 
 const PLUGIN_NAME = "SymlinkedFileOutsidePlugin";
 
-/** @typedef {"unset" | "allowed" | "denied" | "dangling" | "no-compare" | "parent-segment"} Mode */
+/** @typedef {"unset" | "allowed" | "denied" | "dangling" | "no-compare" | "parent-segment" | "backslash-name"} Mode */
 
 /** @type {Mode[]} */
 const MODES = [
@@ -19,7 +19,11 @@ const MODES = [
 	// output.compareBeforeEmit is off, so the file is not read before it is written
 	"no-compare",
 	// the link leads to "alias/../file.txt", where "alias" is a link out of output.path
-	"parent-segment"
+	"parent-segment",
+	// on POSIX "\\" is a character of a name, so "alias\\name/.." leaves a link named so
+	...(process.platform === "win32"
+		? []
+		: /** @type {Mode[]} */ (["backslash-name"]))
 ];
 
 /** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
@@ -52,7 +56,18 @@ module.exports = (env, { testPath }) =>
 						fs.mkdirSync(elsewhere, { recursive: true });
 						fs.mkdirSync(outputPath, { recursive: true });
 						if (mode !== "dangling") fs.writeFileSync(target, "before");
-						if (mode === "parent-segment") {
+						if (mode === "backslash-name") {
+							fs.mkdirSync(path.join(elsewhere, "sub"));
+							fs.symlinkSync(
+								path.join(elsewhere, "sub"),
+								path.join(outputPath, "alias\\name"),
+								"junction"
+							);
+							fs.symlinkSync(
+								"alias\\name/../file.txt",
+								path.join(outputPath, "linked.txt")
+							);
+						} else if (mode === "parent-segment") {
 							fs.mkdirSync(path.join(elsewhere, "sub"));
 							fs.symlinkSync(
 								path.join(elsewhere, "sub"),

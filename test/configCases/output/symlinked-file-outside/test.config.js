@@ -8,7 +8,8 @@ module.exports = {
 			"denied",
 			"dangling",
 			"no-compare",
-			"parent-segment"
+			"parent-segment",
+			"backslash-name"
 		][index];
 		return `./${mode}/dist/bundle${index}.js`;
 	}
