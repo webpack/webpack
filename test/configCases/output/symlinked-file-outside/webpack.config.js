@@ -7,7 +7,7 @@ const { RawSource } = require("webpack-sources");
 
 const PLUGIN_NAME = "SymlinkedFileOutsidePlugin";
 
-/** @typedef {"unset" | "allowed" | "denied" | "dangling" | "no-compare"} Mode */
+/** @typedef {"unset" | "allowed" | "denied" | "dangling" | "no-compare" | "parent-segment"} Mode */
 
 /** @type {Mode[]} */
 const MODES = [
@@ -17,7 +17,9 @@ const MODES = [
 	// the link leads to a file that does not exist yet
 	"dangling",
 	// output.compareBeforeEmit is off, so the file is not read before it is written
-	"no-compare"
+	"no-compare",
+	// the link leads to "alias/../file.txt", where "alias" is a link out of output.path
+	"parent-segment"
 ];
 
 /** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
@@ -50,7 +52,21 @@ module.exports = (env, { testPath }) =>
 						fs.mkdirSync(elsewhere, { recursive: true });
 						fs.mkdirSync(outputPath, { recursive: true });
 						if (mode !== "dangling") fs.writeFileSync(target, "before");
-						fs.symlinkSync(target, path.join(outputPath, "linked.txt"));
+						if (mode === "parent-segment") {
+							fs.mkdirSync(path.join(elsewhere, "sub"));
+							fs.symlinkSync(
+								path.join(elsewhere, "sub"),
+								path.join(outputPath, "alias"),
+								"junction"
+							);
+							// written as it is, as path.join would drop "alias/.."
+							fs.symlinkSync(
+								["alias", "..", "file.txt"].join(path.sep),
+								path.join(outputPath, "linked.txt")
+							);
+						} else {
+							fs.symlinkSync(target, path.join(outputPath, "linked.txt"));
+						}
 					});
 					compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
 						compilation.hooks.processAssets.tap(PLUGIN_NAME, () => {
