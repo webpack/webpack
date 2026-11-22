@@ -2,9 +2,9 @@
 
 const fs = require("fs");
 const path = require("path");
-const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
+const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
-module.exports = createLazyBarrelTest(["lib/Button.js"], {
+module.exports = createLazyMakeTest(["lib/Button.js"], {
 	mode: "production",
 	target: "web",
 	devtool: false,

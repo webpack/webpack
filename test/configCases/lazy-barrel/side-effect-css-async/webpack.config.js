@@ -2,10 +2,10 @@
 
 const fs = require("fs");
 const path = require("path");
-const createLazyBarrelTest = require("../_helpers/createLazyBarrelTest");
+const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
 // unused sibling stays deferred (never built)
-module.exports = createLazyBarrelTest(["lib/Unused.js"], {
+module.exports = createLazyMakeTest(["lib/Unused.js"], {
 	mode: "production",
 	target: "web",
 	devtool: false,
