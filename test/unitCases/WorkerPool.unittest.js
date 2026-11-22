@@ -1487,4 +1487,67 @@ describe("WorkerPool", () => {
 			}
 		});
 	});
+
+	describeThreads("recycling", () => {
+		/** @typedef {{ threadId: number }} Info */
+
+		/**
+		 * @param {WorkerPool} pool the pool
+		 * @param {string} module the module
+		 * @param {number} times how many calls, one after another
+		 * @returns {Promise<number[]>} the thread of each call
+		 */
+		const infoTimes = async (pool, module, times) => {
+			/** @type {number[]} */
+			const threadIds = [];
+			for (let i = 0; i < times; i++) {
+				threadIds.push(
+					/** @type {Info} */ (await pool.run(module, "info")).threadId
+				);
+			}
+			return threadIds;
+		};
+
+		it("replaces a thread worn by one module for a call of another at max", async () => {
+			const pool = createPool({ max: 1 });
+			try {
+				const [first] = await infoTimes(pool, TARGET, 8);
+				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
+
+				expect(other.threadId).not.toBe(first);
+				expect(pool.stats.spawned).toBe(2);
+				expect(pool.stats.workers).toBe(1);
+			} finally {
+				await pool.end({ force: true });
+			}
+		});
+
+		it("reuses a thread that ran few calls of another module", async () => {
+			const pool = createPool({ max: 1 });
+			try {
+				const [first] = await infoTimes(pool, TARGET, 3);
+				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
+
+				expect(other.threadId).toBe(first);
+				expect(pool.stats.spawned).toBe(1);
+			} finally {
+				await pool.end({ force: true });
+			}
+		});
+
+		it("starts a thread below max and keeps the worn one for its module", async () => {
+			const pool = createPool({ max: 2 });
+			try {
+				const [first] = await infoTimes(pool, TARGET, 8);
+				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
+				const again = /** @type {Info} */ (await pool.run(TARGET, "info"));
+
+				expect(other.threadId).not.toBe(first);
+				expect(again.threadId).toBe(first);
+				expect(pool.stats.spawned).toBe(2);
+			} finally {
+				await pool.end({ force: true });
+			}
+		});
+	});
 });
