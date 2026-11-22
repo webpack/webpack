@@ -3045,7 +3045,7 @@ const compareStyles = async ({ pairs, types }) => {
 					// apart only while the used scheme is dark is left out; the frames keep
 					// matching dark queries, so a winning query's value is still compared.
 					for (const doc of docs) {
-						doc.documentElement.style.setProperty("color-scheme", "");
+						doc.documentElement.style.setProperty("color-scheme", "light");
 					}
 					await settleFrames();
 					const light = found.map(({ i, pseudo, changed }) =>
@@ -3063,7 +3063,7 @@ const compareStyles = async ({ pairs, types }) => {
 					await settleFrames();
 					found = found.filter((entry, k) => {
 						entry.changed = entry.changed.filter(
-							(_change, n) => light[k][n][0] !== light[k][n][1]
+							([name], n) => name === "box" || light[k][n][0] !== light[k][n][1]
 						);
 						return entry.changed.length > 0;
 					});

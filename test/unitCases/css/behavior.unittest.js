@@ -103,6 +103,11 @@ describe("CSS styles compared under the color-scheme relaxation", () => {
 				`div::before{content:'x';color:var(--webpack-light,red)var(--webpack-dark,blue)}@media (prefers-color-scheme:dark){div{margin-left:0}}${lowered}`
 			],
 			[
+				"rooted",
+				":root{color-scheme:light dark}div{color:light-dark(red,blue)}@media (prefers-color-scheme:dark){div{margin-left:0}}",
+				`:root{color-scheme:light dark}div{color:var(--webpack-light,red)var(--webpack-dark,blue)}@media (prefers-color-scheme:dark){div{margin-left:0}}${lowered}`
+			],
+			[
 				"query",
 				"@media (prefers-color-scheme:dark){div{color:red}}",
 				"@media (prefers-color-scheme:dark){div{color:blue}}"
@@ -120,6 +125,7 @@ describe("CSS styles compared under the color-scheme relaxation", () => {
 		]);
 		expect(counts.lowered).toBe(0);
 		expect(counts.before).toBe(0);
+		expect(counts.rooted).toBe(0);
 		expect(counts.query).toBeGreaterThan(0);
 		expect(counts.beside).toBeGreaterThan(0);
 		expect(counts.winning).toBeGreaterThan(0);
