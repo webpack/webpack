@@ -18,7 +18,9 @@ var derived = {
 console.log(derived.name());
 function Made() {
 	var read = (unused) => new.target;
-	return read(3) === Made;
+	var made = read(3) === Made;
+	console.log(made);
+	return made;
 }
 console.log(new Made() instanceof Made, Made());
 function nested() {
