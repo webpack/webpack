@@ -1,13 +1,19 @@
 import fs from "fs/promises";
+import { createRequire } from "module";
 import { fileURLToPath } from "url";
-import { minify } from "terser";
+
+const { jsMinify } = createRequire(import.meta.url)(
+	"../../../lib/index.js"
+).javascript;
 
 export async function setup() {
 	const source = await fs.readFile(
 		fileURLToPath(import.meta.resolve("three")),
 		"utf8"
 	);
-	const { code } = await minify(source, { module: true });
+	const { code } = await jsMinify({ "three.module.js": source }, undefined, {
+		module: true
+	});
 
 	if (!code) {
 		throw new Error("Failed to minify the three ESM fixture");

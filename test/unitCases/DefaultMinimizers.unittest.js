@@ -44,6 +44,12 @@ describe("default minimizers", () => {
 		}
 	});
 
+	it("exposes the default JavaScript minifier as `webpack.javascript.jsMinify`", () => {
+		expect(require("../../").javascript.jsMinify).toBe(
+			require("../../lib/javascript/jsMinify")
+		);
+	});
+
 	it("passes webpack's own JavaScript minifier as a function by default", () => {
 		expect(getImplementations({})).toContain(
 			require("../../lib/javascript/jsMinify")

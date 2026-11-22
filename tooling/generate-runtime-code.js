@@ -8,7 +8,7 @@ if (major < 16) {
 const fs = require("fs");
 const path = require("path");
 const prettier = require("prettier");
-const terser = require("terser");
+const { jsMinify } = require("..").javascript;
 
 // When --write is set, files will be written in place
 // Otherwise it only prints outdated files
@@ -64,10 +64,11 @@ const files = ["lib/sharing/semver.js"];
 			}
 
 			const body = originalCode.slice(header[0].length, -1);
-			const result = await terser.minify(
+			const result = await jsMinify(
 				{
 					"input.js": body
 				},
+				undefined,
 				{
 					compress: true,
 					mangle: true,

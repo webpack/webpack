@@ -2,4 +2,4 @@
 "webpack": minor
 ---
 
-Minify JavaScript with webpack's own minifier by default instead of terser.
+Minify JavaScript with webpack's own minifier by default, exposed as `webpack.javascript.jsMinify`.

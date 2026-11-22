@@ -191,10 +191,7 @@ module.exports = function checkArrayExpectation(
 		upperCaseKind = filename;
 		filename = `${kind}s`;
 	}
-	let array = object[`${kind}s`];
-	if (Array.isArray(array) && kind === "warning") {
-		array = array.filter((item) => !/from Terser/.test(item));
-	}
+	const array = object[`${kind}s`];
 	if (fs.existsSync(path.join(testDirectory, `${filename}.js`))) {
 		const expectedFilename = path.join(testDirectory, `${filename}.js`);
 
