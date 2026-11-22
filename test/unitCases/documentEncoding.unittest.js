@@ -149,6 +149,22 @@ describeIf("scriptToDocument", () => {
 		expect(run(written.replace(/^#!.*\n/, ""))).toBe("★");
 	});
 
+	it("should keep a line separator that ends a line as a line break", () => {
+		for (const separator of ["\u2028", "\u2029"]) {
+			const code = `#!/usr/bin/env node${separator}// a comment${separator}this.result = [String.raw\`★\`, "a${separator}b"];`;
+			const written = scriptToDocument(code, "windows-1252");
+			expect(written).toMatch(/^#!\/usr\/bin\/env node\nvar /);
+			expect(written).toContain("// a comment\nthis.result");
+			expect(run(written.replace(/^#!.*\n/, ""))).toEqual(["★", `a${separator}b`]);
+		}
+		for (const terminator of ["\n", "\r\n"]) {
+			const code = `#!/usr/bin/env node${terminator}this.result = String.raw\`★\`;`;
+			expect(scriptToDocument(code, "windows-1252")).toMatch(
+				new RegExp(`^#!/usr/bin/env node${terminator}var `)
+			);
+		}
+	});
+
 	it("should read a module", () => {
 		const code = "export const value = String.raw`★`;";
 		expect(scriptToDocument(code, "windows-1252")).toMatch(
