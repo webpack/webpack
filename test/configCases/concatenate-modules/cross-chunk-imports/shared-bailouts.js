@@ -8,6 +8,7 @@ import { dup } from "./dup/dup.js";
 import { effect } from "./shared/effect.js";
 import * as namespace from "./shared/namespace.js";
 import * as context from "./shared/context.js";
+import anonymous from "./shared/anonymous.js";
 
 export const bailouts = () => ({
 	publicPath: getPublicPath(),
@@ -19,5 +20,7 @@ export const bailouts = () => ({
 	dup: dup(),
 	effect,
 	keys: Object.keys(namespace).sort(),
-	context: context.read()
+	context: context.read(),
+	anonymous: anonymous(),
+	anonymousName: anonymous.name
 });
