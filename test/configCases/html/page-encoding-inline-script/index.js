@@ -9,7 +9,8 @@ const page = () =>
 	);
 
 const run = () => {
-	const scripts = [...page().matchAll(/<script>([^]*?)<\/script>/g)];
+	// every inline script the page holds, which webpack writes as `<script>`
+	const scripts = [...page().matchAll(/<script\b[^>]*>([^]*?)<\/script\b[^>]*>/gi)];
 	const window = {};
 	const context = vm.createContext({ window, self: window });
 	for (const [, code] of scripts) vm.runInContext(code, context);
