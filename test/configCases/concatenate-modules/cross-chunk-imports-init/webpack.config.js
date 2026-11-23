@@ -18,17 +18,26 @@ const group = (name) => ({
  * Returns the configuration for one value of the option.
  * @param {number} index the configuration index
  * @param {true | "always"} crossChunkImports the option value
+ * @param {string=} entry the entry, when not the shared one
+ * @param {boolean=} strictModuleErrorHandling whether a failed module rethrows its error
  * @returns {import("../../../../types").Configuration} configuration
  */
-const config = (index, crossChunkImports) => ({
+const config = (
+	index,
+	crossChunkImports,
+	entry,
+	strictModuleErrorHandling
+) => ({
 	mode: "production",
 	target: "node",
+	entry: entry || "./index.js",
 	stats: { optimizationBailout: true },
 	output: {
 		module: true,
 		chunkFormat: "module",
 		filename: `bundle${index}.mjs`,
-		chunkFilename: `[name]-${index}.chunk.mjs`
+		chunkFilename: `[name]-${index}.chunk.mjs`,
+		strictModuleErrorHandling
 	},
 	optimization: {
 		minimize: false,
@@ -39,4 +48,8 @@ const config = (index, crossChunkImports) => ({
 	}
 });
 
-module.exports = [config(0, "always"), config(1, true)];
+module.exports = [
+	config(0, "always"),
+	config(1, true),
+	config(2, "always", "./failing.js", true)
+];

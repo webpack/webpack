@@ -21,6 +21,20 @@ export class Point {
 	}
 }
 
+// a class or function declaration ends its statement without a semicolon
+let separated = 0
+export class Empty {}
+[1, 2].forEach((n) => {
+	separated += n;
+})
+export function last() {
+	return "last";
+}
+[3].forEach((n) => {
+	separated += n;
+});
+export { separated };
+
 export const {
 	a,
 	b: [c]

@@ -29,6 +29,7 @@ it("should run each init function where the registry runs its module", async () 
 		total: 7,
 		nested: "nested",
 		key: "only",
+		separated: 6,
 		name: "default",
 		expression: "deep 10",
 		both: "ab",
