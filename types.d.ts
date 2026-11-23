@@ -3727,6 +3727,13 @@ declare abstract class ColumnarSyntaxTree {
 	setType(node: number, type: number): void;
 
 	/**
+	 * Retypes a node whose record the new type lays out otherwise, as a `while`
+	 * turned into a `for`: it keeps its id and gets an empty record of the new type.
+	 * @experimental `javascript.syntax` tree; unstable API
+	 */
+	setTypeEmpty(node: number, type: number): void;
+
+	/**
 	 * Sets the slot a node's record holds a part in.
 	 */
 	setPart(part: number, node: number, text: string): void;
