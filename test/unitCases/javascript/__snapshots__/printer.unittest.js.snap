@@ -171,7 +171,7 @@ exports[`one-pass minify of reads and calls on literals should drop only the rea
 
 exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 6`] = `"var log=[],other;try{null.x}catch(e){log.push(e.name)}try{other.y}catch(e){log.push(e.name)}(log.push(\\"factory\\"),{})[{toString:function(){log.push(\\"key\\");return\\"k\\"}}],console.log(log.join());"`;
 
-exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 7`] = `"var log=[],other;try{null.x}catch(e){log.push(e.name)}try{other.y}catch(e){log.push(e.name)}(function(){log.push(\\"factory\\")})();console.log(log.join());"`;
+exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 7`] = `"var log=[],other;try{null.x}catch(e){log.push(e.name)}try{other.y}catch(e){log.push(e.name)}!function(){log.push(\\"factory\\")}(),console.log(log.join());"`;
 
 exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 8`] = `"null.x,(void 0).y;"`;
 
