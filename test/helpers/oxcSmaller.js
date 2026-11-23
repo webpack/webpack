@@ -181,6 +181,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: benches-full/victory.js",
 			"swc minifier: benches-full/vue.js",
 			"swc minifier: fixture/issues/12189/input.js",
+			"swc minifier: fixture/issues/12565/while_body/input.js",
 			"swc minifier: fixture/next/66237/input.js",
 			"swc minifier: fixture/next/feedback-3/579-dcac359116b2707c/input.js",
 			"swc minifier: fixture/next/regression-1/framework-798bab57daac3897/input.js",
@@ -773,7 +774,8 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: functions/recursive_inline_1",
 			"terser compress: functions/issue_2783",
-			"terser compress: functions/issue_2898"
+			"terser compress: functions/issue_2898",
+			"terser compress: functions/issue_3076"
 		]
 	],
 	[
