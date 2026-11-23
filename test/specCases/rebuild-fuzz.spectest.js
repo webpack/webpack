@@ -20,6 +20,7 @@ const {
 	generateSteps,
 	renderFiles
 } = require("../helpers/rebuildFuzzProject");
+const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {import("../helpers/rebuildFuzzProject").Edit} Edit */
 /** @typedef {import("../helpers/rebuildFuzzProject").Project} Project */
@@ -771,6 +772,10 @@ const shrink = async (steps, variant, failure) => {
 
 describe("rebuild fuzz", () => {
 	for (const seed of SEEDS) {
+		// each part picks its own random seed, so every part runs it
+		if (process.env.REBUILD_FUZZ_SEED !== "random" && !isInPart(`${seed}`)) {
+			continue;
+		}
 		const variant = VARIANTS[seed % VARIANTS.length];
 
 		it(
