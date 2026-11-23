@@ -23,7 +23,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12213/shadowed-object/input.js",
 			"swc minifier: fixture/issues/12187/input.js",
 			"terser compress: harmony/export_default_object_expression",
-			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
 			"terser compress: reduce_vars/escaped_prop_3",
 			"terser compress: destructuring/issue_t111_2a",
 			"terser compress: destructuring/issue_t111_2b",
@@ -135,7 +134,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/10876/2/input.js",
 			"swc minifier: fixture/issues/10876/3/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/fn-multi-use-default-side-effect/input.js",
-			"swc minifier: fixture/issues/11512-exhaustive/fn-multi-use-default-unused/input.js",
 			"swc minifier: fixture/issues/11512-exhaustive/iife-default-side-effect/input.js",
 			"swc minifier: fixture/issues/11512/input.js",
 			"swc minifier: fixture/issues/11871/input.js",
@@ -147,7 +145,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8271/input.js",
 			"swc minifier: fixture/issues/9148/input.js",
 			"swc minifier: fixture/issues/9468/input.js",
-			"swc minifier: fixture/issues/9610-arrow-functions/input.js",
 			"swc minifier: fixture/issues/cycle-1/input.js",
 			"swc minifier: fixture/issues/cycle-2/input.js",
 			"swc minifier: fixture/pr/7690/input.js",
@@ -176,7 +173,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12032/input.js",
 			"swc minifier: fixture/issues/12177/input.js",
 			"swc minifier: fixture/issues/12222/input.js",
-			"swc minifier: fixture/issues/12298/input.js",
 			"swc minifier: fixture/issues/12311/input.js",
 			"swc minifier: fixture/issues/12404/input.js",
 			"swc minifier: fixture/issues/12492/input.js",
@@ -305,7 +301,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/next/extra/if_return/.3/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.ddc4110d/input.js",
 			"swc minifier: full/size/6d52ebcc72a64f1f1ef2594baecb5dcab49b1a32/input.js",
-			"swc minifier: fixture/issues/10816/input.js",
 			"swc minifier: fixture/issues/12118/input.js",
 			"swc minifier: fixture/issues/2614/1/input.js",
 			"swc minifier: fixture/issues/6422/1/input.js"
@@ -437,7 +432,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what swc's `pass-1` tests cover",
 		[
-			"swc minifier: pass-1/1/input.js",
 			"swc minifier: pass-1/issue-6788/1/input.js",
 			"swc minifier: pass-1/issue-6405/1/input.js"
 		]
@@ -446,7 +440,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc restructures conditionals: an `if` as `&&` or `?:`, a shared tail or call factored out, `continue` and `break` folded into the condition",
 		[
 			"swc minifier: fixture/issues/10986/input.js",
-			"swc minifier: fixture/issues/11829/input.js",
 			"swc minifier: fixture/issues/2926/1/input.js",
 			"swc minifier: fixture/issues/5846/input.js",
 			"swc minifier: fixture/issues/7412/input.js",
@@ -496,8 +489,7 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/simple/if/var/input.js",
 			"swc minifier: fixture/simple/inline/4/input.js",
 			"swc minifier: fixture/simple/inline/6/input.js",
-			"swc minifier: fixture/simple/switch/const/call/input.js",
-			"swc minifier: fixture/simple/switch/const/order/input.js"
+			"swc minifier: fixture/simple/switch/const/call/input.js"
 		]
 	],
 	[
@@ -719,7 +711,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: pass-1/joda/2/input.js",
 			"swc minifier: fixture/issues/12566/defaults/input.js",
 			"swc minifier: fixture/issues/12566/without-reduce-vars/input.js",
-			"swc minifier: fixture/issues/10178/input.js",
 			"swc minifier: fixture/issues/11684/identifier-side-effects/input.js",
 			"swc minifier: fixture/issues/11684/side-effects/input.js",
 			"swc minifier: fixture/issues/11730/input.js",
