@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold more known values, calls, object assignments and dead code when minifying.
+Fold more values, calls and dead code when minifying, and fix wrong output.

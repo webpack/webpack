@@ -139,6 +139,7 @@ it("should keep a `switch` whose path is not known or whose dropped cases declar
 	expect(unmatched([], true)).toEqual([]);
 	expect(unmatched([], false)).toEqual(["else"]);
 	expect(unknownFirst([], () => 1)).toEqual(["at"]);
+	expect(unknownFirst([], () => 2)).toEqual(["one"]);
 	expect(nestedBreak([], true)).toEqual([]);
 	expect(nestedBreak([], false)).toEqual(["after"]);
 	expect(hoisted([])).toEqual(["undefined"]);

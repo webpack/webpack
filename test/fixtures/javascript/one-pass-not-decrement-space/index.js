@@ -1,0 +1,14 @@
+var a = 0;
+var b = 3;
+var x;
+if (!--b) console.log("zero");
+x = !--b;
+console.log(x, b);
+x = a < !--b;
+console.log(x, b);
+x = a < (!++b ? 0 : 1);
+console.log(x, b);
+x = !(!--b);
+console.log(x, b);
+x = [a < !--b, a <= !--b, - --b, + ++b, !-b];
+console.log(x.join());

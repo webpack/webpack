@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"toplevel":false,"topRetain":"Kept"},"mangle":false,"behavior":true},{"mode":"minify","compress":{"topRetain":"Kept"},"mangle":false,"behavior":true},{"mode":"minify","compress":{"topRetain":["Kept"]},"mangle":{"toplevel":true}}]

@@ -50,8 +50,6 @@ const BY_DESIGN = [
 			"oxc minifier: peephole/obscure_edge_cases.rs:test_advanced_esm_patterns:1e4702f5",
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_block:e9c3eac6",
 			"swc minifier: fixture/projects/jquery/5/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/completion/guard-after-expression/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/guarded-jump/input.js",
 			"swc minifier: fixture/issues/string-from-char-code-uint16/input.js"
 		]
 	],
@@ -67,7 +65,6 @@ const BY_DESIGN = [
 			"terser compress: dead-code/dead_code_2_should_warn",
 			"terser compress: dead-code/dead_code_2_should_warn_strict",
 			"terser compress: evaluate/Infinity_NaN_undefined_LHS",
-			"terser compress: evaluate/issue_2926_1",
 			"terser compress: functions/empty_body",
 			"terser compress: functions/issue_1841_2",
 			"terser compress: functions/issue_2620_1",

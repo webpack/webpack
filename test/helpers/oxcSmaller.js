@@ -117,6 +117,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"terser compress: sequences/make_sequences_4",
 			"swc minifier: fixture/next/feeback-plotly/1/input.js",
 			"swc minifier: fixture/issues/9186/1/input.js",
 			"swc minifier: fixture/issues/12213/shadowed-object/input.js",
@@ -136,7 +137,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: issue-1321/issue_1321_no_debug",
 			"terser compress: issue-1321/issue_1321_debug",
 			"terser compress: issue-1321/issue_1321_with_quoted",
-			"terser compress: numbers/evaluate_4",
 			"terser compress: properties/join_object_assignments_2",
 			"terser compress: properties/join_object_assignments_if",
 			"swc exec: terser_properties_join_object_assignments_2",
@@ -155,7 +155,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_arguments_modified",
 			"swc minifier: fixture/issues/10412/input.js",
 			"swc minifier: fixture/issues/11684/identifier-preserved/input.js",
-			"swc minifier: fixture/issues/4249/input.js",
 			"swc minifier: fixture/issues/arguments-canonical-index/input.js",
 			"swc minifier: fixture/projects/jquery/25/input.js",
 			"swc minifier: fixture/projects/jquery/27/input.js",
@@ -198,7 +197,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/underscore/16/input.js",
 			"swc minifier: fixture/projects/underscore/17/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
-			"swc minifier: mangle/2/input.js",
 			"swc exec: terser_collapse_vars_issue_2914_2",
 			"swc exec: terser_collapse_vars_cond_branch_2",
 			"oxc minifier: peephole/dead_code_elimination.rs:preserve_legal_comment_when_dce_removes_anchor:f30f12bc",
@@ -345,8 +343,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: terser_labels_labels_3",
 			"swc exec: terser_reduce_vars_side_effects_assign",
 			"swc exec: terser_reduce_vars_recursive_inlining_4",
-			"swc exec: terser_reduce_vars_reduce_vars",
-			"swc exec: terser_reduce_vars_escape_local_sequence",
 			"swc exec: terser_collapse_vars_cond_branch_1",
 			"swc exec: terser_collapse_vars_may_throw_2",
 			"swc exec: terser_properties_join_object_assignments_return_2",
@@ -381,8 +377,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/minimize_exit_points.rs:test_for_continue_optimization:34ac02f3",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_switch_exit_points1:ebe0a496",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_test_block_scoped_variables:bc33072e",
-			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:1ba6d27d",
-			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:cb295b49"
+			"oxc minifier: peephole/minimize_exit_points.rs:test_break_optimization:1ba6d27d"
 		]
 	],
 	[
@@ -398,7 +393,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/9619/input.js",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:097786dc",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:1e8b08b2",
-			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:29660a03",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:48e1a076",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:bd15f134",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:ee9ac22d"
@@ -501,14 +495,12 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `reduce_vars` tests cover",
 		[
-			"terser compress: reduce_vars/reduce_vars",
 			"terser compress: reduce_vars/inner_var_if",
 			"terser compress: reduce_vars/issue_1595_4",
 			"terser compress: reduce_vars/unary_delete",
 			"terser compress: reduce_vars/side_effects_assign",
 			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/recursive_inlining_4",
-			"terser compress: reduce_vars/escape_local_sequence",
 			"terser compress: reduce_vars/var_if",
 			"terser compress: reduce_vars/issue_3068_2",
 			"terser compress: reduce_vars/reduce_funcs_in_array_1",
@@ -750,8 +742,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: loops/drop_if_else_break_4",
 			"terser compress: loops/issue_1532",
 			"terser compress: loops/issue_1648",
-			"terser compress: loops/in_parenthesis_3",
-			"terser compress: loops/dead_code_condition"
+			"terser compress: loops/in_parenthesis_3"
 		]
 	],
 	[
@@ -892,7 +883,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `issue-1052` tests cover",
 		[
-			"terser compress: issue-1052/deeply_nested",
 			"terser compress: issue-1052/not_hoisted_when_already_nested",
 			"terser compress: issue-1052/defun_if_return",
 			"terser compress: issue-1052/defun_hoist_funs",
@@ -1035,10 +1025,6 @@ const OXC_SMALLER_BY_REASON = [
 		["terser compress: labels/labels_3", "terser compress: labels/labels_4"]
 	],
 	[
-		"oxc goes further than webpack on what terser's `nullish` tests cover",
-		["terser compress: nullish/delete_nullish_2"]
-	],
-	[
 		"oxc goes further than webpack on what terser's `issue-1482` tests cover",
 		[
 			"terser input: issue-1482/braces.js",
@@ -1062,9 +1048,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what oxc's `mangler/property_mangler.rs` tests cover",
-		[
-			"oxc minifier: mangler/property_mangler.rs:quoted_behavior_is_per_occurrence:342cdf0c"
-		]
+		[]
 	],
 	[
 		"oxc writes a variable's value at its one read and drops the variable, or an alias of another binding",
@@ -1149,10 +1133,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1833` tests cover",
-		[
-			"terser compress: issue-1833/iife_do",
-			"terser compress: issue-1833/iife_for_in"
-		]
+		[]
 	],
 	[
 		"oxc goes further than webpack on what terser's `try-catch` tests cover",
@@ -1215,10 +1196,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc goes further than webpack on what terser's `issue-611` tests cover",
 		["terser compress: issue-611/issue_611"]
-	],
-	[
-		"oxc goes further than webpack on what terser's `optional-chains` tests cover",
-		["terser compress: optional-chains/issue_1586_optional_chain_inlined_2"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `parameters` tests cover",
@@ -1287,11 +1264,7 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12643/runtime/input.js",
 			"swc minifier: fixture/issues/12669/class-methods/input.js",
 			"swc minifier: fixture/issues/12669/function-kinds/input.js",
-			"swc minifier: fixture/issues/12669/object-method/input.js",
-			"swc minifier: fixture/issues/do-while-false-control-flow/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/defaults-mangle/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/downstream-repro/input.js",
-			"swc minifier: fixture/issues/do-while-false-terminal-jump/labels-preserved/input.js"
+			"swc minifier: fixture/issues/12669/object-method/input.js"
 		]
 	],
 	[

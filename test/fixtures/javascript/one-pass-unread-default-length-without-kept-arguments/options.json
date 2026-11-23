@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"keep_fargs":false},"mangle":false,"behavior":true},{"mode":"minify","compress":{"keep_fargs":false,"toplevel":true},"mangle":false,"behavior":true}]

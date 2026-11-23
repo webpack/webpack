@@ -13,8 +13,8 @@ module.exports = {
 		expect(code).toContain('if(!flag)log.push("else")');
 		expect(code).toContain('found:{log.push("one");break found}');
 		expect(code).not.toContain('"two"');
-		expect(code).toContain('if(1===at())log.push("at");else log.push("one")');
+		expect(code).toContain('1===at()?log.push("at"):log.push("one")');
 		expect(code).toContain("if(flag)break");
-		expect(code).toContain('function(log){log.push("undefined");return log}');
+		expect(code).toContain('function(log){return log.push("undefined"),log}');
 	}
 };

@@ -230,6 +230,7 @@ it("should drop a default of `undefined` in a pattern, but a parameter's own", (
 		undefined,
 		0
 	]);
+	expect(patternDefaults([1], { given: 5 })[5]).toBe(5);
 });
 
 it("should read a hole of an array literal at a known index as `void 0`", () => {
