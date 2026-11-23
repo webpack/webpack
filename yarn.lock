@@ -2413,6 +2413,97 @@
     espree "^11.2.0"
     picomatch "^4.0.7"
 
+"@swc-next/parser-binding-darwin-arm64@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-darwin-arm64/-/parser-binding-darwin-arm64-0.8.1.tgz#5129409bb10608aa835dc403095b63b5c76582bb"
+  integrity sha512-c09ymaHfxy6ajhdTzO0W7cn1XQhvlyjjN0aDE8SWzYlGRovq+cbbjkD/PBqPDXv6g2+uwJ7eA5GjOeUPJ38Dsw==
+
+"@swc-next/parser-binding-darwin-x64@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-darwin-x64/-/parser-binding-darwin-x64-0.8.1.tgz#203cfb5d09416055225965f98aa5ab748d277894"
+  integrity sha512-JIz9VqvqYBTe9wvihToj5TNbKv+JXBQtF/q+7tIC8JhvJcZHck1WVjqaGrO1G3hK+VYpyLO/PoM/CqoMBnMUEQ==
+
+"@swc-next/parser-binding-linux-arm-gnueabihf@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-arm-gnueabihf/-/parser-binding-linux-arm-gnueabihf-0.8.1.tgz#214bfef50427cd8e43c589147d0f0836bf203a32"
+  integrity sha512-wdZVX5ZwMuRlJxdsnVUf5GDBn9DHz8drFCq8TMxnVy+5Oh0unyk8Z1TU4YIi51IAJFRWxGEtREDbbyLslgBbyw==
+
+"@swc-next/parser-binding-linux-arm64-gnu@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-arm64-gnu/-/parser-binding-linux-arm64-gnu-0.8.1.tgz#9fe2fd7c39ff6c56beca42e70d1d685333675d9c"
+  integrity sha512-h6ha2UI/+Na/fjWhNigi0ui/qTQLU0i3aoXaWA3GliNyLuPqdxJNoQ7fDnFNxAKYWuiCWqygxKUezbU1UL4WEA==
+
+"@swc-next/parser-binding-linux-arm64-musl@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-arm64-musl/-/parser-binding-linux-arm64-musl-0.8.1.tgz#d935fe09617297fd21de7e55bef86a9d65d2c831"
+  integrity sha512-ptrNgT+WdqnS8WqU7qBO5H7bsxXdC4+fFy06yg9O7Vnx3om7k+X1WBt9U5YxJS6udW6z4rW4oAoGBohdxYt2UA==
+
+"@swc-next/parser-binding-linux-ppc64-gnu@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-ppc64-gnu/-/parser-binding-linux-ppc64-gnu-0.8.1.tgz#343600af22d02a83f3d89d1852369aa2df81eb5c"
+  integrity sha512-uaE+yoUoJUAZCfDpZIb6YVxMgWXlme2QyWYB46sKUvtM4SdWW4E6uEli7/6CRv8WPgyBEw7ZD+JM3RTriEqLEg==
+
+"@swc-next/parser-binding-linux-riscv64-gnu@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-riscv64-gnu/-/parser-binding-linux-riscv64-gnu-0.8.1.tgz#a0d7847af8763a8256b665d6cbdd40a650575f5d"
+  integrity sha512-5CQLyABi4zRVL4o1xL1bq0v3C3s2J1cnE9YfH7w1sOiLJhl6+wd+MiwGjM0l1GnNsQ76WJvUr31rhOuQRGjDDw==
+
+"@swc-next/parser-binding-linux-riscv64-musl@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-riscv64-musl/-/parser-binding-linux-riscv64-musl-0.8.1.tgz#db64ef7b4aa0ab5ab0ab0a8f25803e1bc8e06099"
+  integrity sha512-5eexFn8yMU4JppozcEIUfWp16f59Fci1LHvP7cibbAaxbcrvVPcpTCO/B6oNeaayZ3Gqq8DDFPD24OyE4nSYhw==
+
+"@swc-next/parser-binding-linux-s390x-gnu@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-s390x-gnu/-/parser-binding-linux-s390x-gnu-0.8.1.tgz#1c1c598fea12720002f777b8d39b5a44390abcd6"
+  integrity sha512-0B1DqyF5VoAjQL76Vgytg0jc1O1Qg9K/59Q/QZrGsD2RV0E7uPAVPbc9FNmU5qMnhbtdusBeb+kZWVsEdAICBQ==
+
+"@swc-next/parser-binding-linux-x64-gnu@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-x64-gnu/-/parser-binding-linux-x64-gnu-0.8.1.tgz#09f7e5d9cd77952884e7e89a5ec806d213221f0b"
+  integrity sha512-vA6+qEAqXk8TIhCFt6sV6c4zhcF1dKvoSo7oZE+Dq9XULHJaezM+TVh3lr6CSYJqhs7XLb7uCZhGfC/eFVh5XQ==
+
+"@swc-next/parser-binding-linux-x64-musl@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-linux-x64-musl/-/parser-binding-linux-x64-musl-0.8.1.tgz#ad4d9ffb97fc4ad04d05ae106e9d4a8978d5e7e3"
+  integrity sha512-GpiGIIgK0OUzp471aSCHWMiyRdNZ2By6oQ2ZEAMjAr4y6v+ru50Y8TyBdB1qjJqXmkUH87mABjKjQzeyCqNRsA==
+
+"@swc-next/parser-binding-win32-arm64-msvc@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-win32-arm64-msvc/-/parser-binding-win32-arm64-msvc-0.8.1.tgz#8ed4e38d9ca29045d21c6e29a32124edd40cccfe"
+  integrity sha512-QGGdjAi5MiJTzzRNsjOcd+X6fhe88as1tic2hA9hBgyEcwrVBCJSTpF+w1Hp+GmDCvL21+qRF8BNrJZlPCpIiA==
+
+"@swc-next/parser-binding-win32-x64-msvc@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser-binding-win32-x64-msvc/-/parser-binding-win32-x64-msvc-0.8.1.tgz#9272b620196f06d44a68b6951362586b2c74a428"
+  integrity sha512-PhRFImhBRP2z8smItG1086dnKbCBaxDPfuGxBfZepSLMMQ9pbYu0/uU7JjQy/vmdnvrmAFX0U+eNENVyiZs8ZA==
+
+"@swc-next/parser@^0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/parser/-/parser-0.8.1.tgz#d302e444becc25ff9d51f5cab5de41f4f6896042"
+  integrity sha512-YFhgoirM63a4oazJHL8Puc1FAqc97wfbnOfDuLOLCqmR8ixpxesbTRml84/hGGVUd0orqoV/WE7/6QVlxixV3Q==
+  dependencies:
+    "@swc-next/types" "0.8.1"
+  optionalDependencies:
+    "@swc-next/parser-binding-darwin-arm64" "0.8.1"
+    "@swc-next/parser-binding-darwin-x64" "0.8.1"
+    "@swc-next/parser-binding-linux-arm-gnueabihf" "0.8.1"
+    "@swc-next/parser-binding-linux-arm64-gnu" "0.8.1"
+    "@swc-next/parser-binding-linux-arm64-musl" "0.8.1"
+    "@swc-next/parser-binding-linux-ppc64-gnu" "0.8.1"
+    "@swc-next/parser-binding-linux-riscv64-gnu" "0.8.1"
+    "@swc-next/parser-binding-linux-riscv64-musl" "0.8.1"
+    "@swc-next/parser-binding-linux-s390x-gnu" "0.8.1"
+    "@swc-next/parser-binding-linux-x64-gnu" "0.8.1"
+    "@swc-next/parser-binding-linux-x64-musl" "0.8.1"
+    "@swc-next/parser-binding-win32-arm64-msvc" "0.8.1"
+    "@swc-next/parser-binding-win32-x64-msvc" "0.8.1"
+
+"@swc-next/types@0.8.1":
+  version "0.8.1"
+  resolved "https://registry.npmjs.org/@swc-next/types/-/types-0.8.1.tgz#41b7e0f1d39a2bc6801e40a3ddb86ef47ac1f892"
+  integrity sha512-jfblBPV6LFT8+ZnFHr553S8rI6nVvfVEjkhMELPPvApeCalp4tWEp/s5hmJYs2SZfiF9R+FQ87KYS/m43VknKg==
+
 "@tokenizer/inflate@^0.4.1":
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/@tokenizer/inflate/-/inflate-0.4.1.tgz#fa6cdb8366151b3cc8426bf9755c1ea03a2fba08"

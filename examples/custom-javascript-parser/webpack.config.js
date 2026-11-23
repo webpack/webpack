@@ -3,6 +3,7 @@
 const acornParse = require("./internals/acorn-parse");
 const meriyahParse = require("./internals/meriyah-parse");
 const oxcParse = require("./internals/oxc-parse");
+const swcNextParse = require("./internals/swc-next-parse.mjs").default;
 
 /** @type {import("webpack").Configuration[]} */
 const config = [
@@ -28,6 +29,33 @@ const config = [
 			// 		test: /\.js$/,
 			// 		parser: {
 			// 			parse: oxcParse
+			// 		}
+			// 	}
+			// ]
+		}
+	},
+	// swc-next
+	{
+		mode: "production",
+		optimization: {
+			chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+		},
+		output: {
+			filename: "swc-next.[name].js"
+		},
+		module: {
+			// Global override
+			parser: {
+				javascript: {
+					parse: swcNextParse
+				}
+			}
+			// Override on the module level, only for modules which match the `test`
+			// rules: [
+			// 	{
+			// 		test: /\.js$/,
+			// 		parser: {
+			// 			parse: swcNextParse
 			// 		}
 			// 	}
 			// ]

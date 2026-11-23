@@ -165,6 +165,7 @@
     "@changesets/get-github-info": "^1.0.1",
     "@codspeed/core": "^6.1.0",
     "@mdn/browser-compat-data": "^8.1.4",
+    "@swc-next/parser": "^0.8.1",
     "@types/convert-source-map": "^2.0.3",
     "@types/graceful-fs": "^4.1.9",
     "@types/jest": "^30.0.0",
