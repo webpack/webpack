@@ -698,7 +698,13 @@ const runSequence = async (steps, variant) => {
 				// nothing changed since the cached build, so nothing may be written
 				/** @type {string[]} */
 				const logs = [];
-				await buildOnce(createConfig(dir, variant, cacheConfig, logs));
+				const restored = await buildOnce(
+					createConfig(dir, variant, cacheConfig, logs)
+				);
+				const restoredDifference = compare(restored, fresh);
+				if (restoredDifference) {
+					return { step, check: "cache", detail: restoredDifference };
+				}
 				const write = logs.find((line) => line.includes("Pack got invalid"));
 				if (write) return { step, check: "cache write", detail: write };
 			}
