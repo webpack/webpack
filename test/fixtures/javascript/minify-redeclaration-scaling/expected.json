@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "rename-only",
+		"presets": ["default"],
+		"why": "known bug: compression changes the character frequencies, so a second mangling pass renames bindings"
+	}
+]

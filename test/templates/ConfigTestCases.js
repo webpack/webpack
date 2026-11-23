@@ -195,12 +195,13 @@ const describeCases = (config) => {
 										: options.optimization.concatenateModules !== false)
 								) {
 									const concatenateModules =
-										options.optimization.concatenateModules;
+										typeof options.optimization.concatenateModules === "object"
+											? options.optimization.concatenateModules
+											: {};
+									// keep a case's own setting, e.g. "always" skipping the size check
 									options.optimization.concatenateModules = {
-										...(typeof concatenateModules === "object"
-											? concatenateModules
-											: {}),
-										crossChunkImports: true
+										crossChunkImports: true,
+										...concatenateModules
 									};
 								}
 								// generated runtime runs in this Node.js process; avoid `?.` on
