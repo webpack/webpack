@@ -252,27 +252,17 @@ const config = [
 	{
 		mode: "production",
 		optimization: {
-			chunkIds: "deterministic" // To keep filename consistent between different modes (for example building only)
+			chunkIds: "deterministic"
 		},
 		output: {
 			filename: "swc-next.[name].js"
 		},
 		module: {
-			// Global override
 			parser: {
 				javascript: {
 					parse: swcNextParse
 				}
 			}
-			// Override on the module level, only for modules which match the `test`
-			// rules: [
-			// 	{
-			// 		test: /\.js$/,
-			// 		parser: {
-			// 			parse: swcNextParse
-			// 		}
-			// 	}
-			// ]
 		}
 	},
 	// meriyah
