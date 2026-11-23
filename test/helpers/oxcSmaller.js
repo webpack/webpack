@@ -116,6 +116,13 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"oxc minifier: mangler/property_mangler.rs:99",
+			"swc exec: terser_properties_join_object_assignments_undefined_1",
+			"swc exec: terser_properties_join_object_assignments_undefined_2",
+			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
+			"terser compress: reduce_vars/unsafe_evaluate_unknown",
+			"terser compress: properties/join_object_assignments_undefined_2",
+			"terser compress: properties/join_object_assignments_undefined_1",
 			"terser compress: sequences/make_sequences_4",
 			"swc minifier: fixture/next/feeback-plotly/1/input.js",
 			"swc minifier: fixture/issues/9186/1/input.js",

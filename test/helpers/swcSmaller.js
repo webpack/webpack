@@ -18,6 +18,8 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than swc's: `,` where swc keeps `;` between statements, operand order, `{0}` for an empty body",
 		[
+			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
+			"terser compress: properties/join_object_assignments_undefined_1",
 			"swc minifier: fixture/terser/issue-2535-2/4/input.js",
 			"swc minifier: fixture/issues/react-instancesearch/001/input.js",
 			"swc minifier: fixture/issues/12213/shadowed-object/input.js",
