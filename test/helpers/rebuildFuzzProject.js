@@ -13,7 +13,7 @@ const { createRandom } = require("./jsFuzzProgram");
 /** @typedef {{ format: "esm" | "cjs", exports: string[], links: Link[], reads: Read[], revision: number, exists: boolean, broken: boolean, effect: boolean, dir: string }} ModuleRecord */
 /** @typedef {{ revision: number, exists: boolean }} DataRecord */
 /** @typedef {{ keys: string[], revision: number, exists: boolean }} JsonRecord */
-/** @typedef {{ nextModule: number, modules: Map<string, ModuleRecord>, nextData: number, data: Map<string, DataRecord>, nextJson: number, json: Map<string, JsonRecord>, sideEffectsFalse: boolean, touched: string | undefined }} Project */
+/** @typedef {{ nextModule: number, modules: Map<string, ModuleRecord>, nextData: number, data: Map<string, DataRecord>, nextJson: number, json: Map<string, JsonRecord>, sideEffectsFalse: boolean, touched: string[] }} Project */
 /** @typedef {[string, number, number, number, number]} Edit */
 
 /** @type {LinkKind[]} */
@@ -68,7 +68,7 @@ const createProject = () => {
 		nextJson: 0,
 		json: new Map(),
 		sideEffectsFalse: false,
-		touched: undefined
+		touched: []
 	};
 };
 
@@ -78,7 +78,7 @@ const createProject = () => {
  */
 const cloneProject = (project) => ({
 	...project,
-	touched: undefined,
+	touched: [],
 	modules: new Map(
 		[...project.modules].map(([id, record]) => [
 			id,
@@ -139,7 +139,7 @@ const EDITS = {
 			m
 		);
 		const record = /** @type {ModuleRecord} */ (project.modules.get(id));
-		project.touched = `${record.dir}${id}.js`;
+		project.touched.push(`${record.dir}${id}.js`);
 	},
 	add(project, from, format, kind, name) {
 		const id = `m${project.nextModule++}`;

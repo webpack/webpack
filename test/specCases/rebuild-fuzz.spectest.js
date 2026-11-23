@@ -535,8 +535,8 @@ const writeStep = (dir, wanted, project, step) => {
 		removed.add(file);
 		touched.add(path.dirname(file));
 	}
-	if (project.touched) {
-		const file = path.join(dir, project.touched);
+	for (const name of project.touched) {
+		const file = path.join(dir, name);
 		if (fs.existsSync(file) && !touched.has(file)) {
 			fs.utimesSync(file, time, time);
 			touched.add(file);
