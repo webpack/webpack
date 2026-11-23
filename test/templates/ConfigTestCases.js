@@ -185,6 +185,24 @@ const describeCases = (config) => {
 								if (!options.entry) options.entry = "./index.js";
 								if (!options.target) options.target = "async-node";
 								if (!options.output) options.output = {};
+								// the cross-chunk imports corpus run links every ES module output
+								if (
+									process.env.TEST_CROSS_CHUNK_IMPORTS &&
+									options.output.module &&
+									// only where concatenation runs: development leaves it off
+									(options.optimization.concatenateModules === undefined
+										? options.mode === "production"
+										: options.optimization.concatenateModules !== false)
+								) {
+									const concatenateModules =
+										options.optimization.concatenateModules;
+									options.optimization.concatenateModules = {
+										...(typeof concatenateModules === "object"
+											? concatenateModules
+											: {}),
+										crossChunkImports: true
+									};
+								}
 								// generated runtime runs in this Node.js process; avoid `?.` on
 								// Node < 14 (skip `ecmaVersion` cases asserting derived environment)
 								if (

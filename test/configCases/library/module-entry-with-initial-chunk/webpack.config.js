@@ -47,7 +47,7 @@ const createConfig = (name, concatenateModules) => ({
 				side: {
 					test: /side\.js$/,
 					chunks: "all",
-					name: "side",
+					name: `side-${name}`,
 					enforce: true
 				}
 			}
