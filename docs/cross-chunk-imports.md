@@ -4,6 +4,8 @@
 
 Stats show why a module another chunk imports stays in the registry: its `optimizationBailout` holds `Cross-chunk imports bailout: <reason>`.
 
+CI's `cross-chunk-imports` job runs every config case again with the option forced on wherever `output.module` and concatenation are on (`TEST_CROSS_CHUNK_IMPORTS=1`, see `test/templates/ConfigTestCases.js`).
+
 ## What links
 
 - **Named and namespace imports.** A namespace used as a value, or as the `this` of `ns.f()`, binds an inline namespace object the scope exports under `$<index>`. The scope exports only the names and namespace objects other modules read.
