@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"toplevel":true,"pure_getters":true},"mangle":false,"behavior":true},{"mode":"minify","compress":{"pure_getters":true},"mangle":false,"behavior":true}]
