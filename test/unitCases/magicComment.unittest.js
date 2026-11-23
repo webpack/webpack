@@ -52,6 +52,58 @@ describe("parseMagicComment", () => {
 		expect(options.webpackExports).toEqual(["a", "b"]);
 	});
 
+	it("reads plain literals as data", () => {
+		const vm = require("vm");
+
+		const runInContext = jest.spyOn(vm, "runInContext");
+		try {
+			const options = parseMagicComment(
+				"webpackChunkName: 'a\\'b', webpackMode: `lazy`, webpackInclude: /\\.js$/i, webpackExports: ['x', 'y',], webpackFetchPriority: \"high\", a: { b: [1, -0x10, .5, null] }, c: 10n, d: undefined, __proto__: { polluted: true },",
+				context
+			);
+			expect(runInContext).not.toHaveBeenCalled();
+			expect(options).toEqual({
+				webpackChunkName: "a'b",
+				webpackMode: "lazy",
+				webpackInclude: /\.js$/i,
+				webpackExports: ["x", "y"],
+				webpackFetchPriority: "high",
+				a: { b: [1, -16, 0.5, null] },
+				c: BigInt(10),
+				d: undefined
+			});
+			expect(Object.getPrototypeOf(options)).toBe(Object.prototype);
+			expect(/** @type {EXPECTED_ANY} */ ({}).polluted).toBeUndefined();
+		} finally {
+			runInContext.mockRestore();
+		}
+	});
+
+	it("evaluates other values as before", () => {
+		expect(
+			parseMagicComment('webpackChunkName: "a" + "b", n: Math.max(1, 2)', context)
+		).toEqual({ webpackChunkName: "ab", n: 2 });
+		expect(typeof parseMagicComment("a: Symbol()", context).a).toBe("symbol");
+	});
+
+	it("does not reach webpack's own Function from a comment", () => {
+		expect(() =>
+			parseMagicComment(
+				'webpackChunkName: this.constructor.constructor("return process")()',
+				context
+			)
+		).toThrow(/Code generation from strings disallowed/);
+	});
+
+	it("stops a comment that does not finish", () => {
+		expect(() =>
+			parseMagicComment("webpackChunkName: (() => { for (;;); })()", context)
+		).toThrow(/timed out/);
+		expect(parseMagicComment("webpackChunkName: 'next'", context)).toEqual({
+			webpackChunkName: "next"
+		});
+	});
+
 	it("throws on a malformed comment body", () => {
 		expect(() => parseMagicComment("webpackIgnore: )", context)).toThrow(
 			/Unexpected token/
