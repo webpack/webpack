@@ -17,7 +17,7 @@ module.exports = {
 		minimize: false,
 		// a named id escapes into the binding names
 		moduleIds: "named",
-		concatenateModules: { crossChunkImports: true },
+		concatenateModules: { crossChunkImports: "always" },
 		splitChunks: {
 			cacheGroups: {
 				shared: {

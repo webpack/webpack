@@ -11327,15 +11327,24 @@ Object {
   "optimization-concatenate-modules-cross-chunk-imports": Object {
     "configs": Array [
       Object {
-        "description": "Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it. Applies to 'output.module' builds only. Defaults to 'false'.",
+        "description": "Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it and the output doesn't grow; 'always' links regardless of size. Applies to 'output.module' builds only. Defaults to 'false'.",
+        "multiple": false,
+        "path": "optimization.concatenateModules.crossChunkImports",
+        "type": "enum",
+        "values": Array [
+          "always",
+        ],
+      },
+      Object {
+        "description": "Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it and the output doesn't grow; 'always' links regardless of size. Applies to 'output.module' builds only. Defaults to 'false'.",
         "multiple": false,
         "path": "optimization.concatenateModules.crossChunkImports",
         "type": "boolean",
       },
     ],
-    "description": "Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it. Applies to 'output.module' builds only. Defaults to 'false'.",
+    "description": "Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it and the output doesn't grow; 'always' links regardless of size. Applies to 'output.module' builds only. Defaults to 'false'.",
     "multiple": false,
-    "simpleType": "boolean",
+    "simpleType": "string",
   },
   "optimization-emit-on-errors": Object {
     "configs": Array [

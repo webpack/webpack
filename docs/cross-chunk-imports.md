@@ -2,6 +2,8 @@
 
 `optimization.concatenateModules.crossChunkImports` (experimental, `output.module` with `chunkFormat: "module"` only) hoists the ES modules other chunks import into one top-level scope per chunk. The scope ends with `export { local as $<index><usedName> }`, and importers bind those names with a static `import`. `ChunkLinkingPlugin` (`lib/esm/`) picks the modules; `ConcatenatedModule` renders the scope.
 
+With `true`, a size check keeps a module in the registry when linking it would grow the output: it weighs the registry factory, getters and lookups linking saves against the native exports, imports and import statements it adds (`COST` in `ChunkLinkingPlugin`, tuned so no ES module app of `test/sizeCoreReports/` grows). `"always"` skips that check, as the tests do.
+
 Stats show why a module another chunk imports stays in the registry: its `optimizationBailout` holds `Cross-chunk imports bailout: <reason>`.
 
 ## What links
@@ -36,4 +38,4 @@ These stay in the registry, by design or until future work lifts them:
 Other limits:
 
 - **Timing:** a linked effect runs when its chunk's file evaluates, not inside the `import()` callback. Order among modules holds; interleaving with unrelated async code can differ.
-- **Bytes:** named imports cost about nothing. A namespace used as a value costs an inline namespace object: in a two-export example the shared chunk grows from 162 to 241 bytes gzipped.
+- **Bytes:** with `true`, the size check keeps every ES module sample app at or below its registry size (`node-ssr-esm`: 98,702 → 97,997 bytes gzipped). With `"always"`, a namespace used as a value costs an inline namespace object: in a two-export example the shared chunk grows from 162 to 241 bytes gzipped.

@@ -338,11 +338,11 @@ export interface ConcatenateModulesOptions {
 	 */
 	commonjs?: boolean;
 	/**
-	 * Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it. Applies to 'output.module' builds only. Defaults to 'false'.
+	 * Link ES modules that other chunks import with native 'import'/'export' instead of the module registry, where evaluation order allows it and the output doesn't grow; 'always' links regardless of size. Applies to 'output.module' builds only. Defaults to 'false'.
 	 * @since 5.114.0
 	 * @experimental
 	 */
-	crossChunkImports?: boolean;
+	crossChunkImports?: "always" | boolean;
 }
 
 /**
