@@ -6,9 +6,10 @@
  * Returns the configuration for one option under test.
  * @param {number} index the configuration index
  * @param {Configuration} options the options under test
+ * @param {boolean=} sizeCheck whether linking keeps the size check
  * @returns {Configuration} configuration
  */
-const config = (index, options) => ({
+const config = (index, options, sizeCheck) => ({
 	mode: "production",
 	target: "node",
 	entry: { [`bundle${index}`]: `./index-${index}.js` },
@@ -23,11 +24,11 @@ const config = (index, options) => ({
 	},
 	optimization: {
 		minimize: false,
-		concatenateModules: { crossChunkImports: true },
+		concatenateModules: { crossChunkImports: sizeCheck ? true : "always" },
 		splitChunks: {
 			cacheGroups: {
 				shared: {
-					test: /[\\/]shared[\\/]/,
+					test: /[\\/](shared|many)[\\/]/,
 					name: `shared-${index}`,
 					chunks: "async",
 					minChunks: 2,
@@ -57,5 +58,8 @@ module.exports = [
 		]
 	}),
 	config(1, { output: { strictModuleExceptionHandling: true } }),
-	config(2, { output: { environment: { symbol: false } } })
+	config(2, { output: { environment: { symbol: false } } }),
+	// `true` keeps the size check that "always" skips
+	config(3, {}, true),
+	config(4, {}, true)
 ];

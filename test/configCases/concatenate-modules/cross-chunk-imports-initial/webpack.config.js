@@ -25,7 +25,7 @@ const config = (index, runtimeChunk, secondEntry) => ({
 	plugins: [new webpack.DefinePlugin({ CONFIG_INDEX: index })],
 	optimization: {
 		minimize: false,
-		concatenateModules: { crossChunkImports: true },
+		concatenateModules: { crossChunkImports: "always" },
 		runtimeChunk: runtimeChunk ? { name: `runtime-${index}` } : false,
 		splitChunks: {
 			cacheGroups: {

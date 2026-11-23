@@ -26,7 +26,7 @@ module.exports = {
 	},
 	optimization: {
 		minimize: false,
-		concatenateModules: { crossChunkImports: true },
+		concatenateModules: { crossChunkImports: "always" },
 		splitChunks: {
 			cacheGroups: {
 				shared: group("shared"),
