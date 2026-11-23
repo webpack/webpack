@@ -3727,6 +3727,13 @@ declare abstract class ColumnarSyntaxTree {
 	setType(node: number, type: number): void;
 
 	/**
+	 * Retypes a node whose record the new type lays out otherwise, as a `while`
+	 * turned into a `for`: it keeps its id and gets an empty record of the new type.
+	 * @experimental `javascript.syntax` tree; unstable API
+	 */
+	setTypeEmpty(node: number, type: number): void;
+
+	/**
 	 * Sets the slot a node's record holds a part in.
 	 */
 	setPart(part: number, node: number, text: string): void;
@@ -34466,7 +34473,7 @@ declare interface SortFunction<T> {
 /**
  * A subset of Set that offers sorting functionality
  */
-declare class SortableSet<T, C = unknown> extends Set<T> {
+declare class SortableSet<T> extends Set<T> {
 	/**
 	 * Create a new sortable set
 	 */
@@ -34476,17 +34483,17 @@ declare class SortableSet<T, C = unknown> extends Set<T> {
 	 * Sort with a comparer function
 	 */
 	sortWith(sortFn?: SortFunction<T>): void;
-	sort(): SortableSet<T, C>;
+	sort(): SortableSet<T>;
 
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R>(fn: (set: SortableSet<T, C>) => R): R;
+	getFromCache<R>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
 	 */
-	getFromUnorderedCache<R>(fn: (set: SortableSet<T, C>) => R): R;
+	getFromUnorderedCache<R>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Returns the raw array.
