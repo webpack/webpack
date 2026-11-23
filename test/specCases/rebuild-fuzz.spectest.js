@@ -563,9 +563,9 @@ const runSequence = async (steps, variant) => {
 	const dir = path.join(root, "src");
 	fs.mkdirSync(dir);
 	let project = createProject();
-	/** @type {Result[]} */
+	/** @type {(Result | Error)[]} */
 	const builds = [];
-	/** @type {((result: Result) => void) | undefined} */
+	/** @type {((outcome: Result | Error) => void) | undefined} */
 	let waiting;
 	/** @type {Compiler | undefined} */
 	let compiler;
@@ -618,22 +618,25 @@ const runSequence = async (steps, variant) => {
 		watchCompiler.watchFileSystem = /** @type {EXPECTED_ANY} */ (
 			watchFileSystem
 		);
-		/** @returns {Promise<Result>} the next watch build */
+		/** @returns {Promise<Result>} the next watch build, rejected on a fatal error */
 		const nextBuild = () =>
-			new Promise((resolve) => {
-				const result = builds.shift();
-				if (result) resolve(result);
-				else waiting = resolve;
+			new Promise((resolve, reject) => {
+				/** @type {(outcome: Result | Error) => void} */
+				const settle = (outcome) =>
+					outcome instanceof Error ? reject(outcome) : resolve(outcome);
+				const outcome = builds.shift();
+				if (outcome) settle(outcome);
+				else waiting = settle;
 			});
 		watching = watchCompiler.watch({}, (err, stats) => {
-			if (err) throw err;
-			const result = toResult(/** @type {Stats} */ (stats), dir, assets);
+			const outcome =
+				err || toResult(/** @type {Stats} */ (stats), dir, assets);
 			if (waiting) {
-				const resolve = waiting;
+				const settle = waiting;
 				waiting = undefined;
-				resolve(result);
+				settle(outcome);
 			} else {
-				builds.push(result);
+				builds.push(outcome);
 			}
 		});
 		let watched = await nextBuild();
