@@ -45,8 +45,10 @@ it("should hoist the linkable shared modules into one scope with native exports"
 		"const bracket = ",
 		"function wrap(",
 		"let count = 0;",
-		// effect.js stays in the registry and imports it from the same chunk
+		// what effect.js and the registry's url.js import
 		"const lonely = () => ",
+		// effect.js runs where its importer imports it, in an init function
+		"globalThis.crossChunkImportsEffectRuns",
 		// an anonymous default function is named without the runtime's `.dn`
 		'"name", { value: "default", configurable: true });',
 		// namespace importers bind an inline namespace object
@@ -63,10 +65,11 @@ it("should hoist the linkable shared modules into one scope with native exports"
 	const [exported] = /** @type {RegExpExecArray} */ (exportMatch);
 	expect(exported).not.toMatch(/\bbracket as /);
 	expect(exported).toMatch(/\bcount as \$\d/);
+	// effect.js's importer calls its init function
+	expect(exported).toMatch(/\beffect_init as _\$\d/);
 
 	// each bailout keeps its module in the registry
 	for (const bailout of [
-		"globalThis.crossChunkImportsEffectRuns",
 		"typeof __webpack_require__.p",
 		"const dashed = () => ",
 		"module.exports = {",
@@ -93,7 +96,8 @@ it("should hoist the linkable shared modules into one scope with native exports"
 		for (const specifier of imports[0]
 			.slice("import { ".length, -' } from "./shared.chunk.mjs";'.length)
 			.split(", ")) {
-			expect(specifier).toMatch(/^\$\d/);
+			// a linked export, or an init function under `_$`
+			expect(specifier).toMatch(/^_?\$\d/);
 			expect(specifier).toContain(" as __webpack_linked_");
 		}
 	}
@@ -127,9 +131,6 @@ it("should report why each module another chunk imports stays in the registry", 
 			`${prefix}./shared/cjs.js imports it through cjs full require`
 		],
 		"./shared/url.js": [`${prefix}new URL() needs the module registry`],
-		"./shared/loader.js": [`${prefix}module has async blocks`],
-		"./shared/effect.js": [
-			`${prefix}module has side effects that its chunk's loads don't all run first`
-		]
+		"./shared/loader.js": [`${prefix}module has async blocks`]
 	});
 });

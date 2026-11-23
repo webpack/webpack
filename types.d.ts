@@ -5606,6 +5606,16 @@ declare interface ConcatenatedModuleInfo {
 	 */
 	exportsTypeNonStrict?:
 		"namespace" | "dynamic" | "default-only" | "default-with-named";
+
+	/**
+	 * where a member of a linked scope run in an init function moves its code
+	 */
+	initLayout?: InitLayout;
+
+	/**
+	 * the init function of a member of a linked scope, which each importer calls where its import stands
+	 */
+	initName?: string;
 }
 
 /**
@@ -15895,6 +15905,36 @@ declare class InitFragment<GenerateContext> {
 	 */
 	static STAGE_ASYNC_HARMONY_IMPORTS: number;
 }
+
+/**
+ * Where a module run in an init function moves its code: function declarations stay at the top level, the rest runs in the init function.
+ */
+declare interface InitLayout {
+	/**
+	 * the length of the module's generated code
+	 */
+	length: number;
+
+	/**
+	 * where each top-level function declaration starts and ends, in source order
+	 */
+	functions: [number, number][];
+
+	/**
+	 * the names those declare, which need no hoisted `var`
+	 */
+	functionNames: Set<string>;
+
+	/**
+	 * the start, inclusive end and replacement of each edit turning a declaration the init function would scope into an assignment
+	 */
+	edits: [number, number, string][];
+
+	/**
+	 * where each top-level class declaration starts and ends, and the name it declares
+	 */
+	classes: [number, number, string][];
+}
 declare abstract class InlinedUsedName {
 	value: InlinedValue;
 	suffix: string[];
@@ -21335,6 +21375,11 @@ declare interface LinkedBinding {
 	 * the linked module's position among the modules the scope exposes
 	 */
 	index: number;
+
+	/**
+	 * whether the scope runs the module in an init function each importer calls where its import stands
+	 */
+	init: boolean;
 }
 
 /**
@@ -33359,6 +33404,10 @@ declare abstract class RuntimeTemplate {
 		 * module dependency
 		 */
 		dependency?: ModuleDependency;
+		/**
+		 * chunk init fragments receiving the native import of a linked module's init function
+		 */
+		chunkInitFragments?: InitFragment<ChunkRenderContextJavascriptModulesPlugin>[];
 	}): [string, string];
 
 	/**

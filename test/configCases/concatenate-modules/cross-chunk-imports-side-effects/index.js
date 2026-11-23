@@ -31,7 +31,7 @@ it("should keep side effects in the registry when loads disagree on their order"
 	expect(takeEffects()).toEqual([]);
 });
 
-it("should hoist only the side effects every load runs first", () => {
+it("should run at chunk load only the side effects every load runs first", () => {
 	const fs = __non_webpack_require__("fs");
 	const path = __non_webpack_require__("path");
 	/**
@@ -39,21 +39,36 @@ it("should hoist only the side effects every load runs first", () => {
 	 * @param {string} name the chunk name
 	 * @returns {string[]} the registry and the scope
 	 */
-	const split = (name) =>
-		fs
-			.readFileSync(path.join(__dirname, `${name}.chunk.mjs`), "utf-8")
-			.split(/^\};$/m);
+	const split = (name) => {
+		const source = fs.readFileSync(
+			path.join(__dirname, `${name}.chunk.mjs`),
+			"utf-8"
+		);
+		const end = /** @type {RegExpExecArray} */ (/^\};$|= \{\};$/m.exec(source));
+		const index = end.index + end[0].length;
+		return [source.slice(0, index), source.slice(index)];
+	};
+	/**
+	 * Returns the part of a scope that runs at chunk load, without its init functions.
+	 * @param {string} scope the scope
+	 * @returns {string} what runs at chunk load
+	 */
+	const atLoad = (scope) => scope.replace(/^function \w+\(\) \{$[^]*?^\}$/gm, "");
 	const [sharedRegistry, sharedScope] = split("shared");
-	expect(sharedScope.indexOf('push("a")')).toBeGreaterThan(-1);
+	expect(atLoad(sharedScope).indexOf('push("a")')).toBeGreaterThan(-1);
 	expect(sharedScope.indexOf('push("a")')).toBeLessThan(
 		sharedScope.indexOf('push("b")')
 	);
-	// local-1 runs before late, so late's effect can't move to the chunk load
-	expect(sharedRegistry).toContain('push("late")');
+	// local-1 runs before late, so late's effect waits for its importer
+	expect(sharedRegistry).not.toContain('push("late")');
+	expect(sharedScope).toContain('push("late")');
+	expect(atLoad(sharedScope)).not.toContain('push("late")');
 	const [partialRegistry, partialScope] = split("partial");
-	expect(partialRegistry).toContain('push("x")');
+	expect(partialRegistry).not.toContain('push("x")');
+	expect(atLoad(partialScope)).not.toContain('push("x")');
 	expect(partialScope).toContain('const y = () => "y";');
-	const [conflictRegistry] = split("conflict");
-	expect(conflictRegistry).toContain('push("c")');
-	expect(conflictRegistry).toContain('push("d")');
+	const [conflictRegistry, conflictScope] = split("conflict");
+	expect(conflictRegistry).not.toContain('push("c")');
+	expect(atLoad(conflictScope)).not.toContain('push("c")');
+	expect(atLoad(conflictScope)).not.toContain('push("d")');
 });
