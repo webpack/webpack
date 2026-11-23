@@ -429,32 +429,31 @@ const startRuntime = (entry, readFile) => {
  */
 const snapshot = async (runtime) => {
 	if (runtime.error) return `startup threw: ${runtime.error}`;
-	let budget = 400;
+	// each function runs once, so every use() and import is reached and the
+	// walk ends with what the bundle holds
 	/** @type {Set<unknown>} */
 	const seen = new Set();
 	/**
 	 * @param {unknown} value value
-	 * @param {number} depth how many reads led here
 	 * @returns {Promise<unknown>} a JSON-able copy
 	 */
-	const read = async (value, depth) => {
+	const read = async (value) => {
 		if (typeof value !== "object" && typeof value !== "function") {
 			return value;
 		}
 		if (value === null) return null;
-		if (depth > 4 || --budget < 0) return "<cut>";
 		if (seen.has(value)) return "<seen>";
 		seen.add(value);
 		if (typeof value === "function") {
 			try {
-				return { called: await read(await value(), depth + 1) };
+				return { called: await read(await value()) };
 			} catch (err) {
 				return `threw: ${/** @type {Error} */ (err).message}`;
 			}
 		}
 		if (Array.isArray(value)) {
 			const items = [];
-			for (const item of value) items.push(await read(item, depth + 1));
+			for (const item of value) items.push(await read(item));
 			return items;
 		}
 		const object = /** @type {Record<string | symbol, unknown>} */ (value);
@@ -463,14 +462,14 @@ const snapshot = async (runtime) => {
 		if (object[Symbol.toStringTag] === "Module") result["<module>"] = true;
 		for (const key of Object.keys(object).sort()) {
 			try {
-				result[key] = await read(object[key], depth + 1);
+				result[key] = await read(object[key]);
 			} catch (err) {
 				result[key] = `threw: ${/** @type {Error} */ (err).message}`;
 			}
 		}
 		return result;
 	};
-	return JSON.stringify(await read(runtime.context.root, 0));
+	return JSON.stringify(await read(runtime.context.root));
 };
 
 /**
