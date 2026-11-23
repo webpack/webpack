@@ -116,6 +116,13 @@ declare namespace webpack {
 		assert?: Record<string, string>;
 	}
 
+	/**
+	 * What a module's dispose handlers leave for its next evaluation. Add the
+	 * fields your modules keep by declaration merging:
+	 * `declare global { namespace webpack { interface HotData { count: number } } }`.
+	 */
+	interface HotData {}
+
 	interface Hot {
 		accept: {
 			(
@@ -144,13 +151,14 @@ declare namespace webpack {
 		};
 		status(): HotUpdateStatus;
 		decline(module?: string | string[], options?: HotOptions): void;
-		dispose(callback: (data: object) => void): void;
-		addDisposeHandler(callback: (data: object) => void): void;
-		removeDisposeHandler(callback: (data: object) => void): void;
+		dispose(callback: (data: HotData) => void): void;
+		addDisposeHandler(callback: (data: HotData) => void): void;
+		removeDisposeHandler(callback: (data: HotData) => void): void;
 		invalidate(): void;
 		addStatusHandler(callback: (status: HotUpdateStatus) => void): void;
 		removeStatusHandler(callback: (status: HotUpdateStatus) => void): void;
-		data: object;
+		/** What the previous evaluation's dispose handlers left; `undefined` on the first. */
+		data?: HotData;
 		check(
 			autoApply?: boolean | ApplyOptions
 		): Promise<(string | number)[] | null>;
