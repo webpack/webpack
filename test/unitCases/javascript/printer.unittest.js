@@ -80,6 +80,26 @@ const decodeLine = (mappings) => {
 };
 
 describe("syntax-printer", () => {
+	it("should count mangling characters without encoding the source", () => {
+		const source = fixture(
+			"javascript",
+			"javascript-minifier-printing-a-syntax-tree-should-compress-in-the-one-pass-what"
+		);
+		const from = jest.spyOn(Buffer, "from");
+		try {
+			const { code } = minifyOnePass(source, {
+				compress: false,
+				mangle: true
+			});
+			expect(code.length).toBeGreaterThan(1000);
+			expect(
+				from.mock.calls.filter(([value]) => typeof value === "string")
+			).toHaveLength(0);
+		} finally {
+			from.mockRestore();
+		}
+	});
+
 	it("should read characters as terser's unicode helpers do", async () => {
 		const terserUnicode = await import(
 			require.resolve("terser").replace(/dist[\\/]bundle\.min\.js$/, "lib/unicode.js")
