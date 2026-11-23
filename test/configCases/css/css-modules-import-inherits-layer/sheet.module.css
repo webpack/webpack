@@ -1,0 +1,11 @@
+@value accent from "./sheet-values.module.css";
+
+.sheet {
+	composes: sheet-composed from "./sheet-composed.module.css";
+	composes: other from "./sheet-composed.module.css";
+	color: accent;
+}
+
+.ordered {
+	composes: sheet-ordered from "./sheet-ordered.module.css";
+}

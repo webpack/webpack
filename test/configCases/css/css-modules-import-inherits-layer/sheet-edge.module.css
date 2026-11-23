@@ -1,0 +1,5 @@
+@import "./sheet-edge-b.module.css";
+@import "./sheet-edge-c.css";
+@import "./sheet-edge-b.module.css";
+
+.both { composes: edge from "./sheet-edge-b.module.css"; }
