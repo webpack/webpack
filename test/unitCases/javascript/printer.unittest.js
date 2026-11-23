@@ -2432,7 +2432,7 @@ describe("one-pass minify of reads and calls on literals", () => {
 				mangle: false
 			}).code
 		).toMatchSnapshot();
-		// A write target, a callee, `super`, a logical assignment, a nullish branch, a key running code and an optional read keep the member; what opens ambiguously keeps its parentheses.
+		// A write target, a callee, `super`, a logical assignment, a nullish branch and a key running code keep the member; an optional read ending a chain prints as its object; what opens ambiguously keeps its parentheses.
 		const kept = fixture(
 			"javascript",
 			"one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-2"
