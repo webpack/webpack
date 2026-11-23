@@ -13320,6 +13320,18 @@ declare interface GivenFormatOptions {
 	wrap_iife?: boolean;
 	spidermonkey?: boolean;
 }
+
+/**
+ * A source map made of sections, each a map of its own, as a caller gives it.
+ */
+declare interface GivenIndexSourceMap {
+	version: number;
+	file?: null | string;
+	sections: {
+		offset: { line: number; column: number };
+		map: string | GivenSourceMap | GivenIndexSourceMap;
+	}[];
+}
 type GivenMangleOptions = Omit<Partial<DriverMangleOptions>, "properties"> & {
 	properties?: boolean | GivenPropertyMangleOptions;
 } & TerserMangleAliases;
@@ -13327,12 +13339,26 @@ type GivenPropertyMangleOptions = Omit<
 	Partial<PropertyMangleOptions>,
 	"cache"
 > & { cache?: null | NameCacheEntry } & TerserPropertyAliases;
+type GivenSourceMap = Pick<
+	RawSourceMap,
+	"version" | "names" | "sourceRoot" | "ignoreList"
+> & {
+	file?: null | string;
+	sources: (null | string)[];
+	sourcesContent?: (null | string)[];
+};
 type GivenSourceMapOptions = Omit<
 	Partial<DriverSourceMapOptions>,
 	"content"
 > & {
 	content?:
-		null | string | object | RawSourceMap | DecodedSourceMap | IndexSourceMap;
+		| null
+		| string
+		| RawSourceMap
+		| DecodedSourceMap
+		| IndexSourceMap
+		| GivenSourceMap
+		| GivenIndexSourceMap;
 };
 
 /**
