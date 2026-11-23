@@ -89,7 +89,7 @@ describe("parseMagicComment", () => {
 	it("does not reach webpack's own Function from a comment", () => {
 		expect(() =>
 			parseMagicComment(
-				'webpackChunkName: this.constructor.constructor("return process")()',
+				'webpackChunkName: this.constructor.constructor("return 1")()',
 				context
 			)
 		).toThrow(/Code generation from strings disallowed/);
