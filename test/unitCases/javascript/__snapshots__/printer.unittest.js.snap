@@ -159,9 +159,9 @@ exports[`jsMinify takes the minimizer options as optional 1`] = `"var a=1;"`;
 
 exports[`one-pass minify of reads and calls on literals should drop a \`for\`'s own declarator nothing reads 1`] = `"function f(){for(;;);}function g(){for(let i=0,n=h();;)k(i)}function m(){for(let c=32,d=0;d<c;d++)k(d)}k(f,g,m);"`;
 
-exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 1`] = `"a.b,c().d,null.e,(void 0).f,(void 0).g,x()[y()],{get h(){console.log(1)}}.h,(i||j).k,(l?m:n).o,(p,q()).r,s,(a=f()).b,(x()?.y).z,{...w}.v;"`;
+exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 1`] = `"a.b,c().d,null.e,(void 0).f,(void 0).g,x()[y()],{get h(){console.log(1)}}.h,(i||j).k,(l?m:n).o,(p,q()).r,s?.t,(a=f()).b,(x()?.y).z,{...w}.v;"`;
 
-exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 2`] = `"a,c(),null.e,(void 0).f,(void 0).g,x()[y()],i||j,l?m:n,p,q(),s,a=f(),x(),{...w};"`;
+exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 2`] = `"a,c(),null.e,(void 0).f,(void 0).g,x()[y()],i||j,l?m:n,p,q(),s?.t,a=f(),x(),{...w};"`;
 
 exports[`one-pass minify of reads and calls on literals should drop only the reads \`pure_getters\` takes as running nothing 3`] = `"a.b,c().d,null.e,(void 0).f,(void 0).g,x()[y()],{get h(){console.log(1)}}.h,(i||j).k,(l?m:n).o,(p,q()).r,s?.t,function(){}.name,{}.u,(a=f()).b,(x()?.y).z,{...w}.v;"`;
 
