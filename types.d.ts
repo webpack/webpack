@@ -39527,6 +39527,7 @@ declare namespace exports {
 		modules?: RecordsModules;
 		hash?: string;
 		hotIndex?: number;
+		hotContentHash?: string;
 		fullHashChunkModuleHashes?: FullHashChunkModuleHashes;
 		chunkModuleHashes?: ChunkModuleHashes;
 		chunkHashes?: ChunkHashes;
