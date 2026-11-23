@@ -50549,9 +50549,9 @@ exports[`JavaScript syntax — invariants one-pass-unread-optional-read parses 2
 
 exports[`JavaScript syntax — invariants one-pass-unread-optional-read parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-unread-optional-read prints {"mode":"minify","compress":{"toplevel":true},"mangle":false} 1`] = `"var log=[];function make(value){return log.push(\\"make\\"),value}make(null),make({}),make({unused:{}})?.unused.kept,make(void 0)?.[make(\\"key\\")],make({});try{make({})?.unused.throws}catch(e){log.push(e.name)}var literal={get unused(){return log.push(\\"getter\\"),1}};({get unused(){log.push(\\"literal getter\\")}}).unused;make(literal),{a:make(1)}.b;var read=make({a:1})?.a;console.log(log.join(),read);"`;
+exports[`JavaScript syntax — invariants one-pass-unread-optional-read prints {"mode":"minify","compress":{"toplevel":true},"mangle":false} 1`] = `"var log=[];function make(value){return log.push(\\"make\\"),value}make(null),make({}),make({unused:{}})?.unused.kept,make(void 0)?.[make(\\"key\\")],make({});try{make({})?.unused.throws}catch(e){log.push(e.name)}var literal={get unused(){return log.push(\\"getter\\"),1}};({get unused(){log.push(\\"literal getter\\")}}).unused;make(literal)?.notAGetter,{a:make(1)}.b;var read=make({a:1})?.a;console.log(log.join(),read);"`;
 
-exports[`JavaScript syntax — invariants one-pass-unread-optional-read prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"var log=[];function make(value){return log.push(\\"make\\"),value}make(null),make({}),make({unused:{}})?.unused.kept,make(void 0)?.[make(\\"key\\")],make({});try{make({})?.unused.throws}catch(e){log.push(e.name)}var literal={get unused(){return log.push(\\"getter\\"),1}};({get unused(){log.push(\\"literal getter\\")}}).unused;make(literal),{a:make(1)}.b;var read=make({a:1})?.a;console.log(log.join(),read);"`;
+exports[`JavaScript syntax — invariants one-pass-unread-optional-read prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"var log=[];function make(value){return log.push(\\"make\\"),value}make(null),make({}),make({unused:{}})?.unused.kept,make(void 0)?.[make(\\"key\\")],make({});try{make({})?.unused.throws}catch(e){log.push(e.name)}var literal={get unused(){return log.push(\\"getter\\"),1}};({get unused(){log.push(\\"literal getter\\")}}).unused;make(literal)?.notAGetter,{a:make(1)}.b;var read=make({a:1})?.a;console.log(log.join(),read);"`;
 
 exports[`JavaScript syntax — invariants one-pass-unread-optional-read prints {"mode":"minify"} 1`] = `"var log=[];function make(value){log.push(\\"make\\");return value}make(null)?.unused;make({})?.unused?.deeper;make({unused:{}})?.unused.kept;make(void 0)?.[make(\\"key\\")];make({})?.[\\"literal\\"];try{make({})?.unused.throws}catch(e){log.push(e.name)}var literal={get unused(){log.push(\\"getter\\");return 1}};({get unused(){log.push(\\"literal getter\\")}})?.unused;(function(){return make(literal)})()?.notAGetter;({a:make(1)})?.b;var read=make({a:1})?.a;console.log(log.join(),read);"`;
 
@@ -50577,9 +50577,9 @@ exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 parses
 
 exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 prints {"mode":"minify","compress":{"toplevel":true},"mangle":false} 1`] = `"var log=[],count=0;({get b(){log.push(\\"literal getter\\")}}).b;(count++,{}).d,(log.push(\\"make\\"),{a:{}}),console.log(log.join(),count);"`;
+exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 prints {"mode":"minify","compress":{"toplevel":true},"mangle":false} 1`] = `"var log=[],count=0;({get b(){log.push(\\"literal getter\\")}}).b;(count++,{}).d,(log.push(\\"make\\"),{a:{}})?.a,console.log(log.join(),count);"`;
 
-exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 prints {"mode":"minify","compress":{"toplevel":true},"mangle":true} 1`] = `"var log=[],count=0;({get b(){log.push(\\"literal getter\\")}}).b;(count++,{}).d,(log.push(\\"make\\"),{a:{}}),console.log(log.join(),count);"`;
+exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 prints {"mode":"minify","compress":{"toplevel":true},"mangle":true} 1`] = `"var log=[],count=0;({get b(){log.push(\\"literal getter\\")}}).b;(count++,{}).d,(log.push(\\"make\\"),{a:{}})?.a,console.log(log.join(),count);"`;
 
 exports[`JavaScript syntax — invariants one-pass-unread-optional-read-3 prints {"mode":"minify"} 1`] = `"var log=[];var count=0;var literal={get b(){log.push(\\"literal getter\\")}};literal?.b;(count++,{})?.d;function make(){log.push(\\"make\\");return{a:{}}}make()?.a?.b;console.log(log.join(),count);"`;
 
