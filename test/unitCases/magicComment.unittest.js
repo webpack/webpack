@@ -295,7 +295,37 @@ describe("evaluated magic comment values", () => {
 		const context = createMagicCommentContext();
 		expect(() =>
 			parseMagicComment("a: { toJSON() { return undefined; } }", context)
-		).toThrow(/not valid JSON/);
+		).toThrow(SyntaxError);
+	});
+
+	it("never calls a getter or setter a comment puts where its value is handed back", () => {
+		const context = createMagicCommentContext();
+		expect(() =>
+			parseMagicComment(
+				'a: (() => { Object.defineProperty(this, "__webpack_magic_comment_value__", { configurable: true, set() {}, get() { throw { get message() { for (;;); } }; } }); throw new Error("thrown"); })()',
+				context
+			)
+		).toThrow("thrown");
+		expect(() =>
+			parseMagicComment(
+				'a: (() => { Object.defineProperty(this, "__webpack_magic_comment_value__", { configurable: true, set() { for (;;); } }); throw new Error("thrown"); })()',
+				context
+			)
+		).toThrow("thrown");
+	});
+
+	it("never calls a setter a comment puts where its value is handed back", () => {
+		for (const configurable of [true, false]) {
+			const context = createMagicCommentContext();
+			const value = `a: (Object.defineProperty(this, "__webpack_magic_comment_value__", { set() { for (;;); }, configurable: ${configurable} }), "x" + "y")`;
+			if (configurable) {
+				expect(parseMagicComment(value, context)).toEqual({ a: "xy" });
+			} else {
+				expect(() => parseMagicComment(value, context)).toThrow(
+					"A magic comment's value could not be read"
+				);
+			}
+		}
 	});
 
 	it("reports a comment whose result or error cannot be read", () => {
