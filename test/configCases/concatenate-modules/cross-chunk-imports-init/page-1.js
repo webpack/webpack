@@ -11,7 +11,8 @@ import {
 	total,
 	nested,
 	key,
-	separated
+	separated,
+	unset
 } from "./shared/declarations.js";
 import Default from "./shared/default.js";
 import expression from "./shared/expression.js";
@@ -35,6 +36,7 @@ export const run = () => {
 		nested,
 		key,
 		separated,
+		unset,
 		name: new Default().name(),
 		expression,
 		both: both(),

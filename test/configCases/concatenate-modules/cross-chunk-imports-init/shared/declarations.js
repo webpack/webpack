@@ -33,7 +33,14 @@ export function last() {
 [3].forEach((n) => {
 	separated += n;
 });
-export { separated };
+// automatic semicolon insertion ends this declaration
+var unterminated
+[4].forEach((n) => {
+	separated += n;
+});
+if (unterminated === undefined) var unset = "unset";
+else unset = "set";
+export { separated, unset };
 
 export const {
 	a,
