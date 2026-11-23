@@ -34424,7 +34424,7 @@ declare interface SortFunction<T> {
 /**
  * A subset of Set that offers sorting functionality
  */
-declare class SortableSet<T, C = unknown> extends Set<T> {
+declare class SortableSet<T> extends Set<T> {
 	/**
 	 * Create a new sortable set
 	 */
@@ -34434,17 +34434,17 @@ declare class SortableSet<T, C = unknown> extends Set<T> {
 	 * Sort with a comparer function
 	 */
 	sortWith(sortFn?: SortFunction<T>): void;
-	sort(): SortableSet<T, C>;
+	sort(): SortableSet<T>;
 
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R>(fn: (set: SortableSet<T, C>) => R): R;
+	getFromCache<R>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
 	 */
-	getFromUnorderedCache<R>(fn: (set: SortableSet<T, C>) => R): R;
+	getFromUnorderedCache<R>(fn: (set: SortableSet<T>) => R): R;
 
 	/**
 	 * Returns the raw array.
