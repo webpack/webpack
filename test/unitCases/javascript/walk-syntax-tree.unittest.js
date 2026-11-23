@@ -600,3 +600,35 @@ describe("a hook with path taps", () => {
 		expect(seen).toEqual(["Literal 1", "CallExpression"]);
 	});
 });
+
+describe("a syntax tree node retyped with an empty record", () => {
+	const {
+		_SyntaxTree: SyntaxTree,
+		NodeType
+	} = require("../../../lib/javascript/syntax-parser");
+
+	it("keeps its id and reads as the new type, its fields empty until set", () => {
+		const tree = new SyntaxTree();
+		const test = tree.addValueNode(NodeType.Identifier, 6, 7, "t");
+		const body = tree.add(NodeType.EmptyStatement, 9, 10);
+		const loop = tree.add(NodeType.WhileStatement, 0, 10);
+		tree.set(loop, "test", test);
+		tree.set(loop, "body", body);
+		// Retype until the slot column is full: the next retype grows it.
+		while (tree._slotTop + 4 <= tree._slots.length) {
+			tree.setTypeEmpty(loop, NodeType.ForStatement);
+		}
+		const capacity = tree._slots.length;
+		tree.setTypeEmpty(loop, NodeType.ForStatement);
+		expect(tree._slots.length).toBeGreaterThan(capacity);
+		tree.set(loop, "test", test);
+		tree.set(loop, "body", body);
+		expect(tree.estreeObject(loop)).toMatchObject({
+			type: "ForStatement",
+			init: null,
+			test: { type: "Identifier", name: "t" },
+			update: null,
+			body: { type: "EmptyStatement" }
+		});
+	});
+});

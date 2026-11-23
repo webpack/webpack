@@ -45,7 +45,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: global_defs/mixed",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
 			"swc minifier: fixture/issues/10938/input.js",
-			"swc minifier: fixture/issues/12565/while_body/input.js",
 			"swc minifier: fixture/issues/8228/input.js",
 			"swc minifier: fixture/issues/8923/input.js",
 			"swc minifier: fixture/issues/drop-console-value-refs/input.js",
