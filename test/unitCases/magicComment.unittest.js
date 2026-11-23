@@ -62,7 +62,7 @@ describe("parseMagicComment", () => {
 				context
 			);
 			expect(runInContext).not.toHaveBeenCalled();
-			expect(options).toEqual({
+			expect(options).toStrictEqual({
 				webpackChunkName: "a'b",
 				webpackMode: "lazy",
 				webpackInclude: /\.js$/i,
@@ -84,6 +84,22 @@ describe("parseMagicComment", () => {
 			parseMagicComment('webpackChunkName: "a" + "b", n: Math.max(1, 2)', context)
 		).toEqual({ webpackChunkName: "ab", n: 2 });
 		expect(typeof parseMagicComment("a: Symbol()", context).a).toBe("symbol");
+		const fn = parseMagicComment("d: function f() { return 1; }", context).d;
+		expect(typeof fn).toBe("function");
+		expect(String(fn)).toBe("function f() { return 1; }");
+	});
+
+	it("keeps the options read before a value that cannot be read", () => {
+		for (const value of [" webpackPrefetch: 1, webpackExports: [1n], webpackMode: 2 ", " webpackPrefetch: 1 + 0, webpackExports: [1n], webpackMode: 2 "]) {
+			const { options, errors } = parseCommentOptionsInRange(
+				[{ value, range: [0, 60] }],
+				[0, 60],
+				context
+			);
+			expect(options).toEqual({ webpackPrefetch: 1 });
+			expect(errors).toHaveLength(1);
+			expect(/** @type {Error[]} */ (errors)[0].message).toMatch(/BigInt/);
+		}
 	});
 
 	it("does not reach webpack's own Function from a comment", () => {
@@ -99,7 +115,10 @@ describe("parseMagicComment", () => {
 		expect(() =>
 			parseMagicComment("webpackChunkName: (() => { for (;;); })()", context)
 		).toThrow(/timed out/);
-		expect(parseMagicComment("webpackChunkName: 'next'", context)).toEqual({
+		expect(() =>
+			parseMagicComment("webpackChunkName: { get a() { for (;;); } }", context)
+		).toThrow(/timed out/);
+		expect(parseMagicComment("webpackChunkName: 'ne' + 'xt'", context)).toEqual({
 			webpackChunkName: "next"
 		});
 	});
