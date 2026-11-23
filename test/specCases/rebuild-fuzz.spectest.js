@@ -179,6 +179,14 @@ class FakeWatchFileSystem {
 			pending.directories.has(item);
 		const changes = new Set([...touched].filter(watched));
 		const removals = new Set([...removed].filter(watched));
+		// watchpack reports a watched directory for a change anywhere under it
+		for (const item of [...touched, ...removed]) {
+			let folder = path.dirname(item);
+			while (folder !== path.dirname(folder)) {
+				if (pending.directories.has(folder)) changes.add(folder);
+				folder = path.dirname(folder);
+			}
+		}
 		if (changes.size === 0 && removals.size === 0) return false;
 		this.pending = undefined;
 		const inputFileSystem = /** @type {Required<InputFileSystem>} */ (
@@ -187,7 +195,9 @@ class FakeWatchFileSystem {
 		for (const item of changes) {
 			inputFileSystem.purge(
 				item,
-				pending.directories.has(item) ? { exact: true } : undefined
+				pending.directories.has(item)
+					? { exact: true, readdirPrefix: true }
+					: undefined
 			);
 		}
 		for (const item of removals) inputFileSystem.purge(item);
