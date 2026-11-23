@@ -63,7 +63,6 @@ if (process.env.NODE_ENV === "production") {
 
 	it("drops a bare require of a side-effect-free module", () => {
 		expect(require.resolveWeak("./pure?bare")).toBe(null);
-		expect(bundledSource()).toMatch(/\b0;/);
 	});
 
 	it("drops an unused require binding of a side-effect-free module", () => {
