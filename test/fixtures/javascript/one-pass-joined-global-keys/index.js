@@ -14,3 +14,5 @@ function local() {
 }
 console.log(local());
 console.log(Object.keys({ [0 / 0]: 1, [2 / 4]: 2 }).join());
+// An anonymous class expression binds no name.
+console.log(o[NaN], (class {}).name);
