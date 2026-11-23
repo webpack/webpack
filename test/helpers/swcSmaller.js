@@ -26,8 +26,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12187/input.js",
 			"terser compress: harmony/export_default_object_expression",
 			"terser compress: reduce_vars/escaped_prop_3",
-			"terser compress: destructuring/issue_t111_2a",
-			"terser compress: destructuring/issue_t111_2b",
 			"swc minifier: fixture/projects/mootools/3/input.js",
 			"swc minifier: fixture/projects/yui/12/input.js",
 			"swc minifier: fixture/projects/yui/9/input.js",
@@ -41,8 +39,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: loops/issue_186_beautify_braces",
 			"terser compress: loops/issue_186_braces",
 			"terser compress: pure_getters/set_immutable_5",
-			"terser compress: destructuring/issue_t111_1",
-			"terser compress: destructuring/issue_t111_3",
 			"terser compress: functions/issue_2476",
 			"terser compress: global_defs/mixed",
 			"terser compress: loops/keep_collapse_const_in_own_block_scope_2",
@@ -51,7 +47,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8228/input.js",
 			"swc minifier: fixture/issues/8923/input.js",
 			"swc minifier: fixture/issues/drop-console-value-refs/input.js",
-			"swc minifier: fixture/issues/unused-let-initialization/input.js",
 			"swc minifier: fixture/projects/underscore/18/input.js",
 			"swc minifier: pass-1/issue-6123/1/input.js",
 			"swc minifier: fixture/projects/yui/3/input.js",
@@ -283,7 +278,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: sequences/lift_sequences_5",
 			"terser compress: sequences/lift_sequences_6",
 			"swc minifier: fixture/issues/10807/input.js",
-			"swc minifier: fixture/issues/12190/input.js",
 			"swc minifier: fixture/issues/12380/input.js",
 			"swc minifier: fixture/issues/5280/input.js",
 			"swc minifier: fixture/issues/5693/input.js",
@@ -411,8 +405,7 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: destructuring/destructuring_with_undefined_as_default_assignment",
 			"terser compress: destructuring/empty_object_destructuring_3",
-			"terser compress: destructuring/empty_object_destructuring_4",
-			"terser compress: destructuring/destructure_empty_array_3"
+			"terser compress: destructuring/empty_object_destructuring_4"
 		]
 	],
 	[
