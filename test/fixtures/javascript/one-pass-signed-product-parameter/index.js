@@ -30,9 +30,10 @@ console.log(
 		return [-(x * y)];
 	})({ valueOf() { outer = 7; return 1; } }, outer)
 );
+// JavaScriptCore drops the `+` of `+x*y`, so a BigInt `x` throws in V8 only.
 function big(x, y) {
 	try {
-		console.log(-(x * y), +(x * y));
+		console.log(-(x * y));
 	} catch (e) {
 		console.log(e.name);
 	}

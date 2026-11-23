@@ -12,11 +12,15 @@ function bindings(param) {
 	try {
 		throw 1;
 	} catch (error) {
-		console.log(delete param, delete arguments, delete error);
+		console.log(delete param, delete error);
 	}
 	console.log(delete (value), value);
 }
 bindings(5);
+// JavaScriptCore deletes a parameter where `delete arguments` is beside it.
+(function () {
+	console.log(delete arguments);
+})();
 (function named() {
 	console.log(delete named, typeof named);
 })();
