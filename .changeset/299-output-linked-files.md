@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Check a linked output file before writing; clean files written through links.
+Check linked output files before writing and clean their actual destinations.
