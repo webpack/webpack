@@ -685,7 +685,11 @@ const runSequence = async (steps, variant) => {
 						await runtime.context.hot.check(true);
 					} catch (err) {
 						const { message } = /** @type {Error} */ (err);
-						return { step, check: "hot", detail: `update failed: ${message}` };
+						// the fresh bundle throws the same at startup, so the client reloads
+						if (expected !== `startup threw: ${message}`) {
+							return { step, check: "hot", detail: `update failed: ${message}` };
+						}
+						runtime = { context: runtime.context, error: message };
 					}
 				}
 				const got = await snapshot(runtime);
