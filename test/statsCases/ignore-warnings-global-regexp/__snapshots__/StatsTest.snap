@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases ignore-warnings-global-regexp should print correct stats for ignore-warnings-global-regexp 1`] = `
+"asset main.js X bytes [emitted] (name: main)
+orphan modules X bytes [orphan] 4 modules
+./index.js X bytes [built] [code generated]
+
+WARNING in kept warning
+
+WARNING in kept warning
+
+WARNING in kept warning
+
+webpack x.x.x compiled with 3 warnings in X ms"
+`;
