@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Report the warnings of a module restored after what it imports changed.
+Match a fresh build's warnings and "Did you mean" hints after a watch rebuild.

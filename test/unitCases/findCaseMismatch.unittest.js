@@ -1,9 +1,11 @@
 "use strict";
 
+const { CachedInputFileSystem } = require("enhanced-resolve");
 const { Volume, createFsFromVolume } = require("memfs");
 const {
 	applyCaseCorrections,
-	findCaseMismatch
+	findCaseMismatch,
+	readdirFresh
 } = require("../../lib/module/findCaseMismatch");
 
 /** @import { InputFileSystem } from "../../lib/fs/fs" */
@@ -179,6 +181,39 @@ describe("module/findCaseMismatch", () => {
 			expect(
 				applyCaseCorrections("@/sub", [["subdir", "subDir"]])
 			).toBeUndefined();
+		});
+	});
+
+	describe("readdirFresh", () => {
+		it("lists an entry added after the cache read the directory", (done) => {
+			const volume = Volume.fromJSON({ "/lib/a.js": "" });
+			const fs = /** @type {InputFileSystem} */ (
+				/** @type {unknown} */ (
+					new CachedInputFileSystem(
+						/** @type {EXPECTED_ANY} */ (createFsFromVolume(volume)),
+						60000
+					)
+				)
+			);
+			fs.readdir("/lib", () => {
+				volume.writeFileSync("/lib/b.js", "");
+				fs.readdir("/lib", (cachedError, cached) => {
+					expect(cached).toEqual(["a.js"]);
+					readdirFresh(fs, "/lib", (err, entries) => {
+						expect(err).toBeNull();
+						expect(entries).toEqual(["a.js", "b.js"]);
+						done();
+					});
+				});
+			});
+		});
+
+		it("lists a directory with a file system that has no cache", (done) => {
+			readdirFresh(createFileSystem({ "/lib/a.js": "" }), "/lib", (err, entries) => {
+				expect(err).toBeNull();
+				expect(entries).toEqual(["a.js"]);
+				done();
+			});
 		});
 	});
 });
