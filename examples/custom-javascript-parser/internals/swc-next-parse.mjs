@@ -9,14 +9,15 @@ import { parseSync } from "@swc-next/parser";
  */
 
 /**
- * Like Oxc, SWC Next supplies source offsets. webpack uses them to derive
- * line and column locations and reads ASI positions from the source text.
+ * SWC Next supplies source offsets. webpack uses them to derive line and
+ * column locations and reads ASI positions from the source text.
  * @param {string} sourceCode the source code
  * @param {ParseOptions} options options
  * @returns {ParseResult} the parsed result
  */
 export default function swcNextParse(sourceCode, options) {
 	const result = parseSync(sourceCode, {
+		semanticErrors: true,
 		preserveParens: false,
 		sourceType: options.allowReturnOutsideFunction
 			? "commonjs"
