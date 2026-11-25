@@ -1,0 +1,18 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "(2))+\"\"",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: under `toplevel`, a conditional whose known test keeps a branch setting a name nothing reads keeps the parentheses its place put around the conditional, which a second pass leaves out"
+	},
+	{
+		"relation": "idempotence",
+		"contains": "e(e){return[e]}var n=[]",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: the same parentheses, mangled: the second pass also ranks the characters it names from by the shorter output, so the difference shows first as names"
+	}
+]
