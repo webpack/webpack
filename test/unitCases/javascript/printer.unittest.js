@@ -471,6 +471,39 @@ describe("JavaScript minifier printing a SyntaxTree", () => {
 		expect(segments.get(21)).toEqual([6, 1]);
 	});
 
+	it("should map a spread printing the items of the literal it spreads", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const spread = /** @type {{ code: string, map: { mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "minify-maps-a-spread-printing-its-items"),
+				{ mode: "minify", mangle: false, source: "a.js" }
+			)
+		);
+		expect(spread.code).toBe(
+			"function run(){sink(one(),two()),sink({x:three(),y:4})}"
+		);
+		const segments = decodeLine(spread.map.mappings);
+		expect(segments.get(20)).toEqual([2, 6]);
+		expect(segments.get(39)).toEqual([4, 8]);
+	});
+
+	it("should map a call joining the next value without its parentheses", () => {
+		const { SourceProcessor } = require("../../../lib/javascript/syntax");
+		const joined = /** @type {{ code: string, map: { mappings: string } }} */ (
+			new SourceProcessor().process(
+				fixture("javascript", "minify-maps-a-call-unwrapped-joining-a-value"),
+				{ mode: "minify", mangle: false, source: "a.js" }
+			)
+		);
+		expect(joined.code).toBe(
+			"function run(){var a=first(),live=(function(y){var x=effect(y);log(x),log(x)}(arg),get());return[a,a,live,live]}"
+		);
+		const segments = decodeLine(joined.map.mappings);
+		expect(segments.get(35)).toEqual([2, 12]);
+		expect(segments.get(53)).toEqual([3, 11]);
+		expect(segments.get(78)).toEqual([6, 5]);
+	});
+
 	it("should refuse an option it does not know, and a module statement off the top level", () => {
 		expect(() =>
 			minifyOnePass(
@@ -2432,7 +2465,7 @@ describe("one-pass minify of reads and calls on literals", () => {
 				mangle: false
 			}).code
 		).toMatchSnapshot();
-		// A write target, a callee, `super`, a logical assignment, a nullish branch, a key running code and an optional read keep the member; what opens ambiguously keeps its parentheses.
+		// A write target, a callee, `super`, a logical assignment, a nullish branch and a key running code keep the member; an optional read of a call's value ending a chain prints as that call; what opens ambiguously keeps its parentheses.
 		const kept = fixture(
 			"javascript",
 			"one-pass-minify-of-reads-and-calls-on-literals-should-drop-only-the-reads-2"

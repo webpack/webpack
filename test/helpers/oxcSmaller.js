@@ -116,6 +116,11 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"swc exec: terser_properties_join_object_assignments_undefined_1",
+			"swc exec: terser_properties_join_object_assignments_undefined_2",
+			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
+			"terser compress: properties/join_object_assignments_undefined_2",
+			"terser compress: properties/join_object_assignments_undefined_1",
 			"terser compress: sequences/make_sequences_4",
 			"swc minifier: fixture/next/feeback-plotly/1/input.js",
 			"swc minifier: fixture/issues/9186/1/input.js",
@@ -137,7 +142,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: issue-1321/issue_1321_debug",
 			"terser compress: issue-1321/issue_1321_with_quoted",
 			"terser compress: properties/join_object_assignments_2",
-			"terser compress: properties/join_object_assignments_if",
 			"swc exec: terser_properties_join_object_assignments_2",
 			"swc exec: terser_issue_1321_issue_1321_no_debug",
 			"swc exec: terser_issue_1321_issue_1321_with_quoted",
@@ -225,7 +229,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:test_de_morgan_for_unused_expr:1c43f55a",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_de_morgan_for_unused_expr:3902ec27",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_remove_unused_this:2e6ca9e6",
-			"oxc minifier: peephole/remove_unused_expression.rs:test_remove_unused_this:1fd47091",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_template_literal_drop_walks_removed_element_refs:939506c1",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_array_spread_drop_walks_argument_refs:d0ea7ca1",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_object_literal:50888659",
@@ -488,7 +491,6 @@ const OXC_SMALLER_BY_REASON = [
 		[
 			"terser compress: reduce_vars/inner_var_if",
 			"terser compress: reduce_vars/issue_1595_4",
-			"terser compress: reduce_vars/unary_delete",
 			"terser compress: reduce_vars/side_effects_assign",
 			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/recursive_inlining_4",
@@ -562,9 +564,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: drop-unused/issue_t161_top_retain_14",
 			"terser compress: drop-unused/issue_t161_top_retain_15",
 			"terser compress: drop-unused/unused_class_which_extends_might_throw",
-			"terser compress: drop-unused/unused_class_which_might_throw_2",
-			"terser compress: drop-unused/unused_class_which_might_throw_3",
-			"terser compress: drop-unused/unused_class_which_might_throw_4",
 			"terser compress: drop-unused/class_used_within_itself_3_var_expname",
 			"terser compress: drop-unused/issue_1715_3"
 		]
