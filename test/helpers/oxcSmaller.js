@@ -116,6 +116,7 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"webpack writes the same program in a spelling longer or compressing worse than oxc's",
 		[
+			"oxc minifier: peephole/inline_single_use_variable.rs:test_inline_eval_alias_stays_indirect:a6d4c905",
 			"swc exec: terser_properties_join_object_assignments_undefined_1",
 			"swc exec: terser_properties_join_object_assignments_undefined_2",
 			"swc minifier: full/size/54531ba076299b43c00a0d234240369f93371a41/input.js",
@@ -261,6 +262,9 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:test_rewrite_arguments_copy_loop:70723a6d",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:test_rewrite_arguments_copy_loop:3ea05d0a",
 			"oxc minifier: peephole/substitute_alternate_syntax.rs:test_rewrite_arguments_copy_loop:67928fcd",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:optional_catch_binding_after_removed_var:a684d82d",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:optional_catch_binding_after_removed_var:3f7efff2",
+			"oxc minifier: peephole/substitute_alternate_syntax.rs:optional_catch_binding_after_removed_var:d7caf3c1",
 			"swc minifier: fixture/issues/7749/input.js",
 			"swc minifier: fixture/projects/jquery/26/input.js"
 		]
@@ -1240,7 +1244,8 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:closure_compiler_tests:1858505e",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:3d0fe40c",
 			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:0afd5ce2",
-			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:2f9eb778"
+			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:2f9eb778",
+			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:604850f8"
 		]
 	],
 	[
@@ -1259,7 +1264,10 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what oxc's `mangler/mod.rs` tests cover",
-		["oxc minifier: mangler/mod.rs:labels:87859be1"]
+		[
+			"oxc minifier: mangler/mod.rs:labels:87859be1",
+			"oxc minifier: mangler/mod.rs:catch_parameter_scope:c9ed7fc2"
+		]
 	],
 	[
 		"oxc goes further than webpack on what oxc's `peephole/collapse_variable_declarations.rs` tests cover",
@@ -1278,6 +1286,21 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/statement_fusion.rs:fuse_into_label:032248f2",
 			"oxc minifier: peephole/statement_fusion.rs:fuse_into_label:0b9d916c",
 			"oxc minifier: peephole/statement_fusion.rs:fuse_into_label:55fd2a60"
+		]
+	],
+	[
+		"oxc goes further than webpack on what oxc's `peephole/compression_pass.rs` tests cover",
+		[
+			"oxc minifier: peephole/compression_pass.rs:redeclarations_with_synthetic_spans:d7caf3c1",
+			"oxc minifier: peephole/compression_pass.rs:redeclarations_with_synthetic_spans:7c0ead91"
+		]
+	],
+	[
+		"oxc's output is wrong: it drops a call to a `@__NO_SIDE_EFFECTS__` function after a write gives the binding another function, as its own test keeps it",
+		[
+			"oxc minifier: peephole/remove_unused_expression.rs:no_side_effects_reassigned:75f9c6b9",
+			"oxc minifier: peephole/remove_unused_expression.rs:no_side_effects_reassigned:96f457e0",
+			"oxc minifier: peephole/remove_unused_expression.rs:no_side_effects_reassigned:1c5ef0b6"
 		]
 	]
 ];
