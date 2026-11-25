@@ -1,5 +1,8 @@
 "use strict";
 
+const lateParent = require.resolve("./node_modules/lib/es/late-parent");
+const lateLeaf = require.resolve("./node_modules/lib/es/late-leaf");
+
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [
 	{ mode: "development" },
@@ -14,5 +17,33 @@ module.exports = [
 		...config.optimization,
 		concatenateModules: false,
 		minimize: false
-	}
+	},
+	plugins: [
+		(compiler) => {
+			compiler.hooks.thisCompilation.tap("LateStarRequest", (compilation) => {
+				let leafProcessed = false;
+				/** @type {(() => void) | undefined} */
+				let resumeParent;
+				// Classify the directly requested leaf before the parent forwards its star export.
+				compilation.processDependenciesQueue.hooks.beforeStart.tapAsync(
+					"LateStarRequest",
+					(module, callback) => {
+						if (module.nameForCondition() === lateParent && !leafProcessed) {
+							resumeParent = callback;
+						} else {
+							callback();
+						}
+					}
+				);
+				compilation.processDependenciesQueue.hooks.result.tap(
+					"LateStarRequest",
+					(module) => {
+						if (module.nameForCondition() !== lateLeaf) return;
+						leafProcessed = true;
+						if (resumeParent !== undefined) resumeParent();
+					}
+				);
+			});
+		}
+	]
 }));

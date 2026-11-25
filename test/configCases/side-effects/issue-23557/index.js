@@ -1,4 +1,6 @@
 import { ActionType, rootValue, Table } from "lib";
+import { lateValue as directLateValue } from "lib/es/late-leaf";
+import { lateRoot, lateValue } from "lib/es/late-parent";
 
 it("keeps dependencies of an unused nested star reexport wired", () => {
 	expect(Table()).toBe(42);
@@ -10,4 +12,10 @@ it("keeps dependencies of an unused nested star reexport wired", () => {
 			__webpack_modules__[id].toString().includes("webpackMissingModule")
 	);
 	expect(hasMissingTableAction).toBe(false);
+});
+
+it("resolves imports when a star reexport arrives after a named request", () => {
+	expect(lateRoot).toBe(1);
+	expect(directLateValue).toBe(42);
+	expect(lateValue).toBe(42);
 });
