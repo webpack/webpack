@@ -1,0 +1,1 @@
+[data-weird-foo*="foo2=weirder"][data-weird-bar*="bar2=weirder"],[data-weird-foo^="foo2=weirder"][data-weird-bar^="bar2=weirder"],[data-weird-foo$="foo2=weirder"][data-weird-bar$="bar2=weirder"],[data-weird-foo|="foo2=weirder"][data-weird-bar|="bar2=weirder"]{color:red}

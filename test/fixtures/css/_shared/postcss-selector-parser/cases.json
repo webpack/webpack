@@ -1,0 +1,3715 @@
+[
+	{
+		"name": "postcss-selector-parser-348a9881c020",
+		"references": [
+			"attributeValues.mjs:10 missing attribute value after =",
+			"attributeValues.mjs:50 missing attribute value rejects asynchronous processing"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e39d2f5c36e9",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after =",
+			"attributes.mjs:378 insensitive attribute selector with a empty value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-89e04b2fd6e1",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after ="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8bd08f050a0d",
+		"references": [
+			"attributeValues.mjs:27 unquoted attribute value after ="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f547141fd4c2",
+		"references": [
+			"attributeValues.mjs:10 missing attribute value after ~="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4b51fa26d18d",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after ~="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-30858334faf0",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after ~="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9da97a581bd0",
+		"references": [
+			"attributeValues.mjs:27 unquoted attribute value after ~="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0306b579c8e6",
+		"references": [
+			"attributeValues.mjs:10 missing attribute value after |="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-472ec341c927",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after |="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9ce2c7161c49",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after |="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4f8940b678c9",
+		"references": [
+			"attributeValues.mjs:27 unquoted attribute value after |="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8d91798b0daf",
+		"references": [
+			"attributeValues.mjs:10 missing attribute value after ^="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c4f253ec4a6e",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after ^="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6b4c44e1ef93",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after ^="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-19ed5718f224",
+		"references": [
+			"attributeValues.mjs:27 unquoted attribute value after ^="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5ccf5d94e7d1",
+		"references": [
+			"attributeValues.mjs:10 missing attribute value after $="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-353c0d70db15",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after $="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1d7e83cdc564",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after $="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6a33fdb721dc",
+		"references": [
+			"attributeValues.mjs:27 unquoted attribute value after $="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b879da122a3b",
+		"references": [
+			"attributeValues.mjs:10 missing attribute value after *="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-41d391763e2c",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after *="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-539685a9e641",
+		"references": [
+			"attributeValues.mjs:16 quoted empty attribute value after *="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-00e5c8341c26",
+		"references": [
+			"attributeValues.mjs:27 unquoted attribute value after *="
+		]
+	},
+	{
+		"name": "postcss-selector-parser-83a2bcc1f27d",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[href= ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-232345ce37a3",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[href=\\n\\t ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4269b47ef956",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[href=/**/]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-898fea33031f",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[href= /* value */ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-eac943cb61c2",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[ns|href=]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3b80ecfbc6d4",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[*|href=]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c0f0f2f713f4",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[|href=]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-31bd96764c00",
+		"references": [
+			"attributeValues.mjs:44 missing attribute value in \"[ ns | href = ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-28c70926aecb",
+		"references": [
+			"attributeValues.mjs:55 missing attribute value reports the closing bracket location"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c08af6a1ac56",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid",
+			"attributes.mjs:5 attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a7a7f9535f3f",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3a6bdb0ba824",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8082a0203780",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4aca5df41e3d",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-942f721cc734",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8774f29027cc",
+		"references": [
+			"attributeValues.mjs:64 presence and namespaced quoted-empty attributes remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2ac45955cdd5",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href$]\"",
+			"attributeValues.mjs:104 incomplete attribute operators reject asynchronous processing",
+			"attributes.mjs:683 attribute name followed by a trailing $"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8c0967ffb519",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href$ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6c5ca9ae19af",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href$/**/]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5d784250be2f",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href /* name */ $ /* operator */ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-93c5fcaebd26",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[ns|href$]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d358dffc0b35",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[*|href$]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2194b8cbd9f1",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[|href$]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-22458ad581fa",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href*]\"",
+			"attributeValues.mjs:104 incomplete attribute operators reject asynchronous processing",
+			"attributes.mjs:683 attribute name followed by a trailing *"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-265a5a7407c7",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href* ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6b2310445ff9",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href*/**/]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bcde014f474a",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href /* name */ * /* operator */ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5bfa44643b8c",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[ns|href*]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-80ed2bf7bfd3",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[*|href*]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9cd4cfcc727e",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[|href*]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ed83d96b3c80",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href~]\"",
+			"attributeValues.mjs:104 incomplete attribute operators reject asynchronous processing",
+			"attributes.mjs:683 attribute name followed by a trailing ~"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4c68e4c8929a",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href~ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4ce8cab30e89",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href~/**/]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c74bde0d625d",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href /* name */ ~ /* operator */ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3d5ecd46d869",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[ns|href~]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-00bc809519bc",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[*|href~]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fd15d1dae350",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[|href~]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b9b728e9ac98",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href|]\"",
+			"attributeValues.mjs:104 incomplete attribute operators reject asynchronous processing",
+			"attributes.mjs:683 attribute name followed by a trailing |"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-857b3b612141",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href| ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fb2ca5b3680e",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href|/**/]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2fe5c6758f37",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href /* name */ | /* operator */ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-542378430c30",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[ns|href|]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-73dcba6bedf7",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[*|href|]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-071d531f7a7e",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[|href|]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ce3debd8c94c",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href^]\"",
+			"attributeValues.mjs:104 incomplete attribute operators reject asynchronous processing",
+			"attributes.mjs:683 attribute name followed by a trailing ^"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8e66e64e6889",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href^ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6fc77a16bccb",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href^/**/]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a3ceb4adf547",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[href /* name */ ^ /* operator */ ]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7f9fe3cf7029",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[ns|href^]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-22aa593e87b5",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[*|href^]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8bafa4fe596f",
+		"references": [
+			"attributeValues.mjs:91 incomplete attribute operator in \"[|href^]\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6253b7768db8",
+		"references": [
+			"attributeValues.mjs:112 incomplete attribute operator reports the operator location"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fec5fa388f7b",
+		"references": [
+			"attributeValues.mjs:121 escaped matcher characters remain part of attribute names"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-46407cec724c",
+		"references": [
+			"attributeValues.mjs:121 escaped matcher characters remain part of attribute names"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f9384b4d7404",
+		"references": [
+			"attributeValues.mjs:121 escaped matcher characters remain part of attribute names"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ebeca3f96139",
+		"references": [
+			"attributeValues.mjs:121 escaped matcher characters remain part of attribute names"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d179011884cd",
+		"references": [
+			"attributeValues.mjs:121 escaped matcher characters remain part of attribute names"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9287a187f6ae",
+		"references": [
+			"attributeValues.mjs:132 interpolated attribute names and operator-like values remain valid",
+			"nonstandard.mjs:34 sass interpolation as an attribute name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e7c4d6a6cd9f",
+		"references": [
+			"attributeValues.mjs:132 interpolated attribute names and operator-like values remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ad49b2dd7d0e",
+		"references": [
+			"attributeValues.mjs:132 interpolated attribute names and operator-like values remain valid",
+			"nonstandard.mjs:41 sass interpolation on both sides of an attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-98d54c66967e",
+		"references": [
+			"attributeValues.mjs:132 interpolated attribute names and operator-like values remain valid",
+			"nonstandard.mjs:27 sass escapes (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f053ec8b90f1",
+		"references": [
+			"attributeValues.mjs:132 interpolated attribute names and operator-like values remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0be29c45cfef",
+		"references": [
+			"attributeValues.mjs:132 interpolated attribute names and operator-like values remain valid"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4f53cda18c2b",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5984eac0c5c6",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-92497baa794d",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors",
+			"exceptions.mjs:56 universal selector as an attribute"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2b4d725d948c",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors",
+			"exceptions.mjs:36 namespaced attribute name is an asterisk"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ac6d61589506",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors",
+			"exceptions.mjs:57 asterisk name with trailing space"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8d64d42676ff",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors",
+			"exceptions.mjs:43 namespaced attribute ending in a dollar"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-44f8198b9578",
+		"references": [
+			"attributeValues.mjs:146 missing attribute names retain their syntax errors",
+			"exceptions.mjs:48 namespaced attribute ending in a caret"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e3b0c44298fc",
+		"references": [
+			"attributes-deprecations.mjs:13 deprecated constructor",
+			"attributes-deprecations.mjs:26 deprecated get of raws.unquoted ",
+			"attributes-deprecations.mjs:38 deprecated set of raws.unquoted ",
+			"parser.mjs:88 empty selector string"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f9f9591d0499",
+		"references": [
+			"attributes.mjs:11 attribute selector spaces (before)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6751688ea1ec",
+		"references": [
+			"attributes.mjs:18 attribute selector spaces (after)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7fd6b14d842d",
+		"references": [
+			"attributes.mjs:25 attribute selector spaces with namespace (both)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f23b534d2293",
+		"references": [
+			"attributes.mjs:33 attribute selector spaces with universal namespace (both)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-360892305dea",
+		"references": [
+			"attributes.mjs:40 attribute selector spaces (both)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-82c60033a009",
+		"references": [
+			"attributes.mjs:48 multiple attribute selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8d69895eed37",
+		"references": [
+			"attributes.mjs:54 select elements with or without a namespace",
+			"namespaces.mjs:48 match namespace inside attribute selector (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9ea75015d992",
+		"references": [
+			"attributes.mjs:59 namespace with escapes"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e8d06f8e1816",
+		"references": [
+			"attributes.mjs:71 attribute selector with a empty value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d7c4a1767e18",
+		"references": [
+			"attributes.mjs:78 attribute selector with a value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-434851e0304f",
+		"references": [
+			"attributes.mjs:85 attribute selector with quoted value",
+			"sourceIndex.mjs:138 attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5d803556e840",
+		"references": [
+			"attributes.mjs:95 attribute selector with escaped quote"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bc1a2f9500e0",
+		"references": [
+			"attributes.mjs:107 attribute selector with escaped colon",
+			"attributes.mjs:128 assign attribute name requiring escape"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4d03fccee1fe",
+		"references": [
+			"attributes.mjs:114 attribute selector with short hex escape"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9e45a765b6aa",
+		"references": [
+			"attributes.mjs:121 attribute selector with hex escape"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bca5e9f1b95d",
+		"references": [
+			"attributes.mjs:136 multiple attribute selectors + combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f6460fc5d3a3",
+		"references": [
+			"attributes.mjs:143 attribute, class, combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2a3c6fc69451",
+		"references": [
+			"attributes.mjs:150 attribute selector with quoted value & combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b30ab04d6917",
+		"references": [
+			"attributes.mjs:157 multiple quoted attribute selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d820f198812a",
+		"references": [
+			"attributes.mjs:180 more attribute operators"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-09ea7f48737f",
+		"references": [
+			"attributes.mjs:191 attribute selector with quoted value containing \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4ff9c51a12f4",
+		"references": [
+			"attributes.mjs:208 more attribute selector with quoted value containing \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f555d978c350",
+		"references": [
+			"attributes.mjs:223 attribute selector with quoted value containing multiple \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7a02a4ba01ff",
+		"references": [
+			"attributes.mjs:238 more attribute selector with quoted value containing multiple \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-26ab6b038c30",
+		"references": [
+			"attributes.mjs:253 multiple attribute selectors with quoted value containing \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cb7915dd8d3a",
+		"references": [
+			"attributes.mjs:266 multiple attribute selectors with value containing escaped \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-204b0a4fad78",
+		"references": [
+			"attributes.mjs:284 more multiple attribute selectors with quoted value containing \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-79dc27bc657b",
+		"references": [
+			"attributes.mjs:311 multiple attribute selectors with quoted value containing multiple \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0fa7ac1858a9",
+		"references": [
+			"attributes.mjs:329 more multiple attribute selectors with quoted value containing multiple \"=\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c7fd2b1db6df",
+		"references": [
+			"attributes.mjs:360 spaces in attribute selectors",
+			"lossy.mjs:25 attribute, spaces in selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8ac481cd2f6e",
+		"references": [
+			"attributes.mjs:372 insensitive attribute selector 1"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d6881ec03871",
+		"references": [
+			"attributes.mjs:386 insensitive attribute selector 2",
+			"lossy.mjs:27 attribute, insensitive flag 2"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6c12023396c2",
+		"references": [
+			"attributes.mjs:393 insensitive attribute selector 3"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-69343d0c65f9",
+		"references": [
+			"attributes.mjs:401 capitalized insensitive attribute selector 3"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5c0d659ee4a6",
+		"references": [
+			"attributes.mjs:410 insensitive attribute selector 4"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-56d0a4eb18d4",
+		"references": [
+			"attributes.mjs:415 capitalized insensitive attribute selector 4"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ac44a07b1614",
+		"references": [
+			"attributes.mjs:420 insensitive attribute selector 5"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0c716a1cc931",
+		"references": [
+			"attributes.mjs:425 insensitive attribute selector 6"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7fb3c6b11a54",
+		"references": [
+			"attributes.mjs:430 extraneous non-combinating whitespace",
+			"lossy.mjs:29 attribute, extreneous whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-12dee2e7ba4a",
+		"references": [
+			"attributes.mjs:439 newline in attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0a8e5f167e77",
+		"references": [
+			"attributes.mjs:446 comments within attribute selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-041256fa06d9",
+		"references": [
+			"attributes.mjs:455 comments within attribute selectors (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2597570c174b",
+		"references": [
+			"attributes.mjs:464 comments within attribute selectors (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0413133f8564",
+		"references": [
+			"attributes.mjs:471 comments within attribute selectors (4)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-04f3a92e257c",
+		"references": [
+			"attributes.mjs:491 non standard modifiers",
+			"attributes.mjs:575 case sensitivity setters keep non standard modifiers"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-11a49776a97e",
+		"references": [
+			"attributes.mjs:500 case sensitive attribute selector",
+			"attributes.mjs:534 case sensitivity flags are mutually exclusive (s to i)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ca06cc0e9844",
+		"references": [
+			"attributes.mjs:514 case insensitive attribute selector offset",
+			"attributes.mjs:520 case sensitivity flags are mutually exclusive (i to s)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6f5eeac23c34",
+		"references": [
+			"attributes.mjs:547 switching case sensitivity erases the original notation (I to s)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1f53e3f572e0",
+		"references": [
+			"attributes.mjs:561 switching case sensitivity erases the original notation (S to i)",
+			"attributes.mjs:590 capitalized case sensitive attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ccc79dc5cda0",
+		"references": [
+			"attributes.mjs:605 case sensitive attribute selector (unquoted)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2c90224bc6b8",
+		"references": [
+			"attributes.mjs:615 comment after insensitive(non space)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1dfafab0f0e9",
+		"references": [
+			"attributes.mjs:625 comment after insensitive(space after)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-accc919b00e8",
+		"references": [
+			"attributes.mjs:633 comment after insensitive(space before)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5340752301d4",
+		"references": [
+			"attributes.mjs:644 smart quotes",
+			"attributes.mjs:664 set Attribute#quoteMark"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1b16e6abdbdf",
+		"references": [
+			"classes.mjs:3 class name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0fc8fe153c30",
+		"references": [
+			"classes.mjs:8 multiple class names",
+			"container.mjs:312 container#every"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-05e5af97d2b2",
+		"references": [
+			"classes.mjs:14 qualified class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-47959b818e06",
+		"references": [
+			"classes.mjs:19 escaped numbers in class name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9a70a9a638ea",
+		"references": [
+			"classes.mjs:25 extraneous non-combinating whitespace",
+			"lossy.mjs:22 classes, extraneous spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-dd2c6bc08e82",
+		"references": [
+			"classes.mjs:34 Less interpolation within a class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-067b559406ec",
+		"references": [
+			"classes.mjs:40 ClassName#set value",
+			"node.mjs:33 Node#appendToPropertyAndEscape",
+			"node.mjs:43 Node#setPropertyAndEscape with existing raws",
+			"node.mjs:63 Node#setPropertyWithoutEscape with existing raws"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d3c6c5d2986d",
+		"references": [
+			"classes.mjs:47 escaped dot in class name",
+			"classes.mjs:194 class selector with escaping (23)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6a8868a9f6a4",
+		"references": [
+			"classes.mjs:53 class selector with escaping"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-730d7ee20902",
+		"references": [
+			"classes.mjs:58 class selector with escaping (1)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-12f86d73ebae",
+		"references": [
+			"classes.mjs:63 class selector with escaping (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1da68ffc65fc",
+		"references": [
+			"classes.mjs:68 class selector with escaping (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ad48d0bc5944",
+		"references": [
+			"classes.mjs:73 class selector with escaping (4)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-74f22fd061ee",
+		"references": [
+			"classes.mjs:78 class selector with escaping (5)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2dcce0799396",
+		"references": [
+			"classes.mjs:83 class selector with escaping (6)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c092028a4d4a",
+		"references": [
+			"classes.mjs:88 class selector with escaping (7)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7c552b06e37d",
+		"references": [
+			"classes.mjs:94 class selector with escaping (8)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7d09e6072a51",
+		"references": [
+			"classes.mjs:100 class selector with escaping (9)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-371ffe247952",
+		"references": [
+			"classes.mjs:106 class selector with escaping (10)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-32152bf51855",
+		"references": [
+			"classes.mjs:112 class selector with escaping (11)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-478a795d7a86",
+		"references": [
+			"classes.mjs:118 class selector with escaping (12)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-35bdf922e08e",
+		"references": [
+			"classes.mjs:124 class selector with escaping (13)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9175b09d0e3b",
+		"references": [
+			"classes.mjs:130 class selector with escaping (14)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-88c80fb6470d",
+		"references": [
+			"classes.mjs:136 class selector with escaping (15)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-06fa1a19b7a6",
+		"references": [
+			"classes.mjs:142 class selector with escaping (16)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b4ba68eef29c",
+		"references": [
+			"classes.mjs:158 class selector with escaping (17)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f5512fa90647",
+		"references": [
+			"classes.mjs:164 class selector with escaping (18)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-08e5cb7caac5",
+		"references": [
+			"classes.mjs:170 class selector with escaping (19)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d7213489a3d2",
+		"references": [
+			"classes.mjs:176 class selector with escaping (20)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-58d8470d11d5",
+		"references": [
+			"classes.mjs:182 class selector with escaping (21)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9154f95814a5",
+		"references": [
+			"classes.mjs:188 class selector with escaping (22)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-59fad1953637",
+		"references": [
+			"classes.mjs:200 class selector with escaping (24)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c35862cefac1",
+		"references": [
+			"classes.mjs:206 class selector with escaping (25)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-16eff108a26d",
+		"references": [
+			"classes.mjs:212 class selector with escaping (26)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-944a32afd2f5",
+		"references": [
+			"classes.mjs:218 class selector with escaping (27)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c1767154a8a0",
+		"references": [
+			"classes.mjs:224 class selector with escaping (28)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ed4e84576ab1",
+		"references": [
+			"classes.mjs:230 class selector with escaping (29)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-07e2d6f35e2d",
+		"references": [
+			"classes.mjs:236 class selector with escaping (30)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-02c5c87fe0ac",
+		"references": [
+			"classes.mjs:242 class selector with escaping (31)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-123b58457cb3",
+		"references": [
+			"classes.mjs:248 class selector with escaping (32)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fb5a060ba270",
+		"references": [
+			"classes.mjs:254 class selector with escaping (33)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7c6a1d2240b4",
+		"references": [
+			"classes.mjs:260 class selector with escaping (34)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bbf08457d563",
+		"references": [
+			"classes.mjs:266 class selector with escaping (35)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3b5aaa82f15e",
+		"references": [
+			"classes.mjs:272 class selector with escaping (36)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e00b7095222f",
+		"references": [
+			"combinators.mjs:8 multiple combinating spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-785e5eda050c",
+		"references": [
+			"combinators.mjs:15 column combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7baef82d338d",
+		"references": [
+			"combinators.mjs:21 column combinator (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2c0a4382468a",
+		"references": [
+			"combinators.mjs:29 descendant combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4f414230466b",
+		"references": [
+			"combinators.mjs:35 multiple descendant combinators",
+			"container.mjs:237 container#walkCombinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2496609e0985",
+		"references": [
+			"combinators.mjs:41 adjacent sibling combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a817129ee17d",
+		"references": [
+			"combinators.mjs:47 adjacent sibling combinator (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f5023cbbb482",
+		"references": [
+			"combinators.mjs:54 adjacent sibling combinator (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-52806e8688d4",
+		"references": [
+			"combinators.mjs:61 adjacent sibling combinator (4)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a4dab50a5a6f",
+		"references": [
+			"combinators.mjs:69 adjacent sibling combinator (5)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c8779cc2f397",
+		"references": [
+			"combinators.mjs:77 piercing combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1b41bd490b49",
+		"references": [
+			"combinators.mjs:85 named combinators"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7075d62707d1",
+		"references": [
+			"combinators.mjs:94 named combinators with escapes"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-08518c474f13",
+		"references": [
+			"combinators.mjs:103 named combinators with escapes and uppercase",
+			"combinators.mjs:183 Combinator#set value replaces an escaped named combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d32064ad7174",
+		"references": [
+			"combinators.mjs:112 multiple combinators"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f92c1a34e5f8",
+		"references": [
+			"combinators.mjs:117 multiple combinators with whitespaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b0e05594640d",
+		"references": [
+			"combinators.mjs:122 multiple combinators with whitespaces (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4c55476b264e",
+		"references": [
+			"combinators.mjs:127 trailing combinator & spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c67417701541",
+		"references": [
+			"combinators.mjs:132 trailing sibling combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5ef0c7309530",
+		"references": [
+			"combinators.mjs:137 ending in comment has no trailing combinator",
+			"comments.mjs:35 ending in comment"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a4e9ed591078",
+		"references": [
+			"combinators.mjs:141 The combinating space is not a space character"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-666cb687f2d5",
+		"references": [
+			"combinators.mjs:147 with spaces and a comment has only one combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-23b8c6f5f5d4",
+		"references": [
+			"combinators.mjs:156 with a meaningful comment in the middle of a compound selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4df9ab9273ef",
+		"references": [
+			"combinators.mjs:165 with a comment in the middle of a descendant selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-894891f8b78a",
+		"references": [
+			"combinators.mjs:183 Combinator#set value replaces a tab descendant"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-998a5be88dc5",
+		"references": [
+			"combinators.mjs:183 Combinator#set value replaces a tab descendant",
+			"combinators.mjs:183 Combinator#set value replaces comments embedded in the raw value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7e18f737311b",
+		"references": [
+			"combinators.mjs:183 Combinator#set value normalizes a newline descendant",
+			"combinators.mjs:206 Combinator#clone value overrides invalidate only the clone's raw value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c8687a08aa5d",
+		"references": [
+			"combinators.mjs:183 Combinator#set value normalizes a newline descendant"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-700347c1219e",
+		"references": [
+			"combinators.mjs:183 Combinator#set value replaces mixed descendant whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-300273daf0bb",
+		"references": [
+			"combinators.mjs:183 Combinator#set value replaces mixed descendant whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1c6424d9a720",
+		"references": [
+			"combinators.mjs:183 Combinator#set value replaces an escaped named combinator",
+			"parser.mjs:52 default options work sync and can be overridden",
+			"parser.mjs:59 default options work async and can be overridden",
+			"parser.mjs:299 destructured processSync returns the selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5aa0fb4fc5b1",
+		"references": [
+			"combinators.mjs:183 Combinator#set value replaces comments embedded in the raw value",
+			"combinators.mjs:217 Combinator raw helpers replace or extend embedded comments"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-453f34683669",
+		"references": [
+			"combinators.mjs:183 Combinator#set value keeps comments in separate spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-eca372b5af94",
+		"references": [
+			"combinators.mjs:183 Combinator#set value keeps comments in separate spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fa1c55c2d5b2",
+		"references": [
+			"comments.mjs:3 comments"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bb80259f2a79",
+		"references": [
+			"comments.mjs:8 comments (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-034de7b11950",
+		"references": [
+			"comments.mjs:17 comments (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-948eff3c5850",
+		"references": [
+			"comments.mjs:26 multiple comments and other things"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-79f31dac4b2a",
+		"references": [
+			"comments.mjs:43 ending in comment and whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e6161c956c06",
+		"references": [
+			"comments.mjs:51 ending in comment in a pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7ac4b29c869b",
+		"references": [
+			"comments.mjs:59 ending in comment and whitespace in a pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d8060ff8c4c2",
+		"references": [
+			"comments.mjs:67 comments in selector list"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-34f3ffb73000",
+		"references": [
+			"comments.mjs:78 comments in selector list (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e8733858dfbb",
+		"references": [
+			"comments.mjs:89 comments in selector list (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cd0d05d99946",
+		"references": [
+			"comments.mjs:100 comments in selector list (4)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-621ef274c17c",
+		"references": [
+			"complexity.mjs:51 flat class selectors parse in time proportional to their size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6e83e67d1ca4",
+		"references": [
+			"complexity.mjs:51 flat class selectors parse in time proportional to their size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e0db4b4b2c0e",
+		"references": [
+			"complexity.mjs:51 flat id selectors parse in time proportional to their size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0dd99657ac2f",
+		"references": [
+			"complexity.mjs:51 flat id selectors parse in time proportional to their size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8b79e75b2ccb",
+		"references": [
+			"complexity.mjs:51 repeated Sass interpolations parse in time proportional to their size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d0ce2cadf4af",
+		"references": [
+			"complexity.mjs:51 repeated Sass interpolations parse in time proportional to their size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-610a11fb0266",
+		"references": [
+			"complexity.mjs:112 a digit-prefixed flat selector parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1c903b5b58d5",
+		"references": [
+			"complexity.mjs:112 a digit-prefixed flat selector parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0f4baebd722d",
+		"references": [
+			"complexity.mjs:112 a comment-only selector parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6b36dc85833f",
+		"references": [
+			"complexity.mjs:112 a comment-only selector parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-69d24a0e5cab",
+		"references": [
+			"complexity.mjs:112 a run of parenthesis groups after a class parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ddd290b00aac",
+		"references": [
+			"complexity.mjs:112 a run of parenthesis groups after a class parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ff6f4d91d5ab",
+		"references": [
+			"complexity.mjs:112 a run of parenthesis groups after an attribute parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0380042efeea",
+		"references": [
+			"complexity.mjs:112 a run of parenthesis groups after an attribute parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2d463218e6ac",
+		"references": [
+			"complexity.mjs:112 a namespace made of backslashes parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2262c3e50bcd",
+		"references": [
+			"complexity.mjs:112 a namespace made of backslashes parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-91f88c5fbfc6",
+		"references": [
+			"complexity.mjs:112 an attribute namespace made of backslashes parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0c865e0761eb",
+		"references": [
+			"complexity.mjs:112 an attribute namespace made of backslashes parses in time proportional to its size"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fadb52e8d347",
+		"references": [
+			"complexity.mjs:121 consecutive parenthesis groups are appended to the preceding node"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-351a2a426509",
+		"references": [
+			"complexity.mjs:128 an unclosed group after complete ones reports its own opening parenthesis"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2894742f0540",
+		"references": [
+			"complexity.mjs:136 decimal percentages are still kept as a single tag"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-19b1bb6e6562",
+		"references": [
+			"complexity.mjs:143 spaces after leading comments stay attached to the selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bb68c6c48532",
+		"references": [
+			"complexity.mjs:154 a large flat selector still produces one node per class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1df05b9f385c",
+		"references": [
+			"complexity.mjs:165 deduplication keeps a leading class from being emitted twice"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-81f1d450e44a",
+		"references": [
+			"complexity.mjs:177 deduplication keeps a leading id from being emitted twice"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-36797c3aba1e",
+		"references": [
+			"complexity.mjs:189 a single leading class is emitted once",
+			"parser.mjs:304 destructured astSync returns a root"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-724e3cf46fd6",
+		"references": [
+			"container.mjs:52 root#toString places root spaces outside the selector list and trailing comma"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-de24ac17382f",
+		"references": [
+			"container.mjs:61 replacing a pseudo with its selector preserves transferred spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ca978112ca1b",
+		"references": [
+			"container.mjs:74 container#insertBefore sets parents of every inserted node",
+			"container.mjs:74 container#insertAfter sets parents of every inserted node",
+			"maxInputLength.mjs:60 invalid limits throw rather than silently disabling the guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-33112ee14ee4",
+		"references": [
+			"container.mjs:87 container#append",
+			"container.mjs:450 container#insertAfter",
+			"container.mjs:459 container#insertAfter (multiple node)",
+			"guards.mjs:115 tag guard",
+			"lossy.mjs:95 tag - trailing comma (2)",
+			"sourceIndex.mjs:51 tag selector",
+			"tags.mjs:3 tag selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f998fe06afa0",
+		"references": [
+			"container.mjs:96 container#prepend",
+			"container.mjs:421 container#insertBefore",
+			"container.mjs:430 container#insertBefore (multiple node)",
+			"container.mjs:440 container#insertBefore and node#remove",
+			"container.mjs:469 container#insertAfter and node#remove"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-608d7923a48b",
+		"references": [
+			"container.mjs:105 container#each",
+			"container.mjs:175 container#walk",
+			"container.mjs:202 container#walk (early exit)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3320fedef9e7",
+		"references": [
+			"container.mjs:120 container#each (safe iteration w/ insertBefore)",
+			"container.mjs:148 container#each (safe iteration w/ insertAfter)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-72248c93134d",
+		"references": [
+			"container.mjs:134 container#each (safe iteration w/ prepend)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9d86934ce09e",
+		"references": [
+			"container.mjs:162 container#each (early exit)",
+			"container.mjs:330 container#reduce",
+			"container.mjs:380 container#first, container#last"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-76634d3c45b8",
+		"references": [
+			"container.mjs:190 container#walk (safe iteration)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-88709e8da739",
+		"references": [
+			"container.mjs:217 container#walkAttribute"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0caa8e6dc028",
+		"references": [
+			"container.mjs:228 container#walkClass"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-acdf3d755a7f",
+		"references": [
+			"container.mjs:246 container#walkComment"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fe66b052f655",
+		"references": [
+			"container.mjs:255 container#walkId"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-769159812a9d",
+		"references": [
+			"container.mjs:264 container#walkNesting"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0a2ede02e537",
+		"references": [
+			"container.mjs:273 container#walkPseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7c8f50592903",
+		"references": [
+			"container.mjs:282 container#walkTag",
+			"container.mjs:300 container#map"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-994418c94ba6",
+		"references": [
+			"container.mjs:291 container#walkUniversal"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2f0bad8c4453",
+		"references": [
+			"container.mjs:321 container#some"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-16a6c9825dcd",
+		"references": [
+			"container.mjs:342 container#filter"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a173493c32a5",
+		"references": [
+			"container.mjs:351 container#split"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9c7298c6ba56",
+		"references": [
+			"container.mjs:365 container#sort"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-010915e718d5",
+		"references": [
+			"container.mjs:374 container#at",
+			"container.mjs:394 container#length",
+			"container.mjs:479 container#insertAfter (during iteration)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d4ab6b41c8de",
+		"references": [
+			"container.mjs:387 container#index",
+			"parser.mjs:48 no operation"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8fa18b5e244e",
+		"references": [
+			"container.mjs:400 container#removeChild"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2e52e58f00f1",
+		"references": [
+			"container.mjs:411 container#removeAll, container#empty"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8d316dacc635",
+		"references": [
+			"container.mjs:489 Container#atPosition first pseudo",
+			"container.mjs:497 Container#atPosition class in pseudo",
+			"container.mjs:505 Container#atPosition id in second selector",
+			"container.mjs:513 Container#atPosition combinator in second selector",
+			"container.mjs:525 Container#atPosition tag in second selector pseudo",
+			"container.mjs:533 Container#atPosition comma in second selector pseudo",
+			"node.mjs:84 Node#isAtPosition"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b420fa5da375",
+		"references": [
+			"container.mjs:545 Container#toString tolerates a raw array child from replaceWith(array)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9d63623404ce",
+		"references": [
+			"escapes.mjs:3 escaped semicolon in class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6804fcb00af4",
+		"references": [
+			"escapes.mjs:9 escaped semicolon in id"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-456abfec53b7",
+		"references": [
+			"escapes.mjs:19 escaped backslash before the class delimiter"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-95161ff6311b",
+		"references": [
+			"escapes.mjs:29 escaped class delimiter after an escaped backslash"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5065d7719f6a",
+		"references": [
+			"escapes.mjs:19 escaped backslash before the id delimiter"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cfc99a66308d",
+		"references": [
+			"escapes.mjs:29 escaped id delimiter after an escaped backslash"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b5960a47c70c",
+		"references": [
+			"escapes.mjs:42 bare parens capture contents as a string"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-33153c2d1df7",
+		"references": [
+			"escapes.mjs:49 hex escape 61 terminated by \" \""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1b89aa584f33",
+		"references": [
+			"escapes.mjs:49 hex escape 61 terminated by \"\\t\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ed2203096b4d",
+		"references": [
+			"escapes.mjs:49 hex escape 61 terminated by \"\\n\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c3889e726641",
+		"references": [
+			"escapes.mjs:49 hex escape 61 terminated by \"\\r\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-10f4a9900f1a",
+		"references": [
+			"escapes.mjs:49 hex escape 61 terminated by \"\\f\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a7a9a2ff7ef3",
+		"references": [
+			"escapes.mjs:49 hex escape 61 terminated by \"\\r\\n\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3e73499fc4bf",
+		"references": [
+			"escapes.mjs:49 hex escape 000061 terminated by \" \""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ec0fca7c8b8d",
+		"references": [
+			"escapes.mjs:49 hex escape 000061 terminated by \"\\t\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8ceadb385aa8",
+		"references": [
+			"escapes.mjs:49 hex escape 000061 terminated by \"\\n\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-52762ddb8379",
+		"references": [
+			"escapes.mjs:49 hex escape 000061 terminated by \"\\r\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7f098909653f",
+		"references": [
+			"escapes.mjs:49 hex escape 000061 terminated by \"\\f\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c5261aba3ac6",
+		"references": [
+			"escapes.mjs:49 hex escape 000061 terminated by \"\\r\\n\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6fdf339eff44",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\000061  b\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-36d7e90eb973",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\000000 b\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-80b52329d1bb",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\00D800 b\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d66d412705a5",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\110000 b\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1064be59b7e7",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\000061b\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8075e8107758",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\000061 b\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ca236164ce9c",
+		"references": [
+			"escapes.mjs:68 hex escape boundary \"\\\\000061\\u000bb\""
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c6361123bab0",
+		"references": [
+			"exceptions.mjs:4 unclosed string"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7a9ae7a4368b",
+		"references": [
+			"exceptions.mjs:5 unclosed comment"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-dc4cce55a681",
+		"references": [
+			"exceptions.mjs:6 unclosed pseudo element"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bfc622d4a6d4",
+		"references": [
+			"exceptions.mjs:7 unclosed pseudo class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-60c1f5d5aebb",
+		"references": [
+			"exceptions.mjs:8 unclosed attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e47e883e2ac0",
+		"references": [
+			"exceptions.mjs:15 unclosed attribute at end of input"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b428dbfcde64",
+		"references": [
+			"exceptions.mjs:20 unclosed attribute with value at end of input"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-eec025dc17c2",
+		"references": [
+			"exceptions.mjs:25 trailing namespace pipe"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a8bd50ef6068",
+		"references": [
+			"exceptions.mjs:26 unclosed parenthesis at end of input"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ead46dce1a10",
+		"references": [
+			"exceptions.mjs:41 default namespace with asterisk name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-02a1cd5d70be",
+		"references": [
+			"exceptions.mjs:42 any namespace with asterisk name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ba5ec51d07a4",
+		"references": [
+			"exceptions.mjs:63 no opening parenthesis"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-05722bf1be4f",
+		"references": [
+			"exceptions.mjs:64 no opening parenthesis (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4d553b337b41",
+		"references": [
+			"exceptions.mjs:65 no opening parenthesis (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cfae0d4248f7",
+		"references": [
+			"exceptions.mjs:67 no opening square bracket"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2bd280ae166e",
+		"references": [
+			"exceptions.mjs:68 no opening square bracket (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-66e21295d87a",
+		"references": [
+			"exceptions.mjs:69 no opening square bracket (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e6ade6d01112",
+		"references": [
+			"exceptions.mjs:71 bad pseudo element"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0ef4de4f58d0",
+		"references": [
+			"exceptions.mjs:72 missing closing parenthesis in pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-09970ccc280f",
+		"references": [
+			"exceptions.mjs:74 bad syntax"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-eb434da8241b",
+		"references": [
+			"exceptions.mjs:75 bad syntax (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c6fe303d4070",
+		"references": [
+			"exceptions.mjs:77 missing backslash for semicolon",
+			"exceptions.mjs:78 missing backslash for semicolon (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d1445ab6f806",
+		"references": [
+			"exceptions.mjs:79 unexpected / foo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-da8e141dae02",
+		"references": [
+			"exceptions.mjs:84 bang in selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-dc75e26a1539",
+		"references": [
+			"guards.mjs:6 attribute guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-013b54afaf52",
+		"references": [
+			"guards.mjs:15 className guard",
+			"node.mjs:53 Node#setPropertyAndEscape without existing raws",
+			"node.mjs:73 Node#setPropertyWithoutEscape without existing raws",
+			"parser.mjs:73 default updateSelector works async and can be overridden",
+			"parser.mjs:128 parse errors within the async processor",
+			"parser.mjs:141 parse errors within the async processor before the promise returns",
+			"parser.mjs:149 returning a promise to the sync processor fails",
+			"parser.mjs:162 Passing a rule works async",
+			"parser.mjs:182 Passing a rule with mutation disabled works async",
+			"parser.mjs:202 Passing a rule with mutation works sync",
+			"parser.mjs:213 Transform a selector synchronously",
+			"parser.mjs:227 Transform a selector asynchronously",
+			"parser.mjs:249 get AST of a selector synchronously",
+			"parser.mjs:263 get AST a selector asynchronously"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fcd276e069a9",
+		"references": [
+			"guards.mjs:24 combinator guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-330bd29836bf",
+		"references": [
+			"guards.mjs:33 comment guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-04a604a8a558",
+		"references": [
+			"guards.mjs:42 id guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f9c2dcd9e131",
+		"references": [
+			"guards.mjs:51 nesting guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a017da05396d",
+		"references": [
+			"guards.mjs:60 pseudo class guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0eeb7da86192",
+		"references": [
+			"guards.mjs:71 pseudo element guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-78c7ae17bd81",
+		"references": [
+			"guards.mjs:82 special pseudo element guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7cea5f2a5cbc",
+		"references": [
+			"guards.mjs:92 special pseudo element guard (uppercase)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e9e5c1c9e4f6",
+		"references": [
+			"guards.mjs:106 string guard"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-684888c0ebb1",
+		"references": [
+			"guards.mjs:125 universal guard",
+			"sourceIndex.mjs:3 universal selector",
+			"universal.mjs:3 universal selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4aafad992637",
+		"references": [
+			"id.mjs:3 id selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b33acb708a60",
+		"references": [
+			"id.mjs:8 id selector with universal"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ee30d564678b",
+		"references": [
+			"id.mjs:15 id hack",
+			"sourceIndex.mjs:84 multiple id selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f9d6db302f04",
+		"references": [
+			"id.mjs:20 id and class names mixed"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7abd845224be",
+		"references": [
+			"id.mjs:30 qualified id"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-eaa2d961d622",
+		"references": [
+			"id.mjs:35 qualified id & class name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0059baae4049",
+		"references": [
+			"id.mjs:41 extraneous non-combinating whitespace",
+			"lossy.mjs:23 ids, extraneous spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8a516eeedda0",
+		"references": [
+			"id.mjs:50 Sass interpolation within a class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cf4520e168ef",
+		"references": [
+			"id.mjs:56 Sass interpolation within an id"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ad6ae57e1b39",
+		"references": [
+			"id.mjs:62 Less interpolation within an id"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0e6c523f33a6",
+		"references": [
+			"id.mjs:68 id selector with escaping"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c79d701e32fd",
+		"references": [
+			"id.mjs:74 id selector with escaping (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4f8db9ab0d16",
+		"references": [
+			"id.mjs:79 id selector with escaping (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b83745e4e2cc",
+		"references": [
+			"id.mjs:85 id selector with escaping (4)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4cc3336f830a",
+		"references": [
+			"id.mjs:90 id selector with escaping (5)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-03a01f8f7f8a",
+		"references": [
+			"id.mjs:95 id selector with escaping (6)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6292d48dba0a",
+		"references": [
+			"id.mjs:100 id selector with escaping (7)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c4442e29370d",
+		"references": [
+			"id.mjs:105 id selector with escaping (8)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-872777ddfb56",
+		"references": [
+			"id.mjs:110 id selector with escaping (9)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-075035aa05d6",
+		"references": [
+			"id.mjs:115 id selector with escaping (10)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7667f8ecc8b4",
+		"references": [
+			"id.mjs:120 id selector with escaping (11)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8cf37253c8a0",
+		"references": [
+			"id.mjs:126 id selector with escaping (12)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c364454f87d4",
+		"references": [
+			"id.mjs:132 id selector with escaping (13)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f0d55b20e6ee",
+		"references": [
+			"id.mjs:138 id selector with escaping (14)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bb2b6b905a90",
+		"references": [
+			"id.mjs:144 id selector with escaping (15)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ed89f07ea567",
+		"references": [
+			"id.mjs:150 id selector with escaping (16)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f97baa831ff6",
+		"references": [
+			"id.mjs:156 id selector with escaping (17)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4babe2f4ed82",
+		"references": [
+			"id.mjs:162 id selector with escaping (18)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2586b684c69b",
+		"references": [
+			"id.mjs:168 id selector with escaping (19)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-028f3816806b",
+		"references": [
+			"id.mjs:174 id selector with escaping (20)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-58475229f428",
+		"references": [
+			"id.mjs:190 id selector with escaping (21)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5f86c99c2cb6",
+		"references": [
+			"id.mjs:196 id selector with escaping (22)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-053ca5152816",
+		"references": [
+			"id.mjs:202 id selector with escaping (23)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b5d5056638ba",
+		"references": [
+			"id.mjs:208 id selector with escaping (24)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e7048fc31149",
+		"references": [
+			"id.mjs:214 id selector with escaping (25)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-809d06f64b33",
+		"references": [
+			"id.mjs:220 id selector with escaping (26)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-58a04c2fca68",
+		"references": [
+			"id.mjs:226 id selector with escaping (27)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4ec64b398d08",
+		"references": [
+			"id.mjs:232 id selector with escaping (28)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6c17523e2f67",
+		"references": [
+			"id.mjs:238 id selector with escaping (29)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-016b57e3fb2a",
+		"references": [
+			"id.mjs:244 id selector with escaping (30)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5683fd4bbdea",
+		"references": [
+			"id.mjs:250 id selector with escaping (31)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c3526e717e4a",
+		"references": [
+			"id.mjs:256 id selector with escaping (32)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4756547aee39",
+		"references": [
+			"id.mjs:262 id selector with escaping (33)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d6a6127e1ccc",
+		"references": [
+			"id.mjs:268 id selector with escaping (34)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-144121b1d2f2",
+		"references": [
+			"id.mjs:274 id selector with escaping (35)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f7f34d26884e",
+		"references": [
+			"id.mjs:280 id selector with escaping (36)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-079478733092",
+		"references": [
+			"id.mjs:286 id selector with escaping (37)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-71bfd33f1314",
+		"references": [
+			"lossy.mjs:13 combinator, descendant - single"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-27e15a92bd6b",
+		"references": [
+			"lossy.mjs:14 combinator, descendant - multiple"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e65dc200166d",
+		"references": [
+			"lossy.mjs:15 combinator, child - space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9d0fe36b5de1",
+		"references": [
+			"lossy.mjs:16 combinator, child - space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2d0057fea166",
+		"references": [
+			"lossy.mjs:17 combinator, sibling - space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4dec6dd75976",
+		"references": [
+			"lossy.mjs:18 combinator, sibling - space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1aa6b411fdc7",
+		"references": [
+			"lossy.mjs:19 combinator, adj sibling - space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fe037407970c",
+		"references": [
+			"lossy.mjs:20 combinator, adj sibling - space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4642b6b351d2",
+		"references": [
+			"lossy.mjs:26 attribute, insensitive flag 1"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-23f48e841ede",
+		"references": [
+			"lossy.mjs:28 attribute, insensitive flag 3"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-365a263007e8",
+		"references": [
+			"lossy.mjs:31 attribute namespace, space before separator",
+			"namespaces.mjs:63 attribute namespace with a space before the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-12804e125402",
+		"references": [
+			"lossy.mjs:32 attribute namespace, space after separator",
+			"namespaces.mjs:68 attribute namespace with a space after the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e39d3e551b33",
+		"references": [
+			"lossy.mjs:33 attribute namespace, spaces around separator",
+			"namespaces.mjs:73 attribute namespace with spaces around the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9bd07cb40ff4",
+		"references": [
+			"lossy.mjs:34 any attribute namespace, spaces around separator",
+			"namespaces.mjs:132 any attribute namespace with spaces around the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-18efd3b541ea",
+		"references": [
+			"lossy.mjs:35 empty attribute namespace, space after separator",
+			"namespaces.mjs:117 empty attribute namespace with a space after the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-07a55d669546",
+		"references": [
+			"lossy.mjs:37 namespace, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9300038d34dd",
+		"references": [
+			"lossy.mjs:38 namespace, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f07aadb1e208",
+		"references": [
+			"lossy.mjs:39 namespace - all elements, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-acc19f782b36",
+		"references": [
+			"lossy.mjs:40 namespace - all elements, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-298203a07da0",
+		"references": [
+			"lossy.mjs:41 namespace - all namespaces, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7a17cd5551df",
+		"references": [
+			"lossy.mjs:42 namespace - all namespaces, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1d439e38cf5d",
+		"references": [
+			"lossy.mjs:43 namespace - all elements in all namespaces, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8e368fb96785",
+		"references": [
+			"lossy.mjs:44 namespace - all elements in all namespaces, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-eb0d94bbe2c0",
+		"references": [
+			"lossy.mjs:45 namespace - all elements without namespace, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cde8a1adb3d5",
+		"references": [
+			"lossy.mjs:46 namespace - all elements without namespace, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b3965028a732",
+		"references": [
+			"lossy.mjs:47 namespace - tag with no namespace, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2f181e4fccd5",
+		"references": [
+			"lossy.mjs:48 namespace - tag with no namespace, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-47b868f89a4e",
+		"references": [
+			"lossy.mjs:49 namespace - inside attribute, space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1087752a0f5a",
+		"references": [
+			"lossy.mjs:55 namespace - inside attribute, space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-71c3ae04fb3f",
+		"references": [
+			"lossy.mjs:61 namespace - inside attribute (2), space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-629a24f4101d",
+		"references": [
+			"lossy.mjs:67 namespace - inside attribute (2), space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2a1d4fb88ed1",
+		"references": [
+			"lossy.mjs:73 namespace - inside attribute (3), space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f3337151a72f",
+		"references": [
+			"lossy.mjs:79 namespace - inside attribute (3), space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6eeba8c54ee0",
+		"references": [
+			"lossy.mjs:85 namespace - inside attribute (4), space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bdef936596b8",
+		"references": [
+			"lossy.mjs:92 tag - extraneous whitespace",
+			"tags.mjs:13 extraneous non-combinating whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-73d13e383347",
+		"references": [
+			"lossy.mjs:93 tag - trailing comma"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a53b293bd4f1",
+		"references": [
+			"lossy.mjs:94 tag - trailing comma (1)",
+			"tags.mjs:22 tag with trailing comma"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d158ad25622f",
+		"references": [
+			"lossy.mjs:96 tag - trailing slash (1)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c18fcf264f91",
+		"references": [
+			"lossy.mjs:97 tag - trailing slash (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bedf264d4bb3",
+		"references": [
+			"lossy.mjs:99 universal - combinator",
+			"sourceIndex.mjs:12 lobotomized owl selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-072c33a5fc18",
+		"references": [
+			"lossy.mjs:100 universal - extraneous whitespace",
+			"universal.mjs:30 extraneous non-combinating whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-dea99312c5dd",
+		"references": [
+			"lossy.mjs:101 universal - qualified universal selector",
+			"universal.mjs:39 qualified universal selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f35399e07c96",
+		"references": [
+			"lossy.mjs:108 nesting - spacing before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c7821e8dcf8e",
+		"references": [
+			"lossy.mjs:109 nesting - spacing after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e34b60fb326e",
+		"references": [
+			"lossy.mjs:110 nesting - spacing between"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0887ab98ec33",
+		"references": [
+			"lossy.mjs:112 pseudo (single) - spacing before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a142a4fc2444",
+		"references": [
+			"lossy.mjs:113 pseudo (single) - spacing after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-afc9075c4ab9",
+		"references": [
+			"lossy.mjs:114 pseudo (double) - spacing before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c386580e374e",
+		"references": [
+			"lossy.mjs:115 pseudo (double) - spacing after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9724c93299bf",
+		"references": [
+			"lossy.mjs:116 pseudo - multiple"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-123230fb1757",
+		"references": [
+			"lossy.mjs:117 pseudo - negated"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d6639d8cb776",
+		"references": [
+			"lossy.mjs:118 pseudo - negated with combinators (1)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ffb8a7817aff",
+		"references": [
+			"lossy.mjs:124 pseudo - negated with combinators (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5f93a35b1a87",
+		"references": [
+			"lossy.mjs:130 pseudo - extra whitespace",
+			"pseudos.mjs:56 extra whitespace inside parentheses"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5b309ba2109d",
+		"references": [
+			"lossy.mjs:132 comments - comment inside descendant selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-baa8c9ae8403",
+		"references": [
+			"lossy.mjs:138 comments - comment inside complex selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8f9e4552bd72",
+		"references": [
+			"lossy.mjs:144 comments - comment inside compound selector with space"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-74eead739300",
+		"references": [
+			"lossy.mjs:150 @words - space before"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e5be2a03e344",
+		"references": [
+			"lossy.mjs:151 @words - space after"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1e69a9b3f9f9",
+		"references": [
+			"lossy.mjs:152 @words - maintains space between"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c614d1eb9ac0",
+		"references": [
+			"lossy.mjs:158 @words - extraneous space between"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-0b1d19471c7c",
+		"references": [
+			"lossy.mjs:164 @words - multiple"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-299e85152c45",
+		"references": [
+			"maxInputLength.mjs:5 no limit applies by default"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bf2cb58a68f6",
+		"references": [
+			"maxInputLength.mjs:10 a selector of exactly maxInputLength characters is accepted"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-28cb017dfc99",
+		"references": [
+			"maxInputLength.mjs:14 a selector longer than maxInputLength is rejected with a controlled error"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4a27abdb04fa",
+		"references": [
+			"maxInputLength.mjs:23 the limit is enforced before the selector is tokenized or parsed"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bef57ec7f53a",
+		"references": [
+			"maxInputLength.mjs:30 the limit reports through the rule when given a PostCSS rule"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-fb8e20fc2e4c",
+		"references": [
+			"maxInputLength.mjs:38 the limit applies to every synchronous entry point",
+			"maxInputLength.mjs:47 the asynchronous API rejects instead of throwing",
+			"maxInputLength.mjs:56 Infinity explicitly disables the limit"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-5f7968b1c9b0",
+		"references": [
+			"namespaces.mjs:3 match tags in the postcss namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7016457ac37e",
+		"references": [
+			"namespaces.mjs:8 match everything in the postcss namespace",
+			"namespaces.mjs:18 match all elements within the postcss namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-408496071af3",
+		"references": [
+			"namespaces.mjs:13 match any namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f91aef762b4d",
+		"references": [
+			"namespaces.mjs:23 match all elements in all namespaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c1931d0c13cf",
+		"references": [
+			"namespaces.mjs:28 match all elements without a namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-aba4dfcf7821",
+		"references": [
+			"namespaces.mjs:33 match tags with no namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-832638926c7e",
+		"references": [
+			"namespaces.mjs:38 match namespace inside attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-12427cfae4f6",
+		"references": [
+			"namespaces.mjs:43 match namespace inside attribute selector (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a5eb6811159a",
+		"references": [
+			"namespaces.mjs:53 match default namespace inside attribute selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ce80ef240ccc",
+		"references": [
+			"namespaces.mjs:58 match default namespace inside attribute selector with spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a5a1a9e41c69",
+		"references": [
+			"namespaces.mjs:81 attribute namespace with multiple spaces around the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ade584b00068",
+		"references": [
+			"namespaces.mjs:93 attribute namespace with spaces around the separator and a value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-47aa47d241c1",
+		"references": [
+			"namespaces.mjs:105 attribute namespace with spaces around the separator and a quoted value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-76dfa11be191",
+		"references": [
+			"namespaces.mjs:122 empty attribute namespace with a space after the separator only"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-62efa4b8cc3f",
+		"references": [
+			"namespaces.mjs:127 any attribute namespace with a space before the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c5a337eceb0c",
+		"references": [
+			"namespaces.mjs:137 escaped attribute namespace with a space before the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-688731a4c726",
+		"references": [
+			"namespaces.mjs:142 escaped attribute name with a space after the separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cacc7945532f",
+		"references": [
+			"namespaces.mjs:147 dash match operator is not an attribute namespace separator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-49f3e0f635ad",
+		"references": [
+			"namespaces.mjs:155 dash match operator after an attribute namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-98464c8b1408",
+		"references": [
+			"namespaces.mjs:163 namespace with qualified id selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e633640836e9",
+		"references": [
+			"namespaces.mjs:167 namespace with qualified class selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a9e9adf535cb",
+		"references": [
+			"namespaces.mjs:171 ns alias for namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b78cef14cc18",
+		"references": [
+			"namespaces.mjs:180 empty namespace after a comment is not a prefix"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8d7c11fece85",
+		"references": [
+			"namespaces.mjs:185 empty namespace after a comma is not a prefix"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9300d6ab0bdc",
+		"references": [
+			"namespaces.mjs:190 empty namespace after a combinator is not a prefix"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ae6bab0d11f3",
+		"references": [
+			"namespaces.mjs:195 attribute namespace with no attribute name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-8d7351c0f007",
+		"references": [
+			"namespaces.mjs:196 attribute namespace with an empty attribute name"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cbe5cfdf7c21",
+		"references": [
+			"namespaces.mjs:198 lone pipe symbol"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bad97e8d851d",
+		"references": [
+			"namespaces.mjs:199 lone pipe symbol with leading spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6ce74cf04356",
+		"references": [
+			"namespaces.mjs:200 lone pipe symbol with trailing spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ffa9044b9340",
+		"references": [
+			"namespaces.mjs:201 lone pipe symbol with surrounding spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e93d09a354fd",
+		"references": [
+			"namespaces.mjs:202 trailing pipe symbol with a namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b5faf1b7a0cc",
+		"references": [
+			"namespaces.mjs:203 trailing pipe symbol with any namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-951dcee3a7a4",
+		"references": [
+			"nesting.mjs:3 nesting selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-14bffa09a766",
+		"references": [
+			"nesting.mjs:8 nesting selector followed by a class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d74dcf973c74",
+		"references": [
+			"nesting.mjs:17 &foo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c882056b6693",
+		"references": [
+			"nesting.mjs:24 &-foo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bf8319fb9c35",
+		"references": [
+			"nesting.mjs:31 &_foo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-58340e0cfe8a",
+		"references": [
+			"nesting.mjs:38 &|foo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-47a08474bd7f",
+		"references": [
+			"node.mjs:5 node#clone",
+			"node.mjs:23 node#replaceWith"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-14dfb3fb9bbd",
+		"references": [
+			"node.mjs:14 node#clone of attribute"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4308041645c8",
+		"references": [
+			"nonstandard.mjs:3 non-standard selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3ce23f9dca65",
+		"references": [
+			"nonstandard.mjs:12 at word in selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1b4f5a819cb6",
+		"references": [
+			"nonstandard.mjs:17 leading combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-557fc17ee57a",
+		"references": [
+			"nonstandard.mjs:22 sass escapes"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9f9288169088",
+		"references": [
+			"nonstandard.mjs:51 placeholder"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e7c926cb2fcf",
+		"references": [
+			"nonstandard.mjs:56 styled selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-925ec377fe13",
+		"references": [
+			"nonstandard.mjs:61 styled selector (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-89cc9032b918",
+		"references": [
+			"parser.mjs:66 default maxNestingDepth works and can be overridden"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-2c26b46b68ff",
+		"references": [
+			"parser.mjs:98 async parser"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-74ceb7589784",
+		"references": [
+			"parser.mjs:114 parse errors with the async parser",
+			"postcss.mjs:42 space in between colon and word (incorrect pseudo)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cdad4f9fc6ff",
+		"references": [
+			"parser.mjs:290 destructured processor#ast",
+			"parser.mjs:290 destructured processor#astSync",
+			"parser.mjs:290 destructured processor#transform",
+			"parser.mjs:290 destructured processor#transformSync",
+			"parser.mjs:290 destructured processor#process",
+			"parser.mjs:290 destructured processor#processSync"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6e12db73209a",
+		"references": [
+			"parser.mjs:309 destructured process resolves"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-255357f70710",
+		"references": [
+			"postcss.mjs:24 missing open square bracket"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4e64bcc0d264",
+		"references": [
+			"postcss.mjs:30 missing open parenthesis"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ed2651fbd98c",
+		"references": [
+			"postcss.mjs:36 missing pseudo class or pseudo element"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-22d55577f262",
+		"references": [
+			"postcss.mjs:48 string after colon (incorrect pseudo)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c7a0f7154e64",
+		"references": [
+			"postcss.mjs:54 bad string attribute"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4e9dfac8861a",
+		"references": [
+			"postcss.mjs:60 bad string attribute with value"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-79f7b3be12fd",
+		"references": [
+			"postcss.mjs:66 bad parentheses"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-76d344d401ad",
+		"references": [
+			"postcss.mjs:72 bad lonely asterisk"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-03ff7878d571",
+		"references": [
+			"postcss.mjs:78 bad lonely pipe"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3210f5ac055f",
+		"references": [
+			"postcss.mjs:84 bad lonely caret"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ec5aadfa434b",
+		"references": [
+			"postcss.mjs:90 bad lonely dollar"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-748bd1738532",
+		"references": [
+			"postcss.mjs:96 bad lonely tilde"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3b3ac8168ecb",
+		"references": [
+			"postcss.mjs:102 bad lonely equals"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d4de5f9b268c",
+		"references": [
+			"postcss.mjs:108 bad lonely operator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-321685ae7e45",
+		"references": [
+			"postcss.mjs:114 bad lonely operator (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-475a63d4f71e",
+		"references": [
+			"postcss.mjs:120 bad doubled operator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cbac3b73b637",
+		"references": [
+			"pseudos.mjs:3 pseudo element (single colon)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-a2842cc9bfec",
+		"references": [
+			"pseudos.mjs:9 pseudo element (double colon)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ef4467a81415",
+		"references": [
+			"pseudos.mjs:15 multiple pseudo elements"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f5c5d80d89fa",
+		"references": [
+			"pseudos.mjs:22 negation pseudo element"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9dc30e1a3de4",
+		"references": [
+			"pseudos.mjs:27 negation pseudo element (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-aca62e0fc1c7",
+		"references": [
+			"pseudos.mjs:34 negation pseudo element (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-23ce49cd2087",
+		"references": [
+			"pseudos.mjs:42 negation pseudo element (4)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6410908ba0a7",
+		"references": [
+			"pseudos.mjs:47 pseudo class in the middle of a selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c68e811c6801",
+		"references": [
+			"pseudos.mjs:62 escaped numbers in class name with pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7d938438abeb",
+		"references": [
+			"pseudos.mjs:68 nested pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-145114ca4116",
+		"references": [
+			"pseudos.mjs:72 extraneous non-combinating whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-43fcc4dd1ef6",
+		"references": [
+			"pseudos.mjs:81 negation pseudo element with quotes"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-77ec436500c5",
+		"references": [
+			"pseudos.mjs:86 negation pseudo element with single quotes"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-67a831b5f6d8",
+		"references": [
+			"pseudos.mjs:91 Issue #116"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9c336d84dfb2",
+		"references": [
+			"pseudos.mjs:96 alone pseudo class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-e677b7b44e83",
+		"references": [
+			"pseudos.mjs:101 non standard pseudo (@custom-selector)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c60acf91a39e",
+		"references": [
+			"pseudos.mjs:108 non standard pseudo (@custom-selector) (1)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-ac69aa603825",
+		"references": [
+			"pseudos.mjs:115 current pseudo class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-08fcc654b5dd",
+		"references": [
+			"pseudos.mjs:128 is pseudo class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3a5183b8da8b",
+		"references": [
+			"pseudos.mjs:141 is pseudo class with namespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c8e097b50e3e",
+		"references": [
+			"pseudos.mjs:153 has pseudo class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-854fc2109d58",
+		"references": [
+			"pseudos.mjs:164 where pseudo class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-953c35fafcb3",
+		"references": [
+			"pseudos.mjs:175 nested pseudo classes"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f781e25670e8",
+		"references": [
+			"pseudos.mjs:190 trailing space after a comma inside a pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4c18dd68d783",
+		"references": [
+			"pseudos.mjs:196 trailing space in a nested pseudo"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f7ee86125cc8",
+		"references": [
+			"pseudos.mjs:197 trailing space after several commas"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-4206e1c69312",
+		"references": [
+			"pseudos.mjs:198 space before a trailing comma"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-170bdb8b1cf6",
+		"references": [
+			"pseudos.mjs:199 whitespace-only pseudo argument"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-499058d515b5",
+		"references": [
+			"pseudos.mjs:200 multiple spaces in a whitespace-only argument"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-80da64c2c60b",
+		"references": [
+			"pseudos.mjs:201 trailing space after a top-level comma"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-13a605428720",
+		"references": [
+			"pseudos.mjs:202 space around a comment in a pseudo argument"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-9a008d29afed",
+		"references": [
+			"recursion.mjs:34 reasonably nested selectors still round-trip"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c16c01979fa4",
+		"references": [
+			"recursion.mjs:39 parsing a deeply nested hostile selector throws instead of overflowing the stack",
+			"recursion.mjs:92 invalid maxNestingDepth values fall back to the safe default"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7553fce78e40",
+		"references": [
+			"recursion.mjs:62 maxNestingDepth option controls the limit in both directions",
+			"recursion.mjs:73 the parse and serialize limits stay in sync through processSync"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7f7a835724dd",
+		"references": [
+			"sourceIndex.mjs:27 comment"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bf5bf0fdaa8c",
+		"references": [
+			"sourceIndex.mjs:36 comment & universal selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bdaf096a52ce",
+		"references": [
+			"sourceIndex.mjs:60 id selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7f9e93aeff14",
+		"references": [
+			"sourceIndex.mjs:69 tag selector followed by id selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-129555d5a094",
+		"references": [
+			"sourceIndex.mjs:96 multiple id selectors (2)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-62d191a0781e",
+		"references": [
+			"sourceIndex.mjs:108 multiple id selectors (3)"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b86870644459",
+		"references": [
+			"sourceIndex.mjs:123 multiple class selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f88efe20a2dd",
+		"references": [
+			"sourceIndex.mjs:148 multiple attribute selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-493eb3e79f89",
+		"references": [
+			"sourceIndex.mjs:175 pseudo-class"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-50a03d7157dc",
+		"references": [
+			"sourceIndex.mjs:182 pseudo-class without argument"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-d385f4d3b478",
+		"references": [
+			"sourceIndex.mjs:195 pseudo-class with argument"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-41ab9604d4e5",
+		"references": [
+			"sourceIndex.mjs:211 pseudo-element"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-c70caaadb6d9",
+		"references": [
+			"sourceIndex.mjs:218 multiple pseudos"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b4e5e8f6ca5a",
+		"references": [
+			"sourceIndex.mjs:233 combinators"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-1fb3cb96faf7",
+		"references": [
+			"sourceIndex.mjs:245 combinators surrounded by superfluous spaces"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b718dc58661d",
+		"references": [
+			"sourceIndex.mjs:262 multiple id selectors on different lines"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-6025a7a46de7",
+		"references": [
+			"sourceIndex.mjs:274 multiple id selectors on different CRLF lines"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-cdfbe282d6f8",
+		"references": [
+			"sourceIndex.mjs:291 id, tag, pseudo, and class selectors on different lines with indentation"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-b06405731c9a",
+		"references": [
+			"sourceIndex.mjs:317 pseudo with arguments spanning multiple lines"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-35f9b602e5f0",
+		"references": [
+			"tags.mjs:8 multiple tag selectors"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f9b033a53627",
+		"references": [
+			"tags.mjs:26 tag with trailing slash"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-26a88c520dd5",
+		"references": [
+			"tags.mjs:30 tag with attribute"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-3840579a3438",
+		"references": [
+			"tags.mjs:40 keyframes animation tag selector"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-7aa7d83dbab8",
+		"references": [
+			"universal.mjs:8 lobotomized owl"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-bbf3efc5d45a",
+		"references": [
+			"universal.mjs:14 universal selector with descendant combinator"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-454d41471e4f",
+		"references": [
+			"universal.mjs:20 universal selector with descendant combinator and extraneous non-combinating whitespace"
+		]
+	},
+	{
+		"name": "postcss-selector-parser-f6d63da25924",
+		"references": [
+			"universal.mjs:45 universal selector with pseudo"
+		]
+	}
+]

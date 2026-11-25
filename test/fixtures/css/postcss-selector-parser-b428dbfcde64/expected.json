@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed a[href=x{color:red}, tool nothing",
+		"why": "css-tree keeps an unfinished rule as raw text; the CSS Syntax stylesheet algorithm discards it"
+	}
+]

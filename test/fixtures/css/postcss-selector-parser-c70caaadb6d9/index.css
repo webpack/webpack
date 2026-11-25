@@ -1,0 +1,1 @@
+h1:not(.food)::before, a:first-child{color:red}
