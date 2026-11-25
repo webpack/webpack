@@ -9,9 +9,8 @@ const require = createRequire(import.meta.url);
 /** @type {typeof import("../../../lib/html/syntax-parser")} */
 const htmlParser = require("../../../lib/html/syntax-parser.js");
 /** @type {typeof import("../../../lib/html/syntax")} */
-const htmlSyntax = require("../../../lib/html/syntax.js");
+const { SourceProcessor } = require("../../../lib/html/syntax.js");
 
-const { SourceProcessor } = htmlSyntax;
 const { NodeType, parseHtml, tokenizeXml } = htmlParser;
 
 // No large real-world SVG ships in the repo, so generate a deterministic

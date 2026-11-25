@@ -18,14 +18,19 @@ const acorn = require("acorn");
 const session = new Session();
 session.connect();
 session.post("Profiler.enable");
-session.post("Profiler.startPreciseCoverage", { callCount: true, detailed: true });
+session.post("Profiler.startPreciseCoverage", {
+	callCount: true,
+	detailed: true
+});
 
 const { GENERIC_FONT_FAMILIES } = require("../../lib/css/data");
 const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
 const {
 	builtinEmbeddedRenderer
 } = require("../../lib/html/builtinEmbeddedRenderer");
-const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
+const {
+	SourceProcessor: HtmlSourceProcessor
+} = require("../../lib/html/syntax");
 const { parseHtml } = require("../../lib/html/syntax-parser");
 const {
 	createStylesheetGenerator,
@@ -65,13 +70,9 @@ const UNREACHED_FILE = path.join(__dirname, "syntax-fuzz.unreached.json");
 /** @type {Record<string, Record<string, number>>} */
 const UNREACHED = JSON.parse(fs.readFileSync(UNREACHED_FILE, "utf8"));
 
-/** @typedef {import("../helpers/syntaxEquivalence").Facets} Facets */
-/** @typedef {import("../helpers/syntaxEquivalence").PageHelpers} PageHelpers */
-/** @typedef {import("../helpers/syntaxEquivalence").Relaxation} Relaxation */
-/** @typedef {import("../helpers/syntaxEquivalence").RenderReport} RenderReport */
-/** @typedef {import("../helpers/syntaxEquivalence").StyleReport} StyleReport */
+/** @import { Facets, PageHelpers, Relaxation, RenderReport, StyleReport } from "../helpers/syntaxEquivalence" */
 
-/** @typedef {import("../helpers/fixture").KnownDifference} KnownDifference */
+/** @import { KnownDifference } from "../helpers/fixture" */
 
 /**
  * One relation an input breaks, cut down to the smallest input still breaking it.
@@ -98,7 +99,9 @@ const inputsPerSeed = (raw) => {
 	if (raw === undefined || raw === "") return 100;
 	const count = Number(raw);
 	if (!Number.isSafeInteger(count) || count < 1) {
-		throw new Error(`SYNTAX_FUZZ_INPUTS must be a positive integer, not ${raw}`);
+		throw new Error(
+			`SYNTAX_FUZZ_INPUTS must be a positive integer, not ${raw}`
+		);
 	}
 	return count;
 };
@@ -132,7 +135,11 @@ const htmlPrinter = (options) => (html) =>
 // target that runs the lowerings; `relax` sets aside what each rewrites on purpose.
 /** @type {{ name: string, print: (source: string) => string, relax: Relaxation[] }[]} */
 const CSS_SETS = [
-	{ name: "default", print: cssPrinter({ mergeDistantRules: true }), relax: [] },
+	{
+		name: "default",
+		print: cssPrinter({ mergeDistantRules: true }),
+		relax: []
+	},
 	{ name: "opt-ins", print: cssPrinter(CSS_OPT_INS), relax: CSS_OPT_IN_RELAX },
 	{
 		name: "legacy",
@@ -157,7 +164,11 @@ const HTML_SETS = [
 		print: htmlPrinter({ removeImpliedTags: "smart" }),
 		relax: []
 	},
-	{ name: "opt-ins", print: htmlPrinter(HTML_OPT_INS), relax: HTML_OPT_IN_RELAX },
+	{
+		name: "opt-ins",
+		print: htmlPrinter(HTML_OPT_INS),
+		relax: HTML_OPT_IN_RELAX
+	},
 	{
 		name: "embedded",
 		print: htmlPrinter({ renderEmbeddedSource: builtinEmbeddedRenderer() }),
@@ -182,7 +193,7 @@ const shrink = async (source, breaks) => {
 		size >= 1 && budget > 0;
 		size = size === 1 ? 0 : Math.ceil(size / 2)
 	) {
-		for (let at = 0; at < current.length && budget > 0; ) {
+		for (let at = 0; at < current.length && budget > 0;) {
 			const cut = current.slice(0, at) + current.slice(at + size);
 			budget--;
 			if (cut !== current && (await breaks(cut))) {
@@ -231,7 +242,9 @@ const unknown = (findings, known, lang) => {
 	const out = [];
 	for (const finding of findings) {
 		out.push(
-			`${finding.relation} [${finding.preset}] ${finding.what}\n${JSON.stringify(finding.source)}`
+			`${finding.relation} [${finding.preset}] ${
+				finding.what
+			}\n${JSON.stringify(finding.source)}`
 		);
 		if (!process.env.SYNTAX_FUZZ_WRITE) continue;
 		const digest = createHash("sha256")
@@ -459,9 +472,9 @@ const LOOSE_COMMENT =
  * @returns {string} what it says outside its strings
  */
 const ruleTokens = (rule) =>
-	rule.replace(CSS_STRING, '""').replace(LOOSE_COMMENT, (comment) =>
-		/^\s|\s$/.test(comment) ? " " : ""
-	);
+	rule
+		.replace(CSS_STRING, '""')
+		.replace(LOOSE_COMMENT, (comment) => (/^\s|\s$/.test(comment) ? " " : ""));
 
 /**
  * Two serialized rules alike: their strings exactly, the rest within the
@@ -487,7 +500,9 @@ const ruleDifference = (before, after) => {
 	const at = before.findIndex((rule, i) => !sameRule(rule, after[i]));
 	return at === -1
 		? ""
-		: `rule ${at}: ${JSON.stringify(before[at])} vs ${JSON.stringify(after[at])}`;
+		: `rule ${at}: ${JSON.stringify(before[at])} vs ${JSON.stringify(
+				after[at]
+			)}`;
 };
 
 // The files the generated inputs have to reach every line of.
@@ -590,7 +605,9 @@ const functionNames = (text) => {
 			const value = node[key];
 			const children = Array.isArray(value) ? value : [value];
 			for (const child of children) {
-				if (child === null || typeof child !== "object" || !child.type) continue;
+				if (child === null || typeof child !== "object" || !child.type) {
+					continue;
+				}
 				/** @type {string} */
 				let childName = "";
 				if (node.type === "VariableDeclarator" && key === "init") {
@@ -607,7 +624,11 @@ const functionNames = (text) => {
 			}
 		}
 	};
-	walk(acorn.parse(text, { ecmaVersion: "latest", sourceType: "script" }), "", "");
+	walk(
+		acorn.parse(text, { ecmaVersion: "latest", sourceType: "script" }),
+		"",
+		""
+	);
 	named.sort((a, b) => a.start - b.start || b.end - a.end);
 	/** @type {string[]} */
 	const names = Array.from({ length: text.length }, () => "");
@@ -673,7 +694,10 @@ const lineChanges = (recorded, found) => {
 	for (const file of COVERED_FILES) {
 		const counts = countByFunction(found[file]);
 		const record = recorded[file] || {};
-		for (const name of new Set([...Object.keys(record), ...Object.keys(counts)])) {
+		for (const name of new Set([
+			...Object.keys(record),
+			...Object.keys(counts)
+		])) {
 			const now = counts[name] || 0;
 			const before = Object.prototype.hasOwnProperty.call(record, name)
 				? record[name]
@@ -682,9 +706,15 @@ const lineChanges = (recorded, found) => {
 				const lines = found[file].filter((line) =>
 					line.startsWith(`${name === "(top level)" ? "" : name}: `)
 				);
-				out.push(`${file} ${name}: ${now} unreached, ${before} recorded\n${lines.join("\n")}`);
+				out.push(
+					`${file} ${name}: ${now} unreached, ${before} recorded\n${lines.join(
+						"\n"
+					)}`
+				);
 			} else if (now < before) {
-				out.push(`${file} ${name}: ${now} unreached, ${before} recorded; lower the record`);
+				out.push(
+					`${file} ${name}: ${now} unreached, ${before} recorded; lower the record`
+				);
 			}
 		}
 	}
@@ -745,15 +775,12 @@ describe("syntax fuzz in real chrome", () => {
 		/** @type {{ relation: string, preset: string, what: string }[]} */
 		const out = [];
 		/** @type {{ name: string, before: string, after: string, relax: Relaxation[] }[]} */
-		const pairs = [];
-		for (const set of CSS_SETS) {
-			pairs.push({
-				name: set.name,
-				before: source,
-				after: set.print(source),
-				relax: set.relax
-			});
-		}
+		const pairs = Array.from(CSS_SETS, (set) => ({
+			name: set.name,
+			before: source,
+			after: set.print(source),
+			relax: set.relax
+		}));
 		/** @type {StyleReport[]} */
 		const reports = await page.evaluate(compareStyles, { pairs, types: [] });
 		for (const report of reports) {
@@ -817,9 +844,7 @@ describe("syntax fuzz in real chrome", () => {
 			const before =
 				relax.length === 0
 					? facets[0]
-					: (
-							await page.evaluate(browserFacets, [{ source, relax }])
-						)[0];
+					: (await page.evaluate(browserFacets, [{ source, relax }]))[0];
 			const what = facetDifference(before, facets[i + 1]);
 			if (what !== "") {
 				out.push({ relation: "facets", preset: name, what });
@@ -858,7 +883,9 @@ describe("syntax fuzz in real chrome", () => {
 					out.push({
 						relation: "styles",
 						preset: name,
-						what: `inline styles: ${JSON.stringify(own)} vs ${JSON.stringify(printedOwn)}`
+						what: `inline styles: ${JSON.stringify(own)} vs ${JSON.stringify(
+							printedOwn
+						)}`
 					});
 				}
 			}
@@ -1015,8 +1042,13 @@ describe("syntax fuzz in real chrome", () => {
 		if (process.env.SYNTAX_FUZZ_UPDATE) {
 			/** @type {Record<string, Record<string, number>>} */
 			const record = {};
-			for (const file of COVERED_FILES) record[file] = countByFunction(reached[file]);
-			fs.writeFileSync(UNREACHED_FILE, `${JSON.stringify(record, null, "\t")}\n`);
+			for (const file of COVERED_FILES) {
+				record[file] = countByFunction(reached[file]);
+			}
+			fs.writeFileSync(
+				UNREACHED_FILE,
+				`${JSON.stringify(record, null, "\t")}\n`
+			);
 			return;
 		}
 		expect(lineChanges(UNREACHED, reached)).toEqual([]);

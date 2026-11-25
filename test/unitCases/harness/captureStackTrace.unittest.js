@@ -23,7 +23,9 @@ describe("Error.captureStackTrace in a test file", () => {
 	it("names this file in a frame jest keeps", () => {
 		const frames = /** @type {string} */ (failure().stack)
 			.split("\n")
-			.filter((line) => /^\s+at .*captureStackTrace\.unittest\.js:\d+/.test(line));
+			.filter((line) =>
+				/^\s+at .*captureStackTrace\.unittest\.js:\d+/.test(line)
+			);
 		expect(frames.length).toBeGreaterThan(0);
 		for (const frame of frames) expect(frame).not.toMatch(/^\s+at <anonymous>/);
 	});
@@ -43,7 +45,9 @@ describe("Error.captureStackTrace in a test file", () => {
 				/** @type {import("@jest/test-result").AssertionResult} */ ({
 					ancestorTitles: [],
 					failureDetails: [error],
-					failureMessages: [/** @type {string} */ (/** @type {Error} */ (error).stack)],
+					failureMessages: [
+						/** @type {string} */ (/** @type {Error} */ (error).stack)
+					],
 					fullName: "failure",
 					numPassingAsserts: 0,
 					status: "failed",

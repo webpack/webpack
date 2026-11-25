@@ -1,9 +1,9 @@
 "use strict";
 
-/** @typedef {import("../../lib/html/syntax-parser").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
-/** @typedef {import("../../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} BuiltinEmbeddedRendererOptions */
+/** @import { EmbeddedSourceRenderer } from "../../lib/html/syntax-parser" */
+/** @import { BuiltinEmbeddedRendererOptions } from "../../lib/html/builtinEmbeddedRenderer" */
 
-/** @typedef {import("../../lib/html/htmlMinify").AsyncEmbeddedSourceRenderer} AsyncEmbeddedSourceRenderer */
+/** @import { AsyncEmbeddedSourceRenderer } from "../../lib/html/htmlMinify" */
 
 /**
  * A renderer a fixture's `options.json` names, since JSON holds no function.
@@ -36,9 +36,9 @@ const RENDERERS = {
 	answers: {
 		make: (options) => (source, info) => {
 			const key = `${info.type}/${info.as}`;
-			return Object.prototype.hasOwnProperty.call(options, key)
-				? options[key]
-				: options[info.type];
+			return options[
+				Object.prototype.hasOwnProperty.call(options, key) ? key : info.type
+			];
 		}
 	},
 	// Throws on every body offered, as a failing minifier does.

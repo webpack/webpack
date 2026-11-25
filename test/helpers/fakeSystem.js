@@ -119,13 +119,12 @@ const System = {
 	 */
 	init: (modules) => {
 		System.registry = {};
-		if (modules) {
-			for (const name of Object.keys(modules)) {
-				System.registry[name] = {
-					executed: true,
-					exports: modules[name]
-				};
-			}
+		const initialModules = modules || {};
+		for (const name of Object.keys(initialModules)) {
+			System.registry[name] = {
+				executed: true,
+				exports: initialModules[name]
+			};
 		}
 	},
 	/**

@@ -11,8 +11,7 @@ const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
 
-/** @typedef {import("@mdn/browser-compat-data").SupportStatement} BcdSupport */
-/** @typedef {import("@mdn/browser-compat-data").CompatStatement} BcdCompat */
+/** @import { SupportStatement as BcdSupport, CompatStatement as BcdCompat } from "@mdn/browser-compat-data" */
 /** @typedef {{ [name: string]: { __compat: BcdCompat } }} BcdMembers */
 
 // `require()` returns the package's `data.json` itself, while its `require.d.ts`
@@ -216,7 +215,7 @@ const NATIVE_PURE_STATIC_SUPPLEMENT = {
 /** @typedef {string | { name: string, when: NativeCondition[] }} NativeName */
 /** @typedef {{ when?: NativeCondition[], names: NativeName[] }} NativeGroup */
 /** @typedef {NativeName[] | Record<string, NativeGroup>} NativeTable */
-/** @typedef {import("acorn").AnyNode} AcornNode */
+/** @import { AnyNode as AcornNode } from "acorn" */
 
 /**
  * @param {AcornNode} node the node terser's source holds there
@@ -330,7 +329,7 @@ const readFeatureCallback = (node) => {
 					? property.key.name
 					: ""
 			)
-			.join() !== "sloppy,es" ||
+			.join(",") !== "sloppy,es" ||
 		node.body.type === "BlockStatement"
 	) {
 		throw unexpectedNativeSyntax(node, "`({ sloppy, es }) => <table>`");
@@ -471,12 +470,12 @@ const collectNativeObjects = () => {
 		for (const supplement of names) {
 			const qualified =
 				typeof supplement === "string" ? supplement : supplement.name;
-			const [owner, name] = qualified.split(".");
+			const [owner, name] = qualified.split(".", 2);
 			if (statics[owner] === undefined) statics[owner] = { names: [] };
 			const listed = statics[owner].names;
 			if (
-				listed.some((entry) =>
-					typeof entry === "string" ? entry === name : entry.name === name
+				listed.some(
+					(entry) => (typeof entry === "string" ? entry : entry.name) === name
 				)
 			) {
 				throw new Error(
@@ -1331,7 +1330,7 @@ const collectPureBuiltIns = () => {
 	const impure = new Set();
 	for (const names of Object.values(IMPURE_BUILT_INS)) {
 		for (const name of names) {
-			const [owner, member] = name.split(".");
+			const [owner, member] = name.split(".", 2);
 			if (!builtins[owner] || (member && !builtins[owner][member])) {
 				throw new Error(`@mdn/browser-compat-data lists no built-in ${name}`);
 			}
@@ -1653,8 +1652,9 @@ const collectNodeTables = () => {
 	let flagCount = 0;
 	for (const name of Object.keys(NODE_TYPES)) {
 		types[name] = Object.keys(types).length + 1;
+		// eslint-disable-next-line unicorn/no-duplicate-loops
 		for (const part of NODE_TYPES[name].split(" ").filter(Boolean)) {
-			const [field, kind] = part.split(":");
+			const [field, kind] = part.split(":", 2);
 			if (kind === "node" || kind === "list") {
 				if (!(field in fields)) fields[field] = Object.keys(fields).length + 1;
 			} else if (kind === "flag") {
@@ -1682,7 +1682,7 @@ const collectNodeFields = () => {
 			.split(" ")
 			.filter(Boolean)
 			.map((part) => {
-				const [field, kind] = part.split(":");
+				const [field, kind] = part.split(":", 2);
 				return { field, kind, slot: 0 };
 			});
 		const slotted = fields.filter((field) => field.kind !== "flag");
@@ -1698,8 +1698,8 @@ const collectNodeFields = () => {
 		const editions = new Map();
 		for (const part of (FIELD_EDITIONS[name] || "").split(" ")) {
 			if (part === "") continue;
-			const [field, edition] = part.split(":");
-			if (!fields.some((item) => item.field === field)) {
+			const [field, edition] = part.split(":", 2);
+			if (fields.every((item) => item.field !== field)) {
 				throw new Error(`FIELD_EDITIONS: ${name} has no field ${field}`);
 			}
 			editions.set(field, edition);
@@ -2413,8 +2413,8 @@ const collectParseErrorCodes = () => {
 	for (const message of collectRaisedMessages()) {
 		const asPattern = parseErrorTemplateRegExp(message.replace(/\*+/g, "*"));
 		if (
-			!patterns.some((pattern) => pattern.test(message)) &&
-			!PARSE_ERRORS.some((entry) => asPattern.test(entry.template))
+			patterns.every((pattern) => !pattern.test(message)) &&
+			PARSE_ERRORS.every((entry) => !asPattern.test(entry.template))
 		) {
 			throw new Error(`no PARSE_ERRORS template matches "${message}"`);
 		}

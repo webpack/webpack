@@ -29,7 +29,12 @@ describe("validateSchema", () => {
 
 	it("should validate with the schema a function returns", () => {
 		expect(() =>
-			validateSchema(() => schema, { name: 42 }, undefined, () => false)
+			validateSchema(
+				() => schema,
+				{ name: 42 },
+				undefined,
+				() => false
+			)
 		).toThrow(/options\.name should be a string/);
 	});
 
@@ -147,7 +152,9 @@ describe("validateSchema", () => {
 
 		const compiler = webpack({ context: __dirname });
 
-		expect(() => compiler.validate(schema, { name: 42 }, () => true)).not.toThrow();
+		expect(() =>
+			compiler.validate(schema, { name: 42 }, () => true)
+		).not.toThrow();
 		expect(() => compiler.validate(schema, { name: 42 }, () => false)).toThrow(
 			/^Invalid options object\. My Plugin has been initialized/
 		);

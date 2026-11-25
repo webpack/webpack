@@ -7,14 +7,11 @@ const memfs = require("memfs");
 module.exports = {
 	plugins: [
 		(compiler) => {
-			// eslint-disable-next-line no-warning-comments
-			// @ts-ignore
+			// @ts-expect-error bad types
 			compiler.outputFileSystem = memfs.fs;
-			// eslint-disable-next-line no-warning-comments
-			// @ts-ignore
+			// @ts-expect-error bad types
 			compiler.inputFileSystem = memfs.fs;
-			// eslint-disable-next-line no-warning-comments
-			// @ts-ignore
+			// @ts-expect-error bad types
 			compiler.intermediateFileSystem = memfs.fs;
 
 			compiler.outputFileSystem = fs;

@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-const items = Array.from({ length: 25 }).fill("wasm");
+const items = Array.from({ length: 25 }, () => "wasm");
 
 /**
  * @param {number} i index for import

@@ -43,7 +43,11 @@ describe("WatchDetection", () => {
 			);
 			const filePath = path.join(fixturePath, "file.js");
 			const file2Path = path.join(fixturePath, "file2.js");
-			const loaderPath = path.join(testDirectory, "fixtures", "delay-loader.js");
+			const loaderPath = path.join(
+				testDirectory,
+				"fixtures",
+				"delay-loader.js"
+			);
 			// Scoped here rather than to the test: a timed-out or errored test never
 			// reaches its own cleanup, and an interval still writing into the fixture
 			// during `afterAll` fails the case after it has already finished.

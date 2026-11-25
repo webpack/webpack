@@ -24,14 +24,14 @@ const base = ({
 	baseUri,
 	expect,
 	chunkLoading,
-	publicPath,
-	entryFile
+	publicPath = "assets/",
+	entryFile = "./index.js"
 }) => ({
 	name,
 	target: "node",
 	mode: "development",
 	devtool: false,
-	entry: { [name]: { import: entryFile || "./index.js", baseUri } },
+	entry: { [name]: { import: entryFile, baseUri } },
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	output: {
 		module: esm,
@@ -40,7 +40,7 @@ const base = ({
 		environment: esm ? { module: true } : undefined,
 		filename: `${name}.${esm ? "mjs" : "js"}`,
 		assetModuleFilename: "[name][ext]",
-		publicPath: publicPath || "assets/"
+		publicPath
 	},
 	plugins: [
 		new webpack.DefinePlugin({

@@ -50,7 +50,9 @@ describe("XML fuzzer", () => {
 		const documents = [first(), first()];
 
 		expect([again(), again()]).toEqual(documents);
-		expect(createXmlDocumentGenerator(2, createRandom)()).not.toBe(documents[0]);
+		expect(createXmlDocumentGenerator(2, createRandom)()).not.toBe(
+			documents[0]
+		);
 	});
 
 	for (const seed of SEEDS) {

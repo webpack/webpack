@@ -1,10 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../lib/javascript/syntax-parser").CollectedComment} CollectedComment */
-/** @typedef {import("../../lib/javascript/syntax-parser").JavascriptParseOptions} JavascriptParseOptions */
-/** @typedef {import("../../lib/javascript/syntax-parser").EcmaVersion} EcmaVersion */
-/** @typedef {import("../../lib/javascript/syntax-parser").Token} Token */
-/** @typedef {import("../../lib/javascript/syntax-parser").ParserSourceLocation} Location */
+/** @import { CollectedComment, JavascriptParseOptions, Token, ParserSourceLocation as Location } from "../../lib/javascript/syntax-parser" */
 /** @typedef {{ type: "Block" | "Line", value: string, start: number, end: number, loc?: Location, range?: [number, number] }} AcornComment */
 /** @typedef {(end: number, loc?: Position) => void} AcornOnPunctuation */
 /** @typedef {(block: boolean, text: string, start: number, end: number, startLoc?: Position, endLoc?: Position) => void} AcornOnComment */

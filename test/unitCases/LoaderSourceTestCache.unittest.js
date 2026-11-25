@@ -2,10 +2,15 @@
 
 const fs = require("graceful-fs");
 const path = require("path");
-const rimraf = /** @type {{ sync: (path: string) => void }} */ (require("rimraf"));
+const rimraf = /** @type {{ sync: (path: string) => void }} */ (
+	require("rimraf")
+);
 const webpack = require("../..");
 
-const root = path.resolve(__dirname, "../fixtures/temp-loader-source-test-cache");
+const root = path.resolve(
+	__dirname,
+	"../fixtures/temp-loader-source-test-cache"
+);
 const sourceFile = path.join(root, "source", "index.js");
 const outputFile = path.join(root, "dist", "main.js");
 

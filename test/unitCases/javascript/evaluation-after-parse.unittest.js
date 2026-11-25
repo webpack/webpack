@@ -44,7 +44,10 @@ const evaluateArguments = (source, parser = new JavascriptParser("auto")) => {
 			}
 			return true;
 		});
-	parser.parse(source, /** @type {ParserState} */ (/** @type {unknown} */ ({})));
+	parser.parse(
+		source,
+		/** @type {ParserState} */ (/** @type {unknown} */ ({}))
+	);
 	return { evaluated, nodes };
 };
 
@@ -52,7 +55,12 @@ describe("BasicEvaluatedExpression after its parse", () => {
 	it("should read ranges and expressions after the tree is released and reused", () => {
 		const { evaluated, nodes } = evaluateArguments(SOURCE);
 		// another parse reuses the released tree's columns
-		evaluateArguments(fixture("javascript", "basic-evaluated-expression-after-its-parse-should-read-ranges-and-expressions"));
+		evaluateArguments(
+			fixture(
+				"javascript",
+				"basic-evaluated-expression-after-its-parse-should-read-ranges-and-expressions"
+			)
+		);
 		const expected = acorn.parseExpressionAt(SOURCE, 0, {
 			ecmaVersion: "latest",
 			ranges: true
@@ -112,10 +120,18 @@ describe("BasicEvaluatedExpression after its parse", () => {
 			return true;
 		});
 		parser.parse(
-			fixture("javascript", "basic-evaluated-expression-after-its-parse-should-read-an-expression-read"),
+			fixture(
+				"javascript",
+				"basic-evaluated-expression-after-its-parse-should-read-an-expression-read"
+			),
 			/** @type {ParserState} */ (/** @type {unknown} */ ({}))
 		);
-		evaluateArguments(fixture("javascript", "basic-evaluated-expression-after-its-parse-should-read-an-expression-read-2"));
+		evaluateArguments(
+			fixture(
+				"javascript",
+				"basic-evaluated-expression-after-its-parse-should-read-an-expression-read-2"
+			)
+		);
 		expect(read[0].type).toBe("MemberExpression");
 		expect(
 			/** @type {import("estree").MemberExpression} */ (read[0]).property
@@ -141,7 +157,12 @@ describe("BasicEvaluatedExpression after its parse", () => {
 		});
 		const parser = new JavascriptParser("auto", { parse });
 		const { evaluated } = evaluateArguments(SOURCE, parser);
-		evaluateArguments(fixture("javascript", "basic-evaluated-expression-after-its-parse-should-copy-the-columns-for-a-tree"));
+		evaluateArguments(
+			fixture(
+				"javascript",
+				"basic-evaluated-expression-after-its-parse-should-copy-the-columns-for-a-tree"
+			)
+		);
 		// the copied columns still hold the node
 		expect(evaluated[0].expressionNode).toBeGreaterThan(0);
 		expect(evaluated[0].range).toEqual([4, 9]);
@@ -157,7 +178,16 @@ describe("BasicEvaluatedExpression after its parse", () => {
 		 */
 		const parse = () => {
 			const program = /** @type {number} */ (
-				/** @type {unknown} */ (parseProgram(fixture("javascript", "basic-evaluated-expression-after-its-parse-should-pin-a-node-a-tree-adds-after"), 0, { sourceType: "module" }))
+				/** @type {unknown} */ (
+					parseProgram(
+						fixture(
+							"javascript",
+							"basic-evaluated-expression-after-its-parse-should-pin-a-node-a-tree-adds-after"
+						),
+						0,
+						{ sourceType: "module" }
+					)
+				)
 			);
 			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 			return { tree, statement: tree.field(0, Field.body, program) };

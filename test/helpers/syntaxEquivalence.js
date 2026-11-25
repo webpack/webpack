@@ -3082,11 +3082,11 @@ const compareStyles = async ({ pairs, types }) => {
 						doc.documentElement.style.setProperty("color-scheme", "light");
 					}
 					await settleFrames();
-					const light = found.map(({ i, pseudo, changed }) =>
+					const light = found.map(({ i, pseudo = null, changed }) =>
 						changed.map(([name]) =>
 							[0, 1].map((at) =>
 								windows[at]
-									.getComputedStyle(read[at][i], pseudo || null)
+									.getComputedStyle(read[at][i], pseudo)
 									.getPropertyValue(name)
 							)
 						)

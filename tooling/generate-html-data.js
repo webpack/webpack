@@ -279,10 +279,9 @@ const fetchUrl = (url) =>
 					const status = /** @type {number} */ (res.statusCode);
 					if (status >= 301 && status <= 308 && res.headers.location) {
 						res.resume();
-						return fetchUrl(new URL(res.headers.location, url).toString()).then(
-							resolve,
-							reject
-						);
+						return fetchUrl(new URL(res.headers.location, url).href)
+							.then(resolve)
+							.catch(reject);
 					}
 					if (status !== 200) {
 						res.resume();
@@ -290,7 +289,9 @@ const fetchUrl = (url) =>
 					}
 					/** @type {Buffer[]} */
 					const chunks = [];
-					res.on("data", (/** @type {Buffer} */ chunk) => chunks.push(chunk));
+					res.on("data", (/** @type {Buffer} */ chunk) => {
+						chunks.push(chunk);
+					});
 					res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
 					res.on("error", reject);
 				}
@@ -546,7 +547,7 @@ const domTokenLists = [
 	...new Set([...Object.keys(reflect.tokenList), ...SUPPLEMENT.domTokenList])
 ].sort();
 for (const name of domTokenLists) {
-	if (!tokenLists.some(([listName]) => listName === name)) {
+	if (tokenLists.every(([listName]) => listName !== name)) {
 		throw new Error(`domTokenList.${name} is not a token list at all`);
 	}
 }
@@ -1425,6 +1426,7 @@ const PARSER_TABLES = [
 		"SVG_EDITOR_NAMESPACES",
 		"set",
 		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
+		/* eslint-disable unicorn/prefer-https -- These are literal namespace identifiers. */
 		[
 			"http://www.inkscape.org/namespaces/inkscape",
 			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
@@ -1437,6 +1439,7 @@ const PARSER_TABLES = [
 			"http://www.bohemiancoding.com/sketch/ns",
 			"http://www.figma.com/figma/ns"
 		]
+		/* eslint-enable unicorn/prefer-https */
 	],
 	[
 		"VOID",
@@ -2864,7 +2867,7 @@ const parserTable = ([name, kind, doc, items]) => {
 						: kind === "array"
 							? "string[]"
 							: "Record<string, string>";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
+	return `/**\n * ${doc}\n * @type {${type}}\n */\n${name === "SVG_EDITOR_NAMESPACES" ? "/* eslint-disable unicorn/prefer-https -- These are literal namespace identifiers. */\n" : ""}const ${name} = ${value};\n${name === "SVG_EDITOR_NAMESPACES" ? "/* eslint-enable unicorn/prefer-https */\n" : ""}`;
 };
 
 // WHY: The §13.1.2.4 optional-tag conditions and the value grammars below are prose
@@ -3105,7 +3108,10 @@ const REGION_REGEXP =
  */
 const entityLiteral = (map) =>
 	`{${Object.keys(map)
-		.map((name) => `${toJsStringLiteral(name)}:${toJsStringLiteral(map[name])}`)
+		.map(
+			(name) =>
+				`${toJsStringLiteral(name)}:${toJsStringLiteral(map[name]).replace(/\u00A0/g, "\\u{A0}")}`
+		)
 		.join(",")}}`;
 
 /**

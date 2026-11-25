@@ -2,9 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const webpack = require("../../../../");
-
-const { DefinePlugin, Module } = webpack;
+const { DefinePlugin, Module } = require("../../../../");
 
 const valueFile = path.resolve(__dirname, "value.txt");
 const sharedValue = DefinePlugin.runtimeValue(async ({ key }) =>

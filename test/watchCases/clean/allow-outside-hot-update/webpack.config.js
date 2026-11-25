@@ -53,9 +53,9 @@ module.exports = {
 				// a fresh build of a later step never wrote the earlier hot update
 				if (!compiler.watchMode) return;
 				const files = fs.existsSync(outside)
-					? fs.readdirSync(outside).sort().join()
+					? fs.readdirSync(outside).sort().join(",")
 					: "";
-				const expected = EXPECTED[Number(currentWatchStep.step)].join();
+				const expected = EXPECTED[Number(currentWatchStep.step)].join(",");
 				if (files !== expected) {
 					compilation.errors.push(
 						new compiler.webpack.WebpackError(

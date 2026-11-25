@@ -22,8 +22,19 @@ const {
 	ENUMERATED_KEYWORDS,
 	REWRITABLE_ATTRIBUTES
 } = require("../../lib/html/data");
-const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
-const { A, Field, Namespace, NodeType, _attributeList, _namespaceOf, decodeEntities, parseHtml } = require("../../lib/html/syntax-parser");
+const {
+	SourceProcessor: HtmlSourceProcessor
+} = require("../../lib/html/syntax");
+const {
+	A,
+	Field,
+	Namespace,
+	NodeType,
+	_attributeList,
+	_namespaceOf,
+	decodeEntities,
+	parseHtml
+} = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const launchBrowser = require("../helpers/launchBrowser");
 
@@ -33,7 +44,9 @@ const launchBrowser = require("../helpers/launchBrowser");
 const ENGINES = new Set(["chrome", "firefox", "webkit"]);
 const LISTED = String(process.env.EQUIVALENCE_BROWSER).split(",");
 const LISTED_ENGINE =
-	LISTED[(require("../helpers/testParts").currentPart()[0] - 1) % LISTED.length];
+	LISTED[
+		(require("../helpers/testParts").currentPart()[0] - 1) % LISTED.length
+	];
 const ENGINE = ENGINES.has(LISTED_ENGINE) ? LISTED_ENGINE : "chrome";
 
 // Media is emulated on Chromium only, the engine the filed defects were
@@ -157,7 +170,9 @@ const styleDifferences = async (page, pairs, types = []) => {
 				}
 				out.push({
 					name: report.name,
-					why: `${emulation === undefined ? "" : `${emulation.label} `}${lines.join("; ")}`
+					why: `${
+						emulation === undefined ? "" : `${emulation.label} `
+					}${lines.join("; ")}`
 				});
 			}
 		}
@@ -213,7 +228,10 @@ const FILED_CONFIG_HTML_DEFECTS = new Map([
 ]);
 
 const FILED_BENCHMARK_CSS_DEFECTS = new Map([
-	["UIkit 3", "firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"],
+	[
+		"UIkit 3",
+		"firefox only: not a printer defect — `rgba(255, 255, 255, 0.7)` prints as `#ffffffb3` (lightningcss writes the same), whose alpha is 179/255. Blink stores alpha in a byte either way, while Gecko keeps 0.702 and its `::placeholder` mix lands one byte from the source's 0.378"
+	]
 ]);
 
 const FILED_BENCHMARK_HTML_DEFECTS = new Map();
@@ -263,15 +281,33 @@ const FILED_COLOR_REWRITES = new Map();
 // Enumerated values the printer lower-cases that one engine does not read
 // case-insensitively, keyed as the check reports them.
 const FILED_ENUMERATED_FOLDS = new Map([
-	['img fetchpriority=high: "auto" vs "high"', "webkit only: WebKit reflects no `fetchpriority`, so `high` and `low` both read `auto` and lower-casing one cannot be told from folding it away"],
-	['img fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
-	['link fetchpriority=high: "auto" vs "high"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
-	['link fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
-	['script fetchpriority=high: "auto" vs "high"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
-	['script fetchpriority=low: "auto" vs "low"', "webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"],
+	[
+		'img fetchpriority=high: "auto" vs "high"',
+		"webkit only: WebKit reflects no `fetchpriority`, so `high` and `low` both read `auto` and lower-casing one cannot be told from folding it away"
+	],
+	[
+		'img fetchpriority=low: "auto" vs "low"',
+		"webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"
+	],
+	[
+		'link fetchpriority=high: "auto" vs "high"',
+		"webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"
+	],
+	[
+		'link fetchpriority=low: "auto" vs "low"',
+		"webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"
+	],
+	[
+		'script fetchpriority=high: "auto" vs "high"',
+		"webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"
+	],
+	[
+		'script fetchpriority=low: "auto" vs "low"',
+		"webkit only: the unreflected `fetchpriority` again — see `img fetchpriority=high`"
+	],
 	[
 		'* spellcheck=true: "false" vs "true"',
-		"firefox only: not a printer defect — HTML reads an enumerated attribute's value as an ASCII case-insensitive match for one of its keywords (Keywords and enumerated attributes), and `spellcheck` is one with the keywords `true` and `false`, so `TRUE` names the True state its IDL getter reads back. Gecko matches it case-sensitively instead. Measured in Firefox 156: `spellcheck=\"TRUE\"` reflects `false` and `spellcheck=\"true\"` reflects `true`; Chrome 147 reflects `true` for both, as the spec requires"
+		'firefox only: not a printer defect — HTML reads an enumerated attribute\'s value as an ASCII case-insensitive match for one of its keywords (Keywords and enumerated attributes), and `spellcheck` is one with the keywords `true` and `false`, so `TRUE` names the True state its IDL getter reads back. Gecko matches it case-sensitively instead. Measured in Firefox 156: `spellcheck="TRUE"` reflects `false` and `spellcheck="true"` reflects `true`; Chrome 147 reflects `true` for both, as the spec requires'
 	]
 ]);
 
@@ -529,73 +565,274 @@ const corpora = buildCorpora();
 /** @type {Map<string, [string, string]>} */
 const STYLE_CONTROLS = new Map([
 	["bad dropped rule", [".a{color:red}.b{color:blue}", ".a{color:red}"]],
-	["bad reordered cascade", [".a{color:red}.b{color:blue}", ".b{color:blue}.a{color:red}"]],
+	[
+		"bad reordered cascade",
+		[".a{color:red}.b{color:blue}", ".b{color:blue}.a{color:red}"]
+	],
 	["bad state", [".a:hover{color:red}", ".a:hover{color:blue}"]],
-	["bad media threshold", ["@media (min-width:500px){.a{color:red}}", "@media (min-width:501px){.a{color:red}}"]],
-	["bad container threshold", ["@container (min-width:300px){.a{color:red}}", "@container (min-width:301px){.a{color:red}}"]],
-	["bad keyframes", ["@keyframes k{from{opacity:0}}.a{animation:k 1s}", "@keyframes k{from{opacity:.5}}.a{animation:k 1s}"]],
-	["bad font face", ["@font-face{font-family:x;src:url(a.woff)}", "@font-face{font-family:x;src:url(b.woff)}"]],
-	["bad layer order", ["@layer a,b;@layer a{.a{color:red}}@layer b{.a{color:blue}}", "@layer b,a;@layer a{.a{color:red}}@layer b{.a{color:blue}}"]],
+	[
+		"bad media threshold",
+		[
+			"@media (min-width:500px){.a{color:red}}",
+			"@media (min-width:501px){.a{color:red}}"
+		]
+	],
+	[
+		"bad container threshold",
+		[
+			"@container (min-width:300px){.a{color:red}}",
+			"@container (min-width:301px){.a{color:red}}"
+		]
+	],
+	[
+		"bad keyframes",
+		[
+			"@keyframes k{from{opacity:0}}.a{animation:k 1s}",
+			"@keyframes k{from{opacity:.5}}.a{animation:k 1s}"
+		]
+	],
+	[
+		"bad font face",
+		[
+			"@font-face{font-family:x;src:url(a.woff)}",
+			"@font-face{font-family:x;src:url(b.woff)}"
+		]
+	],
+	[
+		"bad layer order",
+		[
+			"@layer a,b;@layer a{.a{color:red}}@layer b{.a{color:blue}}",
+			"@layer b,a;@layer a{.a{color:red}}@layer b{.a{color:blue}}"
+		]
+	],
 	["bad nested", [".a{& .b{color:red}}", ".a{& .b{color:blue}}"]],
-	["bad custom property", [":root{--x:1px}.a{margin:var(--x)}", ":root{--x:2px}.a{margin:var(--x)}"]],
-	["bad pseudo-element", [".a::before{content:'x'}", ".a::before{content:'y'}"]],
-	["bad dark scheme", ["@media (prefers-color-scheme:dark){.a{color:red}}", "@media (prefers-color-scheme:dark){.a{color:blue}}"]],
-	["bad theme on body", ["body.dark{--c:#4a4458}body.light{--c:#fff}", "body.dark{--c:#4a4558}body.light{--c:#fff}"]],
-	["bad theme on root", [":root.dark .a{color:red}", ":root.dark .a{color:blue}"]],
+	[
+		"bad custom property",
+		[":root{--x:1px}.a{margin:var(--x)}", ":root{--x:2px}.a{margin:var(--x)}"]
+	],
+	[
+		"bad pseudo-element",
+		[".a::before{content:'x'}", ".a::before{content:'y'}"]
+	],
+	[
+		"bad dark scheme",
+		[
+			"@media (prefers-color-scheme:dark){.a{color:red}}",
+			"@media (prefers-color-scheme:dark){.a{color:blue}}"
+		]
+	],
+	[
+		"bad theme on body",
+		[
+			"body.dark{--c:#4a4458}body.light{--c:#fff}",
+			"body.dark{--c:#4a4558}body.light{--c:#fff}"
+		]
+	],
+	[
+		"bad theme on root",
+		[":root.dark .a{color:red}", ":root.dark .a{color:blue}"]
+	],
 	// A value naming custom properties no sheet defines still has to keep its arithmetic.
-	["bad operator over unset properties", [".a{width:calc(var(--r) + var(--w))}", ".a{width:calc(var(--r) - var(--w))}"]],
+	[
+		"bad operator over unset properties",
+		[
+			".a{width:calc(var(--r) + var(--w))}",
+			".a{width:calc(var(--r) - var(--w))}"
+		]
+	],
 	["bad custom number", [".a{--x:1}", ".a{--x:2}"]],
-	["bad custom list length", [".a{--k:0px 0px 0px 0px}", ".a{--k:0px 0px 0px}"]],
+	[
+		"bad custom list length",
+		[".a{--k:0px 0px 0px 0px}", ".a{--k:0px 0px 0px}"]
+	],
 	["bad custom url", ['.a{--u:url("./img.png")}', '.a{--u:url(".z/img.png")}']],
-	["bad keyframe", ["@keyframes k{50%{opacity:.7}}.a{animation-name:k}", "@keyframes k{50%{opacity:.8}}.a{animation-name:k}"]],
+	[
+		"bad keyframe",
+		[
+			"@keyframes k{50%{opacity:.7}}.a{animation-name:k}",
+			"@keyframes k{50%{opacity:.8}}.a{animation-name:k}"
+		]
+	],
 	["bad direction", [".a:dir(rtl){color:red}", ".a:dir(rtl){color:blue}"]],
-	["bad dark color", [".a{color:light-dark(#eee,#111)}", ".a{color:light-dark(#eee,#a11)}"]],
+	[
+		"bad dark color",
+		[".a{color:light-dark(#eee,#111)}", ".a{color:light-dark(#eee,#a11)}"]
+	],
 	["bad dropped display", [".a{display:block}", ".a{}"]],
-	["bad keyframe percentage", ["@keyframes k{to{transform:translateY(-5%)}}", "@keyframes k{to{transform:translateY(-6%)}}"]],
-	["bad rule after a byte order mark", ["\uFEFFbody{color:red}", "\uFEFFbody{color:blue}"]],
+	[
+		"bad keyframe percentage",
+		[
+			"@keyframes k{to{transform:translateY(-5%)}}",
+			"@keyframes k{to{transform:translateY(-6%)}}"
+		]
+	],
+	[
+		"bad rule after a byte order mark",
+		["\uFEFFbody{color:red}", "\uFEFFbody{color:blue}"]
+	],
 	// A `)` inside a quoted `url()` belongs to the address, not to a color.
-	["bad quoted url body", ['.a{--u:url("assets/)#fff")}', '.a{--u:url("assets/)#ffffff")}']],
+	[
+		"bad quoted url body",
+		['.a{--u:url("assets/)#fff")}', '.a{--u:url("assets/)#ffffff")}']
+	],
 	// A private-use character is a value's own, not a space the printer may write.
 	["bad private use", [".a{--x:a\uE000b}", ".a{--x:a b}"]],
 	// An element stands where a structural selector reaches it, so one reaching another position differs.
-	["bad nth-child", ["li:nth-child(2n+1){color:red}", "li:first-child{color:red}"]],
-	["bad nth-last-child", ["li:nth-last-child(2){color:red}", "li:nth-child(2){color:red}"]],
-	["bad nth-of-type", ["p:nth-of-type(3){color:red}", "p:nth-of-type(2){color:red}"]],
+	[
+		"bad nth-child",
+		["li:nth-child(2n+1){color:red}", "li:first-child{color:red}"]
+	],
+	[
+		"bad nth-last-child",
+		["li:nth-last-child(2){color:red}", "li:nth-child(2){color:red}"]
+	],
+	[
+		"bad nth-of-type",
+		["p:nth-of-type(3){color:red}", "p:nth-of-type(2){color:red}"]
+	],
 	["bad has sibling", ["a:has(+ b){color:red}", "a:has(b){color:red}"]],
 	["bad has child", ["a:has(> b){color:red}", "a:has(> i){color:red}"]],
 	// The siblings a position counts are built around the ones already there, so what it declares is read.
-	["bad nth-child of", ["li:nth-child(2 of .x){color:red}", "li:nth-child(2 of .x){color:blue}"]],
-	["bad nth-child after", [".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]],
-	["bad nth-child among", [".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]],
-	["bad nth-of-type after", ["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]],
+	[
+		"bad nth-child of",
+		["li:nth-child(2 of .x){color:red}", "li:nth-child(2 of .x){color:blue}"]
+	],
+	[
+		"bad nth-child after",
+		[".a+.b:nth-child(3){color:red}", ".a+.b:nth-child(3){color:blue}"]
+	],
+	[
+		"bad nth-child among",
+		[".a~.b:nth-child(3){color:red}", ".a~.b:nth-child(3){color:blue}"]
+	],
+	[
+		"bad nth-of-type after",
+		["i+p:nth-of-type(2){color:red}", "i+p:nth-of-type(2){color:blue}"]
+	],
 	// A computed `line-height` serializes at six digits, so only where `1lh` lands on the layout grid tells these apart.
 	// Gecko rounds a length to its nearest 1/60px rather than flooring, so these and the length ones lay out alike in Firefox.
-	["bad line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857}"]],
-	["bad line-height digits through a custom property", [":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}", ":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"]],
-	["bad line-height digits at a queried font size", ["@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}", "@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"]],
+	[
+		"bad line-height digits",
+		[
+			".a{font-size:14px;line-height:1.4285714286}",
+			".a{font-size:14px;line-height:1.42857}"
+		]
+	],
+	[
+		"bad line-height digits through a custom property",
+		[
+			":root{--h:1.4285714286}.a{font-size:14px;line-height:var(--h)}",
+			":root{--h:1.42857}.a{font-size:14px;line-height:var(--h)}"
+		]
+	],
+	[
+		"bad line-height digits at a queried font size",
+		[
+			"@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.4285714286}",
+			"@media (max-width:300px){.a{font-size:14px}}.a{line-height:1.42857}"
+		]
+	],
 	// The same for any length: a computed one serializes at six digits as well, so only where the box lands tells these apart.
-	["bad width digits", [".a{font-size:19px;width:.1052631579em}", ".a{font-size:19px;width:.105263em}"]],
-	["bad padding digits", [".a{font-size:19px;padding-left:.1052631579em}", ".a{font-size:19px;padding-left:.105263em}"]],
-	["bad margin digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.105263em}"]],
-	["good length digits", [".a{font-size:19px;margin-top:.1052631579em}", ".a{font-size:19px;margin-top:.10526316em}"]],
-	["good line-height digits", [".a{font-size:14px;line-height:1.4285714286}", ".a{font-size:14px;line-height:1.42857143}"]],
+	[
+		"bad width digits",
+		[
+			".a{font-size:19px;width:.1052631579em}",
+			".a{font-size:19px;width:.105263em}"
+		]
+	],
+	[
+		"bad padding digits",
+		[
+			".a{font-size:19px;padding-left:.1052631579em}",
+			".a{font-size:19px;padding-left:.105263em}"
+		]
+	],
+	[
+		"bad margin digits",
+		[
+			".a{font-size:19px;margin-top:.1052631579em}",
+			".a{font-size:19px;margin-top:.105263em}"
+		]
+	],
+	[
+		"good length digits",
+		[
+			".a{font-size:19px;margin-top:.1052631579em}",
+			".a{font-size:19px;margin-top:.10526316em}"
+		]
+	],
+	[
+		"good line-height digits",
+		[
+			".a{font-size:14px;line-height:1.4285714286}",
+			".a{font-size:14px;line-height:1.42857143}"
+		]
+	],
 	["good spelling", [".a{color:red;margin:0px}", ".a{color:#f00;margin:0}"]],
-	["good nth spellings", ["li:nth-child(odd){color:red}li:nth-child(even){color:blue}", "li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"]],
+	[
+		"good nth spellings",
+		[
+			"li:nth-child(odd){color:red}li:nth-child(even){color:blue}",
+			"li:nth-child(2n+1){color:red}li:nth-child(2n){color:blue}"
+		]
+	],
 	["good has spacing", ["a:has( > b ){color:red}", "a:has(>b){color:red}"]],
-	["good custom property spacing", [".a{--c:#e9ecef #e9ecef #dee2e6;--f:400 1rem / 1.5 \"Mona Sans\", sans-serif}", ".a{--c:#e9ecef#e9ecef#dee2e6;--f:400/**/1rem/ 1.5\"Mona Sans\",sans-serif}"]],
+	[
+		"good custom property spacing",
+		[
+			'.a{--c:#e9ecef #e9ecef #dee2e6;--f:400 1rem / 1.5 "Mona Sans", sans-serif}',
+			'.a{--c:#e9ecef#e9ecef#dee2e6;--f:400/**/1rem/ 1.5"Mona Sans",sans-serif}'
+		]
+	],
 	// CSS Syntax 4.3.6: recovery ends a bad url at the next `)`.
 	["good bad url", ['.a{--u:url(foo")#fff)}', '.a{--u:url(foo")#ffffff)}']],
 	// CSS Syntax 4.2: U+00A0 is no whitespace, so the quote after it ends a bad url.
-	["good url after a non-breaking space", ['.a{--u:url(\u00A0"foo)#fff")}', '.a{--u:url(\u00A0"foo)#ffffff")}']],
-	["good color against a name", [".a{--s:oklch(0% 0 0) calc(1px)}", ".a{--s:oklch(0% 0 0)calc(1px)}"]],
-	["good color against a non-ascii name", [".a{--s:oklch(0% 0 0) \u00E9}", ".a{--s:oklch(0% 0 0)\u00E9}"]],
+	[
+		"good url after a non-breaking space",
+		['.a{--u:url(\u00A0"foo)#fff")}', '.a{--u:url(\u00A0"foo)#ffffff")}']
+	],
+	[
+		"good color against a name",
+		[".a{--s:oklch(0% 0 0) calc(1px)}", ".a{--s:oklch(0% 0 0)calc(1px)}"]
+	],
+	[
+		"good color against a non-ascii name",
+		[".a{--s:oklch(0% 0 0) \u00E9}", ".a{--s:oklch(0% 0 0)\u00E9}"]
+	],
 	// CSS Cascade 4 §6.2: a later normal declaration loses to an important one.
-	["good important then normal", [".a{--x:red!important}.a{--x:blue}", ".a{--x:red!important}"]],
+	[
+		"good important then normal",
+		[".a{--x:red!important}.a{--x:blue}", ".a{--x:red!important}"]
+	],
 	["good normal then normal", [".a{--y:red}.a{--y:blue}", ".a{--y:blue}"]],
-	["good colors inside a value", [".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}", ".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"]],
-	["good condition spacing", ["@supports (display: grid){@keyframes k{to{opacity:0}}}", "@supports (display:grid){@keyframes k{to{opacity:0}}}"]],
-	["good keyframes joined", ["@keyframes k{from{opacity:0}to{opacity:0}}", "@keyframes k{0%,to{opacity:0}}"]],
-	["good blocks under one layer statement", ["@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}", "@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"]]
+	[
+		"good colors inside a value",
+		[
+			".a{box-shadow:0 1px oklch(0% 0 0/.01) inset,0 -1px oklch(100% 0 0/.01) inset}",
+			".a{box-shadow:0 1px#00000003 inset,0 -1px#ffffff03 inset}"
+		]
+	],
+	[
+		"good condition spacing",
+		[
+			"@supports (display: grid){@keyframes k{to{opacity:0}}}",
+			"@supports (display:grid){@keyframes k{to{opacity:0}}}"
+		]
+	],
+	[
+		"good keyframes joined",
+		[
+			"@keyframes k{from{opacity:0}to{opacity:0}}",
+			"@keyframes k{0%,to{opacity:0}}"
+		]
+	],
+	[
+		"good blocks under one layer statement",
+		[
+			"@layer reset,components;@layer components{.x{color:blue}}@layer reset{.x{color:red}}",
+			"@layer reset,components;@layer reset{.x{color:red}}@layer components{.x{color:blue}}"
+		]
+	]
 ]);
 
 /**
@@ -873,7 +1110,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 							},
 							{
 								name: "doctype-shortened",
-								raw: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><p>x</p>',
+								raw: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd"><p>x</p>',
 								min: '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"><p>x</p>'
 							}
 						],
@@ -883,7 +1120,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 						{ name: "doctype-dropped", why: "document: 2 vs 1" },
 						{
 							name: "doctype-shortened",
-							why: "document 0: html|-//W3C//DTD HTML 4.01 Transitional//EN|http://www.w3.org/TR/html4/loose.dtd vs html|-//W3C//DTD HTML 4.01 Transitional//EN|"
+							why: "document 0: html|-//W3C//DTD HTML 4.01 Transitional//EN|https://www.w3.org/TR/html4/loose.dtd vs html|-//W3C//DTD HTML 4.01 Transitional//EN|"
 						}
 					]);
 				},
@@ -944,16 +1181,12 @@ describe(`printer output in real ${ENGINE}`, () => {
 
 	// A reading that moves between two runs over one sheet would be reported as
 	// a printer defect, so every sheet has to read the same against itself.
-	it(
-		"should read every configCases stylesheet the same against itself",
-		async () => {
-			const differences = await compareStylesheets(
-				buildCorpus(CONFIG_CASES, ".css", (source) => source)
-			);
-			expect(differences).toEqual([]);
-		},
-		1800000
-	);
+	it("should read every configCases stylesheet the same against itself", async () => {
+		const differences = await compareStylesheets(
+			buildCorpus(CONFIG_CASES, ".css", (source) => source)
+		);
+		expect(differences).toEqual([]);
+	}, 1800000);
 
 	for (const [label, why] of [
 		["wpt", NO_CORPUS],
@@ -1053,10 +1286,8 @@ describe(`printer output in real ${ENGINE}`, () => {
 						// a family name quoted or bare is one family, which the engines echo
 						// in either spelling, as the cascade tier already reads it
 						out += `${name}:${paintedColors(
-							canonical(
-								name === "font-family" ? unquoteFamilies(value) : value
-							)
-						)}\u0000`;
+							canonical(name === "font-family" ? unquoteFamilies(value) : value)
+						)}\0`;
 					}
 					return out;
 				};
@@ -1326,8 +1557,9 @@ const domShapeOf = (source) => {
 			if (A.type(child) !== NodeType.Element) continue;
 			const tag = A.name(child);
 			const namespace =
-				/** @type {Record<number, string>} */ (NS_PREFIX)[_namespaceOf(child)] ||
-				"";
+				/** @type {Record<number, string>} */ (NS_PREFIX)[
+					_namespaceOf(child)
+				] || "";
 			const written = _attributeList(child)
 				.map((attribute) => {
 					const name = attribute.serializedName || attribute.name;
@@ -1346,7 +1578,11 @@ const domShapeOf = (source) => {
 			const inPage = renders || (namespace === "" && tag === "body");
 			if (inPage && !VERBATIM_TEXT.has(tag)) {
 				let own = "";
-				for (let tIndex = 0, t = A.child(0, child); t !== 0; t = A.child(++tIndex, child)) {
+				for (
+					let tIndex = 0, t = A.child(0, child);
+					t !== 0;
+					t = A.child(++tIndex, child)
+				) {
 					if (A.type(t) === NodeType.Text) own += A.value(t);
 				}
 				text.push(own.replace(ASCII_WHITESPACE, " "));
@@ -1949,7 +2185,11 @@ const LOWERING_FIXTURES = [
 			"border-top-width:calc(hypot(3px,4px));top:calc(1cm + 1px);" +
 			"left:calc(log(8,2)*10px);right:calc(pow(2,10)*.01px)}",
 		browsers: ["chrome 130"],
-		produces: ["width:141.42135624px", "height:70.71067812px", "margin-left:.3px"],
+		produces: [
+			"width:141.42135624px",
+			"height:70.71067812px",
+			"margin-left:.3px"
+		],
 		html: '<button id=b style="position:absolute">x</button>',
 		probes: [
 			["#b", "width"],
@@ -2328,13 +2568,17 @@ describe("a color rewrite paints as the color it replaced", () => {
 			return `hwb(${number(360, 2)} ${number(60, 2)}% ${number(60, 2)}%)`;
 		}
 		if (pick < 0.44) {
-			return `lab(${number(100, 4)}% ${number(200, 4) - 100} ${number(200, 4) - 100})`;
+			return `lab(${number(100, 4)}% ${number(200, 4) - 100} ${
+				number(200, 4) - 100
+			})`;
 		}
 		if (pick < 0.54) {
 			return `lch(${number(100, 4)}% ${number(140, 4)} ${number(360, 3)})`;
 		}
 		if (pick < 0.64) {
-			return `oklab(${number(1, 6)} ${number(0.8, 6) - 0.4} ${number(0.8, 6) - 0.4})`;
+			return `oklab(${number(1, 6)} ${number(0.8, 6) - 0.4} ${
+				number(0.8, 6) - 0.4
+			})`;
 		}
 		if (pick < 0.74) {
 			return `oklch(${number(1, 6)} ${number(0.4, 6)} ${number(360, 3)})`;
@@ -2607,7 +2851,9 @@ describe("a color rewrite paints as the color it replaced", () => {
 						if (joined.split("<style").length !== (apart.has(first) ? 3 : 2)) {
 							differences.push(`joined wrongly: ${html}`);
 						}
-						if ((await computed(print(html, false))) !== (await computed(joined))) {
+						if (
+							(await computed(print(html, false))) !== (await computed(joined))
+						) {
 							differences.push(`reads differently: ${html}`);
 						}
 					}
@@ -2704,22 +2950,27 @@ const mergeSheet = (random) => {
 	 * @returns {string} one rule, most of them repeating a block
 	 */
 	const rule = () =>
-		`${random() < 0.15 ? `${selector()},${selector()}` : selector()}{${
-			random() < 0.7 ? pick(blocks) : pick(MERGE_DECLARATIONS)
-		}}`;
+		`${random() < 0.15 ? `${selector()},${selector()}` : selector()}{${pick(
+			random() >= 0.7 ? MERGE_DECLARATIONS : blocks
+		)}}`;
 	/** @type {string[]} */
 	const rules = [];
 	const count = 6 + Math.floor(random() * 10);
 	for (let i = 0; i < count; i++) {
 		const shape = random();
-		if (shape < 0.1) {rules.push(`@media (min-width:0){${rule()}${rule()}}`);}
-		else if (shape < 0.15) {rules.push(`@media (max-width:0){${rule()}}`);}
-		else if (shape < 0.2) {rules.push(`@supports (display:grid){${rule()}}`);}
-		else if (shape < 0.24) {
+		if (shape < 0.1) {
+			rules.push(`@media (min-width:0){${rule()}${rule()}}`);
+		} else if (shape < 0.15) {
+			rules.push(`@media (max-width:0){${rule()}}`);
+		} else if (shape < 0.2) {
+			rules.push(`@supports (display:grid){${rule()}}`);
+		} else if (shape < 0.24) {
 			rules.push(`@layer l${Math.floor(random() * 2)}{${rule()}}`);
 		} else if (shape < 0.26) {
 			rules.push(`@media (min-width:0){@media (min-width:1px){${rule()}}}`);
-		} else {rules.push(rule());}
+		} else {
+			rules.push(rule());
+		}
 	}
 	return rules.join("");
 };
@@ -2790,7 +3041,6 @@ describe("a distant merge keeps every element's cascade", () => {
 		},
 		MERGE_TIMEOUT
 	);
-
 });
 
 // WHY: Chrome 155 lays out no box for an iframe the adoption agency moved —
@@ -2836,7 +3086,7 @@ const ENGINE_QUIRKS = [
 		holds: (page) =>
 			page.evaluate(
 				() =>
-					new DOMParser().parseFromString("a<\u0000!", "text/html").body
+					new DOMParser().parseFromString("a<\0!", "text/html").body
 						.textContent === "a<\uFFFD!"
 			)
 	},
@@ -2861,8 +3111,9 @@ const ENGINE_QUIRKS = [
 					return [...context.getImageData(0, 0, 1, 1).data].join(",");
 				};
 				return (
-					paint("hsl(from rgb(214.7 138.3 226.0) calc(h + 40) s calc(l * .9))") !==
-					paint("#db6da0")
+					paint(
+						"hsl(from rgb(214.7 138.3 226.0) calc(h + 40) s calc(l * .9))"
+					) !== paint("#db6da0")
 				);
 			})
 	},
@@ -2899,18 +3150,19 @@ describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
 		if (browser !== undefined) await browser.close();
 	}, FILE_TIMEOUT);
 
-	const quirks = ENGINE_QUIRKS.filter(({ engines }) => engines.includes(ENGINE));
+	const quirks = ENGINE_QUIRKS.filter(({ engines }) =>
+		engines.includes(ENGINE)
+	);
 	if (quirks.length === 0) {
 		it("has no quirk filed for this engine", () => {
 			// No-op: every workaround here was measured in another engine.
 		});
 	} else {
-		it.each(quirks.map(({ quirk, workaround, holds }) => [quirk, workaround, holds]))(
-			"still %s, or %s can go",
-			async (_quirk, _workaround, holds) => {
-				expect(await holds(page)).toBe(true);
-			}
-		);
+		it.each(
+			quirks.map(({ quirk, workaround, holds }) => [quirk, workaround, holds])
+		)("still %s, or %s can go", async (_quirk, _workaround, holds) => {
+			expect(await holds(page)).toBe(true);
+		});
 	}
 });
 
@@ -2935,17 +3187,20 @@ describe(`declaration order in real ${ENGINE}`, () => {
 	it("moves no declaration past one setting a longhand it sets", async () => {
 		const ranks = getDeclarationRanks();
 		/** @type {Record<string, string[]>} */
-		const sets = await page.evaluate((names) => {
-			/** @type {Record<string, string[]>} */
-			const out = {};
-			const element = document.createElement("div");
-			for (const name of names) {
-				element.style.cssText = "";
-				element.style.setProperty(name, "inherit");
-				if (element.style.length !== 0) out[name] = [...element.style];
-			}
-			return out;
-		}, [...ranks.keys()]);
+		const sets = await page.evaluate(
+			(names) => {
+				/** @type {Record<string, string[]>} */
+				const out = {};
+				const element = document.createElement("div");
+				for (const name of names) {
+					element.style.cssText = "";
+					element.style.setProperty(name, "inherit");
+					if (element.style.length !== 0) out[name] = [...element.style];
+				}
+				return out;
+			},
+			[...ranks.keys()]
+		);
 		const names = Object.keys(sets);
 		/** @type {string[]} */
 		const moved = [];
@@ -2957,7 +3212,7 @@ describe(`declaration order in real ${ENGINE}`, () => {
 						? [names[i], names[j]]
 						: [names[j], names[i]];
 				if (ranks.get(first) === ranks.get(second)) continue;
-				if (!sets[first].some((longhand) => sets[second].includes(longhand))) {
+				if (sets[first].every((longhand) => !sets[second].includes(longhand))) {
 					continue;
 				}
 				const { code } = new CssSourceProcessor().process(
@@ -3065,10 +3320,14 @@ describe("a minified page renders as the page it came from", () => {
 					})(),
 					timeLeft() - REPORT_ALLOWANCE
 				);
-				if (!relaunched) throw new Error("no time left to relaunch the browser");
+				if (!relaunched) {
+					throw new Error("no time left to relaunch the browser");
+				}
 			} catch (error) {
 				unrecovered = new Error(
-					`no page to render in once ${batch.map(({ name }) => name).join(", ")} ran past ${deadline}ms`,
+					`no page to render in once ${batch
+						.map(({ name }) => name)
+						.join(", ")} ran past ${deadline}ms`,
 					{ cause: error }
 				);
 				throw unrecovered;
@@ -3141,7 +3400,7 @@ describe("a minified page renders as the page it came from", () => {
 			const after = minifyHtml(fixture.raw, options);
 			return after === fixture.raw
 				? []
-				: [{ name: fixture.name, before: fixture.raw, after }];
+				: { name: fixture.name, before: fixture.raw, after };
 		});
 
 	const configPages = buildCorpus(CONFIG_CASES, ".html", (source) => source);
@@ -3156,7 +3415,7 @@ describe("a minified page renders as the page it came from", () => {
 		// WHY: engines disagree on a NUL, so no print of one renders alike in all:
 		// the spec ignores it in body text, while Chromium turns one right after a
 		// `<` into U+FFFD — measured: `a<\0!` renders `a<\uFFFD!` in Chrome 141.
-		if (raw.includes("\u0000")) continue;
+		if (raw.includes("\0")) continue;
 		const group = name.split("/").slice(2, 4).join("/");
 		const pages = wptPages.get(group);
 		const fixture = { name, raw, min: raw };
@@ -3164,7 +3423,10 @@ describe("a minified page renders as the page it came from", () => {
 		else pages.push(fixture);
 	}
 
-	for (const [label, options] of /** @type {[string, { removeImpliedTags?: boolean | "smart" }][]} */ ([
+	for (const [
+		label,
+		options
+	] of /** @type {[string, { removeImpliedTags?: boolean | "smart" }][]} */ ([
 		["minified", {}],
 		["minified with every implied tag left out", { removeImpliedTags: true }]
 	])) {

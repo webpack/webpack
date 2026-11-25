@@ -269,7 +269,9 @@ describe("CssValueSyntax", () => {
 			// The opposite polarity to `INTEGER_PROPERTIES`: this one is read to
 			// allow a rewrite, so an unannotated grammar must not reach it.
 			// `<line-width>` is the case that proves it — no range, no negatives.
-			const { NEGATIVE_ACCEPTING_PROPERTIES } = require("../../../lib/css/data");
+			const {
+				NEGATIVE_ACCEPTING_PROPERTIES
+			} = require("../../../lib/css/data");
 
 			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("margin-top")).toBe(true);
 			expect(NEGATIVE_ACCEPTING_PROPERTIES.has("border-width")).toBe(false);
@@ -363,9 +365,12 @@ describe("CssValueSyntax", () => {
 			];
 			expect([...folds].sort()).toEqual([...MATH_FUNCTION_FOLD.keys()]);
 			for (const name of folds) {
-				const { code } = new SourceProcessor().process(fixture("css", `css-data-the-math-folds-fold-${name}`), {
-					mode: "minify"
-				});
+				const { code } = new SourceProcessor().process(
+					fixture("css", `css-data-the-math-folds-fold-${name}`),
+					{
+						mode: "minify"
+					}
+				);
 				expect(`${name}: ${code}`).toMatchSnapshot();
 			}
 		});
@@ -949,8 +954,12 @@ describe("CssValueSyntax", () => {
 				__compat: { support: {}, source_file: "css/types/color.json" },
 				display: {
 					__compat: { support: {} },
-					flex: { __compat: { support: {}, source_file: "css/types/color.json" } },
-					is_transitionable: { __compat: { support: {}, source_file: "css/types/color.json" } }
+					flex: {
+						__compat: { support: {}, source_file: "css/types/color.json" }
+					},
+					is_transitionable: {
+						__compat: { support: {}, source_file: "css/types/color.json" }
+					}
 				}
 			});
 			expect(

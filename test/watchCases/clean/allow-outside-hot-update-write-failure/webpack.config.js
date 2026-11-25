@@ -48,7 +48,7 @@ module.exports = {
 			compiler.hooks.afterEmit.tap(PLUGIN_NAME, (compilation) => {
 				// a fresh build of a later step never wrote the earlier hot update
 				if (!compiler.watchMode) return;
-				const files = fs.readdirSync(outside).sort().join();
+				const files = fs.readdirSync(outside).sort().join(",");
 				// the recovered step 1 keeps step 0's hot update, as it replaces it
 				const expected =
 					currentWatchStep.step === "0"

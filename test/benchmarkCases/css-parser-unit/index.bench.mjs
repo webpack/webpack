@@ -54,8 +54,7 @@ function expand(css) {
 	};
 	let out = "";
 	let pos = 0;
-	for (;;) {
-		if (readToken(css, pos, t) === undefined) break;
+	while (readToken(css, pos, t) !== undefined) {
 		pos = t.end;
 		out += css.slice(t.start, t.end);
 		out +=

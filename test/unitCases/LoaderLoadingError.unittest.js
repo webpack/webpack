@@ -19,9 +19,10 @@ const compileWith = (loader) =>
 			mode: "none",
 			entry: `${loader}!./entry-point.js`
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, stats) => {
 			if (err) return reject(err);
 			compiler.close((closeErr) => {

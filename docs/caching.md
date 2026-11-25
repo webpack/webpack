@@ -4,7 +4,7 @@
 
 Persistent caching is a shipped feature, not a test mode. `ConfigCacheTestCases` re-runs **every** `configCases/` case its `test.filter.js` doesn't skip with `cache.type: "filesystem"` and fails it if the second or third run writes to the pack unexpectedly (an `infrastructure-log.js` declares an expected write, see below):
 
-```
+```console
 Pack got invalid because of write to: <identifier>
 ```
 

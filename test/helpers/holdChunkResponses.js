@@ -47,9 +47,14 @@ const moduleScope = (scope, options) => {
 			for (const response of held.splice(0)) response.deliver();
 		},
 		fail(pattern) {
-			for (const response of held.filter((item) => pattern.test(item.url))) {
-				held.splice(held.indexOf(response), 1);
-				response.fail();
+			for (let i = 0; i < held.length;) {
+				const response = held[i];
+				if (pattern.test(response.url)) {
+					held.splice(i, 1);
+					response.fail();
+				} else {
+					i++;
+				}
 			}
 		},
 		nativeImport: undefined,

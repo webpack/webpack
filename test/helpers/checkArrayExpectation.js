@@ -157,11 +157,11 @@ const diffItems = (actual, expected, kind) => {
 	const diff = [];
 	if (missing.length > 0) {
 		diff.push(`The following expected ${kind}s are missing:
-${missing.map((item) => `${explain(item)}`).join("\n\n")}`);
+${missing.map((item) => explain(item)).join("\n\n")}`);
 	}
 	if (tooMuch.length > 0) {
 		diff.push(`The following ${kind}s are unexpected:
-${tooMuch.map((item) => `${explain(item)}`).join("\n\n")}`);
+${tooMuch.map((item) => explain(item)).join("\n\n")}`);
 	}
 	return diff.join("\n\n");
 };

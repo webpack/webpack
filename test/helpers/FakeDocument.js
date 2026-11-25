@@ -277,6 +277,7 @@ class FakeElement {
 		return this._textContent;
 	}
 
+	// eslint-disable-next-line unicorn/prefer-default-parameters
 	set textContent(value) {
 		this._textContent = value || "";
 	}
@@ -550,10 +551,8 @@ class FakeElement {
 	_dispatchEvent(event) {
 		if (!this._eventListeners) return;
 		const handlers = this._eventListeners.get(event.type);
-		if (handlers) {
-			for (const handler of handlers) {
-				handler(event);
-			}
+		for (const handler of handlers || []) {
+			handler(event);
 		}
 	}
 
@@ -634,7 +633,7 @@ class FakeSheet {
 					/** @type {string} */ (this._element.href)
 						.replace(/^https:\/\/test\.cases\/path\//, "")
 						.replace(/^https:\/\/example\.com\//, "")
-						.split("?")[0] // Remove query parameters (e.g., ?hmr=timestamp)
+						.split("?", 1)[0] // Remove query parameters (e.g., ?hmr=timestamp)
 				)
 			),
 			"utf8"
@@ -682,7 +681,7 @@ class FakeSheet {
 				currentRule[property] = value;
 			}
 		};
-		const href = /** @type {string} */ (this._element.href).split("?")[0]; // Remove query parameters (e.g., ?hmr=timestamp)
+		const href = /** @type {string} */ (this._element.href).split("?", 1)[0]; // Remove query parameters (e.g., ?hmr=timestamp)
 		const filepath = /file:\/\//.test(href)
 			? new URL(href)
 			: path.resolve(

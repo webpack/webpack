@@ -15,7 +15,7 @@ module.exports = {
 		);
 		// The mark still names the encoding, and the doctype after it keeps the
 		// page out of quirks mode.
-		expect(html.startsWith("﻿<!doctype html>")).toBe(true);
+		expect(html.startsWith("\u{FEFF}<!doctype html>")).toBe(true);
 		expect(html).toContain("<title>byte order mark</title>");
 	}
 };

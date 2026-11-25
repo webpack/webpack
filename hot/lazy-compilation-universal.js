@@ -5,9 +5,9 @@
 var isNodeLikeEnv =
 	typeof global !== "undefined" && typeof global.process !== "undefined";
 
-var handler = isNodeLikeEnv
-	? require("./lazy-compilation-node")
-	: require("./lazy-compilation-web");
+var handler = require(
+	isNodeLikeEnv ? "./lazy-compilation-node" : "./lazy-compilation-web"
+);
 
 handler.setUrl(decodeURIComponent(__resourceQuery.slice(1)));
 

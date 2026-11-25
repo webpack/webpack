@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
+/** @import Compiler from "../../../../lib/Compiler" */
 /** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
 
 const PLUGIN_NAME = "synthetic-nodes";

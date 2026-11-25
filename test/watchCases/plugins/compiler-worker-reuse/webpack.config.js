@@ -1,12 +1,10 @@
 "use strict";
 
 const path = require("path");
-const webpack = require("../../../../");
-
-const { DefinePlugin } = webpack;
+const { DefinePlugin } = require("../../../../");
 
 /** @typedef {import("../../../../lib/worker/Worker")<{ threadId: () => number }>} ThreadIdWorker */
-/** @typedef {import("../../../../lib/worker/WorkerPool")} WorkerPool */
+/** @import WorkerPool from "../../../../lib/worker/WorkerPool" */
 
 const WORKER = path.resolve(__dirname, "worker.js");
 

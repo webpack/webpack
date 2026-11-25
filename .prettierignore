@@ -17,8 +17,12 @@ test/**/*.*
 !test/**/deprecations.js
 !test/**/infrastructure-log.js
 !test/*.md
+!test/**/*.unittest.js
+!test/**/*.basictest.js
+!test/**/*.longtest.js
 !test/helpers/*.*
 !test/harness/**/*.*
+!test/specCases/**/*.*
 !test/benchmarkCases/**/*.mjs
 test/js/**/*.*
 test/external/test262-cases/**/*.*

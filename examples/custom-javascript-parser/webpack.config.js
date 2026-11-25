@@ -1,8 +1,8 @@
 "use strict";
 
-const acornParse = require("./internals/acorn-parse.js");
-const meriyahParse = require("./internals/meriyah-parse.js");
-const oxcParse = require("./internals/oxc-parse.js");
+const acornParse = require("./internals/acorn-parse");
+const meriyahParse = require("./internals/meriyah-parse");
+const oxcParse = require("./internals/oxc-parse");
 
 /** @type {import("webpack").Configuration[]} */
 const config = [

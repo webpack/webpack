@@ -8,8 +8,8 @@ const path = require("path");
 const webpack = require("../../../../");
 
 // Built here so the needles are not source literals the search would find.
-const CALL = `${"__webpack_require__"}.tu(`;
-const DEFINE = `${"__webpack_require__"}.tu =`;
+const CALL = "__webpack_require__.tu(";
+const DEFINE = "__webpack_require__.tu =";
 
 /**
  * @param {number} index position of this config, so it finds its own bundle

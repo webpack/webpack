@@ -5,6 +5,6 @@
 // ES module. Jest's ESM support (via `--experimental-vm-modules`) needs
 // Node 12+.
 module.exports = function filter() {
-	const major = Number(process.versions.node.split(".")[0]);
+	const major = Number(process.versions.node.split(".", 1)[0]);
 	return major >= 12;
 };

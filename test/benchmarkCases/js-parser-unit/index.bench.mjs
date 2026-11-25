@@ -31,6 +31,7 @@ const threeEsmPath = fileURLToPath(import.meta.resolve("three"));
 const threeEsmSource = fs.readFileSync(threeEsmPath, "utf8");
 const threeEsmMinSource = fs.readFileSync(
 	fileURLToPath(
+		// eslint-disable-next-line unicorn/no-missing-local-resource
 		new URL("../../js/benchmark/three.module.min.js", import.meta.url)
 	),
 	"utf8"

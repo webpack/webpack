@@ -815,16 +815,16 @@ const describeCases = (config) => {
 												for (const file of unseenChanges) {
 													const exists = fs.existsSync(file);
 													if (
-														!builds.some(
+														builds.every(
 															({ compilation }) =>
-																compilation.fileDependencies.has(file) ||
+																!(compilation.fileDependencies.has(file) ||
 																(exists
 																	? compilation.missingDependencies.has(file) ||
 																		isWithin(file, compilation.contextDependencies)
 																	: [
 																			...compilation.fileDependencies,
 																			...compilation.contextDependencies
-																		].some((item) => isWithin(item, [file])))
+																		].some((item) => isWithin(item, [file]))))
 														)
 													) {
 														unseenChanges.delete(file);

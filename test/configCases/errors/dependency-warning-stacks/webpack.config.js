@@ -22,7 +22,7 @@ module.exports = {
 							(item);
 						const details = warning.details;
 						if (details) {
-							warning.details = `overridden ${details.split("\n")[0].trim()}`;
+							warning.details = `overridden ${details.split("\n", 1)[0].trim()}`;
 						} else if (!assignedUnread) {
 							// assigning before the first read must win over the derived stack
 							assignedUnread = true;
@@ -34,7 +34,7 @@ module.exports = {
 							if (warning.stack !== stack) {
 								throw new Error("derived stack changed between reads");
 							}
-							warning.stack = `overridden ${stack.split("\n\n")[1]}`;
+							warning.stack = `overridden ${stack.split("\n\n", 2)[1]}`;
 						}
 					}
 				});

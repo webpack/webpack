@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
+/** @import Compiler from "../../../../lib/Compiler" */
 /** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
 
 const PLUGIN_NAME = "walk-syntax-tree";
@@ -85,11 +85,11 @@ const walkSyntaxTree = (compiler) => {
 							const properties =
 								/** @type {{ referencedPropertiesInDestructuring?: Set<{ id: string }> }} */
 								(dependency).referencedPropertiesInDestructuring;
-							if (properties) for (const { id } of properties) names.push(id);
+							for (const { id } of properties || []) names.push(id);
 							const exports =
 								/** @type {{ referencedExports?: string[][] | null }} */
 								(dependency).referencedExports;
-							if (exports) for (const [id] of exports) names.push(id);
+							for (const [id] of exports || []) names.push(id);
 						}
 						// the names each destructuring reads, recorded by id
 						expect(names.sort()).toEqual(

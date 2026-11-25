@@ -7,8 +7,8 @@ const fs = require("fs");
 const path = require("path");
 
 // Needles built here so they are not source string literals the search would find.
-const publicPath = `${"__webpack_require__"}.p`;
-const chunkFilename = `${"__webpack_require__"}.u`;
+const publicPath = "__webpack_require__.p";
+const chunkFilename = "__webpack_require__.u";
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -77,13 +77,12 @@ const urlSpecifierOf = (node) => {
  */
 const importSpecifierOf = (node) => {
 	const source =
-		node.type === "ImportExpression"
+		node.type === "ImportExpression" ||
+		node.type === "ImportDeclaration" ||
+		node.type === "ExportNamedDeclaration" ||
+		node.type === "ExportAllDeclaration"
 			? node.source
-			: node.type === "ImportDeclaration" ||
-				  node.type === "ExportNamedDeclaration" ||
-				  node.type === "ExportAllDeclaration"
-				? node.source
-				: undefined;
+			: undefined;
 	if (!source || source.type !== "Literal") return;
 	return typeof source.value === "string" ? source.value : undefined;
 };
@@ -132,8 +131,8 @@ const literalSpecifiersOf = (code) => {
  * @returns {{ place: string, inside: boolean } | undefined} where it points
  */
 const placeOf = (specifier, fromDirectory) => {
-	const [withoutHash] = specifier.split("#");
-	const [written] = withoutHash.split("?");
+	const [withoutHash] = specifier.split("#", 1);
+	const [written] = withoutHash.split("?", 1);
 	// A specifier is read as a URL: the file it names is its path decoded.
 	const text = decodeUrlPath(written);
 	if (HAS_SCHEME.test(written)) {

@@ -49,7 +49,10 @@ const TYPE_TO_PRINTED = {
 };
 
 describe("readToken", () => {
-	const casesPath = path.resolve(__dirname, "../../configCases/css/parsing/cases");
+	const casesPath = path.resolve(
+		__dirname,
+		"../../configCases/css/parsing/cases"
+	);
 	const tests = fs
 		.readdirSync(casesPath)
 		.filter((test) => /\.css/.test(test))
@@ -99,22 +102,44 @@ describe("CssSyntax — a function name that only opens like `url`", () => {
 	 * @returns {[number, string]} that token's type and source text
 	 */
 	const first = (source) => {
-		const t = /** @type {import("../../../lib/css/syntax-parser").MutableToken} */ (
-			readToken(
-				source,
-				0,
-				/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
-			)
-		);
+		const t =
+			/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ (
+				readToken(
+					source,
+					0,
+					/** @type {import("../../../lib/css/syntax-parser").MutableToken} */ ({})
+				)
+			);
 		return [t.type, source.slice(t.start, t.end)];
 	};
 
 	it("is a function token when too short or too long to spell it", () => {
 		// `url` with every code point escaped in full is 27 code units.
 		const long = `u${"r".repeat(27)}`;
-		expect(first(fixture("css", "css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too"))).toEqual([TokenType.Function, "u("]);
-		expect(first(fixture("css", "css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too-2"))).toEqual([TokenType.Function, "ur("]);
-		expect(first(fixture("css", "css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too-3"))).toEqual([TokenType.Function, `${long}(`]);
+		expect(
+			first(
+				fixture(
+					"css",
+					"css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too"
+				)
+			)
+		).toEqual([TokenType.Function, "u("]);
+		expect(
+			first(
+				fixture(
+					"css",
+					"css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too-2"
+				)
+			)
+		).toEqual([TokenType.Function, "ur("]);
+		expect(
+			first(
+				fixture(
+					"css",
+					"css-syntax-a-function-name-that-only-opens-like-url-is-a-function-token-when-too-3"
+				)
+			)
+		).toEqual([TokenType.Function, `${long}(`]);
 	});
 });
 
@@ -133,21 +158,29 @@ describe("CssSyntax — the token the lexer reuses", () => {
 	];
 
 	it("carries exactly the fields it was built with", () => {
-		const stream = new TokenStream(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
+		const stream = new TokenStream(
+			fixture(
+				"css",
+				"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+			)
+		);
 		expect(Object.keys(stream.next()).sort()).toEqual(FIELDS);
 	});
 
 	it("has every field set before a token is read, and after", () => {
-		const stream = new TokenStream(fixture("css", "css-syntax-the-token-the-lexer-reuses-has-every-field-set-before-a-token-is-read"));
+		const stream = new TokenStream(
+			fixture(
+				"css",
+				"css-syntax-the-token-the-lexer-reuses-has-every-field-set-before-a-token-is-read"
+			)
+		);
 		for (const field of FIELDS) {
 			expect(/** @type {EXPECTED_ANY} */ (stream.next())[field]).toBeDefined();
 		}
 		// Reading on does not grow it: the same keys, in the same order, whatever
 		// token type wrote into it.
 		for (let i = 0; i < 6; i++) {
-			expect(Object.keys(stream.consume())).toEqual(
-				Object.keys(stream.next())
-			);
+			expect(Object.keys(stream.consume())).toEqual(Object.keys(stream.next()));
 		}
 	});
 });
@@ -156,8 +189,7 @@ describe("CssSyntax — the token the lexer reuses", () => {
  * @param {string} src css source
  * @returns {number[]} component value types
  */
-const cvTypes = (src) =>
-	parseAListOfComponentValues(src).map((n) => A.type(n));
+const cvTypes = (src) => parseAListOfComponentValues(src).map((n) => A.type(n));
 
 describe("CssSyntax — code point and substitution helpers", () => {
 	const {
@@ -202,9 +234,9 @@ describe("CssSyntax — code point and substitution helpers", () => {
 
 	it("finds a substitution function in a value", () => {
 		expect(containsSubstitutionFunction("var(--x)")).toBe(true);
-		expect(containsSubstitutionFunction("calc(1px + env(safe-area-inset-top))")).toBe(
-			true
-		);
+		expect(
+			containsSubstitutionFunction("calc(1px + env(safe-area-inset-top))")
+		).toBe(true);
 		expect(containsSubstitutionFunction("calc(1px + 2px)")).toBe(false);
 		expect(containsSubstitutionFunction("red")).toBe(false);
 	});
@@ -226,7 +258,10 @@ describe("CssSyntax — the token stream", () => {
 		/** @type {string[]} */
 		const seen = [];
 		const stream = new TokenStream(
-			fixture("css", "css-syntax-the-token-stream-fires-each-comment-once-even-when-a-mark-rewinds"),
+			fixture(
+				"css",
+				"css-syntax-the-token-stream-fires-each-comment-once-even-when-a-mark-rewinds"
+			),
 			0,
 			undefined,
 			(input, start, end) => seen.push(input.slice(start, end))
@@ -254,17 +289,64 @@ describe("CssSyntax — the token stream", () => {
 			parseAListOfComponentValues(src);
 			return _S._openCommentStart;
 		};
-		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens"))).toBe(2);
-		expect(openCommentOf(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-a-comment-s-text-closed-or-2"))).toBe(0);
+		expect(
+			openCommentOf(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens"
+				)
+			)
+		).toBe(2);
+		expect(
+			openCommentOf(
+				fixture(
+					"css",
+					"css-syntax-path-reads-on-every-node-kind-reads-a-comment-s-text-closed-or-2"
+				)
+			)
+		).toBe(0);
 		// `/*/` and `/* **` end in what could close a comment, but not one opened there.
-		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-2"))).toBe(1);
-		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-3"))).toBe(1);
-		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-4"))).toBe(-1);
-		expect(openCommentOf(fixture("css", "css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-5"))).toBe(-1);
+		expect(
+			openCommentOf(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-2"
+				)
+			)
+		).toBe(1);
+		expect(
+			openCommentOf(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-3"
+				)
+			)
+		).toBe(1);
+		expect(
+			openCommentOf(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-4"
+				)
+			)
+		).toBe(-1);
+		expect(
+			openCommentOf(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-notes-where-a-comment-the-source-never-closed-opens-5"
+				)
+			)
+		).toBe(-1);
 	});
 
 	it("steps over whitespace without lexing it, unless a token is cached", () => {
-		const stream = new TokenStream(fixture("css", "css-syntax-the-token-stream-steps-over-whitespace-without-lexing-it-unless-a"));
+		const stream = new TokenStream(
+			fixture(
+				"css",
+				"css-syntax-the-token-stream-steps-over-whitespace-without-lexing-it-unless-a"
+			)
+		);
 		stream.skipWhitespace();
 		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
 		// The cached `a` is still the next token.
@@ -282,24 +364,76 @@ describe("CssSyntax — the token stream", () => {
 			stream.skipPreludeLeaves();
 			return peek(stream);
 		};
-		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"))).toEqual([TokenType.LeftCurlyBracket, "{"]);
+		expect(
+			afterPrelude(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"
+				)
+			)
+		).toEqual([TokenType.LeftCurlyBracket, "{"]);
 		// A name running into `(` is lexed with it, as one function or url token.
-		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-2"))).toEqual([TokenType.Function, "not("]);
-		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-3"))).toEqual([TokenType.Function, "ab("]);
-		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-4"))).toEqual([TokenType.Url, "url(x)"]);
-		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-5"))).toEqual([TokenType.LeftParenthesis, "("]);
-		expect(afterPrelude(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-6"))).toEqual([TokenType.EOF, ""]);
+		expect(
+			afterPrelude(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-2"
+				)
+			)
+		).toEqual([TokenType.Function, "not("]);
+		expect(
+			afterPrelude(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-3"
+				)
+			)
+		).toEqual([TokenType.Function, "ab("]);
+		expect(
+			afterPrelude(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-4"
+				)
+			)
+		).toEqual([TokenType.Url, "url(x)"]);
+		expect(
+			afterPrelude(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-5"
+				)
+			)
+		).toEqual([TokenType.LeftParenthesis, "("]);
+		expect(
+			afterPrelude(
+				fixture(
+					"css",
+					"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be-6"
+				)
+			)
+		).toEqual([TokenType.EOF, ""]);
 	});
 
 	it("does not step over a prelude while a token is cached", () => {
-		const stream = new TokenStream(fixture("css", "css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"));
+		const stream = new TokenStream(
+			fixture(
+				"css",
+				"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"
+			)
+		);
 		stream.next();
 		stream.skipPreludeLeaves();
 		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
 	});
 
 	it("parses on from where an existing stream stands", () => {
-		const stream = new TokenStream(fixture("css", "css-syntax-the-token-stream-parses-on-from-where-an-existing-stream-stands"));
+		const stream = new TokenStream(
+			fixture(
+				"css",
+				"css-syntax-the-token-stream-parses-on-from-where-an-existing-stream-stands"
+			)
+		);
 		stream.consume();
 		expect(cvTypes(/** @type {EXPECTED_ANY} */ (stream))).toEqual([
 			NodeType.Whitespace,
@@ -398,4 +532,3 @@ describe("CssSyntax — name and range helpers", () => {
 		expect(skipEscape("\\", 0)).toBe(1);
 	});
 });
-

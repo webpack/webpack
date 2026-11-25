@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../").StatsOptions} StatsOptions */
+/** @import { StatsOptions } from "../../../" */
 
 const counts = /** @type {StatsOptions} */ ({
 	all: false,

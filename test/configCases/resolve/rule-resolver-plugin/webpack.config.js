@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("enhanced-resolve").Resolver} Resolver */
+/** @import { Resolver } from "enhanced-resolve" */
 
 class RedirectResolverPlugin {
 	/**

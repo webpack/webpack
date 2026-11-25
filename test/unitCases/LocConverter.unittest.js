@@ -100,7 +100,11 @@ describe("LocConverter", () => {
 
 	it("answers any query order as counting the newlines before the offset", () => {
 		const input = "ab\r\ncd\re\u2028f\fg\n\nhij\nk";
-		for (const terminators of /** @type {const} */ (["javascript", "css", "html"])) {
+		for (const terminators of /** @type {const} */ ([
+			"javascript",
+			"css",
+			"html"
+		])) {
 			const converter = new LocConverter(input, terminators);
 			const normalized = converter._input;
 			/**

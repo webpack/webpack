@@ -62,8 +62,7 @@ module.exports = {
 				expect(dependent).toContain('opacity="1"');
 				expect(dependent).toContain('d="M000.00 000.00L010.00 000.00"');
 				expect(dependent).toContain('transform="translate(00 00)"');
-			}
-			if (name === "whitespace") {
+			} else if (name === "whitespace") {
 				const read = (file) =>
 					fs.readFileSync(path.join(options[i].output.path, file), "utf8");
 				// An attribute selector reads the editor attribute.

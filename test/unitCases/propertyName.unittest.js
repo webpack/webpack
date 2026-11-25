@@ -70,7 +70,11 @@ describe("renderObjectWithOwnProto", () => {
 
 	it("defines every __proto__ entry without computed keys", () => {
 		const code = renderObjectWithOwnProto(
-			[...entries, { name: "b", value: "3" }, { name: "__proto__", value: "4" }],
+			[
+				...entries,
+				{ name: "b", value: "3" },
+				{ name: "__proto__", value: "4" }
+			],
 			render,
 			false
 		);

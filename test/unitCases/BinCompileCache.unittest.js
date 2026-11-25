@@ -9,9 +9,8 @@ const BIN = path.resolve(__dirname, "../../bin/webpack.js");
 
 // Node's compile cache exists from Node.js 22.8; Bun and Deno expose the
 // function without the cache behind it.
-const { enableCompileCache } = /** @type {{ enableCompileCache?: () => void }} */ (
-	require("module")
-);
+const { enableCompileCache } =
+	/** @type {{ enableCompileCache?: () => void }} */ (require("module"));
 const hasCompileCache =
 	typeof enableCompileCache === "function" &&
 	!process.versions.bun &&
@@ -43,7 +42,10 @@ process.exit(0);
 	/** @type {NodeJS.ProcessEnv} */
 	const env = {};
 	for (const [name, value] of Object.entries(process.env)) {
-		if (!name.startsWith("NODE_COMPILE_CACHE") && name !== "NODE_DISABLE_COMPILE_CACHE") {
+		if (
+			!name.startsWith("NODE_COMPILE_CACHE") &&
+			name !== "NODE_DISABLE_COMPILE_CACHE"
+		) {
 			env[name] = value;
 		}
 	}
@@ -61,48 +63,59 @@ process.exit(0);
 	}
 };
 
-(hasCompileCache ? describe : describe.skip)("bin/webpack.js compile cache", () => {
-	it("hands the compile cache to the child processes it starts", () => {
-		const { variable, childDirectory } = runBin({});
-		expect(typeof variable).toBe("string");
-		expect(typeof childDirectory).toBe("string");
-		expect(/** @type {string} */ (childDirectory).startsWith(/** @type {string} */ (variable))).toBe(true);
-	});
-
-	it("keeps a directory the environment already names", () => {
-		const own = fs.mkdtempSync(path.join(os.tmpdir(), "wp-own-cache-"));
-		try {
-			const { variable, childDirectory } = runBin({ NODE_COMPILE_CACHE: own });
-			expect(variable).toBe(own);
-			expect(/** @type {string} */ (childDirectory).startsWith(own)).toBe(true);
-		} finally {
-			fs.rmSync(own, { recursive: true, force: true });
-		}
-	});
-
-	it("hands nothing on when a preload already enabled the cache", () => {
-		const own = fs.mkdtempSync(path.join(os.tmpdir(), "wp-preload-"));
-		const preload = path.join(own, "preload.js");
-		fs.writeFileSync(preload, 'require("module").enableCompileCache();\n');
-		try {
-			const { variable, childDirectory } = runBin({
-				NODE_OPTIONS: `--require ${JSON.stringify(preload)}`
-			});
-			// The preload's directory is already version-tagged, so handing it on
-			// would make children tag it twice.
-			expect(variable).toBeNull();
+(hasCompileCache ? describe : describe.skip)(
+	"bin/webpack.js compile cache",
+	() => {
+		it("hands the compile cache to the child processes it starts", () => {
+			const { variable, childDirectory } = runBin({});
+			expect(typeof variable).toBe("string");
+			expect(typeof childDirectory).toBe("string");
 			expect(
-				/** @type {string} */ (childDirectory).match(/v\d+\.\d+\.\d+-/g)
-			).toHaveLength(1);
-		} finally {
-			fs.rmSync(own, { recursive: true, force: true });
-		}
-	});
-
-	it("hands nothing on where the cache is disabled", () => {
-		expect(runBin({ NODE_DISABLE_COMPILE_CACHE: "1" })).toEqual({
-			variable: null,
-			childDirectory: null
+				/** @type {string} */ (childDirectory).startsWith(
+					/** @type {string} */ (variable)
+				)
+			).toBe(true);
 		});
-	});
-});
+
+		it("keeps a directory the environment already names", () => {
+			const own = fs.mkdtempSync(path.join(os.tmpdir(), "wp-own-cache-"));
+			try {
+				const { variable, childDirectory } = runBin({
+					NODE_COMPILE_CACHE: own
+				});
+				expect(variable).toBe(own);
+				expect(/** @type {string} */ (childDirectory).startsWith(own)).toBe(
+					true
+				);
+			} finally {
+				fs.rmSync(own, { recursive: true, force: true });
+			}
+		});
+
+		it("hands nothing on when a preload already enabled the cache", () => {
+			const own = fs.mkdtempSync(path.join(os.tmpdir(), "wp-preload-"));
+			const preload = path.join(own, "preload.js");
+			fs.writeFileSync(preload, 'require("module").enableCompileCache();\n');
+			try {
+				const { variable, childDirectory } = runBin({
+					NODE_OPTIONS: `--require ${JSON.stringify(preload)}`
+				});
+				// The preload's directory is already version-tagged, so handing it on
+				// would make children tag it twice.
+				expect(variable).toBeNull();
+				expect(
+					/** @type {string} */ (childDirectory).match(/v\d+\.\d+\.\d+-/g)
+				).toHaveLength(1);
+			} finally {
+				fs.rmSync(own, { recursive: true, force: true });
+			}
+		});
+
+		it("hands nothing on where the cache is disabled", () => {
+			expect(runBin({ NODE_DISABLE_COMPILE_CACHE: "1" })).toEqual({
+				variable: null,
+				childDirectory: null
+			});
+		});
+	}
+);

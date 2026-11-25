@@ -297,7 +297,7 @@ const measure = (name, root) =>
  * @returns {string} the count, with how much it grew (red) or shrank (green)
  */
 const count = (head, base) => {
-	if (base === undefined || head === base) return `${head}`;
+	if (base === undefined || head === base) return String(head);
 	return head > base
 		? `${head} (🔴 +${head - base})`
 		: `${head} (🟢 −${base - head})`;

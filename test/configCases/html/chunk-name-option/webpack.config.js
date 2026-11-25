@@ -52,6 +52,7 @@ module.exports = [
 		module: {
 			parser: {
 				html: {
+					// eslint-disable-next-line unicorn/prefer-default-parameters -- An empty name also denotes an inline script.
 					chunkName: ({ page, name, index, type }) =>
 						`${page}.${name || "inline"}.${index}.${type}`
 				}

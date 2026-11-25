@@ -2,10 +2,10 @@
 
 const PLUGIN_NAME = "DependencyAuthoringApiPlugin";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 /** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
 /** @typedef {Compiler["webpack"]} WebpackApi */
-/** @typedef {import("webpack-sources").ReplaceSource} ReplaceSource */
+/** @import { ReplaceSource } from "webpack-sources" */
 
 /** @type {undefined | EXPECTED_ANY} */
 let cached;

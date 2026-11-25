@@ -96,16 +96,15 @@ if (process.env.DEBUG_INFO) {
 					try {
 						const promise = fn();
 						if (promise && promise.then) {
-							return promise.then(
-								(r) => {
+							return promise
+								.then((r) => {
 									process.stdout.write(`DONE OK ${name}\n`);
 									return r;
-								},
-								(err) => {
+								})
+								.catch((err) => {
 									process.stdout.write(`DONE FAIL ${name}\n`);
 									throw err;
-								}
-							);
+								});
 						}
 
 						process.stdout.write(`DONE OK ${name}\n`);

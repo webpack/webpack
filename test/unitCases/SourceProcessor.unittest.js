@@ -10,7 +10,9 @@ const {
 	Part: CssPart,
 	_blockTokenOf
 } = require("../../lib/css/syntax-parser");
-const { SourceProcessor: HtmlSourceProcessor } = require("../../lib/html/syntax");
+const {
+	SourceProcessor: HtmlSourceProcessor
+} = require("../../lib/html/syntax");
 const {
 	Field: HtmlField,
 	Flag: HtmlFlag,
@@ -20,8 +22,14 @@ const {
 const GenericSourceProcessor = require("../../lib/util/SourceProcessor");
 const { PrintContext } = require("../../lib/util/SourceProcessor");
 
-const CSS = fixture("css", "source-processor-mode-css-walks-without-printing-when-none-is-asked-for");
-const HTML = fixture("html", "source-processor-mode-html-walks-without-printing-when-none-is-asked-for");
+const CSS = fixture(
+	"css",
+	"source-processor-mode-css-walks-without-printing-when-none-is-asked-for"
+);
+const HTML = fixture(
+	"html",
+	"source-processor-mode-html-walks-without-printing-when-none-is-asked-for"
+);
 
 /** @typedef {{ mode?: "minify" | "beautify", source?: string, content?: string }} PrintAsk */
 
@@ -46,7 +54,10 @@ describe("SourceProcessor", () => {
 			}
 		);
 
-		processor.process(fixture("css", "source-processor-reuses-the-caller-s-print-options"), options);
+		processor.process(
+			fixture("css", "source-processor-reuses-the-caller-s-print-options"),
+			options
+		);
 		expect(received).toBe(options);
 	});
 
@@ -83,22 +94,52 @@ describe("SourceProcessor", () => {
 
 		it("is not asked for by a walk", () => {
 			const { processor, loads } = counting();
-			expect(processor.process(fixture("css", "source-processor-deferred-printer-is-not-asked-for-by-a-walk-2"))).toBeUndefined();
+			expect(
+				processor.process(
+					fixture(
+						"css",
+						"source-processor-deferred-printer-is-not-asked-for-by-a-walk-2"
+					)
+				)
+			).toBeUndefined();
 			expect(loads()).toBe(0);
 		});
 
 		it("is asked for once, by the first print", () => {
 			const { processor, loads } = counting();
-			processor.process(fixture("css", "source-processor-deferred-printer-is-asked-for-once-by-the-first-print"));
-			processor.process(fixture("css", "source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2"), { mode: "minify" });
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-deferred-printer-is-asked-for-once-by-the-first-print"
+				)
+			);
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-deferred-printer-is-asked-for-once-by-the-first-print-2"
+				),
+				{ mode: "minify" }
+			);
 			expect(loads()).toBe(1);
 		});
 
 		it("is reused by every print after it", () => {
 			const { processor, loads } = counting();
-			processor.process(fixture("css", "source-processor-deferred-printer-is-reused-by-every-print-after-it"), { mode: "minify" });
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-deferred-printer-is-reused-by-every-print-after-it"
+				),
+				{ mode: "minify" }
+			);
 			const first = processor._printer;
-			processor.process(fixture("css", "source-processor-deferred-printer-is-reused-by-every-print-after-it-2"), { mode: "beautify" });
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-deferred-printer-is-reused-by-every-print-after-it-2"
+				),
+				{ mode: "beautify" }
+			);
 			expect(loads()).toBe(1);
 			expect(processor._printer).toBe(first);
 		});
@@ -106,11 +147,21 @@ describe("SourceProcessor", () => {
 		it("stays out of a processor that was handed its printer", () => {
 			const printer = () => "";
 			let loads = 0;
-			const processor = new GenericSourceProcessor(() => {}, printer, () => {
-				loads++;
-				return () => "";
-			});
-			processor.process(fixture("css", "source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its"), { mode: "minify" });
+			const processor = new GenericSourceProcessor(
+				() => {},
+				printer,
+				() => {
+					loads++;
+					return () => "";
+				}
+			);
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-deferred-printer-stays-out-of-a-processor-that-was-handed-its"
+				),
+				{ mode: "minify" }
+			);
 			expect(processor._printer).toBe(printer);
 			expect(loads).toBe(0);
 		});
@@ -305,7 +356,13 @@ describe("SourceProcessor", () => {
 				it("carries no state between calls", () => {
 					const processor = new Processor();
 					const first = processor.process(source, { mode: "minify" }).code;
-					processor.process(fixture("css", "source-processor-mode-carries-no-state-between-calls"), { mode: "minify" });
+					processor.process(
+						fixture(
+							"css",
+							"source-processor-mode-carries-no-state-between-calls"
+						),
+						{ mode: "minify" }
+					);
 					processor.process(source, { mode: "beautify" });
 					expect(processor.process(source, { mode: "minify" }).code).toBe(
 						first
@@ -358,7 +415,6 @@ describe("SourceProcessor", () => {
 					});
 					expect(map.sourcesContent).toEqual([source]);
 				});
-
 			});
 		}
 
@@ -369,8 +425,10 @@ describe("SourceProcessor", () => {
 
 			// The first declaration is the one the second overrides, so minifying
 			// retracts the piece it was written into.
-			const SOURCE =
-				fixture("css", "source-processor-source-map-over-the-flat-output-drops-the-mapping-of-a-piece");
+			const SOURCE = fixture(
+				"css",
+				"source-processor-source-map-over-the-flat-output-drops-the-mapping-of-a-piece"
+			);
 
 			/**
 			 * @param {"minify" | "beautify"} mode how to print
@@ -413,13 +471,19 @@ describe("SourceProcessor", () => {
 				environment: { browsers: ["chrome 120"] }
 			};
 			const dropped = new CssSourceProcessor().process(
-				fixture("css", "source-processor-source-map-css-anchors-nothing-at-a-rule-the-prefix-pass-took"),
+				fixture(
+					"css",
+					"source-processor-source-map-css-anchors-nothing-at-a-rule-the-prefix-pass-took"
+				),
 				ask
 			);
 			// The same stylesheet with the twin never written, so the surviving rule
 			// stands on the same source line: both must map alike.
 			const alone = new CssSourceProcessor().process(
-				fixture("css", "source-processor-source-map-css-anchors-nothing-at-a-rule-the-prefix-pass-took-2"),
+				fixture(
+					"css",
+					"source-processor-source-map-css-anchors-nothing-at-a-rule-the-prefix-pass-took-2"
+				),
 				ask
 			);
 			expect(dropped.code).toBe(alone.code);
@@ -480,9 +544,30 @@ describe("SourceProcessor", () => {
 					.process(source);
 				return lines;
 			};
-			expect(cssLines(fixture("css", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr"))).toEqual([1, 1, 2, 2]);
-			expect(cssLines(fixture("css", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff"))).toEqual([1, 1, 2, 2]);
-			expect(cssLines(fixture("css", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf"))).toEqual([1, 1, 2, 2]);
+			expect(
+				cssLines(
+					fixture(
+						"css",
+						"source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr"
+					)
+				)
+			).toEqual([1, 1, 2, 2]);
+			expect(
+				cssLines(
+					fixture(
+						"css",
+						"source-processor-node-path-counts-each-language-s-line-terminators-in-loc-ff"
+					)
+				)
+			).toEqual([1, 1, 2, 2]);
+			expect(
+				cssLines(
+					fixture(
+						"css",
+						"source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf"
+					)
+				)
+			).toEqual([1, 1, 2, 2]);
 			/**
 			 * @param {string} source three elements, a line terminator between each
 			 * @returns {number[]} the start line of every `<i>`
@@ -498,12 +583,29 @@ describe("SourceProcessor", () => {
 				return lines;
 			};
 			// HTML ends a line at a lone CR, but a form feed is only whitespace.
-			expect(htmlLines(fixture("html", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr"))).toEqual([1, 2, 3]);
-			expect(htmlLines(fixture("html", "source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf"))).toEqual([1, 2, 3]);
+			expect(
+				htmlLines(
+					fixture(
+						"html",
+						"source-processor-node-path-counts-each-language-s-line-terminators-in-loc-cr"
+					)
+				)
+			).toEqual([1, 2, 3]);
+			expect(
+				htmlLines(
+					fixture(
+						"html",
+						"source-processor-node-path-counts-each-language-s-line-terminators-in-loc-crlf"
+					)
+				)
+			).toEqual([1, 2, 3]);
 		});
 
 		it("reads html nodes through the shared members", () => {
-			const input = fixture("html", "source-processor-node-path-reads-html-nodes-through-the-shared-members");
+			const input = fixture(
+				"html",
+				"source-processor-node-path-reads-html-nodes-through-the-shared-members"
+			);
 			/** @type {Record<string, unknown>[]} */
 			const seen = [];
 			/** @type {[number, string][]} each child of the list, and its own first child's type */
@@ -579,11 +681,20 @@ describe("SourceProcessor", () => {
 						const written =
 							path.type() === CssNodeType.String
 								? path.source()
-								: path.source(.../** @type {[number, number]} */ (path.rangeOf(CssPart.name)));
+								: path.source(
+										.../** @type {[number, number]} */ (
+											path.rangeOf(CssPart.name)
+										)
+									);
 						css.push(`${path.name()}|${path.value()}|${written}`);
 					}
 				)
-				.process(fixture("css", "source-processor-node-path-reads-names-and-values-decoded-and-as-written-through"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-reads-names-and-values-decoded-and-as-written-through"
+					)
+				);
 			expect(css).toEqual([
 				"media||m\\65 dia",
 				"color||co\\6cor",
@@ -607,14 +718,22 @@ describe("SourceProcessor", () => {
 						html.push(`${path.name()}|${path.value()}`);
 					}
 				)
-				.process(fixture("html", "source-processor-node-path-reads-names-and-values-decoded-and-as-written-through"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-reads-names-and-values-decoded-and-as-written-through"
+					)
+				);
 			expect(html).toEqual(["html|", "b|", "|a & b", "|c"]);
 		});
 
 		it("reads css numbers as numbers and leaves source exactly as written", () => {
 			/** @type {[string, unknown, string, string][]} */
 			const seen = [];
-			const input = fixture("css", "source-processor-node-path-reads-css-numbers-as-numbers-and-leaves-source");
+			const input = fixture(
+				"css",
+				"source-processor-node-path-reads-css-numbers-as-numbers-and-leaves-source"
+			);
 			new CssSourceProcessor()
 				.use(
 					[
@@ -647,7 +766,10 @@ describe("SourceProcessor", () => {
 		});
 
 		it("reads every part of a node as a [start, end] range", () => {
-			const css = fixture("css", "source-processor-node-path-reads-every-part-of-a-node-as-a-start-end-range");
+			const css = fixture(
+				"css",
+				"source-processor-node-path-reads-every-part-of-a-node-as-a-start-end-range"
+			);
 			/** @type {Record<string, unknown>[]} */
 			const cssSeen = [];
 			new CssSourceProcessor()
@@ -656,7 +778,8 @@ describe("SourceProcessor", () => {
 					 * @param {[number, number] | null} range range
 					 * @returns {string | null} what it covers
 					 */
-					const text = (range) => (range === null ? null : path.source(...range));
+					const text = (range) =>
+						range === null ? null : path.source(...range);
 					cssSeen.push({
 						source: path.source(...path.range()),
 						name: text(path.rangeOf(CssPart.name)),
@@ -667,11 +790,26 @@ describe("SourceProcessor", () => {
 				})
 				.process(css);
 			expect(cssSeen).toEqual([
-				{ source: "@media x{a{b:url(c)}}", name: "media", value: null, block: "{a{b:url(c)}}", rules: 1 },
+				{
+					source: "@media x{a{b:url(c)}}",
+					name: "media",
+					value: null,
+					block: "{a{b:url(c)}}",
+					rules: 1
+				},
 				{ source: "url(c)", name: null, value: "c", block: null, rules: 0 },
-				{ source: "@import 'd'", name: "import", value: null, block: null, rules: 0 }
+				{
+					source: "@import 'd'",
+					name: "import",
+					value: null,
+					block: null,
+					rules: 0
+				}
 			]);
-			const html = fixture("html", "source-processor-node-path-reads-every-part-of-a-node-as-a-start-end-range");
+			const html = fixture(
+				"html",
+				"source-processor-node-path-reads-every-part-of-a-node-as-a-start-end-range"
+			);
 			/** @type {Record<string, unknown>[]} */
 			const htmlSeen = [];
 			new HtmlSourceProcessor()
@@ -680,7 +818,9 @@ describe("SourceProcessor", () => {
 					if (content === null) return;
 					htmlSeen.push({
 						source: path.source(...path.range()),
-						name: path.source(.../** @type {[number, number]} */ (path.rangeOf(HtmlPart.name))),
+						name: path.source(
+							.../** @type {[number, number]} */ (path.rangeOf(HtmlPart.name))
+						),
 						content: path.source(...content)
 					});
 				})
@@ -702,7 +842,8 @@ describe("SourceProcessor", () => {
 				css[type] = (path) => {
 					const range = path.range();
 					const children = [];
-					for (let i = 0; i < path.childCount(); i++) children.push(path.child(i));
+					for (let i = 0; i < path.childCount(); i++)
+						children.push(path.child(i));
 					if (
 						path.start() !== range[0] ||
 						path.end() !== range[1] ||
@@ -714,7 +855,11 @@ describe("SourceProcessor", () => {
 						const r = path.rangeOf(part);
 						const start = path.startOf(part);
 						const end = path.endOf(part);
-						if (r === null ? start !== -1 || end !== -1 : start !== r[0] || end !== r[1]) {
+						if (
+							r === null
+								? start !== -1 || end !== -1
+								: start !== r[0] || end !== r[1]
+						) {
 							differ.push(`${path.source()} ${part}`);
 						}
 					}
@@ -722,14 +867,20 @@ describe("SourceProcessor", () => {
 			}
 			new CssSourceProcessor()
 				.use(css)
-				.process(fixture("css", "source-processor-node-path-reads-every-position-as-numbers-too-and-the-children"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-reads-every-position-as-numbers-too-and-the-children"
+					)
+				);
 			/** @type {Record<number, (path: import("../../lib/html/syntax-parser").HtmlPath) => void>} */
 			const html = {};
 			for (const type of Object.values(HtmlNodeType)) {
 				html[type] = (path) => {
 					const range = path.range();
 					const children = [];
-					for (let i = 0; i < path.childCount(); i++) children.push(path.child(i));
+					for (let i = 0; i < path.childCount(); i++)
+						children.push(path.child(i));
 					if (
 						path.start() !== range[0] ||
 						path.end() !== range[1] ||
@@ -746,7 +897,11 @@ describe("SourceProcessor", () => {
 							const r = path.rangeOf(part, n);
 							const start = path.startOf(part, n);
 							const end = path.endOf(part, n);
-							if (r === null ? start !== -1 || end !== -1 : start !== r[0] || end !== r[1]) {
+							if (
+								r === null
+									? start !== -1 || end !== -1
+									: start !== r[0] || end !== r[1]
+							) {
 								differ.push(`${path.source(n)} ${part}`);
 							}
 						}
@@ -756,12 +911,20 @@ describe("SourceProcessor", () => {
 			}
 			new HtmlSourceProcessor()
 				.use(html)
-				.process(fixture("html", "source-processor-node-path-reads-every-position-as-numbers-too-and-the-children"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-reads-every-position-as-numbers-too-and-the-children"
+					)
+				);
 			expect(differ).toEqual([]);
 		});
 
 		it("reads a streamed block's start in its rule's enter", () => {
-			const css = fixture("css", "source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter");
+			const css = fixture(
+				"css",
+				"source-processor-node-path-reads-a-streamed-block-s-start-in-its-rule-s-enter"
+			);
 			/** @type {number[]} */
 			const starts = [];
 			new CssSourceProcessor()
@@ -778,9 +941,20 @@ describe("SourceProcessor", () => {
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
 					if (path.name() !== "style") return;
-					bodies.push(path.source(path.startOf(HtmlPart.content), path.endOf(HtmlPart.content)));
+					bodies.push(
+						path.source(
+							path.startOf(HtmlPart.content),
+							path.endOf(HtmlPart.content)
+						)
+					);
 				})
-				.process(fixture("html", "source-processor-node-path-ends-a-raw-text-body-at-its-end-tag-attributes-and"), { skip: { text: true } });
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-ends-a-raw-text-body-at-its-end-tag-attributes-and"
+					),
+					{ skip: { text: true } }
+				);
 			expect(bodies).toEqual(["a{}", "", "b{}"]);
 		});
 
@@ -788,13 +962,20 @@ describe("SourceProcessor", () => {
 			// `</b>` and `</a>` go through the adoption agency, `</span>` through the
 			// generic end tag, `</div>` and `</li>` through their own rules, and the
 			// second `<b>` is closed by its parent's end tag instead.
-			const html = fixture("html", "source-processor-node-path-ends-an-html-element-with-the-end-tag-naming-it");
+			const html = fixture(
+				"html",
+				"source-processor-node-path-ends-an-html-element-with-the-end-tag-naming-it"
+			);
 			/** @type {string[]} */
 			const seen = [];
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
 					if (path.parent !== null && path.name(path.parent) === "body") return;
-					if (path.name() === "html" || path.name() === "head" || path.name() === "body") {
+					if (
+						path.name() === "html" ||
+						path.name() === "head" ||
+						path.name() === "body"
+					) {
 						return;
 					}
 					seen.push(path.source());
@@ -811,13 +992,16 @@ describe("SourceProcessor", () => {
 		});
 
 		it("ends a foreign element with the end tag naming it", () => {
-			const html =
-				fixture("html", "source-processor-node-path-ends-a-foreign-element-with-the-end-tag-naming-it");
+			const html = fixture(
+				"html",
+				"source-processor-node-path-ends-a-foreign-element-with-the-end-tag-naming-it"
+			);
 			/** @type {string[]} */
 			const seen = [];
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
-					if (path.flag(HtmlFlag.svg) || path.flag(HtmlFlag.mathml)) seen.push(path.source());
+					if (path.flag(HtmlFlag.svg) || path.flag(HtmlFlag.mathml))
+						seen.push(path.source());
 				})
 				.process(html);
 			expect(seen).toEqual([
@@ -834,7 +1018,11 @@ describe("SourceProcessor", () => {
 			const seen = [];
 			new CssSourceProcessor()
 				.use(
-					[CssNodeType.QualifiedRule, CssNodeType.Ident, CssNodeType.SimpleBlock],
+					[
+						CssNodeType.QualifiedRule,
+						CssNodeType.Ident,
+						CssNodeType.SimpleBlock
+					],
 					(path) => {
 						seen.push([
 							path.type(),
@@ -845,7 +1033,12 @@ describe("SourceProcessor", () => {
 						]);
 					}
 				)
-				.process(fixture("css", "source-processor-node-path-answers-empty-for-a-css-node-without-a-name-or-value"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-answers-empty-for-a-css-node-without-a-name-or-value"
+					)
+				);
 			expect(seen).toEqual([
 				[CssNodeType.QualifiedRule, "", null, ""],
 				[CssNodeType.Ident, "", null, "a"],
@@ -856,8 +1049,10 @@ describe("SourceProcessor", () => {
 		});
 
 		it("reads css structure through fields and flags", () => {
-			const css =
-				fixture("css", "source-processor-node-path-reads-css-structure-through-fields-and-flags");
+			const css = fixture(
+				"css",
+				"source-processor-node-path-reads-css-structure-through-fields-and-flags"
+			);
 			/** @type {unknown[]} */
 			const seen = [];
 			new CssSourceProcessor()
@@ -913,13 +1108,26 @@ describe("SourceProcessor", () => {
 				[CssNodeType.Declaration, "color", "", "red", [], 0, null, 0, true],
 				[CssNodeType.Declaration, "width", "", "1px", [], 0, null, 0, false],
 				[CssNodeType.QualifiedRule, "", "b", "", [], 0, null, 0, false],
-				[CssNodeType.QualifiedRule, "", "c", "", ["d: f(1)"], 0, null, 0, false],
+				[
+					CssNodeType.QualifiedRule,
+					"",
+					"c",
+					"",
+					["d: f(1)"],
+					0,
+					null,
+					0,
+					false
+				],
 				[CssNodeType.Declaration, "d", "", "f(1)", [], 0, null, 0, false]
 			]);
 		});
 
 		it("reads html structure through fields and flags", () => {
-			const html = fixture("html", "source-processor-node-path-reads-html-structure-through-fields-and-flags");
+			const html = fixture(
+				"html",
+				"source-processor-node-path-reads-html-structure-through-fields-and-flags"
+			);
 			/** @type {unknown[]} */
 			const seen = [];
 			new HtmlSourceProcessor()
@@ -969,7 +1177,10 @@ describe("SourceProcessor", () => {
 			const visitors = {};
 			for (const type of Object.values(CssNodeType)) {
 				visitors[type] = (path) => {
-					if (path.type() !== CssNodeType.Declaration && path.flag(CssFlag.important)) {
+					if (
+						path.type() !== CssNodeType.Declaration &&
+						path.flag(CssFlag.important)
+					) {
 						flagged.push(path.source());
 					}
 				};
@@ -977,18 +1188,36 @@ describe("SourceProcessor", () => {
 			// The second rule's nodes reuse the first rule's ids.
 			new CssSourceProcessor()
 				.use(visitors)
-				.process(fixture("css", "source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns"
+					)
+				);
 			expect(flagged).toEqual([]);
 			/** @type {unknown[]} */
 			const css = [];
 			new CssSourceProcessor()
 				.use([CssNodeType.QualifiedRule], (path) => {
-					css.push(path.field(-1, CssField.declarations), path.field(-1, CssField.prelude));
+					css.push(
+						path.field(-1, CssField.declarations),
+						path.field(-1, CssField.prelude)
+					);
 				})
-				.process(fixture("css", "source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns-2"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns-2"
+					)
+				);
 			expect(css).toEqual([0, 0]);
 
-			new HtmlSourceProcessor().process(fixture("html", "source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns"));
+			new HtmlSourceProcessor().process(
+				fixture(
+					"html",
+					"source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns"
+				)
+			);
 			/** @type {unknown[]} */
 			const html = [];
 			new HtmlSourceProcessor()
@@ -1003,9 +1232,15 @@ describe("SourceProcessor", () => {
 					);
 				})
 				.use([HtmlNodeType.Element], (path) => {
-					if (path.name() === "p") html.push(path.field(-1, HtmlField.attributes));
+					if (path.name() === "p")
+						html.push(path.field(-1, HtmlField.attributes));
 				})
-				.process(fixture("html", "source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns-2"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-answers-fields-and-flags-only-for-the-node-that-owns-2"
+					)
+				);
 			expect(html).toEqual([0, 0, 0, 0]);
 		});
 
@@ -1033,7 +1268,12 @@ describe("SourceProcessor", () => {
 						css.push(path.fieldCount(CssField.value));
 					}
 				})
-				.process(fixture("css", "source-processor-node-path-types-each-visitor-s-path-by-the-node-types-it-visits"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-types-each-visitor-s-path-by-the-node-types-it-visits"
+					)
+				);
 			expect(css).toEqual([true, false, 0, 0, null, 0, 0]);
 
 			/** @type {unknown[]} */
@@ -1062,7 +1302,12 @@ describe("SourceProcessor", () => {
 						path.rangeOf(HtmlPart.name)
 					);
 				})
-				.process(fixture("html", "source-processor-node-path-types-each-visitor-s-path-by-the-node-types-it-visits"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-types-each-visitor-s-path-by-the-node-types-it-visits"
+					)
+				);
 			expect(html).toEqual(["a", 0, false, null, 0, 0, null]);
 		});
 
@@ -1075,13 +1320,21 @@ describe("SourceProcessor", () => {
 						path.source(),
 						path.name(),
 						path.type() === CssNodeType.Dimension
-							? path.source(.../** @type {[number, number]} */ (path.rangeOf(CssPart.name)))
+							? path.source(
+									.../** @type {[number, number]} */ (
+										path.rangeOf(CssPart.name)
+									)
+								)
 							: null,
 						path.flag(CssFlag.integer)
 					]);
 				})
 				.use([CssNodeType.Hash], (path) => {
-					css.push([path.source(), path.flag(CssFlag.id), path.within(CssNodeType.Declaration)]);
+					css.push([
+						path.source(),
+						path.flag(CssFlag.id),
+						path.within(CssNodeType.Declaration)
+					]);
 				})
 				.use([CssNodeType.SimpleBlock], (path) => {
 					css.push([path.source(), path.value()]);
@@ -1089,7 +1342,12 @@ describe("SourceProcessor", () => {
 				.use([CssNodeType.Declaration], (path) => {
 					css.push(path.textOf(CssPart.name));
 				})
-				.process(fixture("css", "source-processor-node-path-reads-what-one-grammar-has-through-the-generic"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-reads-what-one-grammar-has-through-the-generic"
+					)
+				);
 			expect(css).toEqual([
 				["#a", true, false],
 				["[b]", "["],
@@ -1105,12 +1363,19 @@ describe("SourceProcessor", () => {
 
 			/** @type {unknown[]} */
 			const html = [];
-			const page = fixture("html", "source-processor-node-path-reads-what-one-grammar-has-through-the-generic");
+			const page = fixture(
+				"html",
+				"source-processor-node-path-reads-what-one-grammar-has-through-the-generic"
+			);
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Doctype], (path) => {
 					html.push(
 						path.textOf(HtmlPart.publicId),
-						path.source(.../** @type {[number, number]} */ (path.rangeOf(HtmlPart.systemId))),
+						path.source(
+							.../** @type {[number, number]} */ (
+								path.rangeOf(HtmlPart.systemId)
+							)
+						),
 						// @ts-expect-error a doctype has no start tag
 						path.rangeOf(HtmlPart.startTag)
 					);
@@ -1172,7 +1437,12 @@ describe("SourceProcessor", () => {
 					);
 				})
 				// The second `b` is the adoption agency's clone, so no tag of its own.
-				.process(fixture("html", "source-processor-node-path-answers-null-for-a-part-a-node-does-not-have"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-answers-null-for-a-part-a-node-does-not-have"
+					)
+				);
 			expect(html).toEqual(["a", null, [26, 29], null, 0, null, null, 0]);
 
 			/** @type {unknown[]} */
@@ -1182,7 +1452,12 @@ describe("SourceProcessor", () => {
 					css.push(path.name(), _blockTokenOf(path.node));
 				})
 				// An escape the input ends inside is U+FFFD (CSS Syntax §4.3.7).
-				.process(fixture("css", "css-syntax-path-reads-on-every-node-kind-reads-numeric-values-units-and-integer-2"));
+				.process(
+					fixture(
+						"css",
+						"css-syntax-path-reads-on-every-node-kind-reads-numeric-values-units-and-integer-2"
+					)
+				);
 			expect(css).toEqual(["p\uFFFD", ""]);
 		});
 
@@ -1202,12 +1477,26 @@ describe("SourceProcessor", () => {
 				});
 			/** @type {{ values: string[] }} */
 			const state = { values: [] };
-			css.process(fixture("css", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the"), { state });
+			css.process(
+				fixture(
+					"css",
+					"source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the"
+				),
+				{ state }
+			);
 			expect(state.values).toEqual(["a", "c", "1px"]);
 			// Only type-checked: a state of another shape is refused.
 			const wrongState = () =>
-				// @ts-expect-error a state of another shape
-				css.process(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"), { state: { values: 1 } });
+				css.process(
+					fixture(
+						"css",
+						"source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"
+					),
+					{
+						// @ts-expect-error a state of another shape
+						state: { values: 1 }
+					}
+				);
 			expect(typeof wrongState).toBe("function");
 
 			/** @type {import("../../lib/html/syntax").SourceProcessor<{ paragraphs: number }>} */
@@ -1217,13 +1506,25 @@ describe("SourceProcessor", () => {
 			html.use([HtmlNodeType.Element], (path) => {
 				if (path.name() !== "p") return;
 				const inner = { values: [] };
-				css.process(fixture("css", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2"), { state: inner });
+				css.process(
+					fixture(
+						"css",
+						"source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2"
+					),
+					{ state: inner }
+				);
 				// A run of another language leaves this one's state as it found it.
 				seen.push(path.state === outer, inner.values.length);
 				path.state.paragraphs++;
 			});
 			const outer = { paragraphs: 0 };
-			html.process(fixture("html", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the"), { state: outer });
+			html.process(
+				fixture(
+					"html",
+					"source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the"
+				),
+				{ state: outer }
+			);
 			expect(seen).toEqual([true, 1, true, 1]);
 			expect(outer.paragraphs).toBe(2);
 			const { A } = require("../../lib/html/syntax-parser");
@@ -1236,14 +1537,27 @@ describe("SourceProcessor", () => {
 			throwing.use([HtmlNodeType.Element], () => {
 				throw new Error("visitor");
 			});
-			expect(() => throwing.process(fixture("html", "source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2"), { state: outer })).toThrow("visitor");
+			expect(() =>
+				throwing.process(
+					fixture(
+						"html",
+						"source-processor-node-path-hands-every-visitor-the-run-s-state-typed-by-the-2"
+					),
+					{ state: outer }
+				)
+			).toThrow("visitor");
 			expect(Object.prototype.hasOwnProperty.call(A, "state")).toBe(false);
 		});
 
 		it("hands every printer the path its visitors get, state and all", () => {
 			const JavascriptSourceProcessor = require("../../lib/javascript/JavascriptSourceProcessor");
-			const { NodeType: JavascriptNodeType } = require("../../lib/javascript/syntax-parser");
-			const JS = fixture("javascript", "source-processor-node-path-hands-every-printer-the-path-its-visitors-get");
+			const {
+				NodeType: JavascriptNodeType
+			} = require("../../lib/javascript/syntax-parser");
+			const JS = fixture(
+				"javascript",
+				"source-processor-node-path-hands-every-printer-the-path-its-visitors-get"
+			);
 
 			/** @type {[EXPECTED_ANY, string, number | undefined][]} processor, source, visited node type */
 			const runs = [
@@ -1302,7 +1616,12 @@ describe("SourceProcessor", () => {
 						inside++;
 					}
 				})
-				.process(fixture("css", "source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-node-path-knows-a-streamed-block-s-ancestors-until-it-closes"
+					)
+				);
 			expect(inside).toBe(1800);
 			expect(after).toEqual([false]);
 		});
@@ -1319,7 +1638,10 @@ describe("SourceProcessor", () => {
 					);
 				})
 				.process(
-					fixture("css", "source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written")
+					fixture(
+						"css",
+						"source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written"
+					)
 				);
 			expect(seen).toEqual([
 				null,
@@ -1336,24 +1658,31 @@ describe("SourceProcessor", () => {
 					names.push(path.textOf(CssPart.name));
 				})
 				.process(
-					fixture("css", "source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2")
+					fixture(
+						"css",
+						"source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2"
+					)
 				);
 			// The source as given, before the parse reads a NUL as U+FFFD.
 			expect(names).toEqual(["co\u0000lor"]);
 			// A direct parse reads it as given too.
-			const { A, Field, parseAStylesheet } = require("../../lib/css/syntax").parser;
+			const { A, Field, parseAStylesheet } =
+				require("../../lib/css/syntax").parser;
 			const rule = A.field(
 				0,
 				Field.rules,
 				parseAStylesheet(
-					fixture("css", "source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2")
+					fixture(
+						"css",
+						"source-processor-node-path-reads-a-css-part-s-source-text-escapes-as-written-2"
+					)
 				)
 			);
 			const declaration = A.field(0, Field.declarations, rule);
-			expect([A.textOf(CssPart.name, declaration), A.source(declaration)]).toEqual([
-				"co\u0000lor",
-				"co\u0000lor:red"
-			]);
+			expect([
+				A.textOf(CssPart.name, declaration),
+				A.source(declaration)
+			]).toEqual(["co\u0000lor", "co\u0000lor:red"]);
 		});
 
 		it("reads an html node's ancestors along its parent links", () => {
@@ -1370,7 +1699,10 @@ describe("SourceProcessor", () => {
 					chains.push(chain);
 				})
 				.process(
-					fixture("html", "source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links")
+					fixture(
+						"html",
+						"source-processor-node-path-reads-an-html-node-s-ancestors-along-its-parent-links"
+					)
 				);
 			expect(chains).toEqual([["p", "div", "body", "html", ""]]);
 		});
@@ -1391,7 +1723,10 @@ describe("SourceProcessor", () => {
 						})
 						.process(html, { mode: "minify" })
 				).code;
-			const html = fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed");
+			const html = fixture(
+				"html",
+				"source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed"
+			);
 			expect(
 				print(html, "enter", (path) => {
 					if (path.name() === "p") path.replace("<q>Q</q>");
@@ -1408,9 +1743,16 @@ describe("SourceProcessor", () => {
 				})
 			).toBe("<div><p>a</p>B<i>c</i></div>");
 			expect(
-				print(fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2"), "enter", (path) => {
-					if (path.name() === "div") path.replace("<span></span>");
-				})
+				print(
+					fixture(
+						"html",
+						"source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2"
+					),
+					"enter",
+					(path) => {
+						if (path.name() === "div") path.replace("<span></span>");
+					}
+				)
 			).toBe("<span></span>");
 			// The document composes whole, so the replacement is all it prints.
 			expect(
@@ -1422,7 +1764,10 @@ describe("SourceProcessor", () => {
 							}
 						})
 						.process(
-							fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2"),
+							fixture(
+								"html",
+								"source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-2"
+							),
 							{ mode: "minify" }
 						)
 				).code
@@ -1430,7 +1775,10 @@ describe("SourceProcessor", () => {
 			// A print the read-back check would hand back as the source keeps its edits.
 			expect(
 				print(
-					fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4"),
+					fixture(
+						"html",
+						"source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-4"
+					),
 					"enter",
 					(path) => {
 						if (path.name() === "div") path.replace("<span>b</span>");
@@ -1442,7 +1790,10 @@ describe("SourceProcessor", () => {
 					new HtmlSourceProcessor()
 						.use([HtmlNodeType.Text], (path) => path.replace("b"))
 						.process(
-							fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5"),
+							fixture(
+								"html",
+								"source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-5"
+							),
 							{ mode: "minify", fragmentContext: "select" }
 						)
 				).code
@@ -1451,12 +1802,20 @@ describe("SourceProcessor", () => {
 			expect(
 				new HtmlSourceProcessor()
 					.use([HtmlNodeType.Element], (path) => path.remove())
-					.process(fixture("html", "source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3"))
+					.process(
+						fixture(
+							"html",
+							"source-processor-node-path-prints-what-an-html-visitor-replaced-or-removed-3"
+						)
+					)
 			).toBeUndefined();
 		});
 
 		it("reads html attributes as nodes through the shared members", () => {
-			const input = fixture("html", "source-processor-node-path-reads-html-attributes-as-nodes-through-the-shared");
+			const input = fixture(
+				"html",
+				"source-processor-node-path-reads-html-attributes-as-nodes-through-the-shared"
+			);
 			/** @type {Record<string, unknown>[]} */
 			const seen = [];
 			new HtmlSourceProcessor()
@@ -1475,16 +1834,23 @@ describe("SourceProcessor", () => {
 							source: path.source(a),
 							written: valueRange === null ? null : path.source(...valueRange),
 							nameSource: path.source(
-								.../** @type {[number, number]} */ (path.rangeOf(HtmlPart.name, a))
+								.../** @type {[number, number]} */ (
+									path.rangeOf(HtmlPart.name, a)
+								)
 							),
 							loc: path.loc(a).slice(0, 2)
 						});
 					}
 					expect(
-						path.field(path.fieldCount(HtmlField.attributes), HtmlField.attributes)
+						path.field(
+							path.fieldCount(HtmlField.attributes),
+							HtmlField.attributes
+						)
 					).toBe(0);
 					expect(path.fieldNamed(HtmlField.attributes, "id")).toBe(0);
-					expect(path.name(path.fieldNamed(HtmlField.attributes, "title"))).toBe("title");
+					expect(
+						path.name(path.fieldNamed(HtmlField.attributes, "title"))
+					).toBe("title");
 				})
 				.process(input);
 			expect(seen).toEqual([
@@ -1525,7 +1891,12 @@ describe("SourceProcessor", () => {
 				.use([HtmlNodeType.Document, HtmlNodeType.DocumentFragment], (path) => {
 					seen.push([path.type(), path.parent, path.index]);
 				})
-				.process(fixture("html", "source-processor-node-path-reads-the-html-root-and-a-template-s-content-at-index"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-node-path-reads-the-html-root-and-a-template-s-content-at-index"
+					)
+				);
 			expect(seen).toHaveLength(2);
 			expect(seen[0]).toEqual([HtmlNodeType.Document, null, 0]);
 			expect(seen[1][0]).toBe(HtmlNodeType.DocumentFragment);
@@ -1534,10 +1905,18 @@ describe("SourceProcessor", () => {
 		});
 
 		it("reads css nodes through the shared members", () => {
-			const input = fixture("css", "source-processor-node-path-reads-css-nodes-through-the-shared-members-2");
+			const input = fixture(
+				"css",
+				"source-processor-node-path-reads-css-nodes-through-the-shared-members-2"
+			);
 			// Leaves reuse ids that held lists in this parse, so a leaf reading
 			// its id's leftover list slots would report children.
-			new CssSourceProcessor().process(fixture("css", "source-processor-node-path-reads-css-nodes-through-the-shared-members"));
+			new CssSourceProcessor().process(
+				fixture(
+					"css",
+					"source-processor-node-path-reads-css-nodes-through-the-shared-members"
+				)
+			);
 			/** @type {Record<string, unknown>[]} */
 			const seen = [];
 			/** @type {string[]} */
@@ -1588,15 +1967,28 @@ describe("SourceProcessor", () => {
 				.use({
 					[CssNodeType.Declaration]: (path) => log.push(`second ${path.name()}`)
 				});
-			processor.process(fixture("css", "source-processor-stop-ends-a-css-walk-no-later-visitor-exit-or-comment-fires"));
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-stop-ends-a-css-walk-no-later-visitor-exit-or-comment-fires"
+				)
+			);
 			expect(log).toEqual(["rule", "a", "second a", "b"]);
 			log.length = 0;
-			processor.process(fixture("css", "source-processor-stop-ends-a-css-walk-no-later-visitor-exit-or-comment-fires-2"));
+			processor.process(
+				fixture(
+					"css",
+					"source-processor-stop-ends-a-css-walk-no-later-visitor-exit-or-comment-fires-2"
+				)
+			);
 			expect(log).toEqual(["rule", "a", "second a", "rule exit", "comment"]);
 		});
 
 		it("stops css visitors but still prints the whole output", () => {
-			const css = fixture("css", "source-processor-stop-stops-css-visitors-but-still-prints-the-whole-output");
+			const css = fixture(
+				"css",
+				"source-processor-stop-stops-css-visitors-but-still-prints-the-whole-output"
+			);
 			let fired = 0;
 			const { code } = new CssSourceProcessor()
 				.use({
@@ -1622,10 +2014,20 @@ describe("SourceProcessor", () => {
 				},
 				exit: (path) => log.push(`/${path.name()}`)
 			});
-			processor.process(fixture("html", "source-processor-stop-ends-an-html-walk-and-the-next-parse-starts-afresh"));
+			processor.process(
+				fixture(
+					"html",
+					"source-processor-stop-ends-an-html-walk-and-the-next-parse-starts-afresh"
+				)
+			);
 			expect(log).toEqual(["html", "head", "base"]);
 			log.length = 0;
-			processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"));
+			processor.process(
+				fixture(
+					"html",
+					"html-syntax-the-facade-holds-no-printer-until-something-prints"
+				)
+			);
 			expect(log).toEqual([
 				"html",
 				"head",
@@ -1640,7 +2042,10 @@ describe("SourceProcessor", () => {
 
 		it("ends a streamed html walk mid-parse", () => {
 			// Past the node count where the walk streams during tree construction.
-			const html = fixture("html", "source-processor-stop-ends-a-streamed-html-walk-mid-parse");
+			const html = fixture(
+				"html",
+				"source-processor-stop-ends-a-streamed-html-walk-mid-parse"
+			);
 			let seen = 0;
 			new HtmlSourceProcessor()
 				.use([HtmlNodeType.Element], (path) => {
@@ -1658,7 +2063,10 @@ describe("SourceProcessor", () => {
 		});
 
 		it("stops html visitors but still prints the whole output", () => {
-			const html = fixture("html", "source-processor-stop-stops-html-visitors-but-still-prints-the-whole-output");
+			const html = fixture(
+				"html",
+				"source-processor-stop-stops-html-visitors-but-still-prints-the-whole-output"
+			);
 			/** @type {string[]} */
 			const log = [];
 			const { code } = new HtmlSourceProcessor()
@@ -1685,7 +2093,12 @@ describe("SourceProcessor", () => {
 				.use([CssNodeType.Number, CssNodeType.Dimension], (path) =>
 					css.push(path.source())
 				)
-				.process(fixture("css", "source-processor-use-with-an-array-of-node-types-registers-one-visitor-for-every"));
+				.process(
+					fixture(
+						"css",
+						"source-processor-use-with-an-array-of-node-types-registers-one-visitor-for-every"
+					)
+				);
 			expect(css).toEqual(["1px", "2", "3em"]);
 			/** @type {string[]} */
 			const html = [];
@@ -1693,7 +2106,12 @@ describe("SourceProcessor", () => {
 				.use([HtmlNodeType.Text, HtmlNodeType.Comment], {
 					exit: (path) => html.push(path.source())
 				})
-				.process(fixture("html", "source-processor-use-with-an-array-of-node-types-registers-one-visitor-for-every"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-use-with-an-array-of-node-types-registers-one-visitor-for-every"
+					)
+				);
 			expect(html).toEqual(["a", "<!--b-->", "c"]);
 		});
 
@@ -1717,7 +2135,13 @@ describe("SourceProcessor", () => {
 						seen.push(path.name());
 					}
 				})
-				.process(fixture("css", "css-syntax-source-processor-replacing-a-node-removes-a-node-in-an-enter-visitor"), { mode: "minify" });
+				.process(
+					fixture(
+						"css",
+						"css-syntax-source-processor-replacing-a-node-removes-a-node-in-an-enter-visitor"
+					),
+					{ mode: "minify" }
+				);
 			expect(seen).toEqual(["color", "top"]);
 			expect(result.code).toBe("a{color:red;top:0}");
 		});
@@ -1731,7 +2155,12 @@ describe("SourceProcessor", () => {
 						seen.push(path.name());
 					}
 				})
-				.process(fixture("html", "source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-3"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-printing-in-pieces-drops-a-last-child-s-end-tag-only-when-the-3"
+					)
+				);
 			expect(seen).toEqual(["html", "head", "body", "div", "p"]);
 		});
 
@@ -1745,7 +2174,12 @@ describe("SourceProcessor", () => {
 						exit: () => order.push("exit")
 					}
 				})
-				.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
+				.process(
+					fixture(
+						"css",
+						"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+					)
+				);
 			expect(order).toEqual(["enter", "exit"]);
 		});
 
@@ -1758,16 +2192,28 @@ describe("SourceProcessor", () => {
 	describe("empty and degenerate input", () => {
 		for (const [language, Processor] of LANGUAGES) {
 			it(`${language} prints empty input without failing`, () => {
-				const { code } = new Processor().process(fixture("css", "source-processor-empty-and-degenerate-input-prints-empty-input-without-failing"), { mode: "minify" });
+				const { code } = new Processor().process(
+					fixture(
+						"css",
+						"source-processor-empty-and-degenerate-input-prints-empty-input-without-failing"
+					),
+					{ mode: "minify" }
+				);
 				expect(typeof code).toBe("string");
 			});
 		}
 
 		it("css keeps a license comment", () => {
 			expect(
-				new CssSourceProcessor().process(fixture("css", "source-processor-empty-and-degenerate-input-css-keeps-a-license-comment"), {
-					mode: "minify"
-				}).code
+				new CssSourceProcessor().process(
+					fixture(
+						"css",
+						"source-processor-empty-and-degenerate-input-css-keeps-a-license-comment"
+					),
+					{
+						mode: "minify"
+					}
+				).code
 			).toContain("/*! keep */");
 		});
 	});

@@ -151,7 +151,9 @@ const tree = (html) => {
 				}
 				out.push(`#text:${nodePath.value()}`);
 			},
-			[NodeType.Doctype]: (nodePath) => out.push(`#doctype:${nodePath.name()}`)
+			[NodeType.Doctype]: (nodePath) => {
+				out.push(`#doctype:${nodePath.name()}`);
+			}
 		})
 		.process(html, {});
 	return out;

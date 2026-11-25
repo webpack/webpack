@@ -140,7 +140,7 @@ const DOCTYPE_SPELLINGS = [
 	"<!DOCTYPE html>",
 	"<!doctype HTML>",
 	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">',
-	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">',
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "https://www.w3.org/TR/html4/loose.dtd">',
 	'<!DOCTYPE html SYSTEM "about:legacy-compat">',
 	"<!DOCTYPE>",
 	"<!DOCTYPE foo>",
@@ -313,7 +313,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 				"a.html",
 				" b.html ",
 				"#x",
-				"http://example.com/a?b=1&amp;c=2",
+				"https://example.com/a?b=1&amp;c=2",
 				SCRIPT_URL,
 				""
 			]);
@@ -380,7 +380,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 	 */
 	const content = (depth, space) => {
 		let out = "";
-		const count = depth >= MAX_DEPTH ? below(2) : below(5);
+		const count = below(depth >= MAX_DEPTH ? 2 : 5);
 		for (let i = 0; i < count; i++) out += node(depth, space);
 		return out;
 	};

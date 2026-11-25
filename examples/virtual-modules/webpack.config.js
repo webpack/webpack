@@ -74,7 +74,8 @@ export default value;`
 
 						return `export const routes = {${files
 							.map(
-								(key) => `${key.split(".")[0]}: () => import('./routes/${key}')`
+								(key) =>
+									`${key.split(".", 1)[0]}: () => import('./routes/${key}')`
 							)
 							.join(",\n")}}`;
 					}

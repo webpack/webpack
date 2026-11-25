@@ -45,7 +45,9 @@ describe("Profiling Plugin", () => {
 		const profiler = new ProfilingPlugin.Profiler();
 		return profiler.sendCommand(
 			"randy",
-			/** @type {import("inspector").Profiler.SetSamplingIntervalParameterType} */ (/** @type {unknown} */ ("is awesome"))
+			/** @type {import("inspector").Profiler.SetSamplingIntervalParameterType} */ (
+				/** @type {unknown} */ ("is awesome")
+			)
 		);
 	});
 

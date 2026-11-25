@@ -24,7 +24,10 @@ const attributeValue = (element, name) =>
 // these hold what an accessor answers when read again.
 describe("XmlSyntax — parsing", () => {
 	it("should forget the entity text a parse that threw decoded", () => {
-		const aborted = fixture("xml", "xml-syntax-parsing-should-forget-the-entity-text-a-parse-that-threw-decoded");
+		const aborted = fixture(
+			"xml",
+			"xml-syntax-parsing-should-forget-the-entity-text-a-parse-that-threw-decoded"
+		);
 		expect(() =>
 			parseHtmlRefs(aborted, 0, {
 				xml: true,
@@ -33,13 +36,30 @@ describe("XmlSyntax — parsing", () => {
 				}
 			})
 		).toThrow("eof-in-tag");
-		const root = A.child(1, parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-forget-the-entity-text-a-parse-that-threw-decoded-2"), 0, { xml: true }));
+		const root = A.child(
+			1,
+			parseHtmlRefs(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-forget-the-entity-text-a-parse-that-threw-decoded-2"
+				),
+				0,
+				{ xml: true }
+			)
+		);
 		expect(attributeValue(root, "a")).toBe("NEW");
 		expect(A.value(A.child(0, root))).toBe("NEW");
 	});
 
 	it("should skip text under a DTD and keep the elements an entity holds", () => {
-		const document = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-honor-ast-skip-options-outside-the-root-and-under-a-dtd-2"), 0, { xml: true, skip: { text: true } });
+		const document = parseHtmlRefs(
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-honor-ast-skip-options-outside-the-root-and-under-a-dtd-2"
+			),
+			0,
+			{ xml: true, skip: { text: true } }
+		);
 		const root = A.child(1, document);
 		const children = A.children(root);
 		expect(children.map((child) => A.type(child))).toEqual([NodeType.Element]);
@@ -48,7 +68,10 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should expose XML attribute values through the shared path", () => {
-		const source = fixture("xml", "xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path");
+		const source = fixture(
+			"xml",
+			"xml-syntax-parsing-should-expose-xml-attribute-values-through-the-shared-path"
+		);
 		const document = parseHtmlRefs(source, 0, { xml: true });
 		const root = A.child(1, document);
 		const attribute = A.fieldNamed(Field.attributes, "value", root);
@@ -63,10 +86,23 @@ describe("XmlSyntax — parsing", () => {
 			"xml-syntax-parsing-should-decode-an-xml-attribute-only-once-per-parse-2"
 		);
 		const document = parseHtmlRefs(source, 0, { xml: true });
-		const attribute = A.fieldNamed(Field.attributes, "value", A.child(1, document));
+		const attribute = A.fieldNamed(
+			Field.attributes,
+			"value",
+			A.child(1, document)
+		);
 		for (let i = 0; i < 4; i++) expect(A.value(attribute) === value).toBe(true);
-		const next = parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-decode-an-xml-attribute-only-once-per-parse"), 0, { xml: true });
-		expect(A.value(A.fieldNamed(Field.attributes, "value", A.child(0, next)))).toBe("next");
+		const next = parseHtmlRefs(
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-decode-an-xml-attribute-only-once-per-parse"
+			),
+			0,
+			{ xml: true }
+		);
+		expect(
+			A.value(A.fieldNamed(Field.attributes, "value", A.child(0, next)))
+		).toBe("next");
 	});
 
 	it("should end the name of an entity reference in every code unit alike", () => {
@@ -111,9 +147,8 @@ describe("XmlSyntax — parsing", () => {
 			jest.isolateModules(() => {
 				fresh = require("../../../lib/html/syntax-parser");
 			});
-			const parser = /** @type {typeof import("../../../lib/html/syntax-parser")} */ (
-				fresh
-			);
+			const parser =
+				/** @type {typeof import("../../../lib/html/syntax-parser")} */ (fresh);
 			const path = parser.A;
 			const root = path.child(0, parser.parseHtml(source, 0, { xml: true }));
 			/** @type {string[]} */
@@ -133,33 +168,69 @@ describe("XmlSyntax — parsing", () => {
 		let expected = [];
 		// A few past the first capacity: doubling it holds what is predicted.
 		for (let i = 0; i < 3000; i++) expected.push(`b=${i}`, `c=${i}x`);
-		expect(attributesOf(fixture("xml", "xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-2"))).toEqual(expected);
+		expect(
+			attributesOf(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-2"
+				)
+			)
+		).toEqual(expected);
 		// Three times it, spread evenly: the capacity is read off the ones seen so far.
 		for (let i = 3000; i < 6000; i++) expected.push(`b=${i}`, `c=${i}x`);
-		expect(attributesOf(fixture("xml", "xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-3"))).toEqual(expected);
+		expect(
+			attributesOf(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-3"
+				)
+			)
+		).toEqual(expected);
 		// All in the first tag, before any token ended: nothing to read a capacity off.
 		expected = [];
 		for (let i = 0; i < 4200; i++) expected.push(`a${i}=${i}`);
-		expect(attributesOf(fixture("xml", "xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-4"))).toEqual(expected);
+		expect(
+			attributesOf(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-4"
+				)
+			)
+		).toEqual(expected);
 		// A dense start before a long text: what it predicts is trusted fourfold only.
 		expected = [];
 		for (let i = 0; i < 700; i++) {
 			expected.push("b=", `c=${i}`, "d=", "e=", "f=", `g=${i}`);
 		}
 		expected.push("y=1");
-		expect(attributesOf(fixture("xml", "xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-5"))).toEqual(expected);
+		expect(
+			attributesOf(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr-5"
+				)
+			)
+		).toEqual(expected);
 		// Just under the capacity a release keeps: the headroom stops there.
 		expected = [];
 		for (let i = 0; i < 31000; i++) expected.push("b=1", "c=2");
 		expect(
-			attributesOf(fixture("xml", "xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr"))
+			attributesOf(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-keep-every-attribute-of-an-xml-document-its-columns-gr"
+				)
+			)
 		).toEqual(expected);
 	});
 
 	it("should normalize an XML attribute first read after the parse, in any order", () => {
 		// Inline: the tab, the line ends and the order of the reads are the test.
 		const document = parseHtmlRefs(
-			fixture("xml", "xml-syntax-parsing-should-normalize-an-xml-attribute-first-read-after-the-parse"),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-normalize-an-xml-attribute-first-read-after-the-parse"
+			),
 			0,
 			{ xml: true }
 		);
@@ -175,7 +246,10 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should read the attributes of a tag an XML entity holds", () => {
 		const document = parseHtmlRefs(
-			fixture("xml", "xml-syntax-parsing-should-read-the-attributes-of-a-tag-an-xml-entity-holds"),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-read-the-attributes-of-a-tag-an-xml-entity-holds"
+			),
 			0,
 			{ xml: true }
 		);
@@ -188,7 +262,10 @@ describe("XmlSyntax — parsing", () => {
 	it("should resolve an XML attribute's references as its start tag is read", () => {
 		// A declaration after the tag does not reach back into it, whenever it is read.
 		const document = parseHtmlRefs(
-			fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag"),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag"
+			),
 			0,
 			{ xml: true }
 		);
@@ -204,25 +281,75 @@ describe("XmlSyntax — parsing", () => {
 	});
 
 	it("should resolve an XML reference of each form and leave any other `&` as written", () => {
-		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any"))).toBe("<>&\"'");
+		expect(
+			decodeXmlEntities(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any"
+				)
+			)
+		).toBe("<>&\"'");
 		// A name a code unit away from a predefined one is the DTD's to resolve.
-		const others =
-			fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2");
+		const others = fixture(
+			"xml",
+			"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-2"
+		);
 		expect(decodeXmlEntities(others)).toBe(others);
-		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3"))).toBe("AAjjA");
-		const malformed = fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4");
+		expect(
+			decodeXmlEntities(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-3"
+				)
+			)
+		).toBe("AAjjA");
+		const malformed = fixture(
+			"xml",
+			"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-4"
+		);
 		expect(decodeXmlEntities(malformed)).toBe(malformed);
 		// Past U+10FFFF, however many digits, and what §2.2 `Char` leaves out.
 		expect(
 			decodeXmlEntities(
-				fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5")
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-5"
+				)
 			)
 		).toBe("\uFFFD".repeat(7));
-		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6"))).toBe("\u{10FFFF}\u{10FFFF}");
-		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7"))).toBe("a&b&c&lt");
+		expect(
+			decodeXmlEntities(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-6"
+				)
+			)
+		).toBe("\u{10FFFF}\u{10FFFF}");
+		expect(
+			decodeXmlEntities(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-7"
+				)
+			)
+		).toBe("a&b&c&lt");
 		// A declaration may extend a predefined name, and cannot take one over.
-		parseHtmlRefs(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-ot"), 0, { xml: true });
-		expect(decodeXmlEntities(fixture("xml", "xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8"))).toBe("two&<");
+		parseHtmlRefs(
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-ot"
+			),
+			0,
+			{ xml: true }
+		);
+		expect(
+			decodeXmlEntities(
+				fixture(
+					"xml",
+					"xml-syntax-parsing-should-resolve-an-xml-reference-of-each-form-and-leave-any-8"
+				)
+			)
+		).toBe("two&<");
 	});
 
 	it("should return an XML attribute value holding nothing to escape as it came", () => {
@@ -232,7 +359,7 @@ describe("XmlSyntax — parsing", () => {
 		expect(escapeXmlAttribute("a\"b'c<d&e\tf\ng\rh", '"')).toBe(
 			"a&quot;b'c&lt;d&amp;e&#9;f&#10;g&#13;h"
 		);
-		expect(escapeXmlAttribute("a\"b'c", "'")).toBe("a\"b&apos;c");
+		expect(escapeXmlAttribute("a\"b'c", "'")).toBe('a"b&apos;c');
 	});
 
 	it("should spend the expansion budget on XML attributes in document order", () => {
@@ -256,7 +383,10 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should tell an XML attribute holding a reference from the text around it", () => {
 		const document = parseHtmlRefs(
-			fixture("xml", "xml-syntax-parsing-should-tell-an-xml-attribute-holding-a-reference-from-the-tex"),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-tell-an-xml-attribute-holding-a-reference-from-the-tex"
+			),
 			0,
 			{ xml: true }
 		);
@@ -273,9 +403,18 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should end an XML start tag the input cuts after the space around `=`", () => {
 		for (const source of [
-			fixture("xml", "xml-syntax-parsing-should-end-an-xml-start-tag-the-input-cuts-after-the-space"),
-			fixture("xml", "xml-syntax-parsing-should-end-an-xml-start-tag-the-input-cuts-after-the-space-2"),
-			fixture("xml", "xml-syntax-parsing-should-end-an-xml-start-tag-the-input-cuts-after-the-space-3")
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-end-an-xml-start-tag-the-input-cuts-after-the-space"
+			),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-end-an-xml-start-tag-the-input-cuts-after-the-space-2"
+			),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-end-an-xml-start-tag-the-input-cuts-after-the-space-3"
+			)
 		]) {
 			/** @type {string[]} */
 			const codes = [];
@@ -292,7 +431,10 @@ describe("XmlSyntax — parsing", () => {
 
 	it("should decode the character references a declared entity's value holds", () => {
 		const document = parseHtmlRefs(
-			fixture("xml", "xml-syntax-parsing-should-decode-the-character-references-a-declared-entity-s-va"),
+			fixture(
+				"xml",
+				"xml-syntax-parsing-should-decode-the-character-references-a-declared-entity-s-va"
+			),
 			0,
 			{ xml: true }
 		);

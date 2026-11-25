@@ -7,7 +7,7 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
 module.exports = ["memory", "filesystem"].map((type) => ({
 	mode: "development",
 	entry: { main: "./index.js", trigger: "./tick.js" },
-	cache: type === "memory" ? { type: "memory" } : { type: "filesystem" },
+	cache: { type: type === "memory" ? "memory" : "filesystem" },
 	experiments: { cacheUnaffected: true },
 	optimization: { providedExports: false },
 	output: { filename: `${type}-[name].js`, clean: false },

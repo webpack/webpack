@@ -2,9 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const webpack = require("../../../../");
-
-const { DefinePlugin } = webpack;
+const { DefinePlugin } = require("../../../../");
 
 /**
  * @param {string} file the file to read

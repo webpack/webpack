@@ -35,10 +35,8 @@ const { promisify } = require("util");
 const zlib = require("zlib");
 const cssMinify = require("../lib/css/cssMinify");
 const { SourceProcessor } = require("../lib/css/syntax");
-const cssSyntaxParser = require("../lib/css/syntax").parser;
-
 const { Flag, NodeType, Part, isIdentStartCodePoint, unescapeIdentifier } =
-	cssSyntaxParser;
+	require("../lib/css/syntax").parser;
 
 const {
 	CSS_RESPELLINGS,
@@ -336,7 +334,7 @@ const fixtures = () => [
 	)
 ];
 
-/** @typedef {import("../lib/css/syntax-parser").CssPath} CssPath */
+/** @import { CssPath } from "../lib/css/syntax-parser" */
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
@@ -1371,9 +1369,9 @@ const main = async () => {
 	await setup();
 	const postcss = load("postcss");
 	const selectorParser = load("postcss-selector-parser");
-	for (const [label, file] of fixtures().filter(([name]) =>
-		wantedFixture(name)
-	)) {
+	for (const [label, file] of fixtures()) {
+		if (!wantedFixture(label)) continue;
+
 		// A trailing sourceMappingURL is a build artifact, not stylesheet content,
 		// and the tools disagree on keeping it.
 		const css = (await fs.promises.readFile(file, "utf8")).replace(
@@ -1389,7 +1387,9 @@ const main = async () => {
 				input.brotli
 			)} brotli, ${kb(input.zstd)} zstd), ${before.size} classes\n`
 		);
-		for (const stage of STAGES.filter(wantedStage)) {
+		for (const stage of STAGES) {
+			if (!wantedStage(stage)) continue;
+
 			const tools = TOOLS.filter(
 				(tool) => tool.stage === stage && wantedTool(tool.name)
 			);

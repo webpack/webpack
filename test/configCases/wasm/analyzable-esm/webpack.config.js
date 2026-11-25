@@ -6,7 +6,7 @@
 
 const webpack = require("../../../../");
 
-const INSTANTIATE = `${"__webpack_require__"}.v(exports, `;
+const INSTANTIATE = "__webpack_require__.v(exports, ";
 
 /**
  * @param {string} chunkFile emitted file of the `flat` chunk

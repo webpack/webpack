@@ -106,7 +106,18 @@ describe("PackFileCacheStrategy", () => {
 		const pack = /** @type {EXPECTED_ANY} */ (
 			getSerializer("Pack").deserialize(
 				createContext(
-					["a", "b", null, "etag-a", "etag-b", 1, 2, new Set(["a", "b"]), lazy, null],
+					[
+						"a",
+						"b",
+						null,
+						"etag-a",
+						"etag-b",
+						1,
+						2,
+						new Set(["a", "b"]),
+						lazy,
+						null
+					],
 					{ logger: createLogger(messages) }
 				)
 			)
@@ -307,9 +318,7 @@ describe("PackFileCacheStrategy", () => {
 					/** @type {(err: Error | null, valid?: boolean) => void} */ callback
 				) =>
 					callback(
-						...(snapshot === "build-snapshot"
-							? results.build
-							: results.resolve)
+						...(snapshot === "build-snapshot" ? results.build : results.resolve)
 					),
 				checkResolveResultsValid: (
 					/** @type {unknown} */ _resolveResults,
@@ -349,9 +358,7 @@ describe("PackFileCacheStrategy", () => {
 				messages
 			);
 			await expect(strategy._openPack()).resolves.toBe(pack);
-			expect([...strategy.newBuildDependencies]).toEqual([
-				"build-dependency"
-			]);
+			expect([...strategy.newBuildDependencies]).toEqual(["build-dependency"]);
 			expect(messages).toContain(
 				"log: resolving of build dependencies is invalid, will re-resolve build dependencies"
 			);

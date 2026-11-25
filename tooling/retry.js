@@ -26,7 +26,7 @@ const readAttempts = (value) => {
 	// WHY: a typo here used to reach the loop as NaN, where every `attempt >=
 	// ATTEMPTS` is false, so a failing command retried until the job timed out.
 	// Refusing to start says which variable is wrong in one line instead.
-	if (!Number.isInteger(attempts) || attempts < 1) {
+	if (!Number.isSafeInteger(attempts) || attempts < 1) {
 		throw new Error(
 			`RETRY_ATTEMPTS must be a positive integer, got "${value}"`
 		);

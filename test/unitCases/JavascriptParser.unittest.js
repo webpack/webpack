@@ -36,7 +36,10 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"call member using bracket notation": [
-			fixture("javascript", "javascript-parser-should-parse-call-member-using-bracket-notation"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-call-member-using-bracket-notation"
+			),
 			{
 				cdeabc: ["membertest"]
 			}
@@ -48,7 +51,10 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"call inner member using bracket notation": [
-			fixture("javascript", "javascript-parser-should-parse-call-inner-member-using-bracket-notation"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-call-inner-member-using-bracket-notation"
+			),
 			{
 				cdedddabc: ["inner"]
 			}
@@ -72,7 +78,10 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"in function definition": [
-			fixture("javascript", "javascript-parser-should-parse-in-function-definition"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-in-function-definition"
+			),
 			{}
 		],
 		"const definition": [
@@ -84,7 +93,10 @@ describe("JavascriptParser", () => {
 			{}
 		],
 		"function definition": [
-			fixture("javascript", "javascript-parser-should-parse-function-definition"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-function-definition"
+			),
 			{}
 		],
 		"class definition": [
@@ -102,7 +114,10 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming with const": [
-			fixture("javascript", "javascript-parser-should-parse-renaming-with-const"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-renaming-with-const"
+			),
 			{
 				abc: ["test"]
 			}
@@ -114,32 +129,47 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"renaming with assignment": [
-			fixture("javascript", "javascript-parser-should-parse-renaming-with-assignment"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-renaming-with-assignment"
+			),
 			{
 				abc: ["test"]
 			}
 		],
 		"renaming with IIFE": [
-			fixture("javascript", "javascript-parser-should-parse-renaming-with-iife"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-renaming-with-iife"
+			),
 			{
 				abc: ["test"]
 			}
 		],
 		"renaming arguments with IIFE (called)": [
-			fixture("javascript", "javascript-parser-should-parse-renaming-arguments-with-iife-called"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-renaming-arguments-with-iife-called"
+			),
 			{
 				abc: ["test"],
 				fgh: [""]
 			}
 		],
 		"renaming this's properties with IIFE (called)": [
-			fixture("javascript", "javascript-parser-should-parse-renaming-this-s-properties-with-iife-called"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-renaming-this-s-properties-with-iife-called"
+			),
 			{
 				ijksub: ["test"]
 			}
 		],
 		"renaming this's properties with nested IIFE (called)": [
-			fixture("javascript", "javascript-parser-should-parse-renaming-this-s-properties-with-nested-iife-called"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-renaming-this-s-properties-with-nested-iife-called"
+			),
 			{
 				ijksub: ["test"]
 			}
@@ -151,14 +181,16 @@ describe("JavascriptParser", () => {
 			}
 		],
 		"spread calls/literals": [
-			fixture("javascript", "javascript-parser-should-parse-spread-calls-literals"),
+			fixture(
+				"javascript",
+				"javascript-parser-should-parse-spread-calls-literals"
+			),
 			{
 				abc: ["xyz"],
 				fgh: ["xyz"]
 			}
 		]
 	});
-
 
 	for (const name of Object.keys(testCases)) {
 		it(`should parse ${name}`, () => {
@@ -264,7 +296,10 @@ describe("JavascriptParser", () => {
 	}
 
 	it("should parse comments", () => {
-		const source = fixture("javascript", "javascript-parser-should-parse-comments-source");
+		const source = fixture(
+			"javascript",
+			"javascript-parser-should-parse-comments-source"
+		);
 		const state = [
 			{
 				type: "Line",
@@ -340,6 +375,16 @@ describe("JavascriptParser", () => {
 				)
 			).result;
 		}
+
+		it("keeps strict equality unknown when an operand is unknown", () => {
+			const source = fixture(
+				"javascript",
+				"javascript-parser-strict-equality-unknown"
+			);
+			for (const statement of source.trim().split("\n")) {
+				expect(evaluateInParser(statement).isUnknown()).toBe(true);
+			}
+		});
 
 		const statements = fixture(
 			"javascript",
@@ -426,10 +471,22 @@ describe("JavascriptParser", () => {
 	describe("async/await support", () => {
 		describe("should accept", () => {
 			const cases = {
-				"async function": fixture("javascript", "javascript-parser-async-await-support-should-accept-async-function"),
-				"async arrow function": fixture("javascript", "javascript-parser-async-await-support-should-accept-async-arrow-function"),
-				"await expression": fixture("javascript", "javascript-parser-async-await-support-should-accept-await-expression"),
-				"await iteration": fixture("javascript", "javascript-parser-async-await-support-should-accept-await-iteration")
+				"async function": fixture(
+					"javascript",
+					"javascript-parser-async-await-support-should-accept-async-function"
+				),
+				"async arrow function": fixture(
+					"javascript",
+					"javascript-parser-async-await-support-should-accept-async-arrow-function"
+				),
+				"await expression": fixture(
+					"javascript",
+					"javascript-parser-async-await-support-should-accept-await-expression"
+				),
+				"await iteration": fixture(
+					"javascript",
+					"javascript-parser-async-await-support-should-accept-await-iteration"
+				)
 			};
 			const parser = new JavascriptParser();
 			for (const name of Object.keys(cases)) {
@@ -517,7 +574,10 @@ describe("JavascriptParser", () => {
 			});
 
 			parser.parse(
-				fixture("javascript", "javascript-parser-object-rest-spread-support-should-collect-definitions-from"),
+				fixture(
+					"javascript",
+					"javascript-parser-object-rest-spread-support-should-collect-definitions-from"
+				),
 				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
@@ -557,7 +617,10 @@ describe("JavascriptParser", () => {
 			});
 
 			parser.parse(
-				fixture("javascript", "javascript-parser-in-block-scope-should-isolate-definitions-and-propagate"),
+				fixture(
+					"javascript",
+					"javascript-parser-in-block-scope-should-isolate-definitions-and-propagate"
+				),
 				/** @type {import("../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)
@@ -675,7 +738,10 @@ describe("JavascriptParser", () => {
 
 				it(name, () => {
 					const parser = new JavascriptParser();
-					const ast = estree(expr.code, { ecmaVersion: "latest", ranges: true });
+					const ast = estree(expr.code, {
+						ecmaVersion: "latest",
+						ranges: true
+					});
 					expect(typeof ast).toBe("object");
 					expect(
 						parser.parseCalculatedString(
@@ -729,7 +795,13 @@ describe("JavascriptParser", () => {
 				seen.push("marker");
 				return true;
 			});
-			parser.parse(fixture("javascript", "javascript-parser-defined-identifier-evaluation-fast-path-still-walks-callee"), state);
+			parser.parse(
+				fixture(
+					"javascript",
+					"javascript-parser-defined-identifier-evaluation-fast-path-still-walks-callee"
+				),
+				state
+			);
 			expect(seen).toEqual(["marker"]);
 		});
 
@@ -756,7 +828,13 @@ describe("JavascriptParser", () => {
 				calls.push(1);
 				return true;
 			});
-			parser.parse(fixture("javascript", "javascript-parser-defined-identifier-evaluation-fast-path-honors-plugin"), state);
+			parser.parse(
+				fixture(
+					"javascript",
+					"javascript-parser-defined-identifier-evaluation-fast-path-honors-plugin"
+				),
+				state
+			);
 			expect(calls).toEqual([1]);
 		});
 
@@ -775,7 +853,13 @@ describe("JavascriptParser", () => {
 				evaluated.push(/** @type {[number, number]} */ (expr.range)[0]);
 				return undefined;
 			});
-			parser.parse(fixture("javascript", "javascript-parser-defined-identifier-evaluation-fast-path-does-not-treat-tagged"), state);
+			parser.parse(
+				fixture(
+					"javascript",
+					"javascript-parser-defined-identifier-evaluation-fast-path-does-not-treat-tagged"
+				),
+				state
+			);
 			// the tagged callee took the full evaluation path
 			expect(evaluated).toHaveLength(1);
 		});
@@ -924,7 +1008,12 @@ describe("JavascriptParser", () => {
 
 		it("should count every ECMAScript line terminator", () => {
 			const parser = parserFor("a;\rb;\u2028c;\u2029d;\r\ne;");
-			for (const [start, line] of [[3, 2], [6, 3], [9, 4], [13, 5]]) {
+			for (const [start, line] of [
+				[3, 2],
+				[6, 3],
+				[9, 4],
+				[13, 5]
+			]) {
 				expect(parser.getLocation({ start, end: start })).toEqual({
 					start: { line, column: 0 },
 					end: { line, column: 0 }
@@ -934,7 +1023,10 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("hoisted declarations", () => {
-		const EVERY_POSITION = fixture("javascript", "javascript-parser-hoisted-declarations-every-position");
+		const EVERY_POSITION = fixture(
+			"javascript",
+			"javascript-parser-hoisted-declarations-every-position"
+		);
 
 		/**
 		 * @param {string | object} source what to parse
@@ -1002,8 +1094,10 @@ describe("JavascriptParser", () => {
 		});
 
 		it("walks every statement again for a tap that expects them", () => {
-			const source =
-				fixture("javascript", "javascript-parser-hoisted-declarations-walks-every-statement-again-for-a-tap");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-hoisted-declarations-walks-every-statement-again-for-a-tap"
+			);
 			/**
 			 * @param {(parser: EXPECTED_ANY) => void} tap what to tap with
 			 * @returns {string[]} the statement types the pre-walk reported
@@ -1050,7 +1144,10 @@ describe("JavascriptParser", () => {
 			);
 			// the positions `EVERY_POSITION` fills: a `try` missing one of its
 			// two tails, and a loop head declaring nothing
-			const sparse = fixture("javascript", "javascript-parser-hoisted-declarations-declares-the-same-names-through-the-walk");
+			const sparse = fixture(
+				"javascript",
+				"javascript-parser-hoisted-declarations-declares-the-same-names-through-the-walk"
+			);
 			expect(hoistedNames(sparse, "script", true)).toEqual(
 				hoistedNames(sparse)
 			);
@@ -1060,8 +1157,10 @@ describe("JavascriptParser", () => {
 		it("reports the statement written before each module declaration", () => {
 			// removing a module declaration can join the statements around it
 			// through ASI, so what precedes it decides whether a `;` is needed
-			const source =
-				fixture("javascript", "javascript-parser-hoisted-declarations-reports-the-statement-written-before");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-hoisted-declarations-reports-the-statement-written-before"
+			);
 			const parser = new JavascriptParser("module");
 			/** @type {(string | undefined)[]} */
 			const before = [];
@@ -1080,15 +1179,14 @@ describe("JavascriptParser", () => {
 					/** @type {unknown} */ ({})
 				)
 			);
-			expect(before).toEqual([
-				"VariableDeclaration",
-				"ExportNamedDeclaration"
-			]);
+			expect(before).toEqual(["VariableDeclaration", "ExportNamedDeclaration"]);
 		});
 
 		it("scans a statement list when a plugin drives the walk itself", () => {
-			const source =
-				fixture("javascript", "javascript-parser-hoisted-declarations-scans-a-statement-list-when-a-plugin");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-hoisted-declarations-scans-a-statement-list-when-a-plugin"
+			);
 			const parser = new JavascriptParser("module");
 			/** @type {string[]} */
 			const reported = [];
@@ -1113,8 +1211,10 @@ describe("JavascriptParser", () => {
 		});
 
 		it("scans its own module declarations from an AST another parser built", () => {
-			const source =
-				fixture("javascript", "javascript-parser-hoisted-declarations-scans-its-own-module-declarations-from");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-hoisted-declarations-scans-its-own-module-declarations-from"
+			);
 			/**
 			 * @param {string | object} parsed what to parse
 			 * @returns {string[]} the sources reported, in order
@@ -1164,7 +1264,10 @@ describe("JavascriptParser", () => {
 			// again would declare it twice
 			expect(
 				hoistedNames(
-					fixture("javascript", "javascript-parser-hoisted-declarations-keeps-a-declaration-under-an-export-head"),
+					fixture(
+						"javascript",
+						"javascript-parser-hoisted-declarations-keeps-a-declaration-under-an-export-head"
+					),
 					"module"
 				)
 			).toEqual(["plain", "exported", "exportedFunction"]);
@@ -1172,7 +1275,10 @@ describe("JavascriptParser", () => {
 	});
 
 	describe("block declarations", () => {
-		const EVERY_POSITION = fixture("javascript", "javascript-parser-block-declarations-every-position");
+		const EVERY_POSITION = fixture(
+			"javascript",
+			"javascript-parser-block-declarations-every-position"
+		);
 
 		/**
 		 * @param {string | object} source what to parse
@@ -1191,9 +1297,7 @@ describe("JavascriptParser", () => {
 			parser.hooks.blockPreStatementByType
 				.for("ClassDeclaration")
 				.tap("test", (statement) => {
-					names.push(
-						/** @type {EXPECTED_ANY} */ (statement).id.name
-					);
+					names.push(/** @type {EXPECTED_ANY} */ (statement).id.name);
 				});
 			parser.parse(
 				/** @type {EXPECTED_ANY} */ (source),
@@ -1255,8 +1359,10 @@ describe("JavascriptParser", () => {
 		it("reports the statement written before each declaration", () => {
 			// removing an `export` can join the statements around it through ASI,
 			// so what precedes it decides whether a `;` is needed
-			const source =
-				fixture("javascript", "javascript-parser-block-declarations-reports-the-statement-written-before-each");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-block-declarations-reports-the-statement-written-before-each"
+			);
 			const parser = new JavascriptParser("module");
 			/** @type {(string | undefined)[]} */
 			const before = [];
@@ -1280,7 +1386,10 @@ describe("JavascriptParser", () => {
 		});
 
 		it("reads the properties a destructuring assignment names", () => {
-			const source = fixture("javascript", "javascript-parser-block-declarations-reads-the-properties-a-destructuring");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-block-declarations-reads-the-properties-a-destructuring"
+			);
 			/**
 			 * @param {boolean} legacy whether to tap the hook that walks them all
 			 * @returns {number} how many times the collect hook was asked
@@ -1310,10 +1419,14 @@ describe("JavascriptParser", () => {
 
 		it("declares a statement past the indices a mask holds", () => {
 			// a mask is one 31-bit number, so a later index must take the list
-			expect(blockNames(fixture("javascript", "javascript-parser-block-declarations-declares-a-statement-past-the-indices-a-mask"))).toEqual([
-				"early",
-				"late"
-			]);
+			expect(
+				blockNames(
+					fixture(
+						"javascript",
+						"javascript-parser-block-declarations-declares-a-statement-past-the-indices-a-mask"
+					)
+				)
+			).toEqual(["early", "late"]);
 		});
 
 		it("rejects a statement written before the first case", () => {
@@ -1323,7 +1436,10 @@ describe("JavascriptParser", () => {
 		});
 
 		it("walks every statement again for a tap that expects them", () => {
-			const source = fixture("javascript", "javascript-parser-block-declarations-walks-every-statement-again-for-a-tap-that");
+			const source = fixture(
+				"javascript",
+				"javascript-parser-block-declarations-walks-every-statement-again-for-a-tap-that"
+			);
 			/** @type {string[]} */
 			const typed = [];
 			const parser = new JavascriptParser("module");
@@ -1699,7 +1815,6 @@ describe("JavascriptParser", () => {
 			block.range = [1, 2];
 			expect(block.range).toEqual([1, 2]);
 		});
-
 	});
 
 	describe("write hooks", () => {
@@ -1733,13 +1848,49 @@ describe("JavascriptParser", () => {
 		};
 
 		it("reports an update and still walks the target it reads", () => {
-			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-reports-an-update-and-still-walks-the-target-it"), "write", false)).toEqual(["x"]);
-			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-reports-an-update-and-still-walks-the-target-it-2"), "writeMemberChain", false)).toEqual(["x"]);
+			expect(
+				readsWith(
+					fixture(
+						"javascript",
+						"javascript-parser-write-hooks-reports-an-update-and-still-walks-the-target-it"
+					),
+					"write",
+					false
+				)
+			).toEqual(["x"]);
+			expect(
+				readsWith(
+					fixture(
+						"javascript",
+						"javascript-parser-write-hooks-reports-an-update-and-still-walks-the-target-it-2"
+					),
+					"writeMemberChain",
+					false
+				)
+			).toEqual(["x"]);
 		});
 
 		it("lets a tap that rendered the whole update stop the walk", () => {
-			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop"), "write", true)).toEqual([]);
-			expect(readsWith(fixture("javascript", "javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop-2"), "writeMemberChain", true)).toEqual([]);
+			expect(
+				readsWith(
+					fixture(
+						"javascript",
+						"javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop"
+					),
+					"write",
+					true
+				)
+			).toEqual([]);
+			expect(
+				readsWith(
+					fixture(
+						"javascript",
+						"javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop-2"
+					),
+					"writeMemberChain",
+					true
+				)
+			).toEqual([]);
 		});
 	});
 });

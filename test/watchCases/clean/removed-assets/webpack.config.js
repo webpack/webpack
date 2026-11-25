@@ -49,10 +49,10 @@ module.exports = {
 					const step = Number(currentWatchStep.step);
 					const expected = step === 0 ? "" : `extra.${step - 1}.txt`;
 					// an asset removed by an earlier build must not be checked again
-					if (checked.join() !== expected) {
+					if (checked.join(",") !== expected) {
 						compilation.errors.push(
 							new compiler.webpack.WebpackError(
-								`checked [${checked.join()}], expected [${expected}]`
+								`checked [${checked.join(",")}], expected [${expected}]`
 							)
 						);
 					}

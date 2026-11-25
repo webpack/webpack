@@ -5,7 +5,7 @@ import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
 // Large graph in memory mode so the peak live set (and the rebuild delta) is well
 // above the ~256 KB page-quantization noise floor; small elsewhere.
-const items = Array.from({ length: memoryScaledCount(25, 600) }).fill("file");
+const items = Array.from({ length: memoryScaledCount(25, 600) }, () => "file");
 
 /**
  * @param {number} i index

@@ -13,9 +13,8 @@ const {
 	toConstantDependency
 } = require("../../../../lib/javascript/JavascriptParserHelpers");
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
-/** @typedef {import("../../../../lib/javascript/JavascriptParser")} JavascriptParser */
-/** @typedef {import("../../../../lib/javascript/JavascriptParser").Range} Range */
+/** @import Compiler from "../../../../lib/Compiler" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
 
 const PLUGIN_NAME = "object-tap-helpers";
 

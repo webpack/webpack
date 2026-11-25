@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Needle built here so it is not a source string literal the search would find.
-const wrapper = `${"module"}.exports = ${"__webpack_require__"}.p + `;
+const wrapper = "module.exports = __webpack_require__.p + ";
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

@@ -2,7 +2,7 @@
 
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 /**
  * @param {Configuration} config config

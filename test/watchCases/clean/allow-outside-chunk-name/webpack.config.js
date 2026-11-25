@@ -37,7 +37,7 @@ module.exports = {
 			compiler.hooks.afterEmit.tap(PLUGIN_NAME, (compilation) => {
 				// a fresh build of a later step never wrote the earlier chunk
 				if (!compiler.watchMode) return;
-				const files = fs.readdirSync(outside).sort().join();
+				const files = fs.readdirSync(outside).sort().join(",");
 				const name = NAMES[Number(currentWatchStep.step)];
 				const expected = `${name}.css,${name}.js`;
 				if (files !== expected) {

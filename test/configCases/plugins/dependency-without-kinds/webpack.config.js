@@ -2,7 +2,7 @@
 
 const PLUGIN_NAME = "DependencyWithoutKindsPlugin";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 /** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
 /** @typedef {Compiler["webpack"]} WebpackApi */
 /** @typedef {typeof import("../../../../").Dependency} DependencyClass */

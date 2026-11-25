@@ -5,7 +5,7 @@ import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
 // Large graph in memory mode only (see scale.mjs); small for simulation/walltime.
 // Kept modest: generateCSS grows the rule count per file, so total CSS is O(n^2).
-const items = Array.from({ length: memoryScaledCount(10, 120) }).fill("css");
+const items = Array.from({ length: memoryScaledCount(10, 120) }, () => "css");
 
 /**
  * @param {number} i index

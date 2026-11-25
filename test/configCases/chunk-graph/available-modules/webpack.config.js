@@ -5,8 +5,7 @@ const webpack = require("../../../../");
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 const { WebpackError } = webpack;
 
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration, Compilation } from "../../../../" */
 
 const scenarios = [
 	"late-addition",
@@ -108,14 +107,12 @@ const check = (scenario, compilation) => {
 			countModule(compilation, "next-child", "m.js") === 0,
 			'"next-child" should not contain m.js'
 		);
-	}
-	if (scenario === "inherited-growth") {
+	} else if (scenario === "inherited-growth") {
 		expect(
 			countModule(compilation, "grandchild", "m.js") === 0,
 			'"grandchild" should not contain m.js'
 		);
-	}
-	if (scenario === "late-addition-with-restore") {
+	} else if (scenario === "late-addition-with-restore") {
 		expect(
 			chunkHasModule(compilation, "parent", "x.js"),
 			'"parent" should restore x.js lost from the inherited intersection'
@@ -124,8 +121,7 @@ const check = (scenario, compilation) => {
 			countModule(compilation, "child", "x.js") === 0,
 			'"child" should not contain x.js'
 		);
-	}
-	if (scenario === "late-worker-addition") {
+	} else if (scenario === "late-worker-addition") {
 		expect(
 			chunkHasModule(compilation, "worker", "m.js"),
 			'"worker" should contain m.js'

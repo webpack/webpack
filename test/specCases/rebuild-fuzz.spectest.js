@@ -22,14 +22,9 @@ const {
 } = require("../helpers/rebuildFuzzProject");
 const { isInPart } = require("../helpers/testParts");
 
-/** @typedef {import("../helpers/rebuildFuzzProject").Edit} Edit */
-/** @typedef {import("../helpers/rebuildFuzzProject").Project} Project */
-/** @typedef {import("../../").Configuration} Configuration */
-/** @typedef {import("../../").Compiler} Compiler */
-/** @typedef {import("../../").Compilation} Compilation */
-/** @typedef {import("../../").Stats} Stats */
-/** @typedef {import("../../").InputFileSystem} InputFileSystem */
-/** @typedef {import("memfs").IFs} IFs */
+/** @import { Project, Edit } from "../helpers/rebuildFuzzProject" */
+/** @import { Stats, Compilation, InputFileSystem, Compiler, Configuration } from "../../" */
+/** @import { IFs } from "memfs" */
 /** @typedef {{ mode: "production" | "development", splitChunks?: boolean, watchCache?: "filesystem", cacheUnaffected?: boolean, concatenateModules?: boolean, hot?: boolean }} Variant */
 /** @typedef {{ assets: Record<string, string>, hash: string, entry: string | undefined, errors: string[], warnings: string[] }} Result */
 /** @typedef {{ context: vm.Context, error: string | undefined }} Runtime */
@@ -260,8 +255,9 @@ const createConfig = (dir, variant, cache, logs) => ({
 					{
 						get:
 							(_target, method) =>
-							(/** @type {unknown[]} */ ...args) =>
-								logs.push(`${String(method)}: ${args.join(" ")}`)
+							(/** @type {unknown[]} */ ...args) => {
+								logs.push(`${String(method)}: ${args.join(" ")}`);
+							}
 					}
 				)
 			)
@@ -309,7 +305,10 @@ const toResult = (stats, dir, assets) => {
 	const messages = (list) =>
 		list
 			.map((error) =>
-				`${error.message}`.split(dir).join("<dir>").replace(CLOSEST_NAME_HINT, "")
+				String(error.message)
+					.split(dir)
+					.join("<dir>")
+					.replace(CLOSEST_NAME_HINT, "")
 			)
 			.sort();
 	const main = compilation.namedChunks.get("main");
@@ -355,7 +354,9 @@ const compare = (got, expected) => {
 	const messages = (key) =>
 		JSON.stringify(got[key]) === JSON.stringify(expected[key])
 			? undefined
-			: `${key} differ:\n  got:      ${JSON.stringify(got[key])}\n  expected: ${JSON.stringify(expected[key])}`;
+			: `${key} differ:\n  got:      ${JSON.stringify(
+					got[key]
+				)}\n  expected: ${JSON.stringify(expected[key])}`;
 	// WHY: a module that fails to parse keeps its last good buildMeta in
 	// watch (NormalModule#markModuleAsErrored), so its importers' output
 	// and warnings differ from a fresh build by design.
@@ -381,7 +382,9 @@ const compare = (got, expected) => {
 			const expectedLines = expectedSource.split("\n");
 			let line = 0;
 			while (gotLines[line] === expectedLines[line]) line++;
-			return `asset ${name} differs at line ${line + 1}:\n  got:      ${gotLines[line]}\n  expected: ${expectedLines[line]}`;
+			return `asset ${name} differs at line ${line + 1}:\n  got:      ${
+				gotLines[line]
+			}\n  expected: ${expectedLines[line]}`;
 		}
 	}
 	return messages("errors") || messages("warnings");
@@ -492,7 +495,10 @@ const stateDifference = (got, expected) => {
 	let index = 0;
 	while (got[index] === expected[index]) index++;
 	const start = Math.max(0, index - 80);
-	return `state differs at ${index}:\n  got:      ${got.slice(start, index + 80)}\n  expected: ${expected.slice(start, index + 80)}`;
+	return `state differs at ${index}:\n  got:      ${got.slice(
+		start,
+		index + 80
+	)}\n  expected: ${expected.slice(start, index + 80)}`;
 };
 
 /**
@@ -687,7 +693,11 @@ const runSequence = async (steps, variant) => {
 						const { message } = /** @type {Error} */ (err);
 						// the fresh bundle throws the same at startup, so the client reloads
 						if (expected !== `startup threw: ${message}`) {
-							return { step, check: "hot", detail: `update failed: ${message}` };
+							return {
+								step,
+								check: "hot",
+								detail: `update failed: ${message}`
+							};
 						}
 						runtime = { context: runtime.context, error: message };
 					}
@@ -787,7 +797,7 @@ const shrink = async (steps, variant, failure) => {
 describe("rebuild fuzz", () => {
 	for (const seed of SEEDS) {
 		// each part picks its own random seed, so every part runs it
-		if (process.env.REBUILD_FUZZ_SEED !== "random" && !isInPart(`${seed}`)) {
+		if (process.env.REBUILD_FUZZ_SEED !== "random" && !isInPart(String(seed))) {
 			continue;
 		}
 		const variant = VARIANTS[seed % VARIANTS.length];
@@ -804,7 +814,11 @@ describe("rebuild fuzz", () => {
 					failure
 				);
 				throw new Error(
-					`${small.failure.check} differs at step ${small.failure.step} of seed ${seed}\n${small.failure.detail}\nshrunk edits: ${JSON.stringify(small.steps)}`
+					`${small.failure.check} differs at step ${
+						small.failure.step
+					} of seed ${seed}\n${
+						small.failure.detail
+					}\nshrunk edits: ${JSON.stringify(small.steps)}`
 				);
 			},
 			SEED_TIMEOUT

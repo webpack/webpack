@@ -29604,6 +29604,22 @@ exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-s
 
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-selects-quirks-mode-from-the-exact-3 tokenizes 1`] = `"doctype[0,83|10,14|-1,-1|23,81] open[83,86|84,85] text[86,87] open[87,94|88,93] close[94,102|96,101] end=102"`;
 
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-selects-quirks-mode-from-the-exact-4 parses 1`] = `
+"| <!DOCTYPE html \\"\\" \\"https://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd\\">
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"x\\"
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-selects-quirks-mode-from-the-exact-4 parses 2`] = `"warning[0,84]:unknown-doctype"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-selects-quirks-mode-from-the-exact-4 prints {"mode":"minify"} 1`] = `"<!doctype html SYSTEM \\"https://www.ibm.com/data/dtd/v11/ibmxhtml1-transitional.dtd\\"><p>x<table></table>"`;
+
+exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-selects-quirks-mode-from-the-exact-4 tokenizes 1`] = `"doctype[0,84|10,14|-1,-1|23,82] open[84,87|85,86] text[87,88] open[88,95|89,94] close[95,103|97,102] end=103"`;
+
 exports[`HTML syntax — invariants parse-html-quirks-and-foreign-content-arcs-stops-an-unmatched-end-tag-at-a parses 1`] = `
 "| <html>
 |   <head>

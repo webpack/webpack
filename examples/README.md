@@ -30,144 +30,144 @@
 
 ## Aggressive Merging
 
-[aggressive-merging](aggressive-merging)
+[aggressive-merging](./aggressive-merging)
 
 ## Chunk
 
-[chunkhash](chunkhash)
+[chunkhash](./chunkhash)
 
-[common-chunk-and-vendor-chunk](common-chunk-and-vendor-chunk)
+[common-chunk-and-vendor-chunk](./common-chunk-and-vendor-chunk)
 
-[explicit-vendor-chunk](explicit-vendor-chunk)
+[explicit-vendor-chunk](./explicit-vendor-chunk)
 
-[extra-async-chunk-advanced](extra-async-chunk-advanced)
+[extra-async-chunk-advanced](./extra-async-chunk-advanced)
 
-[extra-async-chunk](extra-async-chunk)
+[extra-async-chunk](./extra-async-chunk)
 
-[code-splitting-specify-chunk-name](code-splitting-specify-chunk-name)
+[code-splitting-specify-chunk-name](./code-splitting-specify-chunk-name)
 
-[named-chunks](named-chunks) example demonstrating merging of chunks with named chunks
+[named-chunks](./named-chunks) example demonstrating merging of chunks with named chunks
 
-[two-explicit-vendor-chunks](two-explicit-vendor-chunks)
+[two-explicit-vendor-chunks](./two-explicit-vendor-chunks)
 
 ## Code Splitted
 
-[code-splitted-require.context-amd](code-splitted-require.context-amd) example demonstrating contexts in a code-split environment with AMD.
+[code-splitted-require.context-amd](./code-splitted-require.context-amd) example demonstrating contexts in a code-split environment with AMD.
 
-[code-splitted-require.context](code-splitted-require.context) example demonstrating contexts in a code-split environment.
+[code-splitted-require.context](./code-splitted-require.context) example demonstrating contexts in a code-split environment.
 
 ## Code Splitting
 
-[code-splitting](code-splitting) example demonstrating a very simple case of Code Splitting.
+[code-splitting](./code-splitting) example demonstrating a very simple case of Code Splitting.
 
-[code-splitting-bundle-loader](code-splitting-bundle-loader) example demonstrating Code Splitting through the bundle loader
+[code-splitting-bundle-loader](./code-splitting-bundle-loader) example demonstrating Code Splitting through the bundle loader
 
-[code-splitting-harmony](code-splitting-harmony)
+[code-splitting-harmony](./code-splitting-harmony)
 
-[code-splitting-native-import-context](code-splitting-native-import-context)
+[code-splitting-native-import-context](./code-splitting-native-import-context)
 
-[code-splitting-specify-chunk-name](code-splitting-specify-chunk-name)
+[code-splitting-specify-chunk-name](./code-splitting-specify-chunk-name)
 
 ## Coffee Script
 
-[coffee-script](coffee-script) example demonstrating code written in coffee-script.
+[coffee-script](./coffee-script) example demonstrating code written in coffee-script.
 
 ## CommonJS
 
-[commonjs](commonjs) example demonstrating a very simple program
+[commonjs](./commonjs) example demonstrating a very simple program
 
 ## DLL
 
-[dll](dll)
+[dll](./dll)
 
-[dll-user](dll-user)
+[dll-user](./dll-user)
 
 ## Externals
 
-[externals](externals)
+[externals](./externals)
 
 ## Harmony
 
-[harmony](harmony)
+[harmony](./harmony)
 
-[code-splitting-harmony](code-splitting-harmony)
+[code-splitting-harmony](./code-splitting-harmony)
 
-[harmony-interop](harmony-interop)
+[harmony-interop](./harmony-interop)
 
-[harmony-library](harmony-library)
+[harmony-library](./harmony-library)
 
-[harmony-unused](harmony-unused)
+[harmony-unused](./harmony-unused)
 
 ## HTTP2 Aggressive Splitting
 
-[http2-aggressive-splitting](http2-aggressive-splitting)
+[http2-aggressive-splitting](./http2-aggressive-splitting)
 
 ## Hybrid Routing
 
-[hybrid-routing](hybrid-routing)
+[hybrid-routing](./hybrid-routing)
 
 ## Loader
 
-[loader](loader) example demonstrating the usage of loaders.
+[loader](./loader) example demonstrating the usage of loaders.
 
 ## Mixed
 
-[mixed](mixed) example demonstrating mixing CommonJs and AMD
+[mixed](./mixed) example demonstrating mixing CommonJs and AMD
 
 ## Multi Compiler
 
-[multi-compiler](multi-compiler)
+[multi-compiler](./multi-compiler)
 
 ## Multi Part Library
 
-[multi-part-library](multi-part-library)
+[multi-part-library](./multi-part-library)
 
 ## Multiple Entry Points
 
-[multiple-entry-points](multiple-entry-points) example demonstrating multiple entry points with Code Splitting.
+[multiple-entry-points](./multiple-entry-points) example demonstrating multiple entry points with Code Splitting.
 
 ## Require Context
 
-[require.context](require.context) example demonstrating automatic creation of contexts when using variables in `require`.
+[require.context](./require.context) example demonstrating automatic creation of contexts when using variables in `require`.
 
 ## Resource Hints
 
-[resource-hints](resource-hints) demonstrates every variant of `output.resourceHints` (auto initial-chunk preload / prefetch / custom array / callback) and per-parser `module.parser.<type>.urlHints` rules for `new URL(...)` / CSS `url(...)` / HTML `<img src>`, plus reading `stats.entrypoints[name].resourceHints` in SSR.
+[resource-hints](./resource-hints) demonstrates every variant of `output.resourceHints` (auto initial-chunk preload / prefetch / custom array / callback) and per-parser `module.parser.<type>.urlHints` rules for `new URL(...)` / CSS `url(...)` / HTML `<img src>`, plus reading `stats.entrypoints[name].resourceHints` in SSR.
 
 ## Require Resolve
 
-[require.resolve](require.resolve) example demonstrating how to cache clearing of modules with `require.resolve` and `require.cache`.
+[require.resolve](./require.resolve) example demonstrating how to cache clearing of modules with `require.resolve` and `require.cache`.
 
 ## Scope Hoisting
 
-[scope-hoisting](scope-hoisting)
+[scope-hoisting](./scope-hoisting)
 
 ## Side Effects
 
-[side-effects](side-effects)
+[side-effects](./side-effects)
 
 ## TypeScript
 
-[TypeScript](typescript)
+[TypeScript](./typescript)
 
 ## Source Map
 
-[source-map](source-map)
+[source-map](./source-map)
 
 ## WebAssembly
 
-[wasm-simple](wasm-simple) example demonstrating simple import from a WebAssembly module
-[wasm-complex](wasm-complex) example demonstrating top-level await and import of WebAssembly text format with wast-loader
+[wasm-simple](./wasm-simple) example demonstrating simple import from a WebAssembly module
+[wasm-complex](./wasm-complex) example demonstrating top-level await and import of WebAssembly text format with wast-loader
 
 ## Web Worker
 
-[web-worker](worker) example demonstrating creating WebWorkers with webpack.
+[web-worker](./worker) example demonstrating creating WebWorkers with webpack.
 
-# Requests
+## Requests
 
 If you think an example is missing, please report it as issue. :)
 
-# Building an Example
+### Building an Example
 
 1. Run `yarn` in the root of the project.
 2. Run `yarn setup` in the root of the project.

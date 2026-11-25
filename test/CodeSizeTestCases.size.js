@@ -440,8 +440,7 @@ const collectInput = (compilation, input, digests) => {
 const closeCompiler = (compiler) =>
 	new Promise((resolve) => {
 		const done = () => resolve();
-		if ("compilers" in compiler) compiler.close(done);
-		else compiler.close(done);
+		compiler.close(done);
 	});
 
 /**
@@ -561,8 +560,7 @@ const measureCase = async ({ category, name, directory: testDirectory }) => {
 					if (err) return reject(err);
 					resolve(/** @type {Stats | MultiStats} */ (stats));
 				};
-				if ("compilers" in activeCompiler) activeCompiler.run(done);
-				else activeCompiler.run(done);
+				activeCompiler.run(done);
 			})
 		);
 

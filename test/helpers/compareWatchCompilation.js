@@ -116,8 +116,8 @@ const assertWatchDependencies = (
 				fs.existsSync(dependency) &&
 				fs.statSync(dependency).isDirectory()
 			) {
-				return !actualDependencies.fileDependencies.some((file) =>
-					file.startsWith(`${dependency}${path.sep}`)
+				return actualDependencies.fileDependencies.every(
+					(file) => !file.startsWith(`${dependency}${path.sep}`)
 				);
 			}
 			return true;

@@ -88,7 +88,11 @@ const tokenLine = (source, pos = 0, log = undefined) => {
 		},
 		openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 			out.push(
-				tokenText("open", [start, end, nameStart, nameEnd], selfClosing ? "/" : "")
+				tokenText(
+					"open",
+					[start, end, nameStart, nameEnd],
+					selfClosing ? "/" : ""
+				)
 			);
 			record("open", input, nameStart, nameEnd);
 			return end;
@@ -174,10 +178,7 @@ const ENTRIES = {
 					errors.push(tokenText(severity, [start, end], `:${code}`));
 				}
 			});
-			const values = [
-				materializedJson(A.children(document)),
-				errors.join(" ")
-			];
+			const values = [materializedJson(A.children(document)), errors.join(" ")];
 			if (fields !== undefined) {
 				values.push(treeLines(parser, [document], fields));
 			}
@@ -249,10 +250,7 @@ describe("XML syntax — invariants", () => {
 					}
 				});
 				expect(
-					snapshotOf(
-						source,
-						materializedJson(A.children(document))
-					)
+					snapshotOf(source, materializedJson(A.children(document)))
 				).toMatchSnapshot();
 				// The second entry, so the tree's stays as it was.
 				expect(snapshotOf(source, errors.join(" "))).toMatchSnapshot();

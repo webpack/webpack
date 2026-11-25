@@ -48,11 +48,15 @@ const exec = (
 		const chunks = [];
 		/** @type {import("stream").Readable} */ (p.stderr).on(
 			"data",
-			(/** @type {string} */ chunk) => chunks.push(chunk)
+			(/** @type {string} */ chunk) => {
+				chunks.push(chunk);
+			}
 		);
 		/** @type {import("stream").Readable} */ (p.stdout).on(
 			"data",
-			(/** @type {string} */ chunk) => chunks.push(chunk)
+			(/** @type {string} */ chunk) => {
+				chunks.push(chunk);
+			}
 		);
 		p.once("exit", (code) => {
 			/** @type {string[]} */
@@ -260,7 +264,7 @@ export default 0;`
 				]
 			});
 		}
-		const results = Array.from({ length: supportsEsm ? 10 : 8 }).map((_, i) =>
+		const results = Array.from({ length: supportsEsm ? 10 : 8 }, (_, i) =>
 			require(`./js/buildDeps/${i}/main.js`)
 		);
 		for (const r of results) {
@@ -272,7 +276,9 @@ export default 0;`
 		let result = results.shift();
 		expect(result.loader).toBe(0);
 		expect(result.config).toBe(0);
-		if (supportsEsm) expect(result.esmConfig).toBe(0);
+		if (supportsEsm) {
+			expect(result.esmConfig).toBe(0);
+		}
 		expect(result.uncached).toBe(0);
 		// 0 -> 1 should not cache at all because of invalid buildDeps
 		result = results.shift();
@@ -318,20 +324,19 @@ export default 0;`
 		expect(result.loader).toBe(prevResult.loader);
 		expect(result.config).toBe(prevResult.config);
 		expect(result.definedValue).toBe("other");
-		if (supportsEsm) {
-			// 7 -> 8 should be invalidated
-			result = results.shift();
-			expect(result.loader).toBeGreaterThan(now4);
-			expect(result.config).toBeGreaterThan(now4);
-			expect(result.esmConfig).toBeGreaterThan(now4);
-			expect(result.uncached).toBeGreaterThan(now4);
-			// 8 -> 9 should be invalidated
-			result = results.shift();
-			expect(result.loader).toBeGreaterThan(now5);
-			expect(result.config).toBeGreaterThan(now5);
-			expect(result.esmConfig).toBeGreaterThan(now5);
-			expect(result.esmAsyncConfig).toBeGreaterThan(now5);
-			expect(result.uncached).toBeGreaterThan(now5);
-		}
+		if (!supportsEsm) return;
+		// 7 -> 8 should be invalidated
+		result = results.shift();
+		expect(result.loader).toBeGreaterThan(now4);
+		expect(result.config).toBeGreaterThan(now4);
+		expect(result.esmConfig).toBeGreaterThan(now4);
+		expect(result.uncached).toBeGreaterThan(now4);
+		// 8 -> 9 should be invalidated
+		result = results.shift();
+		expect(result.loader).toBeGreaterThan(now5);
+		expect(result.config).toBeGreaterThan(now5);
+		expect(result.esmConfig).toBeGreaterThan(now5);
+		expect(result.esmAsyncConfig).toBeGreaterThan(now5);
+		expect(result.uncached).toBeGreaterThan(now5);
 	}, 500000);
 });

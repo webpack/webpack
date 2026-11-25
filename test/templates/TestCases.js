@@ -58,10 +58,18 @@ const categories = fs.readdirSync(casesPath).map((cat) => ({
  * @returns {EXPECTED_ANY} logger object
  */
 const createLogger = (appendTarget, appendErrors) => ({
-	log: (/** @type {string} */ l) => appendTarget.push(l),
-	debug: (/** @type {string} */ l) => appendTarget.push(l),
-	trace: (/** @type {string} */ l) => appendTarget.push(l),
-	info: (/** @type {string} */ l) => appendTarget.push(l),
+	log: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
+	debug: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
+	trace: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
+	info: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
 	// Collect warn/error separately: every infrastructure warning/error must be
 	// declared in the case's infrastructure-log.js or the test fails, so a cache
 	// store/restore failure can't slip through unnoticed.
@@ -104,7 +112,7 @@ const describeCases = (config) => {
 			describe(category.name, () => {
 				jest.setTimeout(testTimeout(30000));
 
-				for (const testName of category.tests.filter((test) => {
+				const tests = category.tests.filter((test) => {
 					const testDirectory = path.join(casesPath, category.name, test);
 					const filterPath = path.join(testDirectory, "test.filter.js");
 					if (fs.existsSync(filterPath) && !require(filterPath)(config)) {
@@ -116,7 +124,9 @@ const describeCases = (config) => {
 						return false;
 					}
 					return true;
-				})) {
+				});
+
+				for (const testName of tests) {
 					/** @type {string[]} */
 					const infraStructureLog = [];
 					/** @type {string[]} */
@@ -207,14 +217,10 @@ const describeCases = (config) => {
 								filename: config.module ? "bundle.mjs" : "bundle.js",
 								// generated runtime runs in this Node.js process; avoid `?.` on
 								// Node < 14 and `Object.hasOwn` on Node < 16.9
-								...(supportsOptionalChaining() && supportsObjectHasOwn()
-									? {}
-									: {
+								...(!(supportsOptionalChaining() && supportsObjectHasOwn()) && {
 											environment: {
-												...(supportsOptionalChaining()
-													? {}
-													: { optionalChaining: false }),
-												...(supportsObjectHasOwn() ? {} : { hasOwn: false })
+												...(!supportsOptionalChaining() && { optionalChaining: false }),
+												...(!supportsObjectHasOwn() && { hasOwn: false })
 											}
 										})
 							},

@@ -17,13 +17,18 @@ describe("jsonMinify", () => {
 
 	it("should read a Buffer as UTF-8", async () => {
 		const { code } = await jsonMinify({
-			"data.json": Buffer.from(fixture("json", "json-minify-should-read-a-buffer-as-utf-8"))
+			"data.json": Buffer.from(
+				fixture("json", "json-minify-should-read-a-buffer-as-utf-8")
+			)
 		});
 		expect(code).toMatchSnapshot();
 	});
 
 	it("should return source that is not JSON unchanged", async () => {
-		const source = fixture("json", "json-minify-should-return-source-that-is-not-json-unchanged");
+		const source = fixture(
+			"json",
+			"json-minify-should-return-source-that-is-not-json-unchanged"
+		);
 		const { code } = await jsonMinify({ "data.json": source });
 		expect(code).toBe(source);
 	});

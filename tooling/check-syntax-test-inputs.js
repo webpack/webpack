@@ -100,12 +100,7 @@ const OPAQUE_CALLS = new Set([
 	"readFileSync"
 ]);
 
-/**
- * @typedef {import("estree").Node} Node
- * @typedef {import("estree").Expression} Expression
- * @typedef {import("estree").Pattern} Pattern
- * @typedef {import("estree").Function} FunctionNode
- */
+/** @import { Node, Expression, Pattern, Function as FunctionNode } from "estree" */
 
 /**
  * What a name is bound to.
@@ -345,8 +340,12 @@ const inlineInputs = (code) => {
 	 */
 	const collect = (node, scope) => {
 		const inner = scopeAt(node, scope);
-		if (node.type === "Identifier") scopeOf.set(node, scope);
-		if (node.type === "CallExpression" || node.type === "NewExpression") {
+		if (node.type === "Identifier") {
+			scopeOf.set(node, scope);
+		} else if (
+			node.type === "CallExpression" ||
+			node.type === "NewExpression"
+		) {
 			calls.push(node);
 		}
 		for (const child of childrenOf(node)) {
@@ -717,9 +716,12 @@ const inlineInputs = (code) => {
 				return writesText(node.argument, seen);
 			case "ObjectExpression":
 				return node.properties.some((property) =>
-					property.type === "SpreadElement"
-						? writesText(property.argument, seen)
-						: writesText(property.value, seen)
+					writesText(
+						property.type === "SpreadElement"
+							? property.argument
+							: property.value,
+						seen
+					)
 				);
 			case "AwaitExpression":
 				return writesText(node.argument, seen);

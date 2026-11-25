@@ -2,13 +2,12 @@
 
 const PLUGIN_NAME = "ModuleReferencePlugin";
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
-/** @typedef {import("../../../../").Module} Module */
-/** @typedef {import("../../../../").ModuleGraph} ModuleGraph */
-/** @typedef {import("../../../../").optimize.ConcatenationScope} ConcatenationScope */
+/** @import { Compiler, Module, ModuleGraph } from "../../../../" */
+/** @import { ReplaceSource } from "webpack-sources" */
+
 /** @typedef {Compiler["webpack"]} WebpackApi */
-/** @typedef {import("webpack-sources").ReplaceSource} ReplaceSource */
+/** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
+/** @typedef {import("../../../../").optimize.ConcatenationScope} ConcatenationScope */
 
 /** @type {undefined | EXPECTED_ANY} */
 let cached;

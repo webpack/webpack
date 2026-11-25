@@ -46,8 +46,8 @@ module.exports = {
 			});
 			compiler.hooks.afterEmit.tap(PLUGIN_NAME, (compilation) => {
 				const step = Number(currentWatchStep.step);
-				const files = fs.readdirSync(outside).sort().join();
-				const expected = ["foreign.txt", `step.${step}.txt`].sort().join();
+				const files = fs.readdirSync(outside).sort().join(",");
+				const expected = ["foreign.txt", `step.${step}.txt`].sort().join(",");
 				if (files !== expected) {
 					compilation.errors.push(
 						new compiler.webpack.WebpackError(

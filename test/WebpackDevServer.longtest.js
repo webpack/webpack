@@ -270,7 +270,9 @@ const startServer = (dir, port, devServerOptions) => {
 		compiler.hooks.done.tap("WebpackDevServerLongtest", () => {
 			if (started) return;
 			started = true;
-			waitForPort(port).then(() => resolve({ server, watching }), reject);
+			waitForPort(port)
+				.then(() => resolve({ server, watching }))
+				.catch((err) => reject(err));
 		});
 		// Poll instead of native file watching: libuv's Windows fs.watch aborts the
 		// process on temp-dir paths ("Assertion failed ... fs-event.c"), and it keeps

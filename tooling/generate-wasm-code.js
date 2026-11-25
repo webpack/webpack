@@ -38,7 +38,7 @@ const files = ["lib/util/hash/xxhash64.js", "lib/util/hash/md4.js"];
 	// `assemblyscript/asc` and pull in its global type declarations (which
 	// redeclare `require`).
 	const ascSpecifier = "assemblyscript/asc";
-	// eslint-disable-next-line n/no-unsupported-features/es-syntax
+
 	const asc = /** @type {{ default: Asc }} */ (await import(ascSpecifier))
 		.default;
 

@@ -9,7 +9,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @typedef {import("../../").Configuration} Configuration */
+/** @import { Configuration } from "../../" */
 
 /**
  * The `test.config.js` hooks a part may keep; any other throws, so no hook is

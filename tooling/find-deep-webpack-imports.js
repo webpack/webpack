@@ -85,9 +85,9 @@ const fetchBuffer = (url) =>
 
 					if (status >= 301 && status <= 308 && res.headers.location) {
 						res.resume();
-						return fetchBuffer(
-							new URL(res.headers.location, url).toString()
-						).then(resolve, reject);
+						return fetchBuffer(new URL(res.headers.location, url).href)
+							.then(resolve)
+							.catch(reject);
 					}
 
 					if (status !== 200) {
@@ -98,7 +98,9 @@ const fetchBuffer = (url) =>
 					/** @type {Buffer[]} */
 					const chunks = [];
 
-					res.on("data", (chunk) => chunks.push(chunk));
+					res.on("data", (chunk) => {
+						chunks.push(chunk);
+					});
 					res.on("end", () => resolve(Buffer.concat(chunks)));
 				}
 			)
@@ -640,15 +642,11 @@ const summaryIndex = process.argv.indexOf("--summary");
 const summaryPath =
 	summaryIndex === -1 ? null : process.argv[summaryIndex + 1] || null;
 
-(offline
-	? Promise.resolve(check(summaryPath))
-	: collect(perKeyword, write)
-).then(
-	(broken) => {
+(offline ? Promise.resolve(check(summaryPath)) : collect(perKeyword, write))
+	.then((broken) => {
 		process.exitCode = broken > 0 ? 1 : 0;
-	},
-	(error) => {
+	})
+	.catch((error) => {
 		process.stderr.write(`${error.stack}${os.EOL}`);
 		process.exitCode = 1;
-	}
-);
+	});

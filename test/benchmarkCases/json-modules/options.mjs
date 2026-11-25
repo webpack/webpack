@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-const items = Array.from({ length: 25 }).fill("file");
+const items = Array.from({ length: 25 }, () => "file");
 
 const LEVEL_PREFIX = "level_";
 

@@ -23,7 +23,7 @@ const base = (
 ) => ({
 	target: "node",
 	mode,
-	...(devtool === undefined ? {} : { devtool }),
+	...(devtool !== undefined && { devtool }),
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] },
 	optimization: {
 		chunkIds: "named",

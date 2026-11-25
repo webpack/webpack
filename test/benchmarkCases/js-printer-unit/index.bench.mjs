@@ -13,9 +13,7 @@ import { fileURLToPath } from "url";
 const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/javascript/syntax")} */
-const jsSyntax = require("../../../lib/javascript/syntax.js");
-
-const { SourceProcessor } = jsSyntax;
+const { SourceProcessor } = require("../../../lib/javascript/syntax.js");
 
 /** @type {[string, string, boolean][]} name, source, whether it is a module */
 const FIXTURES = [

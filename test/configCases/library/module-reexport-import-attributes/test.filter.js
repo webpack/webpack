@@ -4,4 +4,4 @@
 module.exports = () =>
 	!process.versions.bun &&
 	(Boolean(process.versions.deno) ||
-		Number(process.versions.node.split(".")[0]) >= 22);
+		Number(process.versions.node.split(".", 1)[0]) >= 22);

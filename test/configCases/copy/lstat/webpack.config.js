@@ -3,7 +3,7 @@
 const { Compilation } = require("../../../../");
 
 /** @typedef {NonNullable<import("../../../../").Compiler["inputFileSystem"]>} InputFileSystem */
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "ReplaceLstatPlugin";
 

@@ -78,7 +78,11 @@ describe("util/identifier", () => {
 				"file://server/share/source.js",
 				"webpack://file://server/share/source.js"
 			],
-			["/project", "file:///project/100%.js", "webpack://file:///project/100%.js"],
+			[
+				"/project",
+				"file:///project/100%.js",
+				"webpack://file:///project/100%.js"
+			],
 			[
 				"/project",
 				"file:///project/%FF.js",
@@ -88,9 +92,14 @@ describe("util/identifier", () => {
 			["/project", "/project/source.js", "webpack://./source.js"]
 		];
 
-		it.each(cases)("contextifies %s and %s as %s", (context, source, expected) => {
-			expect(identifierUtil.contextifySourceUrl(context, source)).toBe(expected);
-		});
+		it.each(cases)(
+			"contextifies %s and %s as %s",
+			(context, source, expected) => {
+				expect(identifierUtil.contextifySourceUrl(context, source)).toBe(
+					expected
+				);
+			}
+		);
 	});
 
 	describe("normalizeSourceMapUrl", () => {

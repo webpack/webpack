@@ -1,7 +1,7 @@
 "use strict";
 
 const http = require("http");
-// eslint-disable-next-line import/no-extraneous-dependencies -- webpack self-reference
+// eslint-disable-next-line import-x/no-extraneous-dependencies -- webpack self-reference
 const webpack = require("webpack");
 
 const {

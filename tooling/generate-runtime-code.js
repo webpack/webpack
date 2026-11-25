@@ -1,6 +1,6 @@
 "use strict";
 
-const major = Number(process.versions.node.split(".")[0]);
+const major = Number(process.versions.node.split(".", 1)[0]);
 if (major < 16) {
 	throw new Error("Node.js 16+ required to build embedded WASM");
 }

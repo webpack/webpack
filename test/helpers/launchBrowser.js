@@ -24,7 +24,11 @@ const pointedAt = (engine, executablePath) =>
  * @returns {Promise<import("playwright-core").Browser>} the running browser
  */
 module.exports = async (options) => {
-	const { browser: engine = "chrome", executablePath, timeout } = options || {};
+	const {
+		browser: engine = "chrome",
+		executablePath,
+		timeout = 100000
+	} = options || {};
 
 	const playwright = require("playwright-core");
 
@@ -34,7 +38,7 @@ module.exports = async (options) => {
 		headless: true,
 		// a cold runner can take a while to print the browser's endpoint; this
 		// stays under the callers' 120s hook budget
-		timeout: timeout || 100000
+		timeout
 	};
 	if (engine === "chrome") {
 		launchOptions.args = ["--disable-gpu", "--disable-dev-shm-usage"];

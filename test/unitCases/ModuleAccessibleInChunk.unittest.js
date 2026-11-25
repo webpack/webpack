@@ -76,8 +76,8 @@ describe("Module.isAccessibleInChunk", () => {
 		chunkGraph.connectChunkAndModule(asyncChunk, module);
 
 		expect(module.isAccessibleInChunk(chunkGraph, nestedChunk)).toBe(true);
-		expect(module.isAccessibleInChunk(chunkGraph, nestedChunk, asyncChunk)).toBe(
-			false
-		);
+		expect(
+			module.isAccessibleInChunk(chunkGraph, nestedChunk, asyncChunk)
+		).toBe(false);
 	});
 });

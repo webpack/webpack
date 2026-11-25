@@ -2,7 +2,9 @@
 
 const path = require("path");
 const { pathToFileURL } = require("url");
-const { getNormalizedWebpackOptions } = require("../../lib/config/normalization");
+const {
+	getNormalizedWebpackOptions
+} = require("../../lib/config/normalization");
 
 describe("getNormalizedWebpackOptions", () => {
 	describe("file URLs", () => {

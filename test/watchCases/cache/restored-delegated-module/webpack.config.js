@@ -5,8 +5,7 @@ const webpack = require("../../../../");
 const DelegatedModule = require("../../../../lib/dll/DelegatedModule");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler, Compilation } from "../../../../" */
 
 const PLUGIN_NAME = "RestoredDelegatedModuleTest";
 

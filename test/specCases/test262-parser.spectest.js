@@ -3,10 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
-const {
-	parseProgram,
-	toEstreeObject
-} = require("../../lib/javascript/syntax").parser;
+const { parseProgram, toEstreeObject } =
+	require("../../lib/javascript/syntax").parser;
 const {
 	firstDifference,
 	reportable
@@ -17,11 +15,10 @@ const { isInPart } = require("../helpers/testParts");
 /** @typedef {{ file: string, at: string, ours: string, acorn: string }} TreeDifference */
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
-/** @typedef {import("acorn").Program} Program */
-/** @typedef {import("acorn").Comment} Comment */
-/** @typedef {import("../helpers/javascriptParse").AcornComment} AcornComment */
+/** @import { Program, Comment } from "acorn" */
+/** @import { AcornComment } from "../helpers/javascriptParse" */
 /** @typedef {{ ast: import("estree").Program, comments: AcornComment[] }} ParseResult */
-/** @typedef {import("../../lib/javascript/syntax-parser").EcmaVersion} EcmaVersion */
+/** @import { EcmaVersion } from "../../lib/javascript/syntax-parser" */
 /** @typedef {string | number | boolean | bigint | RegExp | null | undefined | EstreeValue[] | { [key: string]: EstreeValue }} EstreeValue */
 
 const corpusDir = path.resolve(__dirname, "../external/test262-cases/test");
@@ -118,7 +115,7 @@ const compareFile = (file, mode, trees, verdicts) => {
 			...options,
 			// `parseOurs` sets this from the goal symbol, so acorn has to match
 			allowReturnOutsideFunction: sourceType === "script",
-			...(mode.comments === true ? { onComment: comments } : {})
+			...(mode.comments === true && { onComment: comments })
 		});
 	} catch (err) {
 		theirError = /** @type {Error} */ (err);
@@ -194,7 +191,9 @@ const compareTreeFile = (file, ecmaVersion, trees, verdicts) => {
 	try {
 		ours = /** @type {EstreeValue} */ (
 			/** @type {unknown} */ (
-				toEstreeObject(parseProgram(code, 0, { ...options, importPhases: false }))
+				toEstreeObject(
+					parseProgram(code, 0, { ...options, importPhases: false })
+				)
 			)
 		);
 	} catch (err) {
@@ -214,7 +213,11 @@ const compareTreeFile = (file, ecmaVersion, trees, verdicts) => {
 		const acornVerdict =
 			theirError === undefined ? "parsed" : theirError.message;
 		if (webpackVerdict !== acornVerdict) {
-			verdicts.push({ file: name, webpack: webpackVerdict, acorn: acornVerdict });
+			verdicts.push({
+				file: name,
+				webpack: webpackVerdict,
+				acorn: acornVerdict
+			});
 		}
 		return;
 	}

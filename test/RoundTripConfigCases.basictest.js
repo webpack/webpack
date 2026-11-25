@@ -102,7 +102,7 @@ describe("RoundTripConfigCases", () => {
 						entry,
 						output: {
 							...caseConfig.output,
-							path: path.join(outDir, `${step}`)
+							path: path.join(outDir, String(step))
 						}
 					});
 

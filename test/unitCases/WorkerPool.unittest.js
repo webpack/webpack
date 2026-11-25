@@ -145,13 +145,15 @@ describe("WorkerPool", () => {
 			const stringError = await pool
 				.run(TARGET, "throwString", [])
 				.catch((/** @type {ThrownValue} */ error) => error);
-			expect(/** @type {Error} */ (stringError).message).toMatch(/not an error/);
+			expect(/** @type {Error} */ (stringError).message).toMatch(
+				/not an error/
+			);
 			const plainError = await pool
 				.run(TARGET, "failWithFunction", [])
 				.catch((/** @type {ThrownValue} */ error) => error);
-			expect(
-				/** @type {Error & { code?: string }} */ (plainError).code
-			).toBe("E_BOOM");
+			expect(/** @type {Error & { code?: string }} */ (plainError).code).toBe(
+				"E_BOOM"
+			);
 			await pool.end();
 		});
 
@@ -281,8 +283,7 @@ describe("WorkerPool", () => {
 			expect(await typed.run("add", 1, 2)).toBe(3);
 
 			// exports may include constants; async methods unwrap their promise
-			const typedAsync =
-				/** @type {import("../../lib/worker/Worker")<{
+			const typedAsync = /** @type {import("../../lib/worker/Worker")<{
 					version: string,
 					addAsync: (a: number, b: number) => Promise<number>
 				}>} */ (worker);
@@ -392,13 +393,20 @@ describe("WorkerPool", () => {
 
 			expect(compiler.worker(TARGET)).toBe(early);
 			farm.setKeepAlive(true);
-			expect(/** @type {import("../../lib/worker/Worker")} */ (early)._pool._keepAlive).toBe(true);
+			expect(
+				/** @type {import("../../lib/worker/Worker")} */ (early)._pool
+					._keepAlive
+			).toBe(true);
 			farm.setKeepAlive(false);
 			await new Promise((resolve, reject) => {
 				compiler.close((err) => (err ? reject(err) : resolve(undefined)));
 			});
 			await expect(
-				/** @type {import("../../lib/worker/Worker")} */ (early).run("add", 1, 2)
+				/** @type {import("../../lib/worker/Worker")} */ (early).run(
+					"add",
+					1,
+					2
+				)
 			).rejects.toThrow("The worker pool is ending");
 		});
 
@@ -409,7 +417,9 @@ describe("WorkerPool", () => {
 				experiments: { threads: true }
 			});
 			const worker = compiler.worker(TARGET);
-			const compilation = compiler.newCompilation(compiler.newCompilationParams());
+			const compilation = compiler.newCompilation(
+				compiler.newCompilationParams()
+			);
 			const child = compiler.createChildCompiler(
 				compilation,
 				"child",
@@ -498,7 +508,9 @@ describe("WorkerPool", () => {
 		};
 
 		afterEach(async () => {
-			await Promise.all(pools.splice(0).map((pool) => pool.end({ force: true })));
+			await Promise.all(
+				pools.splice(0).map((pool) => pool.end({ force: true }))
+			);
 		});
 
 		it("runs calls and propagates errors", async () => {
@@ -697,8 +709,7 @@ describe("WorkerPool", () => {
 			const loader = pool.runJob(TARGET, "rpcAdd", [2, 3], {
 				rpc: (method, args) =>
 					method === "add"
-						? /** @type {number} */ (args[0]) +
-							/** @type {number} */ (args[1])
+						? /** @type {number} */ (args[0]) + /** @type {number} */ (args[1])
 						: undefined
 			});
 			expect(await plain).toBe(50);
@@ -710,9 +721,7 @@ describe("WorkerPool", () => {
 			const pool = createThreadPool({ max: 4 });
 			const jobs = [];
 			for (let i = 0; i < 12; i++) {
-				jobs.push(
-					pool.runJob(TARGET, "info", [], { rpc: () => undefined })
-				);
+				jobs.push(pool.runJob(TARGET, "info", [], { rpc: () => undefined }));
 			}
 			const infos = await Promise.all(jobs);
 			/** @type {Map<number, number>} */
@@ -801,7 +810,9 @@ describe("WorkerPool", () => {
 			const force = createThreadPool({ max: 1 });
 			const blocked = force.run(TARGET, "sleep", [5000]);
 			await force.end({ force: true });
-			await expect(blocked).rejects.toThrow(/exited with code \d+ during sleep/);
+			await expect(blocked).rejects.toThrow(
+				/exited with code \d+ during sleep/
+			);
 		});
 	});
 
@@ -927,7 +938,9 @@ describe("WorkerPool", () => {
 			});
 			const response = /** @type {ErrorResponseMessage} */ (await next());
 			expect(response).toMatchObject({ type: "response", id: 2, ok: false });
-			expect(response.error.message).toMatch(/could not be cloned|can not be cloned/);
+			expect(response.error.message).toMatch(
+				/could not be cloned|can not be cloned/
+			);
 			expect(child._rpc.size).toBe(0);
 			port2.postMessage({ type: "close" });
 			await closed(port2);
@@ -997,7 +1010,6 @@ describe("WorkerPool", () => {
 	});
 
 	describeThreads("reuse", () => {
-
 		/** @typedef {import("../../lib/worker/Worker")<{ info: () => { threadId: number } }>} InfoWorker */
 
 		/**
@@ -1322,11 +1334,14 @@ describe("WorkerPool", () => {
 									 * @param {import("../../lib/Compiler")} compiler the compiler
 									 */
 									apply(compiler) {
-										compiler.hooks.thisCompilation.tap("test", (compilation) => {
-											compilation.hooks.processAssets.tapPromise("test", () =>
-												task(compiler)
-											);
-										});
+										compiler.hooks.thisCompilation.tap(
+											"test",
+											(compilation) => {
+												compilation.hooks.processAssets.tapPromise("test", () =>
+													task(compiler)
+												);
+											}
+										);
 									}
 								}
 							]
@@ -1374,55 +1389,61 @@ describe("WorkerPool", () => {
 			}
 		});
 
-		itWithCores("shares the threads of compilers with experiments.threads", async () => {
-			const forced = createCompiler();
-			const configured = createCompiler({
-				experiments: { threads: { max: 1 } }
-			});
-			try {
-				const pool = configured.worker(TARGET)._pool;
-
-				expect(forced.worker(TARGET, { numWorkers: 1 })._pool).toBe(pool);
-				// configured threads ignore numWorkers
-				expect(configured.worker(TARGET, { numWorkers: 4 })._pool).toBe(pool);
-				expect(pool.options.max).toBe(1);
-				await close(configured);
-				expect(pool.ending).toBe(false);
-			} finally {
-				await close(configured);
-				await close(forced);
-			}
-		});
-
-		itWithCores("keeps the threads for the build and retires them after", async () => {
-			/** @type {number[]} */
-			const threadIds = [];
-			const compiler = createCompiler(undefined, async (compiler) => {
-				const worker = /** @type {InfoWorker} */ (
-					compiler.worker(TARGET, { numWorkers: 1 })
-				);
-				// created mid-build: the gap must not cost a respawn
-				worker._pool.options.idleTimeout = 20;
-				threadIds.push((await worker.run("info")).threadId);
-				await sleep(100);
-				const other = /** @type {InfoWorker} */ (
-					compiler.worker(OTHER, { numWorkers: 1 })
-				);
-				threadIds.push((await other.run("info")).threadId);
-			});
-			try {
-				await new Promise((resolve, reject) => {
-					compiler.run((err) => (err ? reject(err) : resolve(undefined)));
+		itWithCores(
+			"shares the threads of compilers with experiments.threads",
+			async () => {
+				const forced = createCompiler();
+				const configured = createCompiler({
+					experiments: { threads: { max: 1 } }
 				});
-				const pool = compiler.worker(TARGET, { numWorkers: 1 })._pool;
+				try {
+					const pool = configured.worker(TARGET)._pool;
 
-				expect(new Set(threadIds).size).toBe(1);
-				expect(pool.stats.spawned).toBe(1);
-				await waitFor(() => pool.stats.workers === 0);
-			} finally {
-				await close(compiler);
+					expect(forced.worker(TARGET, { numWorkers: 1 })._pool).toBe(pool);
+					// configured threads ignore numWorkers
+					expect(configured.worker(TARGET, { numWorkers: 4 })._pool).toBe(pool);
+					expect(pool.options.max).toBe(1);
+					await close(configured);
+					expect(pool.ending).toBe(false);
+				} finally {
+					await close(configured);
+					await close(forced);
+				}
 			}
-		});
+		);
+
+		itWithCores(
+			"keeps the threads for the build and retires them after",
+			async () => {
+				/** @type {number[]} */
+				const threadIds = [];
+				const compiler = createCompiler(undefined, async (compiler) => {
+					const worker = /** @type {InfoWorker} */ (
+						compiler.worker(TARGET, { numWorkers: 1 })
+					);
+					// created mid-build: the gap must not cost a respawn
+					worker._pool.options.idleTimeout = 20;
+					threadIds.push((await worker.run("info")).threadId);
+					await sleep(100);
+					const other = /** @type {InfoWorker} */ (
+						compiler.worker(OTHER, { numWorkers: 1 })
+					);
+					threadIds.push((await other.run("info")).threadId);
+				});
+				try {
+					await new Promise((resolve, reject) => {
+						compiler.run((err) => (err ? reject(err) : resolve(undefined)));
+					});
+					const pool = compiler.worker(TARGET, { numWorkers: 1 })._pool;
+
+					expect(new Set(threadIds).size).toBe(1);
+					expect(pool.stats.spawned).toBe(1);
+					await waitFor(() => pool.stats.workers === 0);
+				} finally {
+					await close(compiler);
+				}
+			}
+		);
 
 		itWithCores("keeps the threads between watch rebuilds", async () => {
 			const compiler = createCompiler(undefined, async (compiler) => {

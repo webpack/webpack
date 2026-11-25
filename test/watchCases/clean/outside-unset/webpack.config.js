@@ -36,7 +36,7 @@ module.exports = {
 				});
 			});
 			compiler.hooks.afterEmit.tap(PLUGIN_NAME, (compilation) => {
-				const files = fs.readdirSync(outside).sort().join();
+				const files = fs.readdirSync(outside).sort().join(",");
 				const expected = `foreign.txt,step.${currentWatchStep.step}.txt`;
 				if (files !== expected) {
 					compilation.errors.push(

@@ -3,7 +3,7 @@
 const path = require("path");
 const webpack = require("../..");
 
-/** @typedef {import("./TestCases").SuiteConfig} SuiteConfig */
+/** @import { SuiteConfig } from "./TestCases" */
 
 const repositoryRoot = path.join(__dirname, "..", "..");
 
