@@ -209,11 +209,15 @@ describe("module/findCaseMismatch", () => {
 		});
 
 		it("lists a directory with a file system that has no cache", (done) => {
-			readdirFresh(createFileSystem({ "/lib/a.js": "" }), "/lib", (err, entries) => {
-				expect(err).toBeNull();
-				expect(entries).toEqual(["a.js"]);
-				done();
-			});
+			readdirFresh(
+				createFileSystem({ "/lib/a.js": "" }),
+				"/lib",
+				(err, entries) => {
+					expect(err).toBeNull();
+					expect(entries).toEqual(["a.js"]);
+					done();
+				}
+			);
 		});
 	});
 });
