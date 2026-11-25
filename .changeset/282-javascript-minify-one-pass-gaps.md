@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold more values, calls, loops and dead code when minifying, and fix wrong output.
+Improve minification folds and fix wrong output, including negated tests.
