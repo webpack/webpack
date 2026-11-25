@@ -1,0 +1,18 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "{return\"staging\"})()",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a call of a function whose body folds to one return only once its own tests fold, through a constant only a second pass reads, an unread statement before it or a single test, prints as that return only in a second pass"
+	},
+	{
+		"relation": "idempotence",
+		"contains": "function e(t){return(()=>{if(t==",
+		"presets": [
+			"default"
+		],
+		"why": "known bug: a call of a function whose body folds to one return only once its own tests fold, through a constant only a second pass reads, an unread statement before it or a single test, prints as that return only in a second pass"
+	}
+]
