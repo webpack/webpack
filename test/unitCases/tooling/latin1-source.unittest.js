@@ -36,7 +36,8 @@ describe("latin1-source", () => {
 	});
 
 	it("escapes an astral character of a name by its code point", () => {
-		const source = "(() => { const \ud835\udc9c = 1; return \ud835\udc9c + \"\ud835\udc9c\"; })()";
+		const source =
+			'(() => { const \ud835\udc9c = 1; return \ud835\udc9c + "\ud835\udc9c"; })()';
 		const rewritten = toLatin1Source(source);
 		expect(rewritten).toBe(
 			'(() => { const \\u{1D49C} = 1; return \\u{1D49C} + "\\uD835\\uDC9C"; })()'

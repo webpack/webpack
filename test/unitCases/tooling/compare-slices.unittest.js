@@ -20,12 +20,20 @@ const hold = (cases) => {
 describe("the slice relation", () => {
 	it("should report nothing about a node its own source gives back", () => {
 		expect(
-			hold([["Declaration", "Declaration[0,4) Ident[3,4)", "Declaration[0,4) Ident[3,4)"]])
+			hold([
+				[
+					"Declaration",
+					"Declaration[0,4) Ident[3,4)",
+					"Declaration[0,4) Ident[3,4)"
+				]
+			])
 		).toEqual({ what: [], read: 1, skipped: 0 });
 	});
 
 	it("should report a node whose own source parses to something else", () => {
-		expect(hold([["Declaration", "Declaration[0,4)", "Declaration[0,5)"]])).toEqual({
+		expect(
+			hold([["Declaration", "Declaration[0,4)", "Declaration[0,5)"]])
+		).toEqual({
 			what: ["parses to something else on its own (Declaration)"],
 			read: 1,
 			skipped: 0
@@ -40,7 +48,9 @@ describe("the slice relation", () => {
 				reparse: () => "Identifier[0,5)"
 			}
 		]);
-		expect(reports[0].repro).toBe("    YieldExpression[0,5)\n      -> Identifier[0,5)");
+		expect(reports[0].repro).toBe(
+			"    YieldExpression[0,5)\n      -> Identifier[0,5)"
+		);
 	});
 
 	it("should count a node no context stands alone rather than report it", () => {

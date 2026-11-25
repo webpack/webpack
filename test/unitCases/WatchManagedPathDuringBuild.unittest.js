@@ -99,7 +99,10 @@ describe("WatchManagedPathDuringBuild", () => {
 				if (err) return done(err);
 				builds++;
 				if (builds === 1) {
-					setTimeout(() => write("index.js", 'export { bar } from "foo";\n//\n'), 300);
+					setTimeout(
+						() => write("index.js", 'export { bar } from "foo";\n//\n'),
+						300
+					);
 					return;
 				}
 				if (resolvesInner()) done();

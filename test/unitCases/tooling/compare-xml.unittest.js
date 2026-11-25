@@ -30,10 +30,7 @@ const {
 	runMode,
 	toolsFor
 } = require("../../../tooling/compare-xml-tools");
-const {
-	agreement,
-	cutsAt
-} = require("../../../tooling/compare-tools-harness");
+const { agreement, cutsAt } = require("../../../tooling/compare-tools-harness");
 const { SourceProcessor } = require("../../../lib/html/syntax");
 
 describe("the XML tool comparison", () => {
@@ -64,26 +61,46 @@ describe("the XML tool comparison", () => {
 	});
 
 	it("should compare sorted attributes with embedded stylesheet minification", async () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg" z="1" a="2"><style>path { fill: #ff0000 }</style></svg>';
-		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (sorted attributes)");
+		const source =
+			'<svg xmlns="http://www.w3.org/2000/svg" z="1" a="2"><style>path { fill: #ff0000 }</style></svg>';
+		const [tool] = toolsFor("minify", source).filter(
+			(tool) => tool.name === "webpack (sorted attributes)"
+		);
 		const minify = await tool.create();
 		const once = await minify(source);
-		expect(once).toBe('<svg a="2" xmlns="http://www.w3.org/2000/svg" z="1"><style>path{fill:red}</style></svg>');
+		expect(once).toBe(
+			'<svg a="2" xmlns="http://www.w3.org/2000/svg" z="1"><style>path{fill:red}</style></svg>'
+		);
 		expect(await minify(once)).toBe(once);
 	});
 
-	it.each(["<svg/>", '<svg xmlns="http://www.w3.org/2000/svg"><path/></svg>', EDITOR_SVG])("should compare both SVGO passes for an SVG root", (xml) => {
-		expect(toolsFor("minify", xml).map((tool) => tool.name)).toEqual(expect.arrayContaining(["svgo", "svgo (multipass)"]));
+	it.each([
+		"<svg/>",
+		'<svg xmlns="http://www.w3.org/2000/svg"><path/></svg>',
+		EDITOR_SVG
+	])("should compare both SVGO passes for an SVG root", (xml) => {
+		expect(toolsFor("minify", xml).map((tool) => tool.name)).toEqual(
+			expect.arrayContaining(["svgo", "svgo (multipass)"])
+		);
 	});
 
-	it.each(["<root><svg/></root>", "<!--<svg >--><root/>", '<root><![CDATA[<svg >]]></root>', MAVEN_POM])("should omit SVGO for a non-SVG root", (xml) => {
-		expect(toolsFor("minify", xml).map((tool) => tool.name)).not.toEqual(expect.arrayContaining(["svgo"]));
+	it.each([
+		"<root><svg/></root>",
+		"<!--<svg >--><root/>",
+		"<root><![CDATA[<svg >]]></root>",
+		MAVEN_POM
+	])("should omit SVGO for a non-SVG root", (xml) => {
+		expect(toolsFor("minify", xml).map((tool) => tool.name)).not.toEqual(
+			expect.arrayContaining(["svgo"])
+		);
 	});
 
 	it("should invoke SVGO with the row's pass count and return its data", async () => {
 		mockOptimize.mockClear();
 		mockLoad.mockClear();
-		const tools = toolsFor("minify", "<svg/>").filter((tool) => tool.name.startsWith("svgo"));
+		const tools = toolsFor("minify", "<svg/>").filter((tool) =>
+			tool.name.startsWith("svgo")
+		);
 		for (const tool of tools) {
 			const minify = await tool.create();
 			expect(await minify("<svg/>")).toBe("<svg/>");
@@ -357,9 +374,10 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 	});
 
 	it("should read what the internal subset declares as plain text, and nothing else", async () => {
-		const reference = /** @type {import("../../../tooling/compare-tools-harness").TreeReader} */ (
-			TREE_READERS.get("@rgrove/parse-xml")
-		);
+		const reference =
+			/** @type {import("../../../tooling/compare-tools-harness").TreeReader} */ (
+				TREE_READERS.get("@rgrove/parse-xml")
+			);
 		const tree = await reference(`<!DOCTYPE r [
 	<!ENTITY first "one"><!ENTITY first "two">
 	<!ENTITY quoted 'say "hi"'>
@@ -380,9 +398,10 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 	});
 
 	it("should read only the declarations the internal subset holds, not text inside one", async () => {
-		const reference = /** @type {import("../../../tooling/compare-tools-harness").TreeReader} */ (
-			TREE_READERS.get("@rgrove/parse-xml")
-		);
+		const reference =
+			/** @type {import("../../../tooling/compare-tools-harness").TreeReader} */ (
+				TREE_READERS.get("@rgrove/parse-xml")
+			);
 		const tree = await reference(`<!DOCTYPE r [
 	<!ENTITY nested SYSTEM "<!ENTITY first 'x'>">
 	<?pi <!ENTITY quoted "y">?>
@@ -409,17 +428,25 @@ describe("the XML tool comparison — the entities a DTD declares", () => {
 
 describe("the XML tool comparison — SVG presets", () => {
 	it("should compare opt-in SVG data removal without removing accessible text", async () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg"><title>Keep</title><metadata>Optional</metadata><style>path { fill: #ff0000 }</style></svg>';
-		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG data removal)");
+		const source =
+			'<svg xmlns="http://www.w3.org/2000/svg"><title>Keep</title><metadata>Optional</metadata><style>path { fill: #ff0000 }</style></svg>';
+		const [tool] = toolsFor("minify", source).filter(
+			(tool) => tool.name === "webpack (SVG data removal)"
+		);
 		const minify = await tool.create();
 		const once = await minify(source);
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><title>Keep</title><style>path{fill:red}</style></svg>');
+		expect(once).toBe(
+			'<svg xmlns="http://www.w3.org/2000/svg"><title>Keep</title><style>path{fill:red}</style></svg>'
+		);
 		expect(await minify(once)).toBe(once);
 	});
 
 	it("should compare namespace and empty-attribute cleanup with CSS rendering", async () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:label="editor"><metadata>Optional</metadata><g class="" style="/* empty */"/></svg>';
-		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG attribute cleanup)");
+		const source =
+			'<svg xmlns="http://www.w3.org/2000/svg" xmlns:e="http://www.inkscape.org/namespaces/inkscape" e:label="editor"><metadata>Optional</metadata><g class="" style="/* empty */"/></svg>';
+		const [tool] = toolsFor("minify", source).filter(
+			(tool) => tool.name === "webpack (SVG attribute cleanup)"
+		);
 		const minify = await tool.create();
 		const once = await minify(source);
 		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/></svg>');
@@ -427,20 +454,30 @@ describe("the XML tool comparison — SVG presets", () => {
 	});
 
 	it("should compare whitespace cleanup without changing SVG text spacing", async () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg">\n <g> </g><text> A  <tspan> B </tspan> C </text>\n</svg>';
-		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG whitespace cleanup)");
+		const source =
+			'<svg xmlns="http://www.w3.org/2000/svg">\n <g> </g><text> A  <tspan> B </tspan> C </text>\n</svg>';
+		const [tool] = toolsFor("minify", source).filter(
+			(tool) => tool.name === "webpack (SVG whitespace cleanup)"
+		);
 		const minify = await tool.create();
 		const once = await minify(source);
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg"><g/><text> A  <tspan> B </tspan> C </text></svg>');
+		expect(once).toBe(
+			'<svg xmlns="http://www.w3.org/2000/svg"><g/><text> A  <tspan> B </tspan> C </text></svg>'
+		);
 		expect(await minify(once)).toBe(once);
 	});
 
 	it("should compare lossless geometry cleanup with embedded CSS rendering", async () => {
-		const source = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.000 0020.000">\n<style>polygon { fill: #ff0000 }</style><polygon points="+001.00, 0002.000 003.000, 004.000"/>\n</svg>';
-		const [tool] = toolsFor("minify", source).filter((tool) => tool.name === "webpack (SVG numeric cleanup)");
+		const source =
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 0010.000 0020.000">\n<style>polygon { fill: #ff0000 }</style><polygon points="+001.00, 0002.000 003.000, 004.000"/>\n</svg>';
+		const [tool] = toolsFor("minify", source).filter(
+			(tool) => tool.name === "webpack (SVG numeric cleanup)"
+		);
 		const minify = await tool.create();
 		const once = await minify(source);
-		expect(once).toBe('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 20"><style>polygon{fill:red}</style><polygon points="1 2 3 4"/></svg>');
+		expect(once).toBe(
+			'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 10 20"><style>polygon{fill:red}</style><polygon points="1 2 3 4"/></svg>'
+		);
 		expect(await minify(once)).toBe(once);
 	});
 });

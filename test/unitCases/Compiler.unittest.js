@@ -164,15 +164,17 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		/** @type {number} */
 		let sizeSeenByAfterDone;
 		compiler.hooks.afterDone.tap("Test", (stats) => {
-			sizeSeenByAfterDone = /** @type {import("../../").CodeGenerationResults} */ (
-				stats.compilation.codeGenerationResults
-			).map.size;
+			sizeSeenByAfterDone =
+				/** @type {import("../../").CodeGenerationResults} */ (
+					stats.compilation.codeGenerationResults
+				).map.size;
 		});
 		compiler.run((err, stats) => {
 			if (err) return done(err);
@@ -260,9 +262,10 @@ describe("Compiler", () => {
 			new Date(0),
 			new Date(0)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (outputFileSystem)
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (outputFileSystem)
+			);
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			expect(
@@ -291,12 +294,13 @@ describe("Compiler", () => {
 				})
 			]
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ ({
-				...createFsFromVolume(new Volume()),
-				utimes: undefined
-			})
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ ({
+					...createFsFromVolume(new Volume()),
+					utimes: undefined
+				})
+			);
 		compiler.run((err) => {
 			expect(/** @type {Error} */ (err).message).toMatch(
 				/Unable to set the times of '.*stamped\.txt': the output file system cannot set them/
@@ -319,9 +323,10 @@ describe("Compiler", () => {
 		const outputFileSystem = createFsFromVolume(volume);
 		volume.fromJSON({ "/directory/stamped.txt": "stamped" });
 		outputFileSystem.chmodSync("/directory/stamped.txt", 0o644);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (outputFileSystem)
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (outputFileSystem)
+			);
 		compiler.run((err, stats) => {
 			if (err) return done(err);
 			expect(
@@ -346,12 +351,13 @@ describe("Compiler", () => {
 			output: { path: "/directory", filename: "bundle.js" },
 			plugins: [emitAssetWithFileAttributes({ mode: 0o755 })]
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ ({
-				...createFsFromVolume(new Volume()),
-				chmod: undefined
-			})
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ ({
+					...createFsFromVolume(new Volume()),
+					chmod: undefined
+				})
+			);
 		compiler.run((err) => {
 			expect(/** @type {Error} */ (err).message).toMatch(
 				/Unable to set the permissions of '.*stamped\.txt': the output file system cannot set them/
@@ -361,7 +367,9 @@ describe("Compiler", () => {
 	});
 
 	it("should not emit compilation errors in async (watch)", async () => {
-		const createStats = (/** @type {import("../../").Configuration} */ options) =>
+		const createStats = (
+			/** @type {import("../../").Configuration} */ options
+		) =>
 			new Promise((resolve, reject) => {
 				const webpack = require("../..");
 
@@ -402,9 +410,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 		});
@@ -425,9 +434,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
@@ -448,9 +458,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 		});
@@ -471,9 +482,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.watch({}, (err, _stats) => {
 			if (err) return done(err);
 		});
@@ -494,9 +506,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		let doneCalls = 0;
 		let inDone = false;
 		let compileDuringDone = false;
@@ -540,9 +553,10 @@ describe("Compiler", () => {
 				() => {}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, _stats) => {
 			if (err) return done();
 		});
@@ -560,9 +574,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, stats1) => {
 			if (err) return done(err);
 
@@ -588,9 +603,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		let idle = compiler.idle;
 		let idleWriteCount = 0;
 		Object.defineProperty(compiler, "idle", {
@@ -623,9 +639,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, _stats) => {
 			if (err) return done(err);
 
@@ -650,9 +667,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
@@ -678,9 +696,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
@@ -702,9 +721,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const watching = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err, _stats) => {
 				if (err) return done(err);
@@ -730,9 +750,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		let once = true;
 		compiler.hooks.afterDone.tap("RunAgainTest", () => {
 			if (!once) return;
@@ -759,9 +780,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const runCb = jest.fn();
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
@@ -798,9 +820,10 @@ describe("Compiler", () => {
 				}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const doneHookCb = jest.fn();
 		compiler.hooks.done.tap("afterDoneRunTest", doneHookCb);
 		compiler.hooks.afterDone.tap("afterDoneRunTest", () => {
@@ -822,9 +845,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const invalidHookCb = jest.fn();
 		const doneHookCb = jest.fn();
 		const watchCb = jest.fn();
@@ -861,9 +885,10 @@ describe("Compiler", () => {
 				filename: "bundle.js"
 			}
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const invalidHookCb = jest.fn();
 		const watchCloseCb = jest.fn();
 		const watchCloseHookCb = jest.fn();
@@ -901,9 +926,10 @@ describe("Compiler", () => {
 			}
 		});
 
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 
 		const watch = /** @type {import("../../").Watching} */ (
 			compiler.watch({}, (err) => {
@@ -933,9 +959,10 @@ describe("Compiler", () => {
 			}
 		});
 		compiler.hooks.failed.tap("CompilerTest", failedSpy);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, _stats) => {
 			expect(err).toBeTruthy();
 			expect(failedSpy).toHaveBeenCalledTimes(1);

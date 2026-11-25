@@ -103,20 +103,21 @@ describeIf("scriptToDocument", () => {
 	};
 
 	it("should leave a script the encoding holds as toDocument writes it", () => {
-		const code = 'result = String.raw`€`;';
+		const code = "result = String.raw`€`;";
 		expect(scriptToDocument(code, "windows-1252")).toBe(
 			toDocument(code, "windows-1252", escapeJsCodePoint)
 		);
 		expect(scriptToDocument(code, "utf-16le")).toBe(code);
-		expect(scriptToDocument("result = 1;", "windows-1252")).toBe(
-			"result = 1;"
-		);
+		expect(scriptToDocument("result = 1;", "windows-1252")).toBe("result = 1;");
 	});
 
 	it("should declare its names after the directives", () => {
-		const code = '"use strict"\nthis.result = [String.raw`★`, (function () { return this; })()];';
+		const code =
+			'"use strict"\nthis.result = [String.raw`★`, (function () { return this; })()];';
 		const written = scriptToDocument(code, "windows-1252");
-		expect(written).toMatch(/^"use strict";var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = \(\{\}\)\.constructor;/);
+		expect(written).toMatch(
+			/^"use strict";var __webpack_template_\w+_0__, __webpack_template_\w+_object__ = \(\{\}\)\.constructor;/
+		);
 		expect(run(written)).toEqual(["★", undefined]);
 	});
 
@@ -130,7 +131,8 @@ describeIf("scriptToDocument", () => {
 	});
 
 	it("should escape an astral character of a private name", () => {
-		const code = "class A { #𝑥 = 1; get() { return this.#𝑥; } }\nresult = new A().get();";
+		const code =
+			"class A { #𝑥 = 1; get() { return this.#𝑥; } }\nresult = new A().get();";
 		const written = scriptToDocument(code, "windows-1252");
 		expect(written).toContain("#\\u{1d465}");
 		// private names run from Node.js 12
@@ -155,7 +157,10 @@ describeIf("scriptToDocument", () => {
 			const written = scriptToDocument(code, "windows-1252");
 			expect(written).toMatch(/^#!\/usr\/bin\/env node\nvar /);
 			expect(written).toContain("// a comment\nthis.result");
-			expect(run(written.replace(/^#!.*\n/, ""))).toEqual(["★", `a${separator}b`]);
+			expect(run(written.replace(/^#!.*\n/, ""))).toEqual([
+				"★",
+				`a${separator}b`
+			]);
 		}
 		for (const terminator of ["\n", "\r\n"]) {
 			const code = `#!/usr/bin/env node${terminator}this.result = String.raw\`★\`;`;

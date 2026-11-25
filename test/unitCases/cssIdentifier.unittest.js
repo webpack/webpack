@@ -131,7 +131,8 @@ describe("css identifier utils", () => {
 	// failure is reproducible. Guards the string utils against crashes and
 	// escape/unescape round-trip violations.
 	describe("fuzzing (seeded)", () => {
-		const { escapeIdentifier, unescapeIdentifier, asciiCaseInsensitiveMatch } = cssParser;
+		const { escapeIdentifier, unescapeIdentifier, asciiCaseInsensitiveMatch } =
+			cssParser;
 		// mulberry32
 		const makeRng = (/** @type {number} */ seed) => {
 			let s = seed >>> 0;

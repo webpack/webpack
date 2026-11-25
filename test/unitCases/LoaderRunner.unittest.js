@@ -456,7 +456,9 @@ describe("runLoaders", () => {
 			},
 			(err, result) => {
 				if (err) return done(err);
-				expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
+				expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe(
+					"efbbbf62c3b66d﻿böm"
+				);
 				done();
 			}
 		);
@@ -1037,7 +1039,9 @@ describe("runLoaders", () => {
 				},
 				(err, result) => {
 					if (err) return done(err);
-					expect(/** @type {Buffer} */ (contentOf(result)).toString("utf8")).toBe("efbbbf62c3b66d﻿böm");
+					expect(
+						/** @type {Buffer} */ (contentOf(result)).toString("utf8")
+					).toBe("efbbbf62c3b66d﻿böm");
 					done();
 				}
 			);

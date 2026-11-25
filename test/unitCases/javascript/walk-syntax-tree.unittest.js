@@ -264,7 +264,11 @@ const evaluations = (source, preparsed, strictOutput) => {
 		parser.hooks.call.for(key).tap("evaluate", (expression) => {
 			results.push(
 				String(parser.isStatementLevelExpression(expression)),
-				String(parser.isAsiPosition(/** @type {[number, number]} */ (expression.range)[0])),
+				String(
+					parser.isAsiPosition(
+						/** @type {[number, number]} */ (expression.range)[0]
+					)
+				),
 				String((parser.state.guardStack || []).length)
 			);
 			for (const argument of expression.arguments) {
@@ -363,49 +367,52 @@ describe("walk the syntax tree", () => {
 		...filesIn("test/cases/parsing")
 	];
 
-	it.each(files)("should call the same hooks for a preparsed AST of %s", (file) => {
-		const source = fs.readFileSync(path.join(ROOT, file), "utf8");
-		/** @type {string[] | Error} */
-		let expected;
-		try {
-			expected = trace(source, false);
-		} catch (err) {
-			expected = /** @type {Error} */ (err);
+	it.each(files)(
+		"should call the same hooks for a preparsed AST of %s",
+		(file) => {
+			const source = fs.readFileSync(path.join(ROOT, file), "utf8");
+			/** @type {string[] | Error} */
+			let expected;
+			try {
+				expected = trace(source, false);
+			} catch (err) {
+				expected = /** @type {Error} */ (err);
+			}
+			if (expected instanceof Error) {
+				expect(() => trace(source, true)).toThrow(expected.message);
+				return;
+			}
+			expect(trace(source, true)).toEqual(expected);
 		}
-		if (expected instanceof Error) {
-			expect(() => trace(source, true)).toThrow(expected.message);
-			return;
-		}
-		expect(trace(source, true)).toEqual(expected);
-	});
+	);
 
 	it.each(
 		[...files, ...SNIPPETS.map((_, i) => `snippet ${i}`)].flatMap((file) => [
 			[file, false],
 			[file, true]
 		])
-	)("should evaluate a preparsed AST of %s the same, strict output %s", (
-		file,
-		strictOutput
-	) => {
-		const source = file.startsWith("snippet ")
-			? SNIPPETS[Number(file.slice(8))]
-			: fs.readFileSync(path.join(ROOT, file), "utf8");
-		/** @type {string[] | Error} */
-		let expected;
-		try {
-			expected = evaluations(source, false, strictOutput);
-		} catch (err) {
-			expected = /** @type {Error} */ (err);
+	)(
+		"should evaluate a preparsed AST of %s the same, strict output %s",
+		(file, strictOutput) => {
+			const source = file.startsWith("snippet ")
+				? SNIPPETS[Number(file.slice(8))]
+				: fs.readFileSync(path.join(ROOT, file), "utf8");
+			/** @type {string[] | Error} */
+			let expected;
+			try {
+				expected = evaluations(source, false, strictOutput);
+			} catch (err) {
+				expected = /** @type {Error} */ (err);
+			}
+			if (expected instanceof Error) {
+				expect(() => evaluations(source, true, strictOutput)).toThrow(
+					expected.message
+				);
+				return;
+			}
+			expect(evaluations(source, true, strictOutput)).toEqual(expected);
 		}
-		if (expected instanceof Error) {
-			expect(() => evaluations(source, true, strictOutput)).toThrow(
-				expected.message
-			);
-			return;
-		}
-		expect(evaluations(source, true, strictOutput)).toEqual(expected);
-	});
+	);
 
 	it.each(SNIPPETS.map((_, i) => i))(
 		"should call the same hooks for a preparsed AST of snippet %i",
@@ -417,13 +424,21 @@ describe("walk the syntax tree", () => {
 });
 
 describe("a syntax tree written from ESTree objects", () => {
-	const { syntaxTreeOfEstree } = require("../../../lib/javascript/syntax-parser");
+	const {
+		syntaxTreeOfEstree
+	} = require("../../../lib/javascript/syntax-parser");
 	const acorn = require("acorn");
 
 	it("serves each node's object until the tree is released", () => {
 		const program = /** @type {import("estree").Program} */ (
 			/** @type {unknown} */ (
-				acorn.parse(fixture("javascript", "a-syntax-tree-written-from-es-tree-objects-serves-each-node-s-object-until-the"), { ecmaVersion: "latest", ranges: true })
+				acorn.parse(
+					fixture(
+						"javascript",
+						"a-syntax-tree-written-from-es-tree-objects-serves-each-node-s-object-until-the"
+					),
+					{ ecmaVersion: "latest", ranges: true }
+				)
 			)
 		);
 		const call = /** @type {import("estree").CallExpression} */ (
@@ -436,7 +451,9 @@ describe("a syntax tree written from ESTree objects", () => {
 		expect(id).not.toBe(0);
 		expect(tree.estree(id)).toBe(call);
 		// lazy objects read the same objects back
-		const lazy = /** @type {import("estree").Program} */ (tree.lazyEstree(node));
+		const lazy = /** @type {import("estree").Program} */ (
+			tree.lazyEstree(node)
+		);
 		expect(lazy).toBe(program);
 		tree.release();
 		expect(tree.nodeOf(call)).toBe(0);
@@ -446,7 +463,11 @@ describe("a syntax tree written from ESTree objects", () => {
 		const depth = 1500;
 		const source = `${"[".repeat(depth)}x${"]".repeat(depth)};`;
 		/** @type {import("estree").Identifier & { range: [number, number] }} */
-		const deepest = { type: "Identifier", name: "x", range: [depth, depth + 1] };
+		const deepest = {
+			type: "Identifier",
+			name: "x",
+			range: [depth, depth + 1]
+		};
 		/** @type {import("estree").Expression & { range: [number, number] }} */
 		let expression = deepest;
 		for (let level = depth - 1; level >= 0; level--) {
@@ -481,7 +502,10 @@ describe("a syntax tree written from ESTree objects", () => {
 		/** @type {import("estree").Expression & { range: [number, number] }} */
 		let expression =
 			/** @type {import("estree").Expression & { range: [number, number] }} */ (
-				/** @type {unknown} */ ({ type: "JSXElement", range: [depth, depth + 1] })
+				/** @type {unknown} */ ({
+					type: "JSXElement",
+					range: [depth, depth + 1]
+				})
 			);
 		for (let level = depth - 1; level >= 0; level--) {
 			expression = {
@@ -536,14 +560,23 @@ describe("a hook with path taps", () => {
 		const seen = [];
 		parser.hooks.statement.tap(
 			{ name: "path", path: true },
-			(/** @type {JavascriptNodeReader} */ reader, /** @type {number} */ id) => {
+			(
+				/** @type {JavascriptNodeReader} */ reader,
+				/** @type {number} */ id
+			) => {
 				seen.push(`path ${reader.range(id)}`);
 			}
 		);
 		parser.hooks.statement.tap("object", (statement) => {
 			seen.push(`object ${statement.type}`);
 		});
-		parse(parser, fixture("javascript", "a-hook-with-path-taps-gives-a-path-tap-ids-from-a-node-object-outside-a-parse"));
+		parse(
+			parser,
+			fixture(
+				"javascript",
+				"a-hook-with-path-taps-gives-a-path-tap-ids-from-a-node-object-outside-a-parse"
+			)
+		);
 		expect(seen).toEqual([
 			"path 0,2",
 			"object ExpressionStatement",
@@ -568,7 +601,13 @@ describe("a hook with path taps", () => {
 				calls++;
 			}
 		});
-		parse(parser, fixture("javascript", "a-hook-with-path-taps-gives-a-path-tap-ids-from-a-node-object-outside-a-parse-2"));
+		parse(
+			parser,
+			fixture(
+				"javascript",
+				"a-hook-with-path-taps-gives-a-path-tap-ids-from-a-node-object-outside-a-parse-2"
+			)
+		);
 		expect(calls).toBe(1);
 		expect(seen).toEqual(["path 0,2", "object ExpressionStatement"]);
 	});
@@ -578,7 +617,9 @@ describe("a hook with path taps", () => {
 		/** @type {string[]} */
 		const seen = [];
 		parser.hooks.isPure.for("Literal").tap("object", (expression) => {
-			seen.push(`${expression.type} ${/** @type {import("estree").Literal} */ (expression).value}`);
+			seen.push(
+				`${expression.type} ${/** @type {import("estree").Literal} */ (expression).value}`
+			);
 			return false;
 		});
 		parser.hooks.isPure.for("CallExpression").tap("object", (expression) => {

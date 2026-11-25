@@ -115,9 +115,7 @@ describe("chunkSetIntersections", () => {
 			[0, 1, 3],
 			[0, 1, 4]
 		]);
-		expect(intersections).toEqual([
-			{ members: [0, 1], support: [0, 1, 2] }
-		]);
+		expect(intersections).toEqual([{ members: [0, 1], support: [0, 1, 2] }]);
 	});
 
 	it("should take another round to intersect what a round found", () => {
@@ -278,12 +276,7 @@ describe("chunkSetIntersections", () => {
 		const blockPairs = [];
 		for (let first = 0; first < blockCount; first++) {
 			for (let second = first + 1; second < blockCount; second++) {
-				blockPairs.push([
-					first * 2,
-					first * 2 + 1,
-					second * 2,
-					second * 2 + 1
-				]);
+				blockPairs.push([first * 2, first * 2 + 1, second * 2, second * 2 + 1]);
 			}
 		}
 

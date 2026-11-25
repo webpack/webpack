@@ -3,9 +3,7 @@
 const fs = require("fs");
 const path = require("path");
 const { parser } = require("../../../lib/javascript/syntax");
-const {
-	blankTypeScript
-} = require("../../../lib/typescript/blankTypeScript");
+const { blankTypeScript } = require("../../../lib/typescript/blankTypeScript");
 const { fixture } = require("../../helpers/fixture");
 const { plain } = require("../../helpers/javascriptParse");
 

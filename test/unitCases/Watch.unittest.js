@@ -52,16 +52,19 @@ describe("Watch", () => {
 					if (err) return done(err);
 					if (/** @type {import("../../").Stats} */ (stats).hasErrors()) {
 						return done(
-							new Error(/** @type {import("../../").Stats} */ (stats).toString())
+							new Error(
+								/** @type {import("../../").Stats} */ (stats).toString()
+							)
 						);
 					}
 					counterHandler++;
 				}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		setTimeout(() => {
 			expect(counterBeforeCompile).toBe(1);
 			expect(counterDone).toBe(1);
@@ -117,7 +120,12 @@ describe("Watch", () => {
 	});
 
 	it("should keep earlier stats readable after their modules are cleaned up", (done) => {
-		const context = path.join(testDirectory, "js", "Watch", "stats-after-cleanup");
+		const context = path.join(
+			testDirectory,
+			"js",
+			"Watch",
+			"stats-after-cleanup"
+		);
 		const entry = path.join(context, "index.js");
 		const changedFile = path.join(context, "a.js");
 		fs.rmSync(context, { recursive: true, force: true });
@@ -130,9 +138,10 @@ describe("Watch", () => {
 			entry: "./index.js",
 			cache: { type: "memory" }
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		const later = new Date(Date.now() + 10000);
 		/** @type {import("../../").Stats[]} */
 		const builds = [];
@@ -164,11 +173,19 @@ describe("Watch", () => {
 	});
 
 	it("should rebuild when a file is removed while a build is running", (done) => {
-		const context = path.join(testDirectory, "js", "Watch", "removed-while-building");
+		const context = path.join(
+			testDirectory,
+			"js",
+			"Watch",
+			"removed-while-building"
+		);
 		const removedFile = path.join(context, "b.js");
 		fs.rmSync(context, { recursive: true, force: true });
 		fs.mkdirSync(context, { recursive: true });
-		fs.writeFileSync(path.join(context, "index.js"), 'require("./a");require("./b");');
+		fs.writeFileSync(
+			path.join(context, "index.js"),
+			'require("./a");require("./b");'
+		);
 		fs.writeFileSync(path.join(context, "a.js"), "module.exports = 1;");
 		fs.writeFileSync(removedFile, "module.exports = 2;");
 		let changed = false;
@@ -187,9 +204,10 @@ describe("Watch", () => {
 				}
 			]
 		});
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.watch({ aggregateTimeout: 50 }, (err) => {
 			if (err) return done(err);
 			if (!changed) {
@@ -197,7 +215,10 @@ describe("Watch", () => {
 				setTimeout(() => {
 					fs.writeFileSync(path.join(context, "a.js"), "module.exports = 3;");
 				}, 300);
-			} else if (compiler.removedFiles && compiler.removedFiles.has(removedFile)) {
+			} else if (
+				compiler.removedFiles &&
+				compiler.removedFiles.has(removedFile)
+			) {
 				compiler.close(done);
 			}
 		});

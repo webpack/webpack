@@ -69,7 +69,7 @@ const { fixture } = require("../../helpers/fixture");
  * `Property`; the analyser requires the `type` acorn always sets).
  */
 
-"use strict";
+("use strict");
 
 const syntax = require("../../../lib/javascript/syntax");
 
@@ -160,7 +160,6 @@ const analyzeAst = (ast) => withViews(ast, analyzeScope(ast, true));
  * @returns {Analysis} the analysis, plus the harness views over it
  */
 const withViews = (ast, analysis) => {
-
 	/** @type {Scope[]} */
 	const scopes = [];
 	/**
@@ -210,10 +209,7 @@ const analyze = (code, sourceType = "module") => {
 	// the cases assert on references at every depth, which the analyser only
 	// collects on request — webpack itself reads back the module scope alone
 	const analysis = analyzeTree(program, true);
-	return withViews(
-		/** @type {Program} */ (toEstreeObject(program)),
-		analysis
-	);
+	return withViews(/** @type {Program} */ (toEstreeObject(program)), analysis);
 };
 
 /**
@@ -257,13 +253,24 @@ describe("ScopeAnalyzer", () => {
 	it("reads the initializer of a sloppy var for-in head", () => {
 		// eslint-scope also counts the initializer's write to `a`, which the
 		// analyser folds into the loop's write at the same position
-		const analysis = analyze(fixture("javascript", "scope-analyzer-reads-the-initializer-of-a-sloppy-var-for-in-head"), "script");
+		const analysis = analyze(
+			fixture(
+				"javascript",
+				"scope-analyzer-reads-the-initializer-of-a-sloppy-var-for-in-head"
+			),
+			"script"
+		);
 		expect(freeNames(analysis).sort()).toEqual(["b", "c"]);
 	});
 
 	describe("the scope tree the analyser always builds", () => {
 		it("is a module scope under an empty global scope", () => {
-			const { globalScope, moduleScope, scopes, ast } = analyze(fixture("javascript", "scope-analyzer-the-scope-tree-the-analyser-always-builds-is-a-module-scope-under"));
+			const { globalScope, moduleScope, scopes, ast } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-the-scope-tree-the-analyser-always-builds-is-a-module-scope-under"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(globalScope.variables).toHaveLength(0);
@@ -282,7 +289,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/arguments.test.js
 	describe("arguments", () => {
 		it("arguments are correctly materialized", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-arguments-arguments-are-correctly-materialized"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-arguments-arguments-are-correctly-materialized"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -297,7 +309,9 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/catch-scope.test.js
 	describe("catch", () => {
 		it("creates scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-catch-creates-scope"));
+			const { scopes } = analyze(
+				fixture("javascript", "scope-analyzer-catch-creates-scope")
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -323,7 +337,9 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("param can be a pattern", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-catch-param-can-be-a-pattern"));
+			const { scopes } = analyze(
+				fixture("javascript", "scope-analyzer-catch-param-can-be-a-pattern")
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -351,7 +367,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-arrow-function-expression.test.js
 	describe("ES6 arrow function expression", () => {
 		it("materialize scope for arrow function expression", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-arrow-function-expression-materialize-scope-for-arrow"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-arrow-function-expression-materialize-scope-for-arrow"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(scopes[1])).toEqual(["arrow"]);
@@ -365,7 +386,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("generate bindings for parameters", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-arrow-function-expression-generate-bindings-for-parameters"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-arrow-function-expression-generate-bindings-for-parameters"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -376,7 +402,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("works with no body", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-arrow-function-expression-works-with-no-body"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-arrow-function-expression-works-with-no-body"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -391,7 +422,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-block-scope.test.js
 	describe("ES6 block scope", () => {
 		it("let is materialized in ES6 block scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-let-is-materialized-in-es6-block-scope"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-block-scope-let-is-materialized-in-es6-block-scope"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 			expect(scopes[1].variables).toHaveLength(0);
@@ -403,7 +439,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("function declaration is materialized in ES6 block scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-function-declaration-is-materialized-in-es6-block"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-block-scope-function-declaration-is-materialized-in-es6-block"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -419,7 +460,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("let is not hoistable#1", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-let-is-not-hoistable-1"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-block-scope-let-is-not-hoistable-1"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 
@@ -438,7 +484,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("let is not hoistable#2", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-block-scope-let-is-not-hoistable-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-block-scope-let-is-not-hoistable-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -477,7 +528,9 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-catch.test.js
 	describe("ES6 catch", () => {
 		it("takes binding pattern", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-catch-takes-binding-pattern"));
+			const { scopes } = analyze(
+				fixture("javascript", "scope-analyzer-es6-catch-takes-binding-pattern")
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -502,7 +555,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-class.test.js
 	describe("ES6 class", () => {
 		it("declaration name creates class scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-declaration-name-creates-class-scope"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-declaration-name-creates-class-scope"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -530,7 +588,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("expression name creates class scope#1", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-expression-name-creates-class-scope-1"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-expression-name-creates-class-scope-1"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -549,7 +612,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("expression name creates class scope#2", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-expression-name-creates-class-scope-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-expression-name-creates-class-scope-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -567,7 +635,12 @@ describe("ScopeAnalyzer", () => {
 
 		// cspell:ignore yuyushiki
 		it("computed property key may refer variables", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-computed-property-key-may-refer-variables"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-computed-property-key-may-refer-variables"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -595,7 +668,12 @@ describe("ScopeAnalyzer", () => {
 
 		// https://github.com/eslint/eslint-scope/issues/59
 		it("class heritage may refer class name in class expressions #1", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "class"]);
 
@@ -622,7 +700,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class heritage may refer class name in class expressions #2", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -653,7 +736,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class heritage may refer class name in class declarations", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class-3"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-class-heritage-may-refer-class-name-in-class-3"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -686,7 +774,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("inner scopes in the class heritage of a class expression are nested in the class scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-inner-scopes-in-the-class-heritage-of-a-class"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-inner-scopes-in-the-class-heritage-of-a-class"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -699,7 +792,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("inner scopes in the class heritage of a class declaration are nested in the class scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-inner-scopes-in-the-class-heritage-of-a-class-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-class-inner-scopes-in-the-class-heritage-of-a-class-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -712,7 +810,9 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("regression #49", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-class-regression-49"));
+			const { scopes } = analyze(
+				fixture("javascript", "scope-analyzer-es6-class-regression-49")
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -987,7 +1087,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-destructuring-assignments.test.js
 	describe("ES6 destructuring assignments", () => {
 		it("pattern in var in ForInStatement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-in-var-in-for-in-statement"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-in-var-in-for-in-statement"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1004,7 +1109,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern in let in ForInStatement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-in-let-in-for-in-statement"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-in-let-in-for-in-statement"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual([
@@ -1026,7 +1136,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in var in ForInStatement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1042,7 +1157,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in let in ForInStatement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-let"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-let"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual([
@@ -1067,7 +1187,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with nested default values in var in ForInStatement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-nested-default-values"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-with-nested-default-values"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1090,7 +1215,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with nested default values in let in ForInStatement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-nested-default-values-2"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-with-nested-default-values-2"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual([
@@ -1118,7 +1248,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in var in ForInStatement (separate declarations)", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var-2"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var-2"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1135,7 +1270,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("pattern with default values in var in ForInStatement (separate declarations and with MemberExpression)", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var-3"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-pattern-with-default-values-in-var-3"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1151,7 +1291,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern in var", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-var"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-var"
+				)
+			);
 			const { scopes } = analysis;
 
 			expect(freeNames(analysis)).toEqual(["array"]);
@@ -1166,7 +1311,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement in var", () => {
-			let analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-var"));
+			let analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-a-spread-element-in-var"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(varNames(analysis.scopes[2])).toEqual([
@@ -1177,7 +1327,12 @@ describe("ScopeAnalyzer", () => {
 			]);
 			expect(refNames(analysis.scopes[2])).toEqual(["a", "b", "rest", "array"]);
 
-			analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-var-2"));
+			analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-a-spread-element-in-var-2"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(varNames(analysis.scopes[2])).toEqual([
@@ -1199,7 +1354,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ObjectPattern in var", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-var"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-var"
+				)
+			);
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["object"]);
@@ -1221,7 +1381,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("complex pattern in var", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-complex-pattern-in-var"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-complex-pattern-in-var"
+				)
+			);
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["object"]);
@@ -1248,7 +1413,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern in AssignmentExpression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-assignment"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-assignment"
+				)
+			);
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "c", "array"]);
@@ -1260,7 +1430,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern with MemberExpression in AssignmentExpression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-with-member"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-array-pattern-with-member"
+				)
+			);
 			const scope = analysis.scopes[2];
 
 			expect(freeNames(analysis)).toEqual(["array"]);
@@ -1272,13 +1447,23 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement in AssignmentExpression", () => {
-			let analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-assignment"));
+			let analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-a-spread-element-in-assignment"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "rest", "array"]);
 			expect(varNames(analysis.scopes[2])).toEqual(["arguments"]);
 			expect(refNames(analysis.scopes[2])).toEqual(["a", "b", "rest", "array"]);
 
-			analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-assignment-2"));
+			analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-a-spread-element-in-assignment-2"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual([
 				"a",
@@ -1300,14 +1485,24 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement with MemberExpression in AssignmentExpression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-with-member"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-a-spread-element-with-member"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "obj", "array"]);
 			expect(refNames(analysis.scopes[2])).toEqual(["a", "b", "obj", "array"]);
 		});
 
 		it("an ObjectPattern in AssignmentExpression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-assignment"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-assignment"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual([
 				"shorthand",
@@ -1325,7 +1520,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("complex pattern in AssignmentExpression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-complex-pattern-in-assignment"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-complex-pattern-in-assignment"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual([
 				"shorthand",
@@ -1351,7 +1551,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ArrayPattern in parameters", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-parameters"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-array-pattern-in-parameters"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(refNames(analysis.moduleScope)).toEqual(["array"]);
@@ -1365,7 +1570,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("a SpreadElement in parameters", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-a-spread-element-in-parameters"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-a-spread-element-in-parameters"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["array"]);
 			expect(refNames(analysis.moduleScope)).toEqual(["array"]);
@@ -1380,7 +1590,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("an ObjectPattern in parameters", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-parameters"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-an-object-pattern-in-parameters"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["object"]);
 			expect(refNames(analysis.moduleScope)).toEqual(["object"]);
@@ -1394,7 +1609,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("complex pattern in parameters", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-complex-pattern-in-parameters"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-complex-pattern-in-parameters"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["object"]);
 			expect(varNames(analysis.scopes[2])).toEqual([
@@ -1411,7 +1631,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("default values and patterns in var", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-default-values-and-patterns-in-var"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-default-values-and-patterns-in-var"
+				)
+			);
 			const scope = scopes[2];
 
 			expect(varNames(scope)).toEqual(["arguments", "a", "b", "c", "d"]);
@@ -1426,7 +1651,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("default values containing references and patterns in var", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-default-values-containing"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-default-values-containing"
+				)
+			);
 			const scope = scopes[2];
 
 			expect(varNames(scope)).toEqual(["arguments", "a", "b", "c", "d"]);
@@ -1442,7 +1672,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("nested default values containing references and patterns in var", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-destructuring-assignments-nested-default-values-containing"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-destructuring-assignments-nested-default-values-containing"
+				)
+			);
 			const scope = scopes[2];
 
 			expect(varNames(scope)).toEqual(["arguments", "a", "b", "c", "d"]);
@@ -1464,7 +1699,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-export.test.js
 	describe("export declaration", () => {
 		it("should create variable bindings", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-create-variable-bindings"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-create-variable-bindings"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["v"]);
@@ -1472,7 +1712,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should create function declaration bindings", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-create-function-declaration-bindings"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-create-function-declaration-bindings"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["f"]);
@@ -1481,7 +1726,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should export function expression", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-export-function-expression"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-export-function-expression"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(moduleScope.variables).toHaveLength(0);
@@ -1491,7 +1741,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("should export an anonymous class", () => {
 			const { scopes, moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-export-declaration-should-export-an-anonymous-class")
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-export-an-anonymous-class"
+				)
 			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "class"]);
@@ -1501,7 +1754,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should export literal", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-export-literal"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-export-literal"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(moduleScope.variables).toHaveLength(0);
@@ -1509,7 +1767,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should refer exported references#1", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-refer-exported-references-1"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-refer-exported-references-1"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["x"]);
@@ -1520,7 +1783,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should refer exported references#2", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-refer-exported-references-2"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-refer-exported-references-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["v"]);
@@ -1528,7 +1796,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should not refer exported references from other source#1", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-not-refer-exported-references-from"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-not-refer-exported-references-from"
+				)
+			);
 
 			expect(scopeTypes(analysis.scopes)).toEqual(["global", "module"]);
 			expect(analysis.moduleScope.variables).toHaveLength(0);
@@ -1537,7 +1810,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should not refer exported references from other source#2", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-not-refer-exported-references-from-2"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-not-refer-exported-references-from-2"
+				)
+			);
 
 			expect(analysis.moduleScope.variables).toHaveLength(0);
 			expect(refs(analysis.moduleScope)).toHaveLength(0);
@@ -1545,7 +1823,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should not refer exported references from other source#3", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-export-declaration-should-not-refer-exported-references-from-3"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-declaration-should-not-refer-exported-references-from-3"
+				)
+			);
 
 			expect(analysis.moduleScope.variables).toHaveLength(0);
 			expect(refs(analysis.moduleScope)).toHaveLength(0);
@@ -1556,7 +1839,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/export-star-as-ns-from-source.test.js
 	describe("export * as ns from 'source'", () => {
 		it("should not have any variables or references", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-export-as-ns-from-source-should-not-have-any-variables-or"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-export-as-ns-from-source-should-not-have-any-variables-or"
+				)
+			);
 
 			expect(scopeTypes(analysis.scopes)).toEqual(["global", "module"]);
 			for (const scope of analysis.scopes) {
@@ -1570,7 +1858,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-import.test.js
 	describe("import declaration", () => {
 		it("should import names from source", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-names-from-source"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-import-declaration-should-import-names-from-source"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["v"]);
@@ -1578,21 +1871,36 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should import namespaces", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-namespaces"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-import-declaration-should-import-namespaces"
+				)
+			);
 
 			expect(varNames(moduleScope)).toEqual(["ns"]);
 			expect(refs(moduleScope)).toHaveLength(0);
 		});
 
 		it("should import insided names#1", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-insided-names-1"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-import-declaration-should-import-insided-names-1"
+				)
+			);
 
 			expect(varNames(moduleScope)).toEqual(["x"]);
 			expect(refs(moduleScope)).toHaveLength(0);
 		});
 
 		it("should import insided names#2", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-import-declaration-should-import-insided-names-2"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-import-declaration-should-import-insided-names-2"
+				)
+			);
 
 			expect(varNames(moduleScope)).toEqual(["v"]);
 			expect(refs(moduleScope)).toHaveLength(0);
@@ -1602,7 +1910,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-iteration-scope.test.js
 	describe("ES6 iteration scope", () => {
 		it("let materialize iteration scope for ForInStatement#1", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for-in"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for-in"
+				)
+			);
 
 			// the loop body declares nothing, so it gets no scope of its own
 			expect(scopeTypes(scopes)).toEqual([
@@ -1629,7 +1942,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("let materialize iteration scope for ForInStatement#2", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for-in-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for-in-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1657,7 +1975,12 @@ describe("ScopeAnalyzer", () => {
 
 		// cspell:ignore okok
 		it("let materialize iteration scope for ForStatement#2", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-iteration-scope-let-materialize-iteration-scope-for-for"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1701,7 +2024,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-new-target.test.js
 	describe("ES6 new.target", () => {
 		it("should not make references of new.target", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-new-target-should-not-make-references-of-new-target"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-new-target-should-not-make-references-of-new-target"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1721,7 +2049,9 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-object.test.js
 	describe("ES6 object", () => {
 		it("method definition", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-object-method-definition"));
+			const { scopes } = analyze(
+				fixture("javascript", "scope-analyzer-es6-object-method-definition")
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -1733,7 +2063,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("computed property key may refer variables", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-object-computed-property-key-may-refer-variables"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-object-computed-property-key-may-refer-variables"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1756,7 +2091,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-rest-args.test.js
 	describe("ES6 rest arguments", () => {
 		it("materialize rest argument in scope", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-es6-rest-arguments-materialize-rest-argument-in-scope"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-rest-arguments-materialize-rest-argument-in-scope"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["foo"]);
@@ -1773,7 +2113,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-super.test.js
 	describe("ES6 super", () => {
 		it("is not handled as reference", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-es6-super-is-not-handled-as-reference"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-super-is-not-handled-as-reference"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1801,7 +2146,9 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-switch.test.js
 	describe("ES6 switch", () => {
 		it("materialize scope", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-es6-switch-materialize-scope"));
+			const { scopes, moduleScope } = analyze(
+				fixture("javascript", "scope-analyzer-es6-switch-materialize-scope")
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "switch"]);
 			expect(moduleScope.variables).toHaveLength(0);
@@ -1818,7 +2165,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/es6-template-literal.test.js
 	describe("ES6 template literal", () => {
 		it("refer variables", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-es6-template-literal-refer-variables"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-es6-template-literal-refer-variables"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1850,7 +2202,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/function-expression-name.test.js
 	describe("function name", () => {
 		it("should create its special scope", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-function-name-should-create-its-special-scope"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-function-name-should-create-its-special-scope"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -1876,7 +2233,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/global-increment.test.js
 	describe("global increment", () => {
 		it("makes one reference", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-global-increment-makes-one-reference"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-global-increment-makes-one-reference"
+				)
+			);
 
 			expect(scopeTypes(analysis.scopes)).toEqual(["global", "module"]);
 			expect(analysis.moduleScope.variables).toHaveLength(0);
@@ -1889,7 +2251,10 @@ describe("ScopeAnalyzer", () => {
 	describe("label", () => {
 		it("should not create variables", () => {
 			const { scopes, moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-label-should-not-create-variables")
+				fixture(
+					"javascript",
+					"scope-analyzer-label-should-not-create-variables"
+				)
 			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
@@ -1903,7 +2268,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("should count child node references", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-label-should-count-child-node-references"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-label-should-count-child-node-references"
+				)
+			);
 			const { moduleScope } = analysis;
 
 			expect(varNames(moduleScope)).toEqual(["foo"]);
@@ -1947,7 +2317,9 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/class-fields.test.js
 	describe("class fields", () => {
 		it("class C { f = g }", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f-g"));
+			const { moduleScope } = analyze(
+				fixture("javascript", "scope-analyzer-class-fields-class-c-f-g")
+			);
 			const classScope = moduleScope.childScopes[0];
 
 			expect(moduleScope.childScopes).toHaveLength(1);
@@ -1973,7 +2345,9 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { f }", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f"));
+			const { moduleScope } = analyze(
+				fixture("javascript", "scope-analyzer-class-fields-class-c-f")
+			);
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -1985,7 +2359,9 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { #f = g }", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f-g-2"));
+			const { moduleScope } = analyze(
+				fixture("javascript", "scope-analyzer-class-fields-class-c-f-g-2")
+			);
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2001,7 +2377,9 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { [fname] }", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-fname"));
+			const { moduleScope } = analyze(
+				fixture("javascript", "scope-analyzer-class-fields-class-c-fname")
+			);
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2010,7 +2388,9 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { [fname] = value }", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-fname-value"));
+			const { moduleScope } = analyze(
+				fixture("javascript", "scope-analyzer-class-fields-class-c-fname-value")
+			);
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2028,7 +2408,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { #f = g; e = this.#f }", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-class-fields-class-c-f-g-e-this-f"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-class-fields-class-c-f-g-e-this-f"
+				)
+			);
 			const classScope = moduleScope.childScopes[0];
 
 			expect(classScope.type).toBe("class");
@@ -2050,7 +2435,10 @@ describe("ScopeAnalyzer", () => {
 	describe("class static blocks", () => {
 		it("class C { static { var a; let b; const c = 1; function d(){} class e {} } }", () => {
 			const { ast, moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-var-a-let-b-const-c-1-function")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-var-a-let-b-const-c-1-function"
+				)
 			);
 
 			expect(varNames(moduleScope)).toEqual(["C"]);
@@ -2096,7 +2484,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { static { function f(){} f(); } }", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-function-f-f"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-function-f-f"
+				)
+			);
 			const { moduleScope } = analysis;
 
 			expect(refs(moduleScope)).toHaveLength(0);
@@ -2123,7 +2516,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("class C { static { a = 1; if (this.x) { var a; } } }", () => {
 			const analysis = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-a-1-if-this-x-var-a")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-a-1-if-this-x-var-a"
+				)
 			);
 			const { moduleScope } = analysis;
 
@@ -2151,7 +2547,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("class C { static { if (this.x) { var a; a = 1; } } }", () => {
 			const analysis = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-if-this-x-var-a-a-1")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-if-this-x-var-a-a-1"
+				)
 			);
 			const { moduleScope } = analysis;
 
@@ -2173,7 +2572,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("class C { static { const { a } = this.foo; if (this.bar) { const b = a + 1; this.baz(b); } } }", () => {
 			const analysis = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-const-a-this-foo-if-this-bar")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-const-a-this-foo-if-this-bar"
+				)
 			);
 			const { moduleScope } = analysis;
 
@@ -2207,7 +2609,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { static { C.x; } }", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-c-x"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-c-x"
+				)
+			);
 			const { moduleScope } = analysis;
 
 			expect(refs(moduleScope)).toHaveLength(0);
@@ -2233,7 +2640,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("let a; class C { static { lbl: { this.b = a } } }", () => {
 			const analysis = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-let-a-class-c-static-lbl-this-b-a")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-let-a-class-c-static-lbl-this-b-a"
+				)
 			);
 			const { moduleScope } = analysis;
 
@@ -2257,7 +2667,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("class C { static { a; } }", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-class-static-blocks-class-c-static-a"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-class-c-static-a"
+				)
+			);
 			const { moduleScope } = analysis;
 			const staticBlockScope = moduleScope.childScopes[0].childScopes[0];
 
@@ -2270,7 +2685,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("let a; class C { static { let a; a; } static { a; let a; } }", () => {
 			const { moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-let-a-class-c-static-let-a-a-static-a-let-a")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-let-a-class-c-static-let-a-a-static-a-let-a"
+				)
 			);
 
 			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
@@ -2321,7 +2739,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("let a; class C { [a]; static { let a; } [a]; static { function a(){} } [a]; static { var a; } [a]; }", () => {
 			const { moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-class-static-blocks-let-a-class-c-a-static-let-a-a-static")
+				fixture(
+					"javascript",
+					"scope-analyzer-class-static-blocks-let-a-class-c-a-static-let-a-a-static"
+				)
 			);
 
 			expect(moduleScope.getBinding("a")).toBe(moduleScope.variables[0]);
@@ -2356,7 +2777,10 @@ describe("ScopeAnalyzer", () => {
 	describe("import attributes", () => {
 		it('const type = "json"; import pkg from "./package.json" with { type: "json" };', () => {
 			const { ast, globalScope, moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-import-pkg-from-package-json")
+				fixture(
+					"javascript",
+					"scope-analyzer-import-attributes-const-type-json-import-pkg-from-package-json"
+				)
 			);
 
 			expect(globalScope.variables).toHaveLength(0);
@@ -2374,7 +2798,10 @@ describe("ScopeAnalyzer", () => {
 
 		it('const type = "json"; export * from "./package.json" with { type: "json" };', () => {
 			const { moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-export-from-package-json-with")
+				fixture(
+					"javascript",
+					"scope-analyzer-import-attributes-const-type-json-export-from-package-json-with"
+				)
 			);
 
 			expect(moduleScope.childScopes).toHaveLength(0);
@@ -2384,7 +2811,10 @@ describe("ScopeAnalyzer", () => {
 
 		it('const type = "json"; export { default } from "./package.json" with { type: "json" };', () => {
 			const { moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-export-default-from-package")
+				fixture(
+					"javascript",
+					"scope-analyzer-import-attributes-const-type-json-export-default-from-package"
+				)
 			);
 
 			expect(moduleScope.childScopes).toHaveLength(0);
@@ -2394,7 +2824,10 @@ describe("ScopeAnalyzer", () => {
 
 		it('const type = "json"; import("./package.json", { with: { type } });', () => {
 			const { ast, moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-import-attributes-const-type-json-import-package-json-with-type")
+				fixture(
+					"javascript",
+					"scope-analyzer-import-attributes-const-type-json-import-package-json-with-type"
+				)
 			);
 
 			expect(moduleScope.childScopes).toHaveLength(0);
@@ -2418,7 +2851,12 @@ describe("ScopeAnalyzer", () => {
 	// ported from tests/using-scope.test.js
 	describe("`using` and `await using` block scope", () => {
 		it("`using` in block scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-using-and-await-using-block-scope-using-in-block-scope"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-using-and-await-using-block-scope-using-in-block-scope"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 			expect(scopes[1].variables).toHaveLength(0);
@@ -2433,7 +2871,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("`await using` in block scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-using-and-await-using-block-scope-await-using-in-block-scope"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-using-and-await-using-block-scope-await-using-in-block-scope"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2455,9 +2898,27 @@ describe("ScopeAnalyzer", () => {
 	describe("references", () => {
 		/** @type {[string, string][]} */
 		const declarations = [
-			["let", fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-in-the-module-scope")],
-			["const", fixture("javascript", "scope-analyzer-references-the-reference-to-a-const-declaration-in-the-module")],
-			["var", fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-in-the-module-scope")]
+			[
+				"let",
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-let-declaration-in-the-module-scope"
+				)
+			],
+			[
+				"const",
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-const-declaration-in-the-module"
+				)
+			],
+			[
+				"var",
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-var-declaration-in-the-module-scope"
+				)
+			]
 		];
 
 		for (const [kind, code] of declarations) {
@@ -2480,15 +2941,24 @@ describe("ScopeAnalyzer", () => {
 		const inFunctions = [
 			[
 				"let",
-				fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-inside-a-function")
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-let-declaration-inside-a-function"
+				)
 			],
 			[
 				"const",
-				fixture("javascript", "scope-analyzer-references-the-reference-to-a-const-declaration-inside-a-function")
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-const-declaration-inside-a-function"
+				)
 			],
 			[
 				"var",
-				fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-inside-a-function")
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-var-declaration-inside-a-function"
+				)
 			]
 		];
 
@@ -2511,7 +2981,12 @@ describe("ScopeAnalyzer", () => {
 		}
 
 		it("the reference in a default parameter resolves", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-in-a-default-parameter-resolves"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-in-a-default-parameter-resolves"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 
@@ -2523,7 +2998,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `function` declaration resolves", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-function-declaration-resolves"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-function-declaration-resolves"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "function"]);
 			expect(varNames(moduleScope)).toEqual(["a"]);
@@ -2532,7 +3012,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `function` declaration inside a function resolves", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-function-declaration-inside-a"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-function-declaration-inside-a"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2549,7 +3034,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `class` declaration resolves", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-class-declaration-resolves"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-class-declaration-resolves"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "class"]);
 			expect(varNames(moduleScope)).toEqual(["A", "b"]);
@@ -2558,7 +3048,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("the reference to a `class` declaration inside a function resolves", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-references-the-reference-to-a-class-declaration-inside-a-function"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-class-declaration-inside-a-function"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual([
 				"global",
@@ -2578,11 +3073,17 @@ describe("ScopeAnalyzer", () => {
 		const inNestedFunctions = [
 			[
 				"let",
-				fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-in-a-nested")
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-let-declaration-in-a-nested"
+				)
 			],
 			[
 				"var",
-				fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-in-a-nested")
+				fixture(
+					"javascript",
+					"scope-analyzer-references-the-reference-to-a-var-declaration-in-a-nested"
+				)
 			]
 		];
 
@@ -2606,9 +3107,18 @@ describe("ScopeAnalyzer", () => {
 		}
 
 		for (const code of [
-			fixture("javascript", "scope-analyzer-references-let-a-1-the-reference-should-be-resolved"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-1-the-reference-should-be-resolved"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-a-a-1-the-reference-should-be-resolved")
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-1-the-reference-should-be-resolved"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-1-the-reference-should-be-resolved"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-a-a-1-the-reference-should-be-resolved"
+			)
 		]) {
 			it(`"${code}", the reference should be resolved.`, () => {
 				const { scopes, moduleScope } = analyze(code);
@@ -2627,48 +3137,174 @@ describe("ScopeAnalyzer", () => {
 
 		// every binding form that writes to `a`; all of them resolve
 		for (const code of [
-			fixture("javascript", "scope-analyzer-references-the-reference-to-a-var-declaration-in-the-module-scope"),
-			fixture("javascript", "scope-analyzer-references-the-reference-to-a-let-declaration-in-the-module-scope"),
-			fixture("javascript", "scope-analyzer-references-the-reference-to-a-const-declaration-in-the-module"),
-			fixture("javascript", "scope-analyzer-references-var-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-const-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-var-a-1-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-1-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-const-a-1-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-var-a-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-let-a-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-const-a-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-var-b-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-b-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-const-b-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-var-b-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-b-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-const-b-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-for-var-a-0-in-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-for-let-a-0-in-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a-3"),
-			fixture("javascript", "scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a-3"),
-			fixture("javascript", "scope-analyzer-references-for-var-a-0-in-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-for-let-a-0-in-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-new-function-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-new-function-a-0-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-new-function-b-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-1-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-a-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-a-0-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a-2"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-a-0-in-every-reference-resolves-to-a"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a-3"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-a-0-in-every-reference-resolves-to-a-2")
+			fixture(
+				"javascript",
+				"scope-analyzer-references-the-reference-to-a-var-declaration-in-the-module-scope"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-the-reference-to-a-let-declaration-in-the-module-scope"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-the-reference-to-a-const-declaration-in-the-module"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-var-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-const-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-var-a-1-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-1-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-const-a-1-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-var-a-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-const-a-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-var-b-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-b-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-const-b-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-var-b-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-b-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-const-b-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-var-a-0-in-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-let-a-0-in-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-var-a-in-every-reference-resolves-to-a-3"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-let-a-in-every-reference-resolves-to-a-3"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-var-a-0-in-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-for-let-a-0-in-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-new-function-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-new-function-a-0-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-new-function-b-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-1-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-a-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-a-0-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-a-0-in-every-reference-resolves-to-a"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-a-in-every-reference-resolves-to-a-3"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-a-0-in-every-reference-resolves-to-a-2"
+			)
 		]) {
 			it(`"${code}", every reference resolves to \`a\``, () => {
 				const { scopes } = analyze(code);
@@ -2688,20 +3324,62 @@ describe("ScopeAnalyzer", () => {
 
 		// reads of `a`, wherever they sit, resolve back to the one binding
 		for (const code of [
-			fixture("javascript", "scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its"),
-			fixture("javascript", "scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its-2"),
-			fixture("javascript", "scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its-3"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-var-b-in-a-the-references-to-a-resolve-to"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-var-b-a-in-the-references-to-a-resolve-to"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-let-b-in-a-the-references-to-a-resolve-to"),
-			fixture("javascript", "scope-analyzer-references-let-a-for-let-b-a-in-the-references-to-a-resolve-to"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding-2"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding-3"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-for-b-in-a-the-references-to-a-resolve-to-its"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-for-b-a-in-the-references-to-a-resolve-to-its"),
-			fixture("javascript", "scope-analyzer-references-let-a-a-foo-0-the-references-to-a-resolve-to-its"),
-			fixture("javascript", "scope-analyzer-references-let-a-b-b-a-foo-the-references-to-a-resolve-to-its")
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-let-b-a-the-references-to-a-resolve-to-its-3"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-var-b-in-a-the-references-to-a-resolve-to"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-var-b-a-in-the-references-to-a-resolve-to"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-let-b-in-a-the-references-to-a-resolve-to"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-for-let-b-a-in-the-references-to-a-resolve-to"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding-2"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-b-a-the-references-to-a-resolve-to-its-binding-3"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-for-b-in-a-the-references-to-a-resolve-to-its"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-for-b-a-in-the-references-to-a-resolve-to-its"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-a-foo-0-the-references-to-a-resolve-to-its"
+			),
+			fixture(
+				"javascript",
+				"scope-analyzer-references-let-a-b-b-a-foo-the-references-to-a-resolve-to-its"
+			)
 		]) {
 			it(`"${code}", the references to \`a\` resolve to its binding`, () => {
 				const { moduleScope } = analyze(code);
@@ -2722,7 +3400,12 @@ describe("ScopeAnalyzer", () => {
 	// list of free references the analyser keeps
 	describe("free references", () => {
 		it("assignments in the module scope", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignments-in-the-module-scope"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-free-references-assignments-in-the-module-scope"
+				)
+			);
 
 			expect(varNames(analysis.moduleScope)).toEqual(["x"]);
 			expect(analysis.moduleScope.variables[0].references).toHaveLength(2);
@@ -2730,14 +3413,21 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("assignments in the module scope without definition", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignments-in-the-module-scope-without"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-free-references-assignments-in-the-module-scope-without"
+				)
+			);
 
 			expect(analysis.moduleScope.variables).toHaveLength(0);
 			expect(freeNames(analysis)).toEqual(["x", "x"]);
 		});
 
 		it("assignment leaks", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignment-leaks"));
+			const analysis = analyze(
+				fixture("javascript", "scope-analyzer-free-references-assignment-leaks")
+			);
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -2748,7 +3438,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("assignment doesn't leak", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-assignment-does-not-leak"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-free-references-assignment-does-not-leak"
+				)
+			);
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -2760,7 +3455,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("for-in-statement leaks", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-for-in-statement-leaks"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-free-references-for-in-statement-leaks"
+				)
+			);
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -2771,7 +3471,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("for-in-statement doesn't leak", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-free-references-for-in-statement-does-not-leak"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-free-references-for-in-statement-does-not-leak"
+				)
+			);
 
 			expect(analysis.scopes.map(varNames)).toEqual([
 				[],
@@ -2800,7 +3505,12 @@ describe("ScopeAnalyzer", () => {
 	// is the analyser's only behaviour for a node type it does not know
 	describe("unknown node types", () => {
 		it("keeps walking a node type it does not know", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-unknown-node-types-keeps-walking-a-node-type-it-does-not-know"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-unknown-node-types-keeps-walking-a-node-type-it-does-not-know"
+				)
+			);
 			const declarator = /** @type {EXPECTED_ANY} */ (ast.body[0])
 				.declarations[0];
 
@@ -2814,7 +3524,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("resolves references found under an unknown node type", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-unknown-node-types-resolves-references-found-under-an-unknown"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-unknown-node-types-resolves-references-found-under-an-unknown"
+				)
+			);
 			const statement = /** @type {EXPECTED_ANY} */ (ast.body[1]).body.body[0];
 
 			statement.argument = parenthesize(statement.argument);
@@ -2846,7 +3561,12 @@ describe("ScopeAnalyzer", () => {
 
 		it("collects the references of a module-scope binding", () => {
 			const { moduleScope } = analyzeScope(
-				parse(fixture("javascript", "scope-analyzer-what-a-binding-collects-by-default-collects-the-references-of-a"))
+				parse(
+					fixture(
+						"javascript",
+						"scope-analyzer-what-a-binding-collects-by-default-collects-the-references-of-a"
+					)
+				)
 			);
 
 			expect(collected(moduleScope)).toEqual({ a: 3, f: 0 });
@@ -2856,7 +3576,12 @@ describe("ScopeAnalyzer", () => {
 			// the class name is bound twice, and `getAllReferences` reads the
 			// inner binding through `moduleScope.childScopes`
 			const { moduleScope } = analyzeScope(
-				parse(fixture("javascript", "scope-analyzer-what-a-binding-collects-by-default-collects-the-references-of-a-2"))
+				parse(
+					fixture(
+						"javascript",
+						"scope-analyzer-what-a-binding-collects-by-default-collects-the-references-of-a-2"
+					)
+				)
 			);
 			const classScope = moduleScope.childScopes[0];
 
@@ -2864,7 +3589,10 @@ describe("ScopeAnalyzer", () => {
 			expect(collected(classScope)).toEqual({ C: 1 });
 		});
 
-		const nested = fixture("javascript", "scope-analyzer-what-a-binding-collects-by-default-resolves-a-deeper-reference");
+		const nested = fixture(
+			"javascript",
+			"scope-analyzer-what-a-binding-collects-by-default-resolves-a-deeper-reference"
+		);
 
 		it("resolves a deeper reference without collecting it", () => {
 			const analysis = analyzeScope(parse(nested));
@@ -2884,14 +3612,24 @@ describe("ScopeAnalyzer", () => {
 
 	describe("scopes a block only when it declares something", () => {
 		it("gives a block with a lexical declaration a scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-block-with"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-block-with"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "block"]);
 			expect(varNames(scopes[2])).toEqual(["a"]);
 		});
 
 		it("gives a block holding only `var` no scope of its own", () => {
-			const { scopes, moduleScope } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-block"));
+			const { scopes, moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-block"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 			expect(varNames(moduleScope)).toEqual(["a"]);
@@ -2899,20 +3637,35 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("gives a switch with a lexical declaration a scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-switch"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-switch"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module", "switch"]);
 			expect(varNames(scopes[2])).toEqual(["a"]);
 		});
 
 		it("gives a switch that declares nothing no scope", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-switch-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-scopes-a-block-only-when-it-declares-something-gives-a-switch-2"
+				)
+			);
 
 			expect(scopeTypes(scopes)).toEqual(["global", "module"]);
 		});
 
 		it("scopes a block whose statement type it does not list", () => {
-			const { scopes } = analyze(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-scopes-a-block-2"));
+			const { scopes } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-scopes-a-block-only-when-it-declares-something-scopes-a-block-2"
+				)
+			);
 
 			// a statement it does not list as declaring nothing might declare, so
 			// the block keeps a scope
@@ -2927,7 +3680,10 @@ describe("ScopeAnalyzer", () => {
 
 		it("finds every binding once the scope has an index", () => {
 			const { moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-indexing-a-scope-that-outgrows-a-scan-finds-every-binding")
+				fixture(
+					"javascript",
+					"scope-analyzer-indexing-a-scope-that-outgrows-a-scan-finds-every-binding"
+				)
 			);
 
 			expect(varNames(moduleScope)).toEqual(names);
@@ -2935,12 +3691,24 @@ describe("ScopeAnalyzer", () => {
 				expect(moduleScope.getBinding(name)).toBe(moduleScope.variables[i]);
 			}
 			expect(moduleScope.getBinding("missing")).toBeUndefined();
-			expect(freeNames(analyze(fixture("javascript", "scope-analyzer-indexing-a-scope-that-outgrows-a-scan-finds-every-free-name")))).toEqual(names);
+			expect(
+				freeNames(
+					analyze(
+						fixture(
+							"javascript",
+							"scope-analyzer-indexing-a-scope-that-outgrows-a-scan-finds-every-free-name"
+						)
+					)
+				)
+			).toEqual(names);
 		});
 
 		it("resolves a reference through the index", () => {
 			const { moduleScope } = analyze(
-				fixture("javascript", "scope-analyzer-indexing-a-scope-that-outgrows-a-scan-resolves-a-reference-through-the-index")
+				fixture(
+					"javascript",
+					"scope-analyzer-indexing-a-scope-that-outgrows-a-scan-resolves-a-reference-through-the-index"
+				)
 			);
 			const last =
 				/** @type {import("../../../lib/javascript/ScopeAnalyzer").Variable} */ (
@@ -2954,7 +3722,12 @@ describe("ScopeAnalyzer", () => {
 
 	describe("a binding declared more than once", () => {
 		it("keeps every declaring identifier", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-a-binding-declared-more-than-once-keeps-every-declaring"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-a-binding-declared-more-than-once-keeps-every-declaring"
+				)
+			);
 			const a = moduleScope.variables[0];
 
 			expect(varNames(moduleScope)).toEqual(["a"]);
@@ -2964,7 +3737,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("keeps a parameter and the `var` of the same name together", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-a-binding-declared-more-than-once-keeps-a-parameter-and-the-var"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-a-binding-declared-more-than-once-keeps-a-parameter-and-the-var"
+				)
+			);
 			const functionScope = moduleScope.childScopes[0];
 			const a =
 				/** @type {import("../../../lib/javascript/ScopeAnalyzer").Variable} */ (
@@ -2978,19 +3756,34 @@ describe("ScopeAnalyzer", () => {
 
 	describe("branches of a conditional", () => {
 		it("visits the alternate of an if statement", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-branches-of-a-conditional-visits-the-alternate-of-an-if-statement"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-branches-of-a-conditional-visits-the-alternate-of-an-if-statement"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "c"]);
 		});
 
 		it("visits every arm of a ternary", () => {
-			const analysis = analyze(fixture("javascript", "webpack-parser-owned-operator-scanner-should-scan-conditional-and-before-a-digit-3"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"webpack-parser-owned-operator-scanner-should-scan-conditional-and-before-a-digit-3"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a", "b", "c"]);
 		});
 
 		it("handles an if statement with no alternate", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-branches-of-a-conditional-handles-an-if-statement-with-no"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-branches-of-a-conditional-handles-an-if-statement-with-no"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a", "b"]);
 		});
@@ -3000,7 +3793,12 @@ describe("ScopeAnalyzer", () => {
 		// acorn emits a pattern for every destructuring target, so these arms
 		// need the tree a parser reporting expressions would hand over
 		it("binds through an array reported as an expression", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds"
+				)
+			);
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0].type = "ArrayExpression";
@@ -3011,7 +3809,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("binds through an object reported as an expression", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds-2"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds-2"
+				)
+			);
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0].type = "ObjectExpression";
@@ -3022,7 +3825,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("binds through a default reported as an assignment", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds-3"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-binds-3"
+				)
+			);
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0].type = "AssignmentExpression";
@@ -3035,7 +3843,12 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("visits a pattern element whose type it does not know", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"
+				)
+			);
 			const outer = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression.left;
 
 			outer.elements[0] = parenthesize(outer.elements[0]);
@@ -3049,7 +3862,12 @@ describe("ScopeAnalyzer", () => {
 
 	describe("reading and writing the same binding", () => {
 		it("records one reference for a compound assignment", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-records-one-reference-for-a"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-reading-and-writing-the-same-binding-records-one-reference-for-a"
+				)
+			);
 			const x = moduleScope.variables[0];
 
 			expect(x.references).toHaveLength(2);
@@ -3057,26 +3875,46 @@ describe("ScopeAnalyzer", () => {
 		});
 
 		it("records one reference for an update expression", () => {
-			const { moduleScope } = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-records-one-reference-for-an"));
+			const { moduleScope } = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-reading-and-writing-the-same-binding-records-one-reference-for-an"
+				)
+			);
 			const x = moduleScope.variables[0];
 
 			expect(x.references).toHaveLength(2);
 		});
 
 		it("walks a compound assignment to a member expression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-walks-a-compound-assignment"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-reading-and-writing-the-same-binding-walks-a-compound-assignment"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a", "c"]);
 		});
 
 		it("walks an update expression on a member expression", () => {
-			const analysis = analyze(fixture("javascript", "scope-analyzer-reading-and-writing-the-same-binding-walks-an-update-expression"));
+			const analysis = analyze(
+				fixture(
+					"javascript",
+					"scope-analyzer-reading-and-writing-the-same-binding-walks-an-update-expression"
+				)
+			);
 
 			expect(freeNames(analysis)).toEqual(["a"]);
 		});
 
 		it("walks a compound assignment reported against a pattern", () => {
-			const ast = parse(fixture("javascript", "scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"));
+			const ast = parse(
+				fixture(
+					"javascript",
+					"scope-analyzer-assignment-targets-a-parser-may-report-as-expressions-visits-a"
+				)
+			);
 			const assignment = /** @type {EXPECTED_ANY} */ (ast.body[0]).expression;
 
 			// no parser emits this, but the walker must not drop the target
@@ -3102,33 +3940,56 @@ describe("ScopeAnalyzer", () => {
 				);
 
 		it("records the identifier of a shorthand in an object expression", () => {
-			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-the-identifier-of-a-shorthand-in-an"))).toEqual([
-				"a"
-			]);
+			expect(
+				shorthandNames(
+					fixture(
+						"javascript",
+						"scope-analyzer-shorthand-properties-records-the-identifier-of-a-shorthand-in-an"
+					)
+				)
+			).toEqual(["a"]);
 		});
 
 		it("records the identifier of a shorthand in a pattern", () => {
-			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-the-identifier-of-a-shorthand-in-a"))).toEqual(["a"]);
+			expect(
+				shorthandNames(
+					fixture(
+						"javascript",
+						"scope-analyzer-shorthand-properties-records-the-identifier-of-a-shorthand-in-a"
+					)
+				)
+			).toEqual(["a"]);
 		});
 
 		it("records the bound identifier of a shorthand with a default", () => {
-			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-the-bound-identifier-of-a-shorthand"))).toEqual(["a"]);
+			expect(
+				shorthandNames(
+					fixture(
+						"javascript",
+						"scope-analyzer-shorthand-properties-records-the-bound-identifier-of-a-shorthand"
+					)
+				)
+			).toEqual(["a"]);
 		});
 
 		it("records nothing for a method or a getter", () => {
-			expect(shorthandNames(fixture("javascript", "scope-analyzer-shorthand-properties-records-nothing-for-a-method-or-a-getter"))).toEqual(
-				[]
-			);
+			expect(
+				shorthandNames(
+					fixture(
+						"javascript",
+						"scope-analyzer-shorthand-properties-records-nothing-for-a-method-or-a-getter"
+					)
+				)
+			).toEqual([]);
 		});
 	});
-
 });
 
 /*
 	MIT License https://www.opensource.org/licenses/mit-license.php
 */
 
-"use strict";
+("use strict");
 
 // Holds lib/javascript/ScopeAnalyzer.js to eslint-scope, the analyser it
 // replaced, over one shared AST. Skips where the reference cannot run.
@@ -3361,234 +4222,547 @@ const expectAgreement = (code, sourceType = "module") => {
 const CASES = {
 	"scope kinds": {
 		"a module body": fixture("javascript", "scope-scope-kinds-a-module-body"),
-		"a block that declares something": fixture("javascript", "scope-scope-kinds-a-block-that-declares-something"),
-		"a block that declares nothing": fixture("javascript", "scope-scope-kinds-a-block-that-declares-nothing"),
-		"nested blocks shadowing one name": fixture("javascript", "scope-scope-kinds-nested-blocks-shadowing-one-name"),
-		"a switch with a lexical declaration in a case":
-			fixture("javascript", "scope-scope-kinds-a-switch-with-a-lexical-declaration-in-a-case"),
+		"a block that declares something": fixture(
+			"javascript",
+			"scope-scope-kinds-a-block-that-declares-something"
+		),
+		"a block that declares nothing": fixture(
+			"javascript",
+			"scope-scope-kinds-a-block-that-declares-nothing"
+		),
+		"nested blocks shadowing one name": fixture(
+			"javascript",
+			"scope-scope-kinds-nested-blocks-shadowing-one-name"
+		),
+		"a switch with a lexical declaration in a case": fixture(
+			"javascript",
+			"scope-scope-kinds-a-switch-with-a-lexical-declaration-in-a-case"
+		),
 		"a catch clause": fixture("javascript", "scope-scope-kinds-a-catch-clause"),
-		"a catch clause without a parameter": fixture("javascript", "scope-scope-kinds-a-catch-clause-without-a-parameter"),
-		"a catch clause taking a pattern":
-			fixture("javascript", "scope-scope-kinds-a-catch-clause-taking-a-pattern"),
-		"a lexical for loop head":
-			fixture("javascript", "scope-scope-kinds-a-lexical-for-loop-head"),
-		"a var for loop head": fixture("javascript", "scope-scope-kinds-a-var-for-loop-head"),
-		"a while and a do-while body":
-			fixture("javascript", "scope-scope-kinds-a-while-and-a-do-while-body"),
-		"a with body": [fixture("javascript", "scope-analyzer-matches-eslint-scope-scope-kinds-a-with-body"), "script"],
-		"a named function expression": fixture("javascript", "scope-scope-kinds-a-named-function-expression"),
-		"a named function expression shadowing its own name":
-			fixture("javascript", "scope-scope-kinds-a-named-function-expression-shadowing-its-own-name"),
-		"a class field initializer": fixture("javascript", "scope-scope-kinds-a-class-field-initializer"),
-		"a class field without an initializer": fixture("javascript", "scope-scope-kinds-a-class-field-without-an-initializer"),
-		"a class static block": fixture("javascript", "scope-scope-kinds-a-class-static-block"),
-		"a class static block reading a private method":
-			fixture("javascript", "scope-scope-kinds-a-class-static-block-reading-a-private-method"),
-		"an arrow function body": fixture("javascript", "scope-scope-kinds-an-arrow-function-body"),
-		"a labeled block": fixture("javascript", "scope-scope-kinds-a-labeled-block")
+		"a catch clause without a parameter": fixture(
+			"javascript",
+			"scope-scope-kinds-a-catch-clause-without-a-parameter"
+		),
+		"a catch clause taking a pattern": fixture(
+			"javascript",
+			"scope-scope-kinds-a-catch-clause-taking-a-pattern"
+		),
+		"a lexical for loop head": fixture(
+			"javascript",
+			"scope-scope-kinds-a-lexical-for-loop-head"
+		),
+		"a var for loop head": fixture(
+			"javascript",
+			"scope-scope-kinds-a-var-for-loop-head"
+		),
+		"a while and a do-while body": fixture(
+			"javascript",
+			"scope-scope-kinds-a-while-and-a-do-while-body"
+		),
+		"a with body": [
+			fixture(
+				"javascript",
+				"scope-analyzer-matches-eslint-scope-scope-kinds-a-with-body"
+			),
+			"script"
+		],
+		"a named function expression": fixture(
+			"javascript",
+			"scope-scope-kinds-a-named-function-expression"
+		),
+		"a named function expression shadowing its own name": fixture(
+			"javascript",
+			"scope-scope-kinds-a-named-function-expression-shadowing-its-own-name"
+		),
+		"a class field initializer": fixture(
+			"javascript",
+			"scope-scope-kinds-a-class-field-initializer"
+		),
+		"a class field without an initializer": fixture(
+			"javascript",
+			"scope-scope-kinds-a-class-field-without-an-initializer"
+		),
+		"a class static block": fixture(
+			"javascript",
+			"scope-scope-kinds-a-class-static-block"
+		),
+		"a class static block reading a private method": fixture(
+			"javascript",
+			"scope-scope-kinds-a-class-static-block-reading-a-private-method"
+		),
+		"an arrow function body": fixture(
+			"javascript",
+			"scope-scope-kinds-an-arrow-function-body"
+		),
+		"a labeled block": fixture(
+			"javascript",
+			"scope-scope-kinds-a-labeled-block"
+		)
 	},
 
 	"bindings and hoisting": {
-		"a var hoists out of a block that binds something": fixture("javascript", "scope-bindings-and-hoisting-a-var-hoists-out-of-a-block-that-binds-something"),
-		"a var hoists out of an if branch":
-			fixture("javascript", "scope-bindings-and-hoisting-a-var-hoists-out-of-an-if-branch"),
-		"a var hoists out of a switch case":
-			fixture("javascript", "scope-bindings-and-hoisting-a-var-hoists-out-of-a-switch-case"),
-		"a var hoists out of try and catch":
-			fixture("javascript", "scope-bindings-and-hoisting-a-var-hoists-out-of-try-and-catch"),
-		"a var hoists out of a for-of body":
-			fixture("javascript", "scope-bindings-and-hoisting-a-var-hoists-out-of-a-for-of-body"),
-		"a var hoists out of both branches of an if":
-			fixture("javascript", "scope-bindings-and-hoisting-a-var-hoists-out-of-both-branches-of-an-if"),
-		"a class declaration in a block": fixture("javascript", "scope-bindings-and-hoisting-a-class-declaration-in-a-block"),
-		"a function declaration is block scoped":
-			fixture("javascript", "scope-bindings-and-hoisting-a-function-declaration-is-block-scoped"),
+		"a var hoists out of a block that binds something": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-hoists-out-of-a-block-that-binds-something"
+		),
+		"a var hoists out of an if branch": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-hoists-out-of-an-if-branch"
+		),
+		"a var hoists out of a switch case": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-hoists-out-of-a-switch-case"
+		),
+		"a var hoists out of try and catch": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-hoists-out-of-try-and-catch"
+		),
+		"a var hoists out of a for-of body": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-hoists-out-of-a-for-of-body"
+		),
+		"a var hoists out of both branches of an if": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-hoists-out-of-both-branches-of-an-if"
+		),
+		"a class declaration in a block": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-class-declaration-in-a-block"
+		),
+		"a function declaration is block scoped": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-function-declaration-is-block-scoped"
+		),
 		"a function declaration in a sloppy-mode if": [
-			fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-57"),
+			fixture(
+				"javascript",
+				"parser-parses-like-acorn-for-every-program-as-script-latest-57"
+			),
 			"script"
 		],
-		"a var redeclared in a nested block": fixture("javascript", "scope-bindings-and-hoisting-a-var-redeclared-in-a-nested-block"),
+		"a var redeclared in a nested block": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-var-redeclared-in-a-nested-block"
+		),
 		"a var and a function declaration under one name": [
-			fixture("javascript", "scope-analyzer-matches-eslint-scope-bindings-and-hoisting-a-var-and-a-function"),
+			fixture(
+				"javascript",
+				"scope-analyzer-matches-eslint-scope-bindings-and-hoisting-a-var-and-a-function"
+			),
 			"script"
 		],
-		"a function declaration hoisted over a var in its body":
-			fixture("javascript", "scope-bindings-and-hoisting-a-function-declaration-hoisted-over-a-var-in-its"),
-		"a let read before its declaration": fixture("javascript", "scope-bindings-and-hoisting-a-let-read-before-its-declaration"),
-		"a let initialized from its own name": fixture("javascript", "scope-bindings-and-hoisting-a-let-initialized-from-its-own-name"),
-		"an implicit arguments binding":
-			fixture("javascript", "scope-bindings-and-hoisting-an-implicit-arguments-binding"),
-		"an arguments binding read from a nested arrow":
-			fixture("javascript", "scope-bindings-and-hoisting-an-arguments-binding-read-from-a-nested-arrow"),
-		"a nested var and let of the same name":
-			fixture("javascript", "scope-bindings-and-hoisting-a-nested-var-and-let-of-the-same-name")
+		"a function declaration hoisted over a var in its body": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-function-declaration-hoisted-over-a-var-in-its"
+		),
+		"a let read before its declaration": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-let-read-before-its-declaration"
+		),
+		"a let initialized from its own name": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-let-initialized-from-its-own-name"
+		),
+		"an implicit arguments binding": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-an-implicit-arguments-binding"
+		),
+		"an arguments binding read from a nested arrow": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-an-arguments-binding-read-from-a-nested-arrow"
+		),
+		"a nested var and let of the same name": fixture(
+			"javascript",
+			"scope-bindings-and-hoisting-a-nested-var-and-let-of-the-same-name"
+		)
 	},
 
 	"parameters and defaults": {
-		"a default reading an outer binding": fixture("javascript", "scope-parameters-and-defaults-a-default-reading-an-outer-binding"),
-		"a default reading a later parameter": fixture("javascript", "scope-parameters-and-defaults-a-default-reading-a-later-parameter"),
-		"a default that the body shadows": fixture("javascript", "scope-parameters-and-defaults-a-default-that-the-body-shadows"),
-		"a default whose nested function the body shadows":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-whose-nested-function-the-body-shadows"),
-		"a parameter the body redeclares with var":
-			fixture("javascript", "scope-parameters-and-defaults-a-parameter-the-body-redeclares-with-var"),
-		"a default reading a parameter declared after it":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-reading-a-parameter-declared-after-it"),
-		"a default reading a function the body declares":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-reading-a-function-the-body-declares"),
-		"a default in an arrow that the body shadows":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-in-an-arrow-that-the-body-shadows"),
-		"a default closing over an earlier parameter":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-closing-over-an-earlier-parameter"),
-		"a default in a method that the body shadows":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-in-a-method-that-the-body-shadows"),
-		"a default in a nested function reading the outer body":
-			fixture("javascript", "scope-parameters-and-defaults-a-default-in-a-nested-function-reading-the-outer"),
-		"a destructured parameter with defaults and a rest element":
-			fixture("javascript", "scope-parameters-and-defaults-a-destructured-parameter-with-defaults-and-a-rest"),
-		"a destructured parameter defaulting to an object":
-			fixture("javascript", "scope-parameters-and-defaults-a-destructured-parameter-defaulting-to-an-object"),
-		"a deeply nested destructured parameter":
-			fixture("javascript", "scope-parameters-and-defaults-a-deeply-nested-destructured-parameter"),
-		"an arrow with several parameters": fixture("javascript", "scope-parameters-and-defaults-an-arrow-with-several-parameters")
+		"a default reading an outer binding": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-reading-an-outer-binding"
+		),
+		"a default reading a later parameter": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-reading-a-later-parameter"
+		),
+		"a default that the body shadows": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-that-the-body-shadows"
+		),
+		"a default whose nested function the body shadows": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-whose-nested-function-the-body-shadows"
+		),
+		"a parameter the body redeclares with var": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-parameter-the-body-redeclares-with-var"
+		),
+		"a default reading a parameter declared after it": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-reading-a-parameter-declared-after-it"
+		),
+		"a default reading a function the body declares": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-reading-a-function-the-body-declares"
+		),
+		"a default in an arrow that the body shadows": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-in-an-arrow-that-the-body-shadows"
+		),
+		"a default closing over an earlier parameter": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-closing-over-an-earlier-parameter"
+		),
+		"a default in a method that the body shadows": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-in-a-method-that-the-body-shadows"
+		),
+		"a default in a nested function reading the outer body": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-default-in-a-nested-function-reading-the-outer"
+		),
+		"a destructured parameter with defaults and a rest element": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-destructured-parameter-with-defaults-and-a-rest"
+		),
+		"a destructured parameter defaulting to an object": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-destructured-parameter-defaulting-to-an-object"
+		),
+		"a deeply nested destructured parameter": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-a-deeply-nested-destructured-parameter"
+		),
+		"an arrow with several parameters": fixture(
+			"javascript",
+			"scope-parameters-and-defaults-an-arrow-with-several-parameters"
+		)
 	},
 
 	"destructuring patterns": {
-		"an array pattern in var": fixture("javascript", "scope-destructuring-patterns-an-array-pattern-in-var"),
-		"a rest element in var":
-			fixture("javascript", "scope-destructuring-patterns-a-rest-element-in-var"),
-		"a nested rest element in var":
-			fixture("javascript", "scope-destructuring-patterns-a-nested-rest-element-in-var"),
-		"an object pattern in var":
-			fixture("javascript", "scope-destructuring-patterns-an-object-pattern-in-var"),
-		"a complex pattern in var":
-			fixture("javascript", "scope-destructuring-patterns-a-complex-pattern-in-var"),
-		"a default in an array pattern in var":
-			fixture("javascript", "scope-destructuring-patterns-a-default-in-an-array-pattern-in-var"),
-		"a default reading a free name in var":
-			fixture("javascript", "scope-destructuring-patterns-a-default-reading-a-free-name-in-var"),
-		"nested defaults in var":
-			fixture("javascript", "scope-destructuring-patterns-nested-defaults-in-var"),
-		"a nested object pattern with defaults":
-			fixture("javascript", "scope-destructuring-patterns-a-nested-object-pattern-with-defaults"),
-		"a computed key in an object pattern": fixture("javascript", "scope-destructuring-patterns-a-computed-key-in-an-object-pattern"),
-		"an array pattern in an assignment":
-			fixture("javascript", "scope-destructuring-patterns-an-array-pattern-in-an-assignment"),
-		"a member expression in a destructuring assignment":
-			fixture("javascript", "scope-destructuring-patterns-a-member-expression-in-a-destructuring-assignment"),
-		"an object pattern in an assignment":
-			fixture("javascript", "scope-destructuring-patterns-an-object-pattern-in-an-assignment"),
-		"a rest element in an assignment":
-			fixture("javascript", "scope-destructuring-patterns-a-rest-element-in-an-assignment"),
-		"a rest element onto a member expression":
-			fixture("javascript", "scope-destructuring-patterns-a-rest-element-onto-a-member-expression"),
-		"a hole and a rest element in an assignment": fixture("javascript", "scope-destructuring-patterns-a-hole-and-a-rest-element-in-an-assignment"),
-		"a rest property in an assignment": fixture("javascript", "scope-destructuring-patterns-a-rest-property-in-an-assignment"),
-		"a shorthand default in an assignment":
-			fixture("javascript", "scope-destructuring-patterns-a-shorthand-default-in-an-assignment"),
-		"a literal computed key in an assignment": fixture("javascript", "scope-destructuring-patterns-a-literal-computed-key-in-an-assignment"),
-		"a pattern in a var for-in head":
-			fixture("javascript", "scope-destructuring-patterns-a-pattern-in-a-var-for-in-head"),
-		"a pattern in a let for-of head": fixture("javascript", "scope-destructuring-patterns-a-pattern-in-a-let-for-of-head"),
-		"a pattern with defaults in a var for-in head":
-			fixture("javascript", "scope-destructuring-patterns-a-pattern-with-defaults-in-a-var-for-in-head"),
-		"a pattern with nested defaults in a let for-in head":
-			fixture("javascript", "scope-destructuring-patterns-a-pattern-with-nested-defaults-in-a-let-for-in-head"),
-		"a pattern declared apart from the for-in head":
-			fixture("javascript", "scope-destructuring-patterns-a-pattern-declared-apart-from-the-for-in-head"),
-		"a member expression in a for-of head": fixture("javascript", "scope-destructuring-patterns-a-member-expression-in-a-for-of-head"),
-		"a bare identifier in a for-of head": fixture("javascript", "scope-destructuring-patterns-a-bare-identifier-in-a-for-of-head"),
-		"a rest property and a rest element in declarations":
-			fixture("javascript", "scope-destructuring-patterns-a-rest-property-and-a-rest-element-in-declarations")
+		"an array pattern in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-an-array-pattern-in-var"
+		),
+		"a rest element in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-rest-element-in-var"
+		),
+		"a nested rest element in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-nested-rest-element-in-var"
+		),
+		"an object pattern in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-an-object-pattern-in-var"
+		),
+		"a complex pattern in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-complex-pattern-in-var"
+		),
+		"a default in an array pattern in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-default-in-an-array-pattern-in-var"
+		),
+		"a default reading a free name in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-default-reading-a-free-name-in-var"
+		),
+		"nested defaults in var": fixture(
+			"javascript",
+			"scope-destructuring-patterns-nested-defaults-in-var"
+		),
+		"a nested object pattern with defaults": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-nested-object-pattern-with-defaults"
+		),
+		"a computed key in an object pattern": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-computed-key-in-an-object-pattern"
+		),
+		"an array pattern in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-an-array-pattern-in-an-assignment"
+		),
+		"a member expression in a destructuring assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-member-expression-in-a-destructuring-assignment"
+		),
+		"an object pattern in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-an-object-pattern-in-an-assignment"
+		),
+		"a rest element in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-rest-element-in-an-assignment"
+		),
+		"a rest element onto a member expression": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-rest-element-onto-a-member-expression"
+		),
+		"a hole and a rest element in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-hole-and-a-rest-element-in-an-assignment"
+		),
+		"a rest property in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-rest-property-in-an-assignment"
+		),
+		"a shorthand default in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-shorthand-default-in-an-assignment"
+		),
+		"a literal computed key in an assignment": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-literal-computed-key-in-an-assignment"
+		),
+		"a pattern in a var for-in head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-pattern-in-a-var-for-in-head"
+		),
+		"a pattern in a let for-of head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-pattern-in-a-let-for-of-head"
+		),
+		"a pattern with defaults in a var for-in head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-pattern-with-defaults-in-a-var-for-in-head"
+		),
+		"a pattern with nested defaults in a let for-in head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-pattern-with-nested-defaults-in-a-let-for-in-head"
+		),
+		"a pattern declared apart from the for-in head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-pattern-declared-apart-from-the-for-in-head"
+		),
+		"a member expression in a for-of head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-member-expression-in-a-for-of-head"
+		),
+		"a bare identifier in a for-of head": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-bare-identifier-in-a-for-of-head"
+		),
+		"a rest property and a rest element in declarations": fixture(
+			"javascript",
+			"scope-destructuring-patterns-a-rest-property-and-a-rest-element-in-declarations"
+		)
 	},
 
 	classes: {
-		"a class declaration and its heritage":
-			fixture("javascript", "scope-classes-a-class-declaration-and-its-heritage"),
-		"a named class expression":
-			fixture("javascript", "scope-classes-a-named-class-expression"),
-		"an anonymous class expression":
-			fixture("javascript", "scope-classes-an-anonymous-class-expression"),
-		"a computed method key reading an outer binding":
-			fixture("javascript", "scope-classes-a-computed-method-key-reading-an-outer-binding"),
-		"a class expression whose heritage names itself":
-			fixture("javascript", "scope-classes-a-class-expression-whose-heritage-names-itself"),
-		"a class expression assigning its own name in its heritage":
-			fixture("javascript", "scope-classes-a-class-expression-assigning-its-own-name-in-its-heritage"),
-		"a class declaration assigning its own name in its heritage":
-			fixture("javascript", "scope-classes-a-class-declaration-assigning-its-own-name-in-its-heritage"),
-		"a function expression in a class heritage":
-			fixture("javascript", "scope-classes-a-function-expression-in-a-class-heritage"),
-		"a class in a class heritage":
-			fixture("javascript", "scope-classes-a-class-in-a-class-heritage"),
-		"a computed field and a computed static method":
-			fixture("javascript", "scope-classes-a-computed-field-and-a-computed-static-method"),
-		"a private field read from a method":
-			fixture("javascript", "scope-classes-a-private-field-read-from-a-method"),
-		"an accessor pair with computed keys":
-			fixture("javascript", "scope-classes-an-accessor-pair-with-computed-keys")
+		"a class declaration and its heritage": fixture(
+			"javascript",
+			"scope-classes-a-class-declaration-and-its-heritage"
+		),
+		"a named class expression": fixture(
+			"javascript",
+			"scope-classes-a-named-class-expression"
+		),
+		"an anonymous class expression": fixture(
+			"javascript",
+			"scope-classes-an-anonymous-class-expression"
+		),
+		"a computed method key reading an outer binding": fixture(
+			"javascript",
+			"scope-classes-a-computed-method-key-reading-an-outer-binding"
+		),
+		"a class expression whose heritage names itself": fixture(
+			"javascript",
+			"scope-classes-a-class-expression-whose-heritage-names-itself"
+		),
+		"a class expression assigning its own name in its heritage": fixture(
+			"javascript",
+			"scope-classes-a-class-expression-assigning-its-own-name-in-its-heritage"
+		),
+		"a class declaration assigning its own name in its heritage": fixture(
+			"javascript",
+			"scope-classes-a-class-declaration-assigning-its-own-name-in-its-heritage"
+		),
+		"a function expression in a class heritage": fixture(
+			"javascript",
+			"scope-classes-a-function-expression-in-a-class-heritage"
+		),
+		"a class in a class heritage": fixture(
+			"javascript",
+			"scope-classes-a-class-in-a-class-heritage"
+		),
+		"a computed field and a computed static method": fixture(
+			"javascript",
+			"scope-classes-a-computed-field-and-a-computed-static-method"
+		),
+		"a private field read from a method": fixture(
+			"javascript",
+			"scope-classes-a-private-field-read-from-a-method"
+		),
+		"an accessor pair with computed keys": fixture(
+			"javascript",
+			"scope-classes-an-accessor-pair-with-computed-keys"
+		)
 	},
 
 	"imports and exports": {
-		"every import form":
-			fixture("javascript", "scope-imports-and-exports-every-import-form"),
-		"an import with attributes": fixture("javascript", "scope-imports-and-exports-an-import-with-attributes"),
-		"a dynamic import with attributes":
-			fixture("javascript", "scope-imports-and-exports-a-dynamic-import-with-attributes"),
-		"a dynamic import in an expression": fixture("javascript", "scope-imports-and-exports-a-dynamic-import-in-an-expression"),
-		"an exported var declaration": fixture("javascript", "scope-imports-and-exports-an-exported-var-declaration"),
-		"a default exported function declaration":
-			fixture("javascript", "scope-imports-and-exports-a-default-exported-function-declaration"),
-		"a default exported anonymous function": fixture("javascript", "scope-imports-and-exports-a-default-exported-anonymous-function"),
-		"a default exported anonymous class":
-			fixture("javascript", "scope-imports-and-exports-a-default-exported-anonymous-class"),
-		"a default exported expression": fixture("javascript", "scope-imports-and-exports-a-default-exported-expression"),
-		"an export specifier list": fixture("javascript", "scope-imports-and-exports-an-export-specifier-list"),
-		"a renaming export specifier": fixture("javascript", "scope-imports-and-exports-a-renaming-export-specifier"),
-		"a string export name": fixture("javascript", "scope-imports-and-exports-a-string-export-name"),
-		"a re-export from another source": fixture("javascript", "scope-imports-and-exports-a-re-export-from-another-source"),
-		"a star re-export": fixture("javascript", "scope-imports-and-exports-a-star-re-export"),
-		"a namespace re-export": fixture("javascript", "scope-imports-and-exports-a-namespace-re-export"),
-		"every exported declaration form":
-			fixture("javascript", "scope-imports-and-exports-every-exported-declaration-form")
+		"every import form": fixture(
+			"javascript",
+			"scope-imports-and-exports-every-import-form"
+		),
+		"an import with attributes": fixture(
+			"javascript",
+			"scope-imports-and-exports-an-import-with-attributes"
+		),
+		"a dynamic import with attributes": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-dynamic-import-with-attributes"
+		),
+		"a dynamic import in an expression": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-dynamic-import-in-an-expression"
+		),
+		"an exported var declaration": fixture(
+			"javascript",
+			"scope-imports-and-exports-an-exported-var-declaration"
+		),
+		"a default exported function declaration": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-default-exported-function-declaration"
+		),
+		"a default exported anonymous function": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-default-exported-anonymous-function"
+		),
+		"a default exported anonymous class": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-default-exported-anonymous-class"
+		),
+		"a default exported expression": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-default-exported-expression"
+		),
+		"an export specifier list": fixture(
+			"javascript",
+			"scope-imports-and-exports-an-export-specifier-list"
+		),
+		"a renaming export specifier": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-renaming-export-specifier"
+		),
+		"a string export name": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-string-export-name"
+		),
+		"a re-export from another source": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-re-export-from-another-source"
+		),
+		"a star re-export": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-star-re-export"
+		),
+		"a namespace re-export": fixture(
+			"javascript",
+			"scope-imports-and-exports-a-namespace-re-export"
+		),
+		"every exported declaration form": fixture(
+			"javascript",
+			"scope-imports-and-exports-every-exported-declaration-form"
+		)
 	},
 
 	"references and expressions": {
-		"a compound assignment and an update expression":
-			fixture("javascript", "scope-references-and-expressions-a-compound-assignment-and-an-update-expression"),
-		"a compound assignment onto a member expression": fixture("javascript", "scope-references-and-expressions-a-compound-assignment-onto-a-member-expression"),
-		"a logical assignment": fixture("javascript", "scope-references-and-expressions-a-logical-assignment"),
-		"a computed and a non-computed member read": fixture("javascript", "scope-references-and-expressions-a-computed-and-a-non-computed-member-read"),
-		"an optional chain": fixture("javascript", "scope-references-and-expressions-an-optional-chain"),
-		"a unary and a sequence expression":
-			fixture("javascript", "scope-references-and-expressions-a-unary-and-a-sequence-expression"),
-		"an object literal with every property form":
-			fixture("javascript", "scope-references-and-expressions-an-object-literal-with-every-property-form"),
-		"an array literal with a hole and a spread": fixture("javascript", "scope-references-and-expressions-an-array-literal-with-a-hole-and-a-spread"),
+		"a compound assignment and an update expression": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-compound-assignment-and-an-update-expression"
+		),
+		"a compound assignment onto a member expression": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-compound-assignment-onto-a-member-expression"
+		),
+		"a logical assignment": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-logical-assignment"
+		),
+		"a computed and a non-computed member read": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-computed-and-a-non-computed-member-read"
+		),
+		"an optional chain": fixture(
+			"javascript",
+			"scope-references-and-expressions-an-optional-chain"
+		),
+		"a unary and a sequence expression": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-unary-and-a-sequence-expression"
+		),
+		"an object literal with every property form": fixture(
+			"javascript",
+			"scope-references-and-expressions-an-object-literal-with-every-property-form"
+		),
+		"an array literal with a hole and a spread": fixture(
+			"javascript",
+			"scope-references-and-expressions-an-array-literal-with-a-hole-and-a-spread"
+		),
 		// eslint-disable-next-line no-template-curly-in-string -- the fixture is a template
-		"a template literal and a tagged template": fixture("javascript", "scope-references-and-expressions-a-template-literal-and-a-tagged-template"),
-		"a label on a loop and its break":
-			fixture("javascript", "scope-references-and-expressions-a-label-on-a-loop-and-its-break"),
-		"nested labels":
-			fixture("javascript", "scope-references-and-expressions-nested-labels"),
-		"a labeled statement whose body reads a binding":
-			fixture("javascript", "scope-references-and-expressions-a-labeled-statement-whose-body-reads-a-binding"),
-		"a direct eval call": fixture("javascript", "scope-references-and-expressions-a-direct-eval-call"),
-		"new.target and import.meta":
-			fixture("javascript", "scope-references-and-expressions-new-target-and-import-meta"),
-		"a generator and a delegating yield":
-			fixture("javascript", "scope-references-and-expressions-a-generator-and-a-delegating-yield"),
-		"a for-await loop": fixture("javascript", "scope-references-and-expressions-a-for-await-loop"),
-		"an async generator method":
-			fixture("javascript", "scope-references-and-expressions-an-async-generator-method"),
-		"nested arrows capturing this": fixture("javascript", "scope-references-and-expressions-nested-arrows-capturing-this"),
-		"a using declaration": fixture("javascript", "scope-references-and-expressions-a-using-declaration"),
-		"an await using declaration":
-			fixture("javascript", "scope-references-and-expressions-an-await-using-declaration"),
-		"literals that bind nothing": fixture("javascript", "scope-references-and-expressions-literals-that-bind-nothing"),
-		"a throw statement": fixture("javascript", "scope-references-and-expressions-a-throw-statement"),
-		"every function form in one declaration":
-			fixture("javascript", "scope-references-and-expressions-every-function-form-in-one-declaration")
+		"a template literal and a tagged template": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-template-literal-and-a-tagged-template"
+		),
+		"a label on a loop and its break": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-label-on-a-loop-and-its-break"
+		),
+		"nested labels": fixture(
+			"javascript",
+			"scope-references-and-expressions-nested-labels"
+		),
+		"a labeled statement whose body reads a binding": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-labeled-statement-whose-body-reads-a-binding"
+		),
+		"a direct eval call": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-direct-eval-call"
+		),
+		"new.target and import.meta": fixture(
+			"javascript",
+			"scope-references-and-expressions-new-target-and-import-meta"
+		),
+		"a generator and a delegating yield": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-generator-and-a-delegating-yield"
+		),
+		"a for-await loop": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-for-await-loop"
+		),
+		"an async generator method": fixture(
+			"javascript",
+			"scope-references-and-expressions-an-async-generator-method"
+		),
+		"nested arrows capturing this": fixture(
+			"javascript",
+			"scope-references-and-expressions-nested-arrows-capturing-this"
+		),
+		"a using declaration": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-using-declaration"
+		),
+		"an await using declaration": fixture(
+			"javascript",
+			"scope-references-and-expressions-an-await-using-declaration"
+		),
+		"literals that bind nothing": fixture(
+			"javascript",
+			"scope-references-and-expressions-literals-that-bind-nothing"
+		),
+		"a throw statement": fixture(
+			"javascript",
+			"scope-references-and-expressions-a-throw-statement"
+		),
+		"every function form in one declaration": fixture(
+			"javascript",
+			"scope-references-and-expressions-every-function-form-in-one-declaration"
+		)
 	}
 };
 
@@ -3695,13 +4869,31 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 		});
 
 		it("matches the tree walk on syntax webpack's own sources lack", () => {
-			for (const [code, sourceType] of /** @type {[string, "module" | "script"][]} */ ([
+			for (const [
+				code,
+				sourceType
+			] of /** @type {[string, "module" | "script"][]} */ ([
 				[
-					fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-syntax-webpack-s-own"),
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-syntax-webpack-s-own"
+					),
 					"module"
 				],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-syntax-webpack-s-own-2"), "module"],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-syntax-webpack-s-own-3"), "script"]
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-syntax-webpack-s-own-2"
+					),
+					"module"
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-syntax-webpack-s-own-3"
+					),
+					"script"
+				]
 			])) {
 				const walked = analyzeParse(code, false, sourceType);
 
@@ -3734,19 +4926,86 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 		it("matches the tree walk on what webpack's own sources never write", () => {
 			/** @type {[string, ("module" | "script")?][]} */
 			const cases = [
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-2"), "script"],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-3")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-4")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-5")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-6")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-7")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-8"), "script"],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-9")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-10")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-11")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-12")],
-				[fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-13")]
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-2"
+					),
+					"script"
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-3"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-4"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-5"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-6"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-7"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-8"
+					),
+					"script"
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-9"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-10"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-11"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-12"
+					)
+				],
+				[
+					fixture(
+						"javascript",
+						"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-13"
+					)
+				]
 			];
 			for (const [code, sourceType] of cases) {
 				const walked = analyzeParse(code, false, sourceType);
@@ -3757,15 +5016,26 @@ describeIfSupported("ScopeAnalyzer matches eslint-scope", () => {
 			const program = /** @type {EXPECTED_ANY} */ (
 				toEstreeObject(
 					/** @type {number} */ (
-						parseTree(fixture("javascript", "the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-14"), 0, {
-							sourceType: "script",
-							scopes: true
-						})
+						parseTree(
+							fixture(
+								"javascript",
+								"the-scope-log-a-parse-records-matches-the-tree-walk-on-what-webpack-s-own-14"
+							),
+							0,
+							{
+								sourceType: "script",
+								scopes: true
+							}
+						)
 					)
 				)
 			);
 
-			expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
+			expect(
+				program.body.map(
+					(/** @type {{ type: string }} */ statement) => statement.type
+				)
+			).toEqual([
 				"BlockStatement",
 				"LabeledStatement",
 				"ExpressionStatement",

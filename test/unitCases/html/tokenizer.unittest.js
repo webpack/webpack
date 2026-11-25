@@ -19,7 +19,6 @@ const {
 } = require("../../../lib/html/syntax-parser");
 
 describe("tokenize", () => {
-
 	describe("coverage: state-machine branches", () => {
 		// --- Callback can advance `pos` past the natural end (skip-ahead) ---
 		it("openTag callback returning a larger position causes state to fall to DATA", () => {
@@ -42,7 +41,10 @@ describe("tokenize", () => {
 					return end + 1;
 				};
 			tokenize(
-				fixture("html", "tokenize-coverage-state-machine-branches-open-tag-callback-returning-a-larger"),
+				fixture(
+					"html",
+					"tokenize-coverage-state-machine-branches-open-tag-callback-returning-a-larger"
+				),
 				0,
 				{
 					openTag: skipFn("open"),
@@ -91,7 +93,10 @@ describe("tokenize", () => {
 			/** @type {[string, number][]} */
 			const errors = [];
 			tokenize(
-				fixture("html", "coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet"),
+				fixture(
+					"html",
+					"coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet"
+				),
 				0,
 				{
 					attribute: (input, ns, ne, vs, ve) => {
@@ -125,103 +130,329 @@ describe("tokenize", () => {
 		});
 	});
 
-
 	describe("decodeEntities", () => {
 		it("should decode core named entities", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-core-named-entities"))).toBe(
-				"&<>\"'\u00A0"
-			);
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-core-named-entities"
+					)
+				)
+			).toBe("&<>\"'\u00A0");
 		});
 
 		it("should decode legacy named entities without trailing semicolon", () => {
 			// `&AMP` and `&copy` are legacy bare-form entities in the WHATWG
 			// named character references table.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing"))).toBe("&");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing-2"))).toBe("\u00A9");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing"
+					)
+				)
+			).toBe("&");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-legacy-named-entities-without-trailing-2"
+					)
+				)
+			).toBe("\u00A9");
 		});
 
 		it("should decode entities outside the BMP and multi-codepoint entities", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi"))).toBe("\u00C6");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi"
+					)
+				)
+			).toBe("\u00C6");
 			// `&NotEqualTilde;` is a multi-codepoint named reference (\u2242 + combining slash).
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi-2"))).toBe("\u2242\u0338");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-entities-outside-the-bmp-and-multi-2"
+					)
+				)
+			).toBe("\u2242\u0338");
 		});
 
 		it("should apply longest-prefix backtrack per WHATWG", () => {
 			// `&notpre;` is not in the table, but `&not` is \u2014 the prefix matches
 			// and the remainder `pre;` is left as literal text.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-apply-longest-prefix-backtrack-per-whatwg"))).toBe("\u00ACpre;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-apply-longest-prefix-backtrack-per-whatwg"
+					)
+				)
+			).toBe("\u00ACpre;");
 		});
 
 		it("should decode numeric decimal references", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-numeric-decimal-references"))).toBe("ABC");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-numeric-decimal-references"
+					)
+				)
+			).toBe("ABC");
 		});
 
 		it("should decode numeric references without trailing semicolon", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-numeric-references-without-trailing"))).toBe("A");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-numeric-references-without-trailing-2"))).toBe("A");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-numeric-references-without-trailing"
+					)
+				)
+			).toBe("A");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-numeric-references-without-trailing-2"
+					)
+				)
+			).toBe("A");
 		});
 
 		it("should not let decimal references swallow trailing hex-letter chars", () => {
 			// Regression: a decimal numeric reference consumes only `[0-9]+`, so
 			// `&#65b` decodes to `A` and leaves `b` as text. The earlier regexp
 			// matched `[0-9a-fA-F]+` for both bases and swallowed the `b`.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex"))).toBe("Ab");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex-2"))).toBe("f");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex"
+					)
+				)
+			).toBe("Ab");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-not-let-decimal-references-swallow-trailing-hex-2"
+					)
+				)
+			).toBe("f");
 		});
 
 		it("should decode numeric hexadecimal references", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-numeric-hexadecimal-references"))).toBe("ABC");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-decode-numeric-hexadecimal-references-2"))).toBe("ABC");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-numeric-hexadecimal-references"
+					)
+				)
+			).toBe("ABC");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-decode-numeric-hexadecimal-references-2"
+					)
+				)
+			).toBe("ABC");
 		});
 
 		it("should leave unknown or incomplete entities as literals", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals"))).toBe("&zzzunknown;");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-2"))).toBe("&#;");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3"))).toBe("&#x;");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-4"))).toBe("bare & alone");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals"
+					)
+				)
+			).toBe("&zzzunknown;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-2"
+					)
+				)
+			).toBe("&#;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-3"
+					)
+				)
+			).toBe("&#x;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-leave-unknown-or-incomplete-entities-as-literals-4"
+					)
+				)
+			).toBe("bare & alone");
 		});
 
 		it("should not match inherited Object.prototype keys as entities", () => {
 			// Regression: from a plain object literal `HTML_ENTITIES["toString"]`
 			// returns `Object.prototype.toString` and the lookup reads the entity as
 			// matched. The generated table has a null prototype, so it does not.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as"))).toBe("&toString;");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-2"))).toBe("&constructor;");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-3"))).toBe("&hasOwnProperty;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as"
+					)
+				)
+			).toBe("&toString;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-2"
+					)
+				)
+			).toBe("&constructor;");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-not-match-inherited-object-prototype-keys-as-3"
+					)
+				)
+			).toBe("&hasOwnProperty;");
 		});
 
 		it("should handle mixed text and entities", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-handle-mixed-text-and-entities"))).toBe(
-				"foo & bar A baz"
-			);
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-handle-mixed-text-and-entities"
+					)
+				)
+			).toBe("foo & bar A baz");
 		});
 
 		it("should fast-path strings with no `&`", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-fast-path-strings-with-no"))).toBe("plain text");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-fast-path-strings-with-no"
+					)
+				)
+			).toBe("plain text");
 		});
 
 		it("should replace numeric references above U+10FFFF with U+FFFD", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u"))).toBe("�");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u-2"))).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u"
+					)
+				)
+			).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-replace-numeric-references-above-u-10ffff-with-u-2"
+					)
+				)
+			).toBe("�");
 		});
 
 		it("should replace NULL and surrogate numeric references with U+FFFD", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references"))).toBe("�");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-2"))).toBe("�");
-			expect(decodeEntities(fixture("html", "tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-3"))).toBe("�");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-3"))).toBe("�");
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-4"))).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references"
+					)
+				)
+			).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-2"
+					)
+				)
+			).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-parse-error-callback-validates-numeric-references-that-end-exactly-at-3"
+					)
+				)
+			).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-3"
+					)
+				)
+			).toBe("�");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-replace-null-and-surrogate-numeric-references-4"
+					)
+				)
+			).toBe("�");
 		});
 
 		it("should remap C1 numeric references via the Windows-1252 table", () => {
 			// `&#x80;` (Windows-1252 euro sign) per WHATWG remaps to U+20AC.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252"))).toBe("€");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252"
+					)
+				)
+			).toBe("€");
 			// `&#x99;` remaps to U+2122 (trade mark sign).
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-2"))).toBe("™");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-2"
+					)
+				)
+			).toBe("™");
 			// `&#x9F;` remaps to U+0178 (Ÿ).
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-3"))).toBe("Ÿ");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-3"
+					)
+				)
+			).toBe("Ÿ");
 			// C1 control codepoints with no remap entry pass through.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-4"))).toBe("");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-remap-c1-numeric-references-via-the-windows-1252-4"
+					)
+				)
+			).toBe("");
 		});
 
 		it("should stay linear-time on long alphanumeric runs after `&`", () => {
@@ -229,47 +460,127 @@ describe("tokenize", () => {
 			// WHATWG entity name, otherwise inputs like `&` + thousands of chars
 			// trigger O(n²) substring allocations.
 			const longRun = "a".repeat(1000);
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after"))).toBe(`&${longRun}`);
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after"
+					)
+				)
+			).toBe(`&${longRun}`);
 			// `&amp` prefix at the start still decodes; the rest is appended verbatim.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2"))).toBe(`&${longRun}`);
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-stay-linear-time-on-long-alphanumeric-runs-after-2"
+					)
+				)
+			).toBe(`&${longRun}`);
 		});
 
 		it("should apply the consumed-as-part-of-an-attribute rule when asked", () => {
 			// In text context, `&amp=foo` decodes to `&=foo`.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule"))).toBe("&=foo");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule"
+					)
+				)
+			).toBe("&=foo");
 			// In attribute context, the same input stays literal.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule"), true)).toBe("&amp=foo");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule"
+					),
+					true
+				)
+			).toBe("&amp=foo");
 			// `&amp;=foo` (with semicolon) decodes regardless of context.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-2"), true)).toBe("&=foo");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-2"
+					),
+					true
+				)
+			).toBe("&=foo");
 			// Longest-prefix leftover case: `&ampx` → `&amp` matches but leftover
 			// `x` is alphanumeric, so in attribute context this stays literal.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3"), true)).toBe("&ampX");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3"
+					),
+					true
+				)
+			).toBe("&ampX");
 			// In text context it still decodes the prefix.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3"))).toBe("&X");
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-apply-the-consumed-as-part-of-an-attribute-rule-3"
+					)
+				)
+			).toBe("&X");
 		});
 	});
 
 	describe("decodeEntities with map", () => {
 		it("should return the input and no map when nothing decodes", () => {
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-should-fast-path-strings-with-no"), false, true)).toEqual({
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-should-fast-path-strings-with-no"
+					),
+					false,
+					true
+				)
+			).toEqual({
 				text: "plain text",
 				map: undefined
 			});
 			// Attribute rule keeps `&amp=1` literal — no map either.
-			expect(decodeEntities(fixture("html", "tokenize-decode-entities-with-map-should-return-the-input-and-no-map-when"), true, true)).toEqual({
+			expect(
+				decodeEntities(
+					fixture(
+						"html",
+						"tokenize-decode-entities-with-map-should-return-the-input-and-no-map-when"
+					),
+					true,
+					true
+				)
+			).toEqual({
 				text: "&amp=1",
 				map: undefined
 			});
 		});
 
 		it("should map decoded boundaries back to raw offsets", () => {
-			const { text, map } = decodeEntities(fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"), true, true);
+			const { text, map } = decodeEntities(
+				fixture(
+					"html",
+					"tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"
+				),
+				true,
+				true
+			);
 			expect(text).toBe("a&b");
 			// Boundaries: `a` 0, decoded `&` starts at raw 1, `b` at raw 6, end 7.
 			expect(map).toEqual([0, 1, 6, 7]);
 			// A decoded span maps to the covering raw span.
 			expect(
-				fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named").slice(
+				fixture(
+					"html",
+					"tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"
+				).slice(
 					/** @type {number[]} */ (map)[0],
 					/** @type {number[]} */ (map)[3]
 				)
@@ -277,7 +588,14 @@ describe("tokenize", () => {
 		});
 
 		it("should map around numeric references and trailing text", () => {
-			const { text, map } = decodeEntities(fixture("html", "tokenize-decode-entities-with-map-should-map-around-numeric-references-and"), true, true);
+			const { text, map } = decodeEntities(
+				fixture(
+					"html",
+					"tokenize-decode-entities-with-map-should-map-around-numeric-references-and"
+				),
+				true,
+				true
+			);
 			expect(text).toBe("x yz");
 			expect(map).toEqual([0, 1, 6, 7, 8]);
 		});
@@ -422,7 +740,10 @@ describe("tokenize", () => {
 		/** @type {[string, number][]} */
 		const errors = [];
 		tokenize(
-			fixture("html", "tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it"),
+			fixture(
+				"html",
+				"tokenize-reads-a-named-reference-the-same-wherever-the-input-repeats-it"
+			),
 			0,
 			{
 				parseError: (input, code, start) => {
@@ -440,8 +761,6 @@ describe("tokenize", () => {
 	});
 });
 
-
-
 describe("a tag whose name a NUL interrupts", () => {
 	it("ends at the `>` the tag-name state reads", () => {
 		// The name scan stops on the NUL, so the `>` after it is left to the
@@ -451,21 +770,28 @@ describe("a tag whose name a NUL interrupts", () => {
 		/** @type {[string, number][]} */
 		const errors = [];
 		let skip = 1;
-		tokenize(fixture("html", "a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads"), 0, {
-			openTag: (input, start, end, ns, ne) => {
-				tags.push(["open", input.slice(ns, ne), start, end]);
-				const next = end + skip;
-				skip = 0;
-				return next;
-			},
-			closeTag: (input, start, end, ns, ne) => {
-				tags.push(["close", input.slice(ns, ne), start, end]);
-				return end;
-			},
-			parseError: (input, code, start) => {
-				errors.push([code, start]);
+		tokenize(
+			fixture(
+				"html",
+				"a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads"
+			),
+			0,
+			{
+				openTag: (input, start, end, ns, ne) => {
+					tags.push(["open", input.slice(ns, ne), start, end]);
+					const next = end + skip;
+					skip = 0;
+					return next;
+				},
+				closeTag: (input, start, end, ns, ne) => {
+					tags.push(["close", input.slice(ns, ne), start, end]);
+					return end;
+				},
+				parseError: (input, code, start) => {
+					errors.push([code, start]);
+				}
 			}
-		});
+		);
 		expect(tags).toEqual([
 			["open", "a\0b", 0, 5],
 			["close", "a\0b", 6, 12],

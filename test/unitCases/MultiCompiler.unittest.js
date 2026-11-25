@@ -151,9 +151,10 @@ describe("MultiCompiler", () => {
 				() => {}
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err, _stats) => {
 			if (err) {
 				compiler.close(done);
@@ -177,8 +178,9 @@ describe("MultiCompiler", () => {
 		const compiler = createMultiCompiler();
 		compiler.run((err, stats) => {
 			if (err) return done(err);
-			for (const childStats of /** @type {import("../../").MultiStats} */ (stats)
-				.stats) {
+			for (const childStats of /** @type {import("../../").MultiStats} */ (
+				stats
+			).stats) {
 				const compilation = childStats.compilation;
 				// codeGenerationResults: only used during seal/emit, dropped.
 				expect(
@@ -216,9 +218,10 @@ describe("MultiCompiler", () => {
 				)
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.watchFileSystem =
 			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 				watch: (_a, _b, _c, _d, _e, _f, _g) =>
@@ -238,10 +241,11 @@ describe("MultiCompiler", () => {
 		/** @type {number | undefined} */
 		let aMapSizeWhenBStarts;
 		b.hooks.run.tap("test", () => {
-			aMapSizeWhenBStarts = /** @type {import("../../").CodeGenerationResults} */ (
-				/** @type {import("../../").Compilation} */ (aCompilation)
-					.codeGenerationResults
-			).map.size;
+			aMapSizeWhenBStarts =
+				/** @type {import("../../").CodeGenerationResults} */ (
+					/** @type {import("../../").Compilation} */ (aCompilation)
+						.codeGenerationResults
+				).map.size;
 		});
 		compiler.run((err) => {
 			if (err) return done(err);
@@ -493,9 +497,10 @@ describe("MultiCompiler", () => {
 				])
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.run((err) => {
 			expect(/** @type {Error} */ (err).message).toMatch(
 				/Compiler dependency `missing` not found/
@@ -661,9 +666,10 @@ describe("MultiCompiler", () => {
 				])
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		compiler.watchFileSystem =
 			/** @type {import("../../lib/fs/fs").WatchFileSystem} */ ({
 				watch: (_a, _b, _c, _d, _e, _f, _g) =>
@@ -740,9 +746,10 @@ describe("MultiCompiler", () => {
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 
 		let state = 0;
 		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
@@ -832,9 +839,10 @@ describe("MultiCompiler", () => {
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 
 		let state = 0;
 		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
@@ -911,9 +919,10 @@ describe("MultiCompiler", () => {
 				/** @type {unknown} */ (/** @type {() => void} */ (() => {}))
 			)
 		};
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 
 		const watching = /** @type {import("../../lib/watch/MultiWatching")} */ (
 			/** @type {unknown} */ (
@@ -957,9 +966,10 @@ describe("MultiCompiler", () => {
 				)
 			)
 		);
-		compiler.outputFileSystem = /** @type {import("../../").OutputFileSystem} */ (
-			/** @type {unknown} */ (createFsFromVolume(new Volume()))
-		);
+		compiler.outputFileSystem =
+			/** @type {import("../../").OutputFileSystem} */ (
+				/** @type {unknown} */ (createFsFromVolume(new Volume()))
+			);
 		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
 		const watchCallbacks = [];
 		/** @type {((...args: EXPECTED_ANY[]) => void)[]} */
@@ -1038,9 +1048,7 @@ describe("MultiCompiler deprecated 'done' hook call", () => {
 		compiler.hooks.done.tap("test", () => {
 			throw error;
 		});
-		expect(() =>
-			compiler.hooks.done.call(createStats(), [])
-		).toThrow(error);
+		expect(() => compiler.hooks.done.call(createStats(), [])).toThrow(error);
 		tracker();
 	});
 
@@ -1070,7 +1078,11 @@ describe("MultiCompiler runWithDependencies", () => {
 	it("should run a compiler after the ones it depends on and report no result", (done) => {
 		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack([
-				{ name: "a", context: path.join(testDirectory, "fixtures"), entry: "./a.js" },
+				{
+					name: "a",
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./a.js"
+				},
 				{
 					name: "b",
 					dependencies: ["a"],
@@ -1103,7 +1115,11 @@ describe("MultiCompiler runWithDependencies", () => {
 	it("should report the error of a failing compiler", (done) => {
 		const compiler = /** @type {import("../../").MultiCompiler} */ (
 			webpack([
-				{ name: "a", context: path.join(testDirectory, "fixtures"), entry: "./a.js" },
+				{
+					name: "a",
+					context: path.join(testDirectory, "fixtures"),
+					entry: "./a.js"
+				},
 				{
 					name: "b",
 					dependencies: ["a"],

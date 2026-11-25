@@ -27,9 +27,18 @@ describe("WebpackParser", () => {
 			// `await` and a block's `}` leave the tokenizer guessing division, but
 			// an expression belongs there, so the spec reads a regexp (acorn throws)
 			const sources = [
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the"),
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-2"),
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-3")
+				fixture(
+					"javascript",
+					"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the"
+				),
+				fixture(
+					"javascript",
+					"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-2"
+				),
+				fixture(
+					"javascript",
+					"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-3"
+				)
 			];
 			for (const source of sources) {
 				expect(() => acorn.parse(source, { ecmaVersion: "latest" })).toThrow(
@@ -41,14 +50,28 @@ describe("WebpackParser", () => {
 					);
 				}
 			}
-			expect(() => parse(fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-4"))).toThrow(
-				/Unterminated regular expression \(1:5\)/
-			);
+			expect(() =>
+				parse(
+					fixture(
+						"javascript",
+						"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-4"
+					)
+				)
+			).toThrow(/Unterminated regular expression \(1:5\)/);
 			// a lone `/` there is re-read the same way, which acorn does too
 			for (const source of [
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-5"),
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-6"),
-				fixture("javascript", "webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-7")
+				fixture(
+					"javascript",
+					"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-5"
+				),
+				fixture(
+					"javascript",
+					"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-6"
+				),
+				fixture(
+					"javascript",
+					"webpack-parser-token-context-finish-token-expr-allowed-should-re-read-a-the-7"
+				)
 			]) {
 				for (const options of [{}, { locations: true }]) {
 					expect(JSON.stringify(parse(source, options).ast)).toContain(
@@ -75,11 +98,46 @@ describe("WebpackParser", () => {
 		};
 
 		it("should read radix integers and bigints", () => {
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers")).value).toBe(255);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-2")).value).toBe(15);
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-2")).value).toBe(10);
-			expect(literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-3")).value).toBe(BigInt(31));
-			expect(typeof literal(fixture("javascript", "webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-4")).value).toBe("bigint");
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers"
+					)
+				).value
+			).toBe(255);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-2"
+					)
+				).value
+			).toBe(15);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-2"
+					)
+				).value
+			).toBe(10);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-3"
+					)
+				).value
+			).toBe(BigInt(31));
+			expect(
+				typeof literal(
+					fixture(
+						"javascript",
+						"webpack-parser-tokenizer-cold-paths-ported-from-acorn-should-read-radix-integers-4"
+					)
+				).value
+			).toBe("bigint");
 		});
 	});
 });
@@ -260,191 +318,683 @@ const TOKENIZER_OPTION_SETS = [
  */
 const TOKENIZER_SOURCES = {
 	punctuators: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-10")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-punctuators-under-every-option-set-10"
+		)
 	],
 	numbers: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-22"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-23"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-24"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-14"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-15"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-16"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-17"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-19"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-20"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-21"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-25")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-22"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-23"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-24"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-14"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-15"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-16"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-17"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-18"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-19"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-20"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-21"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-numbers-under-every-option-set-25"
+		)
 	],
 	strings: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-14"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-15"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-16"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-17"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-19")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-14"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-15"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-16"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-17"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-18"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-strings-under-every-option-set-19"
+		)
 	],
 	templates: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-14"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-15"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-16"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-17"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-19"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-21"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-20")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-14"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-15"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-16"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-17"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-18"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-19"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-21"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-templates-under-every-option-set-20"
+		)
 	],
 	regexps: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-14"),
-		fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-15"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-15"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-16"),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-18"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-14"
+		),
+		fixture(
+			"javascript",
+			"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-15"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-15"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-16"
+		),
 		// syntax V8 builds whatever the edition, which acorn gates on ES2018
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-17")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-regexps-under-every-option-set-17"
+		)
 	],
 	"comments and whitespace": [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-8"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-150"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-14"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-12")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-8"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-150"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-14"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-comments-and-whitespace-under-every-12"
+		)
 	],
 	identifiers: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-16"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-19"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-20"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-21"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-17"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-14"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-15"),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-16"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-19"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-20"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-21"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-17"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-14"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-18"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-15"
+		),
 		// words past the 12 chars WORD_CACHE holds, which `readWord` hands on
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-22"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-23"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-24"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-identifiers-under-every-option-set-25"
+		)
 	],
 	keywords: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-5")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-keywords-under-every-option-set-5"
+		)
 	],
 	// where `/` is a regexp or a division depends on the tokenizer's context
 	contexts: [
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-2"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-3"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-4"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-5"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-6"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-7"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-8"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-9"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-10"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-11"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-12"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-13"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-14"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-15"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-16"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-17"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-18"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-19"),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-2"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-3"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-4"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-5"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-6"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-7"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-8"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-9"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-10"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-11"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-12"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-13"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-14"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-15"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-16"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-17"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-18"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-19"
+		),
 		// a keyword property name pushes a function context its colon pops
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-20"),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-20"
+		),
 		// `yield` in a generator is an operator, so a regexp follows it
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-21"),
-		fixture("javascript", "parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-22")
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-21"
+		),
+		fixture(
+			"javascript",
+			"parser-tokenizer-tokenizes-like-acorn-for-contexts-under-every-option-set-22"
+		)
 	]
 };
 /* eslint-enable no-template-curly-in-string */
@@ -474,15 +1024,14 @@ describe("Parser.tokenizer", () => {
 							/** @type {{ tokens?: unknown[], comments: unknown[] }} */ (
 								theirs
 							);
-						for (const [variant, collect] of /** @type {[string, boolean][]} */ ([
+						for (const [
+							variant,
+							collect
+						] of /** @type {[string, boolean][]} */ ([
 							["comments collected", true],
 							["comments skipped", false]
 						])) {
-							const ours = tokenizedByWebpack(
-								source,
-								options,
-								collect
-							);
+							const ours = tokenizedByWebpack(source, options, collect);
 							const wanted = expected.tokens
 								? {
 										tokens: expected.tokens,
@@ -510,9 +1059,18 @@ describe("Parser.tokenizer", () => {
 		it("should report the same tokens as acorn when the parser overrides a context", () => {
 			const sources = [
 				// `async function` reads as a statement until the parser says otherwise
-				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn"),
-				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-3"),
-				fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-4")
+				fixture(
+					"javascript",
+					"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn"
+				),
+				fixture(
+					"javascript",
+					"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-3"
+				),
+				fixture(
+					"javascript",
+					"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-4"
+				)
 			];
 			const differences = [];
 			for (const source of sources) {
@@ -530,7 +1088,13 @@ describe("Parser.tokenizer", () => {
 			expect(differences).toEqual([]);
 			// the override is what turns the `/` after `{}` into a division
 			const tokens = /** @type {{ type: { label: string } }[]} */ (
-				parsedTokens(fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-5"), { ecmaVersion: "latest" })
+				parsedTokens(
+					fixture(
+						"javascript",
+						"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-5"
+					),
+					{ ecmaVersion: "latest" }
+				)
 			);
 			expect(tokens.map((token) => token.type.label)).toEqual([
 				"name",
@@ -550,7 +1114,10 @@ describe("Parser.tokenizer", () => {
 		it("should read a division after a conditional's function expression, unlike acorn", () => {
 			// acorn reads `function () {}` after a statement-level `:` as a
 			// declaration and the `/` after it as a regexp; the parser knows better
-			const source = fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-2");
+			const source = fixture(
+				"javascript",
+				"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-2"
+			);
 			expect(() => new (require("vm").Script)(source)).not.toThrow();
 			expect(() =>
 				acorn.Parser.parse(source, { ecmaVersion: "latest" })
@@ -559,9 +1126,31 @@ describe("Parser.tokenizer", () => {
 				parsedTokens(source, { ecmaVersion: "latest" })
 			);
 			expect(tokens.map((token) => token.type.label)).toEqual([
-				"name", "=", "name", "?", "name", ":", "{", "}", "/", "num", ";",
-				"name", "=", "name", "?", "name", ":", "function", "(", ")", "{",
-				"}", "/", "num", "eof"
+				"name",
+				"=",
+				"name",
+				"?",
+				"name",
+				":",
+				"{",
+				"}",
+				"/",
+				"num",
+				";",
+				"name",
+				"=",
+				"name",
+				"?",
+				"name",
+				":",
+				"function",
+				"(",
+				")",
+				"{",
+				"}",
+				"/",
+				"num",
+				"eof"
 			]);
 		});
 
@@ -569,27 +1158,39 @@ describe("Parser.tokenizer", () => {
 			// a deliberate divergence, documented on `inGeneratorContext`: acorn
 			// looks for a generator `function` context, which a method's `*` never
 			// pushes, so it reads a division here and rejects the program
-			const source = fixture("javascript", "parser-tokenizer-parser-decided-contexts-should-read-a-regexp-after-yield-in-a");
+			const source = fixture(
+				"javascript",
+				"parser-tokenizer-parser-decided-contexts-should-read-a-regexp-after-yield-in-a"
+			);
 			const tokens = /** @type {{ type: { label: string } }[]} */ (
 				parsedTokens(source, { ecmaVersion: "latest" })
 			);
 			expect(tokens.map((token) => token.type.label)).toContain("regexp");
-			expect(
-				acornTokens(source, { ecmaVersion: "latest" })
-			).toMatchObject({ error: "Unexpected token (1:23)" });
+			expect(acornTokens(source, { ecmaVersion: "latest" })).toMatchObject({
+				error: "Unexpected token (1:23)"
+			});
 		});
 	});
 
 	describe("token stream", () => {
 		it("should stop iterating at eof and keep returning eof", () => {
-			const tokenizer = Parser.tokenizer(fixture("javascript", "parser-static-entry-points-tokenizes-like-acorn-2"), { ecmaVersion: "latest" });
+			const tokenizer = Parser.tokenizer(
+				fixture(
+					"javascript",
+					"parser-static-entry-points-tokenizes-like-acorn-2"
+				),
+				{ ecmaVersion: "latest" }
+			);
 			expect(Array.from(tokenizer, (token) => token.value)).toEqual(["a", "b"]);
 			expect(tokenizer.getToken().type).toBe(tokTypes.eof);
 			expect(tokenizer.getToken().type).toBe(tokTypes.eof);
 		});
 
 		it("should skip comments when nothing collects them", () => {
-			const source = fixture("javascript", "parser-tokenizer-token-stream-should-skip-comments-when-nothing-collects-them");
+			const source = fixture(
+				"javascript",
+				"parser-tokenizer-token-stream-should-skip-comments-when-nothing-collects-them"
+			);
 			expect(labels(source)).toEqual(["name", "name", "name"]);
 			expect(
 				plain([...Parser.tokenizer(source, { ecmaVersion: "latest" })])
@@ -601,7 +1202,10 @@ describe("Parser.tokenizer", () => {
 		});
 
 		it("should hand comments and tokens to callbacks like acorn", () => {
-			const source = fixture("javascript", "parser-tokenizer-token-stream-should-hand-comments-and-tokens-to-callbacks-like");
+			const source = fixture(
+				"javascript",
+				"parser-tokenizer-token-stream-should-hand-comments-and-tokens-to-callbacks-like"
+			);
 			/**
 			 * @param {(source: string, options: EXPECTED_ANY) => unknown} parse what parses it, ours or acorn's
 			 * @returns {unknown[]} each callback's arguments, in call order
@@ -649,12 +1253,18 @@ describe("Parser.tokenizer", () => {
 		it("should show onTokenRead the parser at each token", () => {
 			/** @type {[string, unknown][]} */
 			const seen = [];
-			parseEstree(fixture("javascript", "parser-tokenizer-token-stream-should-show-on-token-read-the-parser-at-each-token"), {
-				ecmaVersion: "latest",
-				onTokenRead: (instance) => {
-					seen.push([instance.type.label, instance.value]);
+			parseEstree(
+				fixture(
+					"javascript",
+					"parser-tokenizer-token-stream-should-show-on-token-read-the-parser-at-each-token"
+				),
+				{
+					ecmaVersion: "latest",
+					onTokenRead: (instance) => {
+						seen.push([instance.type.label, instance.value]);
+					}
 				}
-			});
+			);
 			expect(seen).toEqual([
 				["name", "x"],
 				["=", "="],
@@ -666,10 +1276,16 @@ describe("Parser.tokenizer", () => {
 
 		it("should report an error's line and column without locations", () => {
 			// CRLF counts as one line break and LS as another
-			const tokenizer = Parser.tokenizer(fixture("javascript", "parser-tokenizer-token-stream-should-report-an-error-s-line-and-column-without"), {
-				ecmaVersion: "latest",
-				sourceFile: "input.js"
-			});
+			const tokenizer = Parser.tokenizer(
+				fixture(
+					"javascript",
+					"parser-tokenizer-token-stream-should-report-an-error-s-line-and-column-without"
+				),
+				{
+					ecmaVersion: "latest",
+					sourceFile: "input.js"
+				}
+			);
 			expect(() => [...tokenizer]).toThrow(
 				expect.objectContaining({
 					message: "Unexpected character '@' (3:2) in input.js",
@@ -704,9 +1320,23 @@ describe("Parser.tokenizer", () => {
 			/** @type {[string, boolean, ((parser: EXPECTED_ANY) => void) | undefined][]} */
 			const contexts = [
 				// whitespace kept: no skip runs before readToken
-				[fixture("javascript", "parser-tokenizer-plugin-hooks-should-leave-a-plugin-s-own-contexts-to-acorn-s"), true, undefined],
+				[
+					fixture(
+						"javascript",
+						"parser-tokenizer-plugin-hooks-should-leave-a-plugin-s-own-contexts-to-acorn-s"
+					),
+					true,
+					undefined
+				],
 				// a reader of its own, after the usual whitespace skip
-				[fixture("javascript", "parser-tokenizer-plugin-hooks-should-leave-a-plugin-s-own-contexts-to-acorn-s-2"), false, (parser) => parser.readWord()]
+				[
+					fixture(
+						"javascript",
+						"parser-tokenizer-plugin-hooks-should-leave-a-plugin-s-own-contexts-to-acorn-s-2"
+					),
+					false,
+					(parser) => parser.readWord()
+				]
 			];
 			for (const [source, preserveSpace, override] of contexts) {
 				const theirs = tokenized(
@@ -734,10 +1364,22 @@ describe("Parser.tokenizer", () => {
 	describe("directive prologues", () => {
 		it("should read a script strict as acorn does from its prologue", () => {
 			for (const source of [
-				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue"),
-				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-2"),
-				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-3"),
-				fixture("javascript", "parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-4")
+				fixture(
+					"javascript",
+					"parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue"
+				),
+				fixture(
+					"javascript",
+					"parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-2"
+				),
+				fixture(
+					"javascript",
+					"parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-3"
+				),
+				fixture(
+					"javascript",
+					"parser-tokenizer-directive-prologues-should-read-a-script-strict-as-acorn-does-from-its-prologue-4"
+				)
 			]) {
 				expect(tokenized(Parser, source, { ecmaVersion: "latest" })).toEqual(
 					tokenized(acornPort.Parser, source, { ecmaVersion: "latest" })
@@ -751,16 +1393,28 @@ describe("Parser.tokenizer", () => {
 			/** @type {unknown[]} */
 			const theirs = [];
 			[
-				...Parser.tokenizer(fixture("javascript", "parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"), {
-					ecmaVersion: "latest",
-					onToken: /** @type {EXPECTED_ANY} */ (ours)
-				})
+				...Parser.tokenizer(
+					fixture(
+						"javascript",
+						"parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"
+					),
+					{
+						ecmaVersion: "latest",
+						onToken: /** @type {EXPECTED_ANY} */ (ours)
+					}
+				)
 			];
 			[
-				...acornPort.Parser.tokenizer(fixture("javascript", "parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"), {
-					ecmaVersion: "latest",
-					onToken: /** @type {EXPECTED_ANY} */ (theirs)
-				})
+				...acornPort.Parser.tokenizer(
+					fixture(
+						"javascript",
+						"parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"
+					),
+					{
+						ecmaVersion: "latest",
+						onToken: /** @type {EXPECTED_ANY} */ (theirs)
+					}
+				)
 			];
 			expect(plain(ours)).toEqual(plain(theirs));
 			expect(ours).not.toHaveLength(0);
@@ -770,12 +1424,18 @@ describe("Parser.tokenizer", () => {
 			/** @type {string[]} */
 			const seen = [];
 			[
-				...Parser.tokenizer(fixture("javascript", "parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"), {
-					ecmaVersion: "latest",
-					onTokenRead: (instance) => {
-						seen.push(instance.type.label);
+				...Parser.tokenizer(
+					fixture(
+						"javascript",
+						"parser-tokenizer-directive-prologues-should-report-tokens-into-an-array-as-acorn-does"
+					),
+					{
+						ecmaVersion: "latest",
+						onTokenRead: (instance) => {
+							seen.push(instance.type.label);
+						}
 					}
-				})
+				)
 			];
 			// each token is reported as the next is asked for, the first being the
 			// start of input

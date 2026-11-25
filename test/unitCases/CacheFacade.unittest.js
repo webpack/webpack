@@ -51,9 +51,7 @@ describe("CacheFacade", () => {
 		it("rejects when the cache errors", async () => {
 			const { cache } = createCache({ getError: new Error("get failed") });
 			const facade = new CacheFacade(cache, "facade", "xxhash64");
-			await expect(facade.getPromise("id", null)).rejects.toThrow(
-				"get failed"
-			);
+			await expect(facade.getPromise("id", null)).rejects.toThrow("get failed");
 		});
 	});
 
@@ -221,7 +219,9 @@ describe("ItemCacheFacade", () => {
 			});
 			hashFunction = "sha256";
 			expect(String(facade.getLazyHashedEtag(obj))).toBe(
-				String(new CacheFacade(cache, "facade", "sha256").getLazyHashedEtag(obj))
+				String(
+					new CacheFacade(cache, "facade", "sha256").getLazyHashedEtag(obj)
+				)
 			);
 		});
 

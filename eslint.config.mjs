@@ -221,6 +221,12 @@ export default defineConfig([
 		}
 	},
 	{
+		files: ["test/**/*.{js,cjs,mjs}"],
+		rules: {
+			"unicorn/prefer-https": "off"
+		}
+	},
+	{
 		files: ["test/**/*.js"],
 		rules: {
 			// Some our tests contain `package.json` without `engines`, but tests should work on Node.js@10, so let's disable it
@@ -272,6 +278,7 @@ export default defineConfig([
 	{
 		files: [
 			"test/configCases/{dll-plugin-entry,dll-plugin-side-effects,dll-plugin}/**/webpack.config.js",
+			"examples/dll-user/webpack.config.js",
 			"test/unitCases/NodeTemplatePlugin.unittest.js",
 			"test/unitCases/PersistentCaching.unittest.js"
 		],

@@ -97,7 +97,11 @@ const tokenLine = (source, options, pos = 0) => {
 		},
 		openTag: (input, start, end, nameStart, nameEnd, selfClosing) => {
 			out.push(
-				tokenText("open", [start, end, nameStart, nameEnd], selfClosing ? "/" : "")
+				tokenText(
+					"open",
+					[start, end, nameStart, nameEnd],
+					selfClosing ? "/" : ""
+				)
 			);
 			return end;
 		},
@@ -206,7 +210,8 @@ const ENTRIES = {
 			if (log !== undefined || vetoesContentMode !== undefined) {
 				given.vetoesContentMode = (name) => {
 					const answer = vetoesContentMode === true;
-					if (log !== undefined) log.push(`vetoesContentMode(${name})=${answer}`);
+					if (log !== undefined)
+						log.push(`vetoesContentMode(${name})=${answer}`);
 					return answer;
 				};
 			}

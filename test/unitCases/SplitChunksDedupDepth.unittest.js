@@ -12,7 +12,12 @@ const MESSAGE =
 describe("optimization.splitChunks.dedupDepth", () => {
 	// The schema refuses what it can read off the value alone; the plugin refuses
 	// the rest, which is also what a plugin constructed by hand is held to.
-	for (const dedupDepth of [1.5, Number.NaN, Number.POSITIVE_INFINITY, 0x100000000]) {
+	for (const dedupDepth of [
+		1.5,
+		Number.NaN,
+		Number.POSITIVE_INFINITY,
+		0x100000000
+	]) {
 		it(`should refuse ${String(dedupDepth)}`, () => {
 			expect(
 				() => new SplitChunksPlugin({ dedupDepth })

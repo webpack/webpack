@@ -34,7 +34,9 @@ describe("XML behavior relation", () => {
 			)
 		);
 		expect(reports.map(({ what }) => what)).toEqual(["draws otherwise"]);
-		expect(reports[0].repro).toMatch(/^ {4}\d+ pixels draw otherwise, first at /);
+		expect(reports[0].repro).toMatch(
+			/^ {4}\d+ pixels draw otherwise, first at /
+		);
 	}, 60000);
 
 	it("reports a shape moved", async () => {

@@ -3,7 +3,9 @@
 const { fixture } = require("../helpers/fixture");
 
 const acorn = require("acorn");
-const { collectCjsRequireSpecifiers } = require("../../lib/javascript/syntax-parser");
+const {
+	collectCjsRequireSpecifiers
+} = require("../../lib/javascript/syntax-parser");
 
 /**
  * The AST-based reference the scanner replaces.
@@ -47,83 +49,310 @@ const withAcorn = (source) => {
 	return requires;
 };
 
-
 describe("collectCjsRequireSpecifiers", () => {
 	const cases = [
-		["plain", fixture("javascript", "collect-cjs-require-specifiers-cases-plain")],
-		["double and single quotes", fixture("javascript", "collect-cjs-require-specifiers-cases-double-and-single-quotes")],
-		["repeated specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-repeated-specifier")],
-		["whitespace and newlines", fixture("javascript", "collect-cjs-require-specifiers-cases-whitespace-and-newlines")],
-		["comment between tokens", fixture("javascript", "collect-cjs-require-specifiers-cases-comment-between-tokens")],
-		["line comment holding a call", fixture("javascript", "collect-cjs-require-specifiers-cases-line-comment-holding-a-call")],
-		["block comment holding a call", fixture("javascript", "collect-cjs-require-specifiers-cases-block-comment-holding-a-call")],
+		[
+			"plain",
+			fixture("javascript", "collect-cjs-require-specifiers-cases-plain")
+		],
+		[
+			"double and single quotes",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-double-and-single-quotes"
+			)
+		],
+		[
+			"repeated specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-repeated-specifier"
+			)
+		],
+		[
+			"whitespace and newlines",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-whitespace-and-newlines"
+			)
+		],
+		[
+			"comment between tokens",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-comment-between-tokens"
+			)
+		],
+		[
+			"line comment holding a call",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-line-comment-holding-a-call"
+			)
+		],
+		[
+			"block comment holding a call",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-block-comment-holding-a-call"
+			)
+		],
 		[
 			"string holding a call",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-string-holding-a-call")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-string-holding-a-call"
+			)
 		],
 		[
 			"template holding a call",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-template-holding-a-call")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-template-holding-a-call"
+			)
 		],
 		[
 			"template substitution is code",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-template-substitution-is-code")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-template-substitution-is-code"
+			)
 		],
-		["member access is not a call", fixture("javascript", "collect-cjs-require-specifiers-cases-member-access-is-not-a-call")],
-		["a longer name is not a call", fixture("javascript", "collect-cjs-require-specifiers-cases-a-longer-name-is-not-a-call")],
+		[
+			"member access is not a call",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-member-access-is-not-a-call"
+			)
+		],
+		[
+			"a longer name is not a call",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-a-longer-name-is-not-a-call"
+			)
+		],
 		[
 			"optional member access is not a call",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-optional-member-access-is-not-a-call")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-optional-member-access-is-not-a-call"
+			)
 		],
-		["spread into an object", fixture("javascript", "collect-cjs-require-specifiers-cases-spread-into-an-object")],
-		["spread into an array", fixture("javascript", "collect-cjs-require-specifiers-cases-spread-into-an-array")],
-		["spread into a call", fixture("javascript", "collect-cjs-require-specifiers-cases-spread-into-a-call")],
+		[
+			"spread into an object",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-spread-into-an-object"
+			)
+		],
+		[
+			"spread into an array",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-spread-into-an-array"
+			)
+		],
+		[
+			"spread into a call",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-spread-into-a-call"
+			)
+		],
 		[
 			"spread beside a member access",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-spread-beside-a-member-access")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-spread-beside-a-member-access"
+			)
 		],
-		["longer identifier", fixture("javascript", "collect-cjs-require-specifiers-cases-longer-identifier")],
-		["identifier ending in require", fixture("javascript", "collect-cjs-require-specifiers-cases-identifier-ending-in-require")],
-		["nested call", fixture("javascript", "collect-cjs-require-specifiers-cases-nested-call")],
+		[
+			"longer identifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-longer-identifier"
+			)
+		],
+		[
+			"identifier ending in require",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-identifier-ending-in-require"
+			)
+		],
+		[
+			"nested call",
+			fixture("javascript", "collect-cjs-require-specifiers-cases-nested-call")
+		],
 		[
 			"escaped quote in a skipped string",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-escaped-quote-in-a-skipped-string")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-escaped-quote-in-a-skipped-string"
+			)
 		],
-		["division is not a regexp", fixture("javascript", "collect-cjs-require-specifiers-cases-division-is-not-a-regexp")],
+		[
+			"division is not a regexp",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-division-is-not-a-regexp"
+			)
+		],
 		[
 			"regexp holding a call",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-regexp-holding-a-call")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-regexp-holding-a-call"
+			)
 		],
-		["regexp class with a slash", fixture("javascript", "collect-cjs-require-specifiers-cases-regexp-class-with-a-slash")],
-		["return before a regexp", fixture("javascript", "collect-cjs-require-specifiers-cases-return-before-a-regexp")],
+		[
+			"regexp class with a slash",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-regexp-class-with-a-slash"
+			)
+		],
+		[
+			"return before a regexp",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-return-before-a-regexp"
+			)
+		],
 		[
 			"await before a regexp",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-await-before-a-regexp")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-await-before-a-regexp"
+			)
 		],
-		["dynamic specifier is not static", fixture("javascript", "collect-cjs-require-specifiers-cases-dynamic-specifier-is-not-static")],
+		[
+			"dynamic specifier is not static",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-dynamic-specifier-is-not-static"
+			)
+		],
 		[
 			"concatenated specifier is not static",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-concatenated-specifier-is-not-static")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-concatenated-specifier-is-not-static"
+			)
 		],
-		["template specifier is not collected", fixture("javascript", "collect-cjs-require-specifiers-cases-template-specifier-is-not-collected")],
+		[
+			"template specifier is not collected",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-template-specifier-is-not-collected"
+			)
+		],
 		[
 			"template specifier with substitution is not collected",
-			fixture("javascript", "collect-cjs-require-specifiers-cases-template-specifier-with-substitution-is-not")
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-template-specifier-with-substitution-is-not"
+			)
 		],
-		["escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-escape-in-the-specifier")],
-		["backslash in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-backslash-in-the-specifier")],
-		["hex escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-hex-escape-in-the-specifier")],
-		["unicode escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-unicode-escape-in-the-specifier")],
-		["code point escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-code-point-escape-in-the-specifier")],
-		["octal escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-octal-escape-in-the-specifier")],
-		["out of range octal escape", fixture("javascript", "collect-cjs-require-specifiers-cases-out-of-range-octal-escape")],
-		["non-octal digit escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-non-octal-digit-escape-in-the-specifier")],
-		["quote escape in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-quote-escape-in-the-specifier")],
-		["line continuation in the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-line-continuation-in-the-specifier")],
-		["carriage return line continuation", fixture("javascript", "collect-cjs-require-specifiers-cases-carriage-return-line-continuation")],
-		["bare carriage return line continuation", fixture("javascript", "collect-cjs-require-specifiers-cases-bare-carriage-return-line-continuation")],
-		["line separator line continuation", fixture("javascript", "collect-cjs-require-specifiers-cases-line-separator-line-continuation")],
-		["escape after the specifier", fixture("javascript", "collect-cjs-require-specifiers-cases-escape-after-the-specifier")]
+		[
+			"escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-escape-in-the-specifier"
+			)
+		],
+		[
+			"backslash in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-backslash-in-the-specifier"
+			)
+		],
+		[
+			"hex escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-hex-escape-in-the-specifier"
+			)
+		],
+		[
+			"unicode escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-unicode-escape-in-the-specifier"
+			)
+		],
+		[
+			"code point escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-code-point-escape-in-the-specifier"
+			)
+		],
+		[
+			"octal escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-octal-escape-in-the-specifier"
+			)
+		],
+		[
+			"out of range octal escape",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-out-of-range-octal-escape"
+			)
+		],
+		[
+			"non-octal digit escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-non-octal-digit-escape-in-the-specifier"
+			)
+		],
+		[
+			"quote escape in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-quote-escape-in-the-specifier"
+			)
+		],
+		[
+			"line continuation in the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-line-continuation-in-the-specifier"
+			)
+		],
+		[
+			"carriage return line continuation",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-carriage-return-line-continuation"
+			)
+		],
+		[
+			"bare carriage return line continuation",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-bare-carriage-return-line-continuation"
+			)
+		],
+		[
+			"line separator line continuation",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-line-separator-line-continuation"
+			)
+		],
+		[
+			"escape after the specifier",
+			fixture(
+				"javascript",
+				"collect-cjs-require-specifiers-cases-escape-after-the-specifier"
+			)
+		]
 	];
 
 	for (const [name, source] of cases) {
@@ -141,70 +370,162 @@ describe("collectCjsRequireSpecifiers", () => {
 		const malformed = [
 			[
 				"regexp at the very start",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-regexp-at-the-very"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-regexp-at-the-very"
+				),
 				["./a"]
 			],
 			[
 				"line comment before the call parens",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-line-comment-before"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-line-comment-before"
+				),
 				["./a"]
 			],
-			["unterminated line comment", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-line"), ["./a"]],
-			["unterminated line comment after require", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-line-2"), []],
-			["unterminated block comment after require", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-block"), []],
-			["unterminated string", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-string"), ["./a"]],
+			[
+				"unterminated line comment",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-line"
+				),
+				["./a"]
+			],
+			[
+				"unterminated line comment after require",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-line-2"
+				),
+				[]
+			],
+			[
+				"unterminated block comment after require",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-block"
+				),
+				[]
+			],
+			[
+				"unterminated string",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-string"
+				),
+				["./a"]
+			],
 			[
 				"newline inside a string",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-newline-inside-a"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-newline-inside-a"
+				),
 				["./a"]
 			],
-			["unterminated template", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-template"), ["./a"]],
-			["unterminated regexp", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-regexp"), ["./a"]],
-			["unterminated call", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-call"), ["./a"]],
-			["empty source", fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-empty-source"), []],
+			[
+				"unterminated template",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-template"
+				),
+				["./a"]
+			],
+			[
+				"unterminated regexp",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-regexp"
+				),
+				["./a"]
+			],
+			[
+				"unterminated call",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-call"
+				),
+				["./a"]
+			],
+			[
+				"empty source",
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-empty-source"
+				),
+				[]
+			],
 			[
 				"newline in the specifier",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-newline-in-the"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-newline-in-the"
+				),
 				["./c"]
 			],
 			[
 				"newline after an escape in the specifier",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-newline-after-an"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-newline-after-an"
+				),
 				["./d"]
 			],
 			[
 				"invalid hex escape in the specifier",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-invalid-hex-escape-in"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-invalid-hex-escape-in"
+				),
 				["./c"]
 			],
 			[
 				"invalid unicode escape in the specifier",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-invalid-unicode"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-invalid-unicode"
+				),
 				["./c"]
 			],
 			[
 				"backslash at the end of the specifier",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-backslash-at-the-end"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-backslash-at-the-end"
+				),
 				["./a"]
 			],
 			[
 				"unterminated code point escape",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-unterminated-code"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-unterminated-code"
+				),
 				["./c"]
 			],
 			[
 				"empty code point escape",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-empty-code-point"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-empty-code-point"
+				),
 				["./c"]
 			],
 			[
 				"out of range code point escape",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-out-of-range-code"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-out-of-range-code"
+				),
 				["./c"]
 			],
 			[
 				"backslash at the end of source",
-				fixture("javascript", "collect-cjs-require-specifiers-malformed-source-malformed-backslash-at-the-end-2"),
+				fixture(
+					"javascript",
+					"collect-cjs-require-specifiers-malformed-source-malformed-backslash-at-the-end-2"
+				),
 				["./a"]
 			]
 		];

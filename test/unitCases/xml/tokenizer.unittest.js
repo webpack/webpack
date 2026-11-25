@@ -9,8 +9,10 @@ const { tokenizeXml } = require("../../../lib/html/syntax-parser");
 // with only some callbacks.
 describe("tokenizeXml", () => {
 	it("advances over markup whose callback is missing", () => {
-		const source =
-			fixture("xml", "tokenize-xml-advances-over-markup-whose-callback-is-missing");
+		const source = fixture(
+			"xml",
+			"tokenize-xml-advances-over-markup-whose-callback-is-missing"
+		);
 		/** @type {string[]} */
 		const texts = [];
 		expect(
@@ -23,7 +25,14 @@ describe("tokenizeXml", () => {
 		).toBe(source.length);
 		expect(texts).toEqual(["a", "b", "e", "f", "h", "j", "n", "o", "r", "u"]);
 		// With no callbacks at all, it still reads to the end.
-		expect(tokenizeXml(fixture("xml", "tokenize-xml-advances-over-markup-whose-callback-is-missing-2"))).toBe(source.length + 1);
+		expect(
+			tokenizeXml(
+				fixture(
+					"xml",
+					"tokenize-xml-advances-over-markup-whose-callback-is-missing-2"
+				)
+			)
+		).toBe(source.length + 1);
 		/** @type {string[]} */
 		const tags = [];
 		tokenizeXml(source, 0, {

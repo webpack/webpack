@@ -38,8 +38,14 @@ describe("JavascriptParser object API", () => {
 		/** @type {string[]} */
 		const declared = [];
 		withProgram((parser, body) => {
-			const [, labeled, switchStatement, tryStatement, declaration, letDeclaration] =
-				body;
+			const [
+				,
+				labeled,
+				switchStatement,
+				tryStatement,
+				declaration,
+				letDeclaration
+			] = body;
 			parser.detectMode(body);
 			expect(parser.scope.isAsmJs).toBe(true);
 			const ifStatement = /** @type {import("estree").LabeledStatement} */ (
@@ -108,9 +114,9 @@ describe("JavascriptParser object API", () => {
 				JavascriptParser.ALLOWED_MEMBER_TYPES_ALL
 			);
 			expect(info && info.type).toBe("call");
-			expect(
-				info && info.type === "call" ? info.call.type : undefined
-			).toBe("CallExpression");
+			expect(info && info.type === "call" ? info.call.type : undefined).toBe(
+				"CallExpression"
+			);
 			parser.enterDeclaration(
 				/** @type {import("estree").Declaration} */ (body[13]),
 				(name) => declared.push(name)
@@ -125,14 +131,14 @@ describe("JavascriptParser object API", () => {
 			parser.walkExpression(
 				/** @type {import("estree").AssignmentExpression} */ (
 					/** @type {unknown} */ ({
-					type: "AssignmentExpression",
-					operator: "=",
-					left: literal,
-					right: literal,
-					range: literal.range,
-					start: literal.range && literal.range[0],
-					end: literal.range && literal.range[1]
-				})
+						type: "AssignmentExpression",
+						operator: "=",
+						left: literal,
+						right: literal,
+						range: literal.range,
+						start: literal.range && literal.range[0],
+						end: literal.range && literal.range[1]
+					})
 				)
 			);
 		});
@@ -140,7 +146,10 @@ describe("JavascriptParser object API", () => {
 	});
 
 	it("should walk and read the statement and pattern objects a plugin hands it", () => {
-		const code = fixture("javascript", "javascript-parser-object-api-should-walk-and-read-the-statement-and-pattern");
+		const code = fixture(
+			"javascript",
+			"javascript-parser-object-api-should-walk-and-read-the-statement-and-pattern"
+		);
 		const parser = new JavascriptParser("script");
 		parser.hooks.terminate.tap("test", () => true);
 		/** @type {string[]} */
@@ -219,9 +228,7 @@ describe("JavascriptParser object API", () => {
 				names.push(name);
 			});
 			parser.enterPattern(
-				/** @type {import("estree").Pattern} */ (
-					/** @type {unknown} */ (null)
-				),
+				/** @type {import("estree").Pattern} */ (/** @type {unknown} */ (null)),
 				() => {
 					names.push("none");
 				}
@@ -261,7 +268,10 @@ describe("JavascriptParser object API", () => {
 	});
 
 	it("should run the object taps and helpers a plugin outside webpack calls", () => {
-		const code = fixture("javascript", "javascript-parser-object-api-should-run-the-object-taps-and-helpers-a-plugin");
+		const code = fixture(
+			"javascript",
+			"javascript-parser-object-api-should-run-the-object-taps-and-helpers-a-plugin"
+		);
 		const parser = new JavascriptParser("script");
 		/** @type {string[]} */
 		const elements = [];
@@ -349,7 +359,9 @@ describe("JavascriptParser object API", () => {
 			parser.getDirective(statement("'use strict'", [0, 15]))
 		).toBeUndefined();
 		const unquoted = statement("'use strict'", [1, 14]);
-		delete (/** @type {import("estree").SimpleLiteral} */ (unquoted.expression).raw);
+		delete (
+			/** @type {import("estree").SimpleLiteral} */ (unquoted.expression).raw
+		);
 		expect(parser.getDirective(unquoted)).toBe("use strict");
 		expect(
 			parser.getDirective({
@@ -369,7 +381,10 @@ describe("JavascriptParser object API", () => {
 
 	it("should skip a node type the tree has no layout for", () => {
 		const parser = new JavascriptParser("module");
-		const code = fixture("javascript", "javascript-parser-object-api-should-skip-a-node-type-the-tree-has-no-layout-for");
+		const code = fixture(
+			"javascript",
+			"javascript-parser-object-api-should-skip-a-node-type-the-tree-has-no-layout-for"
+		);
 		/** @type {import("../../../lib/javascript/JavascriptParser").StatementPathItem[]} */
 		const statements = [];
 		parser.hooks.statement.tap("test", (statement) => {

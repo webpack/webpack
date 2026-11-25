@@ -137,10 +137,13 @@ describe("retry", () => {
 		});
 
 		it("reads the attempts and delay from the environment", async () => {
-			const code = await main([process.execPath, "-e", "process.exitCode = 2"], {
-				RETRY_ATTEMPTS: "2",
-				RETRY_DELAY: "0"
-			});
+			const code = await main(
+				[process.execPath, "-e", "process.exitCode = 2"],
+				{
+					RETRY_ATTEMPTS: "2",
+					RETRY_DELAY: "0"
+				}
+			);
 			expect(code).toBe(2);
 		});
 
@@ -148,7 +151,9 @@ describe("retry", () => {
 			expect(() => main(["true"], { RETRY_ATTEMPTS: "abc" })).toThrow(
 				"RETRY_ATTEMPTS"
 			);
-			expect(() => main(["true"], { RETRY_DELAY: "-1" })).toThrow("RETRY_DELAY");
+			expect(() => main(["true"], { RETRY_DELAY: "-1" })).toThrow(
+				"RETRY_DELAY"
+			);
 		});
 
 		it("names its usage when given nothing to run", () => {
@@ -197,8 +202,12 @@ describe("retry", () => {
 
 	describe("runOnce", () => {
 		it("resolves with the exit code of the process", async () => {
-			expect(await runOnce(process.execPath, ["-e", "process.exitCode = 0"])).toBe(0);
-			expect(await runOnce(process.execPath, ["-e", "process.exitCode = 4"])).toBe(4);
+			expect(
+				await runOnce(process.execPath, ["-e", "process.exitCode = 0"])
+			).toBe(0);
+			expect(
+				await runOnce(process.execPath, ["-e", "process.exitCode = 4"])
+			).toBe(4);
 		});
 
 		// Windows runs these through a shell, which reports an unknown command as

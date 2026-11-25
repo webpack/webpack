@@ -1455,7 +1455,7 @@ async function importCaseOptions(testDirectory) {
 
 	// Imported outside the existence check so a broken `options.mjs` throws
 	// instead of reading as a case that has none.
-	return import(pathToFileURL(optionsPath));
+	return import(pathToFileURL(optionsPath).href);
 }
 
 /**
@@ -1477,7 +1477,7 @@ async function registerBenchmark(bench, task, casesPath) {
 		// Unit benchmarks register their own tasks against the current lib; they
 		// have no scenarios or baselines, so no HEAD/BASE comparison is emitted.
 		const benchmarkPath = path.resolve(testDirectory, "index.bench.mjs");
-		const registerBenchmarks = await import(pathToFileURL(benchmarkPath));
+		const registerBenchmarks = await import(pathToFileURL(benchmarkPath).href);
 
 		registerBenchmarks.default(bench);
 		return;
@@ -1488,7 +1488,7 @@ async function registerBenchmark(bench, task, casesPath) {
 	}
 
 	const configModule = await import(
-		pathToFileURL(path.join(testDirectory, "webpack.config.mjs"))
+		pathToFileURL(path.join(testDirectory, "webpack.config.mjs")).href
 	);
 	const realConfig = configModule.default;
 	// Cloning the config strips a plugin's prototype, and with it `apply`, so a
@@ -1509,7 +1509,7 @@ async function registerBenchmark(bench, task, casesPath) {
 	for (const baseline of baselines) {
 		const webpack = (
 			await import(
-				pathToFileURL(path.resolve(baseline.path, "./lib/index.js"))
+				pathToFileURL(path.resolve(baseline.path, "./lib/index.js")).href
 			)
 		).default;
 

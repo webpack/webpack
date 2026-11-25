@@ -31,7 +31,11 @@ describe("xmlMinify against svgo's plugin tests", () => {
 				fs.readFileSync(path.join(dir, "options.json"), "utf8")
 			);
 			const ours = (
-				await xmlMinify({ "index.svg": fixture("xml", name) }, undefined, options)
+				await xmlMinify(
+					{ "index.svg": fixture("xml", name) },
+					undefined,
+					options
+				)
 			).code.length;
 			const theirs = new SourceProcessor().process(
 				fs.readFileSync(path.join(dir, "svgo.xml"), "utf8"),
@@ -39,7 +43,9 @@ describe("xmlMinify against svgo's plugin tests", () => {
 			).code.length;
 			webpackTotal += ours;
 			svgoTotal += theirs;
-			rows.push(`${name}: webpack ${ours}, svgo ${theirs}, gap ${ours - theirs}`);
+			rows.push(
+				`${name}: webpack ${ours}, svgo ${theirs}, gap ${ours - theirs}`
+			);
 		}
 		rows.push(`total: webpack ${webpackTotal}, svgo ${svgoTotal}`);
 		expect(rows.join("\n")).toMatchSnapshot();

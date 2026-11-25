@@ -14,9 +14,8 @@ jest.mock("../../../tooling/compare-tools-harness", () => {
 	return {
 		...actual,
 		installPackages: installed,
-		loaderFor:
-			(/** @type {string} */ cache) => (/** @type {string} */ name) =>
-				name === "parse5" ? mockParse5 : actual.loaderFor(cache)(name)
+		loaderFor: (/** @type {string} */ cache) => (/** @type {string} */ name) =>
+			name === "parse5" ? mockParse5 : actual.loaderFor(cache)(name)
 	};
 });
 
@@ -156,7 +155,10 @@ describe("compare-html-tools — the cold constructs fixture", () => {
 			new Set(["js", "node_modules", "wpt"])
 		)
 			// The unit tests' inputs are fragments, not the pages this one stands in for.
-			.filter((file) => !/[\\/]fixtures[\\/]html[\\/][^\\/]+[\\/]index\.html$/.test(file))
+			.filter(
+				(file) =>
+					!/[\\/]fixtures[\\/]html[\\/][^\\/]+[\\/]index\.html$/.test(file)
+			)
 			.map((file) => fs.readFileSync(file, "utf8").toLowerCase());
 		const reached = COLD.filter(([, probe]) =>
 			others.some((doc) => doc.includes(probe.toLowerCase()))
@@ -226,12 +228,20 @@ describe("compare-html-tools — what a document says", () => {
 	});
 
 	it("matches a merged or folded sheet against the sheets it came from", () => {
-		expect(sameSheets([".a{color:red}", ".b{color:red}"], [".a,.b{color:red}"], {})).toBe(true);
-		expect(sameSheets([".a{color:red}", ".b{color:red}"], [".a{color:red}"], {})).toBe(false);
+		expect(
+			sameSheets([".a{color:red}", ".b{color:red}"], [".a,.b{color:red}"], {})
+		).toBe(true);
+		expect(
+			sameSheets([".a{color:red}", ".b{color:red}"], [".a{color:red}"], {})
+		).toBe(false);
 		expect(sameSheets([".a{color:red}"], [".a{color:blue}"], {})).toBe(false);
 		// Read apart, an open value cannot swallow the next sheet.
 		expect(
-			sameSheets([".a{--x:f(", ".b{color:red}"], [".a{--x:f(", ".b{color:red}"], {})
+			sameSheets(
+				[".a{--x:f(", ".b{color:red}"],
+				[".a{--x:f(", ".b{color:red}"],
+				{}
+			)
 		).toBe(true);
 	});
 

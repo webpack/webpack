@@ -28,28 +28,33 @@ class Cycle {
 	}
 }
 
-ObjectMiddleware.register(Cycle, "test/unitCases/ObjectMiddleware.unittest", "Cycle", {
-	/**
-	 * @param {Cycle} item item
-	 * @param {import("../../lib/serialization/ObjectMiddleware").ObjectSerializerContext} context context
-	 */
-	serialize(item, { write, setCircularReference }) {
-		setCircularReference(item);
-		write(item.name);
-		write(item.next);
-	},
-	/**
-	 * @param {import("../../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} context context
-	 * @returns {Cycle} item
-	 */
-	deserialize({ read, setCircularReference }) {
-		const item = new Cycle("");
-		setCircularReference(item);
-		item.name = /** @type {string} */ (read());
-		item.next = /** @type {Cycle | undefined} */ (read());
-		return item;
+ObjectMiddleware.register(
+	Cycle,
+	"test/unitCases/ObjectMiddleware.unittest",
+	"Cycle",
+	{
+		/**
+		 * @param {Cycle} item item
+		 * @param {import("../../lib/serialization/ObjectMiddleware").ObjectSerializerContext} context context
+		 */
+		serialize(item, { write, setCircularReference }) {
+			setCircularReference(item);
+			write(item.name);
+			write(item.next);
+		},
+		/**
+		 * @param {import("../../lib/serialization/ObjectMiddleware").ObjectDeserializerContext} context context
+		 * @returns {Cycle} item
+		 */
+		deserialize({ read, setCircularReference }) {
+			const item = new Cycle("");
+			setCircularReference(item);
+			item.name = /** @type {string} */ (read());
+			item.next = /** @type {Cycle | undefined} */ (read());
+			return item;
+		}
 	}
-});
+);
 
 /** Registered under a moved request, still restorable from the old one. */
 class Moved {
@@ -316,7 +321,9 @@ describe("ObjectMiddleware restoring a request that is not registered", () => {
 	const lateClass = path.join(fixtures, "late-class.js");
 
 	afterEach(() => {
-		delete (/** @type {EXPECTED_ANY} */ (globalThis).__serializationFixtureLoaded);
+		delete (
+			/** @type {EXPECTED_ANY} */ (globalThis).__serializationFixtureLoaded
+		);
 	});
 
 	/**
@@ -354,9 +361,9 @@ describe("ObjectMiddleware restoring a request that is not registered", () => {
 			require(request);
 			return true;
 		});
-		const written = /** @type {EXPECTED_ANY[]} */ (
-			naming(lateClass)
-		).map((token) => (token === "Moved" ? null : token));
+		const written = /** @type {EXPECTED_ANY[]} */ (naming(lateClass)).map(
+			(token) => (token === "Moved" ? null : token)
+		);
 
 		const tracker = deprecationTracking.start();
 		const [restored] = /** @type {EXPECTED_ANY[]} */ (

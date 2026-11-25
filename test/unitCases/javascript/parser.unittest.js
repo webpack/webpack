@@ -49,7 +49,10 @@ const locationMapperFor = (code) => {
 describe("WebpackParser", () => {
 	it("reports the lines and columns of tokens and comments", () => {
 		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
-		const source = fixture("javascript", "webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-reports-the-lines-and-columns-of-tokens-and-comments"
+		);
 		/** @type {{ loc?: object }[]} */
 		const acornTokens = [];
 		/** @type {{ loc?: object }[]} */
@@ -69,7 +72,12 @@ describe("WebpackParser", () => {
 			/** @type {CollectedComment[]} */
 			const comments = [];
 			new WebpackParser(
-				{ ecmaVersion: "latest", locations: true, onToken: tokens, onComment: comments },
+				{
+					ecmaVersion: "latest",
+					locations: true,
+					onToken: tokens,
+					onComment: comments
+				},
 				source
 			).parse();
 			expect(locations(tokens)).toEqual(locations(acornTokens));
@@ -79,7 +87,10 @@ describe("WebpackParser", () => {
 
 	it("reports the lines and columns of tokens on one long line", () => {
 		const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
-		const source = fixture("javascript", "webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-reports-the-lines-and-columns-of-tokens-on-one-long-line"
+		);
 		/** @type {{ loc?: object }[]} */
 		const acornTokens = [];
 		/** @type {{ loc?: object }[]} */
@@ -109,7 +120,12 @@ describe("WebpackParser", () => {
 		};
 		try {
 			new WebpackParser(
-				{ ecmaVersion: "latest", locations: true, onToken: tokens, onComment: comments },
+				{
+					ecmaVersion: "latest",
+					locations: true,
+					onToken: tokens,
+					onComment: comments
+				},
 				source
 			).parse();
 		} finally {
@@ -124,7 +140,10 @@ describe("WebpackParser", () => {
 	});
 
 	it("reports the lines and columns of comments on many lines", () => {
-		const source = fixture("javascript", "webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-reports-the-lines-and-columns-of-comments-on-many-lines"
+		);
 		/** @type {{ loc?: object }[]} */
 		const acornComments = [];
 		acorn.parse(source, {
@@ -164,7 +183,10 @@ describe("WebpackParser", () => {
 	describe("lazy comments", () => {
 		it("should collect hashbang, line, block and html comments lazily", () => {
 			const { comments } = parse(
-				fixture("javascript", "webpack-parser-lazy-comments-should-collect-hashbang-line-block-and-html")
+				fixture(
+					"javascript",
+					"webpack-parser-lazy-comments-should-collect-hashbang-line-block-and-html"
+				)
 			);
 			expect(comments.map((c) => [c.type, c.value])).toEqual([
 				["Line", "/usr/bin/env node"],
@@ -178,7 +200,12 @@ describe("WebpackParser", () => {
 		});
 
 		it("should memoize and accept explicit value writes", () => {
-			const { comments } = parse(fixture("javascript", "webpack-parser-lazy-comments-should-memoize-and-accept-explicit-value-writes"));
+			const { comments } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-lazy-comments-should-memoize-and-accept-explicit-value-writes"
+				)
+			);
 			expect(comments[0].value).toBe(" abc");
 			// memoized second read
 			expect(comments[0].value).toBe(" abc");
@@ -189,16 +216,27 @@ describe("WebpackParser", () => {
 		});
 
 		it("should collect a hashbang as a comment", () => {
-			const { comments } = parse(fixture("javascript", "webpack-parser-lazy-comments-should-collect-a-hashbang-when-acorn-s-constructor"));
+			const { comments } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-lazy-comments-should-collect-a-hashbang-when-acorn-s-constructor"
+				)
+			);
 			expect(comments.map((c) => [c.type, c.value, c.range])).toEqual([
 				["Line", "/usr/bin/env node", [0, 19]]
 			]);
 		});
 
 		it("should collect comments eagerly when ranges are off", () => {
-			const { comments } = parse(fixture("javascript", "webpack-parser-lazy-comments-should-collect-comments-eagerly-when-ranges-are-off"), {
-				ranges: false
-			});
+			const { comments } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-lazy-comments-should-collect-comments-eagerly-when-ranges-are-off"
+				),
+				{
+					ranges: false
+				}
+			);
 			expect(comments.map((c) => [c.type, c.value])).toEqual([
 				["Line", " line"],
 				["Block", " block "]
@@ -206,7 +244,10 @@ describe("WebpackParser", () => {
 		});
 
 		it("should map positions across CRLF, CR, LS and PS line breaks", () => {
-			const code = fixture("javascript", "webpack-parser-lazy-comments-should-map-positions-across-crlf-cr-ls-and-ps-line");
+			const code = fixture(
+				"javascript",
+				"webpack-parser-lazy-comments-should-map-positions-across-crlf-cr-ls-and-ps-line"
+			);
 			const { comments } = parse(code);
 			const mapper = locationMapperFor(code);
 			expect(
@@ -227,7 +268,12 @@ describe("WebpackParser", () => {
 
 	describe("regexp fast path", () => {
 		it("should build the literal value once", () => {
-			const { ast } = parse(fixture("javascript", "webpack-parser-regexp-fast-path-should-build-the-literal-value-once"));
+			const { ast } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-regexp-fast-path-should-build-the-literal-value-once"
+				)
+			);
 			const statement =
 				/** @type {import("estree").ExpressionStatement} */
 				(ast.body[0]);
@@ -259,13 +305,62 @@ describe("WebpackParser", () => {
 		};
 
 		it("should read radix, exponent, separator and bigint literals on the cold path", () => {
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint")).value).toBe(31);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-2")).value).toBe(15);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-3")).value).toBe(5);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-4")).value).toBe(1000);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-5")).value).toBe(1000);
-			expect(literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-6")).value).toBe(1234567890123456);
-			expect(typeof literal(fixture("javascript", "webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-7")).value).toBe("bigint");
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint"
+					)
+				).value
+			).toBe(31);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-2"
+					)
+				).value
+			).toBe(15);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-3"
+					)
+				).value
+			).toBe(5);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-4"
+					)
+				).value
+			).toBe(1000);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-5"
+					)
+				).value
+			).toBe(1000);
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-6"
+					)
+				).value
+			).toBe(1234567890123456);
+			expect(
+				typeof literal(
+					fixture(
+						"javascript",
+						"webpack-parser-number-fast-path-should-read-radix-exponent-separator-and-bigint-7"
+					)
+				).value
+			).toBe("bigint");
 		});
 	});
 
@@ -285,11 +380,44 @@ describe("WebpackParser", () => {
 		};
 
 		it("should read plain strings on the fast path", () => {
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path")).value).toBe("abc");
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path-2")).value).toBe("abc");
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path-3")).value).toBe("");
-			expect(literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path-4")).value).toBe('it"s');
-			const lit = literal(fixture("javascript", "webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path"));
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path"
+					)
+				).value
+			).toBe("abc");
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path-2"
+					)
+				).value
+			).toBe("abc");
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path-3"
+					)
+				).value
+			).toBe("");
+			expect(
+				literal(
+					fixture(
+						"javascript",
+						"webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path-4"
+					)
+				).value
+			).toBe('it"s');
+			const lit = literal(
+				fixture(
+					"javascript",
+					"webpack-parser-string-fast-path-should-read-plain-strings-on-the-fast-path"
+				)
+			);
 			expect(lit.raw).toBe('"abc"');
 			expect(lit.range).toEqual([8, 13]);
 		});
@@ -314,7 +442,14 @@ describe("WebpackParser", () => {
 
 		it("should derive ASI positions from the source text", () => {
 			// no real semicolon → end and (via prev) start are ASI positions
-			const asi = asiParserFor(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"), [2, 3], [0, 1]);
+			const asi = asiParserFor(
+				fixture(
+					"javascript",
+					"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"
+				),
+				[2, 3],
+				[0, 1]
+			);
 			expect(asi.isAsiPosition(3)).toBe(true);
 			expect(asi.isAsiPosition(2)).toBe(true);
 			// a real semicolon terminates the statement → not an ASI position
@@ -330,7 +465,13 @@ describe("WebpackParser", () => {
 			// force ASI even though a real semicolon is present
 			term.setAsiPosition(5);
 			expect(term.isAsiPosition(5)).toBe(true);
-			const asi = asiParserFor(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"), [2, 3]);
+			const asi = asiParserFor(
+				fixture(
+					"javascript",
+					"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"
+				),
+				[2, 3]
+			);
 			// force a real semicolon even though the source relies on ASI
 			asi.unsetAsiPosition(3);
 			expect(asi.isAsiPosition(3)).toBe(false);
@@ -346,7 +487,10 @@ describe("WebpackParser", () => {
 			// a genuine line break with no separator is an ASI position; a lone
 			// slash (division) is a token, not a comment, so it stays ASI too
 			for (const code of [
-				fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"),
+				fixture(
+					"javascript",
+					"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"
+				),
 				"a//c\nb",
 				"a/* c */\nb",
 				"a",
@@ -407,18 +551,26 @@ describe("WebpackParser", () => {
 		it("should reclassify a cached word for a second keyword set", () => {
 			// `abstract` is an ordinary name under a recent ecmaVersion and reserved
 			// under ES3, so each parse retypes the slot the one before it typed
-			const code = fixture("javascript", "webpack-parser-identifier-word-cache-should-reclassify-a-cached-word-for-a");
-			expect(names(code)).toEqual(["abstract"]);
-			expect(() => parse(code, { ecmaVersion: 3, allowReserved: false })).toThrow(
-				/'abstract' is reserved/
+			const code = fixture(
+				"javascript",
+				"webpack-parser-identifier-word-cache-should-reclassify-a-cached-word-for-a"
 			);
+			expect(names(code)).toEqual(["abstract"]);
+			expect(() =>
+				parse(code, { ecmaVersion: 3, allowReserved: false })
+			).toThrow(/'abstract' is reserved/);
 			expect(names(code)).toEqual(["abstract"]);
 		});
 	});
 
 	describe("statements", () => {
 		it("should parse labeled statements through acorn's tail", () => {
-			const { ast } = parse(fixture("javascript", "webpack-parser-statements-should-parse-labeled-statements-through-acorn-s-tail"));
+			const { ast } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-statements-should-parse-labeled-statements-through-acorn-s-tail"
+				)
+			);
 			expect(ast.body.map((s) => s.type)).toEqual([
 				"LabeledStatement",
 				"LabeledStatement"
@@ -428,7 +580,14 @@ describe("WebpackParser", () => {
 			);
 			expect(labeled.label.name).toBe("outer");
 			expect(labeled.range).toEqual([0, 32]);
-			expect(() => parse(fixture("javascript", "webpack-parser-statements-should-parse-labeled-statements-through-acorn-s-tail-2"))).toThrow(/Unsyntactic break/);
+			expect(() =>
+				parse(
+					fixture(
+						"javascript",
+						"webpack-parser-statements-should-parse-labeled-statements-through-acorn-s-tail-2"
+					)
+				)
+			).toThrow(/Unsyntactic break/);
 		});
 	});
 
@@ -443,7 +602,12 @@ describe("WebpackParser", () => {
 					parse(code).ast.body[0]
 				).expression;
 			const sum = /** @type {import("estree").BinaryExpression} */ (
-				expression(fixture("javascript", "webpack-parser-binary-expressions-should-climb-operator-precedence-like-acorn"))
+				expression(
+					fixture(
+						"javascript",
+						"webpack-parser-binary-expressions-should-climb-operator-precedence-like-acorn"
+					)
+				)
 			);
 			// ((1 + (2 * 3)) - 4): the same-precedence loop keeps left-association
 			expect(sum.operator).toBe("-");
@@ -452,12 +616,22 @@ describe("WebpackParser", () => {
 			expect(add.right.type).toBe("BinaryExpression");
 			expect(sum.range).toEqual([0, 13]);
 			const coalesce = /** @type {import("estree").LogicalExpression} */ (
-				expression(fixture("javascript", "webpack-parser-binary-expressions-should-climb-operator-precedence-like-acorn-2"))
+				expression(
+					fixture(
+						"javascript",
+						"webpack-parser-binary-expressions-should-climb-operator-precedence-like-acorn-2"
+					)
+				)
 			);
 			expect(coalesce.operator).toBe("??");
 			expect(coalesce.left.type).toBe("LogicalExpression");
 			const exponent = /** @type {import("estree").BinaryExpression} */ (
-				expression(fixture("javascript", "webpack-parser-binary-expressions-should-climb-operator-precedence-like-acorn-3"))
+				expression(
+					fixture(
+						"javascript",
+						"webpack-parser-binary-expressions-should-climb-operator-precedence-like-acorn-3"
+					)
+				)
 			);
 			// `**` is right-associative via the recursive right-side climb
 			expect(exponent.right.type).toBe("BinaryExpression");
@@ -466,7 +640,12 @@ describe("WebpackParser", () => {
 
 	describe("expressions, spreads and parameter checks", () => {
 		it("should parse comma sequences and spreads with ranges", () => {
-			const { ast } = parse(fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-parse-comma"));
+			const { ast } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-expressions-spreads-and-parameter-checks-should-parse-comma"
+				)
+			);
 			const sequence =
 				/** @type {import("estree").SequenceExpression} */
 				(
@@ -484,23 +663,46 @@ describe("WebpackParser", () => {
 				);
 			expect(call.arguments[0].type).toBe("SpreadElement");
 			expect(call.arguments[0].range).toEqual([11, 18]);
-			expect(parse(fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-parse-comma-2"), { ranges: false }).ast).toBeDefined();
+			expect(
+				parse(
+					fixture(
+						"javascript",
+						"webpack-parser-expressions-spreads-and-parameter-checks-should-parse-comma-2"
+					),
+					{ ranges: false }
+				).ast
+			).toBeDefined();
 		});
 
 		it("should report stack overflow on pathological nesting like acorn", () => {
-			expect(() => parse(fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack"))).toThrow(
-				/Not enough stack space to parse input/
-			);
+			expect(() =>
+				parse(
+					fixture(
+						"javascript",
+						"webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack"
+					)
+				)
+			).toThrow(/Not enough stack space to parse input/);
 			// statements alone nest past any expression's own catch
-			expect(() => parse(fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2"))).toThrow(
-				/Not enough stack space to parse input/
-			);
+			expect(() =>
+				parse(
+					fixture(
+						"javascript",
+						"webpack-parser-expressions-spreads-and-parameter-checks-should-report-stack-2"
+					)
+				)
+			).toThrow(/Not enough stack space to parse input/);
 		});
 	});
 
 	describe("punctuator fast path", () => {
 		it("should keep ranges aligned across punctuator-dense code", () => {
-			const { ast } = parse(fixture("javascript", "webpack-parser-punctuator-fast-path-should-keep-ranges-aligned-across-punctuator"));
+			const { ast } = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-punctuator-fast-path-should-keep-ranges-aligned-across-punctuator"
+				)
+			);
 			const { range } = /** @type {{ range: [number, number] }} */ (
 				/** @type {unknown} */ (ast.body[0])
 			);
@@ -522,12 +724,17 @@ describe("WebpackParser", () => {
 			// unreachable from the dispatch fast path (nextToken finishes plain
 			// `=`/`.` itself) but part of the getTokenFromCode contract
 			const { tokTypes } = require("../../../lib/javascript/syntax-parser");
-			const { WebpackParser } = require("../../../lib/javascript/syntax-parser");
+			const {
+				WebpackParser
+			} = require("../../../lib/javascript/syntax-parser");
 
-			const source = fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-single-char-tails-for-direct");
+			const source = fixture(
+				"javascript",
+				"webpack-parser-owned-operator-scanner-should-keep-single-char-tails-for-direct"
+			);
 			const parser = new WebpackParser(
 				/** @type {EXPECTED_ANY} */ ({
-					ecmaVersion: "latest",
+					ecmaVersion: "latest"
 				}),
 				source
 			);
@@ -541,27 +748,61 @@ describe("WebpackParser", () => {
 
 		it("should read the inlined HTML comment forms", () => {
 			// `<!--` opens a line comment in script mode only
-			const script = parse(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms"));
+			const script = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms"
+				)
+			);
 			expect(script.comments.map((c) => c.value)).toEqual(["y"]);
-			const module_ = parse(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-2"), { sourceType: "module" });
+			const module_ = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-2"
+				),
+				{ sourceType: "module" }
+			);
 			expect(module_.comments).toHaveLength(0);
 			// `-->` after a line break is a comment; `a-->b` stays `(a--) > b`
-			const close = parse(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-3"));
+			const close = parse(
+				fixture(
+					"javascript",
+					"webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-3"
+				)
+			);
 			expect(close.comments.map((c) => c.value)).toEqual([" rest"]);
-			expect(op(fixture("javascript", "webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-4"))).toBe(">");
+			expect(
+				op(
+					fixture(
+						"javascript",
+						"webpack-parser-owned-operator-scanner-should-read-the-inlined-html-comment-forms-4"
+					)
+				)
+			).toBe(">");
 		});
 
 		it("should keep where a module reads `<!--` as operators", () => {
-			const source = fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators");
-			for (const type of /** @type {("module" | "auto")[]} */ (["module", "auto"])) {
+			const source = fixture(
+				"javascript",
+				"webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators"
+			);
+			for (const type of /** @type {("module" | "auto")[]} */ ([
+				"module",
+				"auto"
+			])) {
 				const { tree } = JavascriptParser._parseTree(source, type, false);
 				expect(tree.htmlOpensAsOperators()).toEqual([30, 43]);
 				tree.release();
 			}
-			expect(() => estree(source, { ecmaVersion: "latest", sourceType: "module" })).not.toThrow();
+			expect(() =>
+				estree(source, { ecmaVersion: "latest", sourceType: "module" })
+			).not.toThrow();
 			// a script, as the fallback of `auto` reads it, takes a comment there
 			const fallback = JavascriptParser._parseTree(
-				fixture("javascript", "webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2"),
+				fixture(
+					"javascript",
+					"webpack-parser-owned-operator-scanner-should-keep-where-a-module-reads-html-open-as-operators-2"
+				),
 				"auto",
 				false
 			);
@@ -631,7 +872,10 @@ describe("WebpackParser", () => {
 
 		it("should downgrade a top-level return in a single parse (fast path)", () => {
 			const { ast, parses } = parseAuto(
-				fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-downgrade-a-top")
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-downgrade-a-top"
+				)
 			);
 			expect(parses).toBe(1);
 			expect(ast.sourceType).toBe("script");
@@ -639,14 +883,23 @@ describe("WebpackParser", () => {
 		});
 
 		it("should downgrade a bare top-level return", () => {
-			const { ast, parses } = parseAuto(fixture("javascript", "webpack-parser-statements-should-parse-if-else-chains-and-returns-on-the-fast-2"));
+			const { ast, parses } = parseAuto(
+				fixture(
+					"javascript",
+					"webpack-parser-statements-should-parse-if-else-chains-and-returns-on-the-fast-2"
+				)
+			);
 			expect(parses).toBe(1);
 			expect(ast.body[0].type).toBe("ReturnStatement");
 		});
 
 		it("should read the whole source as a script where the module parse fails", () => {
-			const { parseProgram, takeParsedTree } = require("../../../lib/javascript/syntax-parser");
-			const name = "webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails";
+			const {
+				parseProgram,
+				takeParsedTree
+			} = require("../../../lib/javascript/syntax-parser");
+			const name =
+				"webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails";
 			for (const [suffix, comment] of [
 				["", " comment"],
 				// `<!--` read as operators leaves no script to turn into in place
@@ -660,21 +913,32 @@ describe("WebpackParser", () => {
 						comments
 					})
 				);
-				const tree = /** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (takeParsedTree());
-				expect(/** @type {EXPECTED_ANY} */ (tree.estree(program)).sourceType).toBe("script");
+				const tree =
+					/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (
+						takeParsedTree()
+					);
+				expect(
+					/** @type {EXPECTED_ANY} */ (tree.estree(program)).sourceType
+				).toBe("script");
 				expect(comments.map((item) => item.value)).toEqual([comment]);
 				tree.release();
 			}
 			// where both fail, the module parse's error is the one thrown
 			expect(() =>
-				parseProgram(fixture("javascript", `${name}-3`), 0, { sourceType: "auto" })
+				parseProgram(fixture("javascript", `${name}-3`), 0, {
+					sourceType: "auto"
+				})
 			).toThrow("Unexpected token (2:0)");
 			const source = fixture("javascript", name);
-			const { toEstreeObject } = require("../../../lib/javascript/syntax-parser");
+			const {
+				toEstreeObject
+			} = require("../../../lib/javascript/syntax-parser");
 			expect(
 				/** @type {EXPECTED_ANY} */ (
 					toEstreeObject(
-						/** @type {number} */ (parseProgram(source, 0, { sourceType: "auto" }))
+						/** @type {number} */ (
+							parseProgram(source, 0, { sourceType: "auto" })
+						)
 					)
 				).sourceType
 			).toBe("script");
@@ -690,8 +954,14 @@ describe("WebpackParser", () => {
 		});
 
 		it("should report a script read after a failed module parse once", () => {
-			const { parseProgram, takeParsedTree } = require("../../../lib/javascript/syntax-parser");
-			const source = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4");
+			const {
+				parseProgram,
+				takeParsedTree
+			} = require("../../../lib/javascript/syntax-parser");
+			const source = fixture(
+				"javascript",
+				"webpack-parser-auto-source-type-module-script-fallback-should-read-a-script-the-module-parse-fails-4"
+			);
 			/** @type {EXPECTED_ANY[]} */
 			const comments = [];
 			/** @type {EXPECTED_ANY[]} */
@@ -701,8 +971,13 @@ describe("WebpackParser", () => {
 				onComment: comments,
 				onToken: tokens
 			});
-			/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (takeParsedTree()).release();
-			expect(comments.map((comment) => comment.value)).toEqual([" lead ", " comment"]);
+			/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (
+				takeParsedTree()
+			).release();
+			expect(comments.map((comment) => comment.value)).toEqual([
+				" lead ",
+				" comment"
+			]);
 			expect(tokens.filter((token) => token.value === "first")).toHaveLength(1);
 			// a callback is told of each token as read, which no retry could take back
 			const onComment = jest.fn();
@@ -710,13 +985,21 @@ describe("WebpackParser", () => {
 				parseProgram(source, 0, { sourceType: "auto", onComment })
 			).toThrow("Unexpected token (1:26)");
 			expect(onComment).toHaveBeenCalledTimes(1);
-			for (const name of ["onToken", "onTokenRead", "onInsertedSemicolon", "onTrailingComma"]) {
+			for (const name of [
+				"onToken",
+				"onTokenRead",
+				"onInsertedSemicolon",
+				"onTrailingComma"
+			]) {
 				expect(() =>
 					parseProgram(source, 0, { sourceType: "auto", [name]: () => {} })
 				).toThrow("Unexpected token (1:26)");
 			}
 			// an error a callback throws is no syntax error to read past
-			const valid = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed");
+			const valid = fixture(
+				"javascript",
+				"webpack-parser-auto-source-type-module-script-fallback-should-report-a-script-read-after-a-failed"
+			);
 			const thrown = new Error("from a callback");
 			let reads = 0;
 			expect(() =>
@@ -741,7 +1024,10 @@ describe("WebpackParser", () => {
 		});
 
 		it("should produce the same AST as an explicit script parse", () => {
-			const code = fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-produce-the-same");
+			const code = fixture(
+				"javascript",
+				"webpack-parser-auto-source-type-module-script-fallback-should-produce-the-same"
+			);
 			const strip = (/** @type {unknown} */ node) =>
 				JSON.stringify(node, (k, v) =>
 					k === "loc" || k === "start" || k === "end" || k === "range"
@@ -757,24 +1043,59 @@ describe("WebpackParser", () => {
 		it("should single-parse a top-level return past an async function's await", () => {
 			// the await is function-scoped, not module syntax, so the downgrade still applies
 			const { parses, ast } = parseAuto(
-				fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-single-parse-a-top")
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-single-parse-a-top"
+				)
 			);
 			expect(parses).toBe(1);
 			expect(ast.sourceType).toBe("script");
 		});
 
 		it("should keep esm a single module parse", () => {
-			const { ast, parses } = parseAuto(fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-keep-esm-a-single"));
+			const { ast, parses } = parseAuto(
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-keep-esm-a-single"
+				)
+			);
 			expect(parses).toBe(1);
 			expect(ast.sourceType).toBe("module");
 			expect(ast.body[0].type).toBe("ExportNamedDeclaration");
 		});
 
 		it.each([
-			[fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when"), "import"],
-			[fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when-2"), "export"],
-			[fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when-3"), "top-level await"],
-			[fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when-4"), fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite")]
+			[
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when"
+				),
+				"import"
+			],
+			[
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when-2"
+				),
+				"export"
+			],
+			[
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when-3"
+				),
+				"top-level await"
+			],
+			[
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-when-4"
+				),
+				fixture(
+					"javascript",
+					"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite"
+				)
+			]
 		])(
 			"should not downgrade when %s precedes the return (module syntax seen)",
 			(code) => {
@@ -795,14 +1116,22 @@ describe("WebpackParser", () => {
 
 		it("should not downgrade a return inside a class static block", () => {
 			expect(() =>
-				parseThroughJavascriptParser(fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-a"))
+				parseThroughJavascriptParser(
+					fixture(
+						"javascript",
+						"webpack-parser-auto-source-type-module-script-fallback-should-not-downgrade-a"
+					)
+				)
 			).toThrow(/'return' outside of function/);
 		});
 
 		it("should still fall back to script for strict-only syntax", () => {
 			// `with` is not handled by the in-place switch; the outer retry covers it
 			const { ast, parses } = parseAuto(
-				fixture("javascript", "webpack-parser-auto-source-type-module-script-fallback-should-still-fall-back-to")
+				fixture(
+					"javascript",
+					"webpack-parser-auto-source-type-module-script-fallback-should-still-fall-back-to"
+				)
 			);
 			expect(parses).toBe(2);
 			expect(ast.body[0].type).toBe("WithStatement");
@@ -814,11 +1143,17 @@ describe("WebpackParser", () => {
 			for (const importPhases of [true, false]) {
 				const declaration =
 					/** @type {import("estree").VariableDeclaration} */ (
-						parse(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s"), {
-							sourceType: "module",
-							importPhases,
-							locations: true
-						}).ast.body[0]
+						parse(
+							fixture(
+								"javascript",
+								"webpack-parser-import-phases-owned-defer-source-parsing-should-keep-acorn-s"
+							),
+							{
+								sourceType: "module",
+								importPhases,
+								locations: true
+							}
+						).ast.body[0]
 					);
 				const meta = /** @type {import("estree").MetaProperty} */ (
 					declaration.declarations[0].init
@@ -838,18 +1173,23 @@ describe("WebpackParser", () => {
 				locations: true
 			};
 			// `defer` and `source` as default names are plain imports to acorn too
-			const names = fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-locate-phase");
-			expect(
-				plain(estree(names, { ...options, importPhases: true }))
-			).toEqual(
-				plain(
-					acorn.parse(names, /** @type {acorn.Options} */ (options))
-				)
+			const names = fixture(
+				"javascript",
+				"webpack-parser-import-phases-owned-defer-source-parsing-should-locate-phase"
 			);
-			const program = estree(fixture("javascript", "webpack-parser-import-phases-owned-defer-source-parsing-should-locate-phase-2"), {
-				...options,
-				importPhases: true
-			});
+			expect(plain(estree(names, { ...options, importPhases: true }))).toEqual(
+				plain(acorn.parse(names, /** @type {acorn.Options} */ (options)))
+			);
+			const program = estree(
+				fixture(
+					"javascript",
+					"webpack-parser-import-phases-owned-defer-source-parsing-should-locate-phase-2"
+				),
+				{
+					...options,
+					importPhases: true
+				}
+			);
 			expect(
 				program.body.map((statement) => {
 					const { expression } =
@@ -882,19 +1222,40 @@ describe("WebpackParser fast paths", () => {
 		/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
 			/** @type {unknown} */ ({
 				ecmaVersion: "latest",
-				sourceType: "script",
+				sourceType: "script"
 			})
 		);
 
 	it.each([
-		fixture("javascript", "parser-reads-as-acorn-does-a-private-name-without-its-name"),
-		fixture("javascript", "parser-reads-as-acorn-does-an-object-s-computed-short-and-literal-keys"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-506"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-165"),
+		fixture(
+			"javascript",
+			"parser-reads-as-acorn-does-a-private-name-without-its-name"
+		),
+		fixture(
+			"javascript",
+			"parser-reads-as-acorn-does-an-object-s-computed-short-and-literal-keys"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-506"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-165"
+		),
 		fixture("javascript", "parser-reads-as-acorn-does-a-pattern-with-a-hole"),
-		fixture("javascript", "parser-reads-as-acorn-does-a-template-with-two-parts"),
-		fixture("javascript", "parser-reads-as-acorn-does-an-export-under-a-string-name"),
-		fixture("javascript", "parser-reads-as-acorn-does-proto-keys-that-do-not-clash")
+		fixture(
+			"javascript",
+			"parser-reads-as-acorn-does-a-template-with-two-parts"
+		),
+		fixture(
+			"javascript",
+			"parser-reads-as-acorn-does-an-export-under-a-string-name"
+		),
+		fixture(
+			"javascript",
+			"parser-reads-as-acorn-does-proto-keys-that-do-not-clash"
+		)
 	])("reads %s as acorn does", (source) => {
 		/**
 		 * @param {() => unknown} parse what reads it
@@ -916,7 +1277,13 @@ describe("WebpackParser fast paths", () => {
 
 	it("serves the strict-bind probe from the Set stand-in", () => {
 		expect(() =>
-			estree(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-serves-the-strict-bind-probe-from"), { sourceType: "module" })
+			estree(
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-serves-the-strict-bind-probe-from"
+				),
+				{ sourceType: "module" }
+			)
 		).toThrow(/Assigning to eval in strict mode/);
 	});
 
@@ -925,25 +1292,68 @@ describe("WebpackParser fast paths", () => {
 		const referenceOptions = { ecmaVersion: "latest", sourceType: "script" };
 
 		it("parses single parenthesized expressions like acorn", () => {
-			const code = fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-25");
+			const code = fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-25"
+			);
 			expect(
-				firstDifference(estree(code), acorn.parse(code, referenceOptions), "program")
+				firstDifference(
+					estree(code),
+					acorn.parse(code, referenceOptions),
+					"program"
+				)
 			).toBeNull();
 		});
 
 		it.each([
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-2"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-3"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-4"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-5"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-6"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-7"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-8"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-9"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-10"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-11"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-12")
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-2"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-3"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-4"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-5"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-6"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-7"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-8"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-9"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-10"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-11"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-12"
+			)
 		])("preserves the AST for %s", (code) => {
 			for (const preserveParens of [false, true]) {
 				expect(
@@ -957,16 +1367,46 @@ describe("WebpackParser fast paths", () => {
 		});
 
 		it.each([
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-13"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-14"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-15"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-16"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-17"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-18"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-19"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-20"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-21"),
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-22")
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-13"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-14"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-15"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-16"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-17"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-18"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-19"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-20"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-21"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-parenthesized-expression-lists-22"
+			)
 		])("preserves the error for %s", (code) => {
 			/** @type {SyntaxError | undefined} */
 			let expectedError;
@@ -977,11 +1417,8 @@ describe("WebpackParser fast paths", () => {
 				expectedError = error;
 			}
 			expect(expectedError).toBeInstanceOf(SyntaxError);
-			expect(() => estree(code)).toThrow(
-				expectedError
-			);
+			expect(() => estree(code)).toThrow(expectedError);
 		});
-
 	});
 
 	it("allows an expression after a closing paren at the root context", () => {
@@ -998,17 +1435,33 @@ describe("WebpackParser fast paths", () => {
 			].map((token) => token.type.label);
 		// the root context has nothing to pop, so `)` leaves an expression allowed
 		// and the `/` after it opens a regexp rather than dividing
-		expect(labels(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-allows-an-expression-after-a"))).toEqual([")", "regexp"]);
-		expect(labels(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-allows-an-expression-after-a-2"))).toEqual(["name", "/", "name", "/", "name"]);
+		expect(
+			labels(
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-allows-an-expression-after-a"
+				)
+			)
+		).toEqual([")", "regexp"]);
+		expect(
+			labels(
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-allows-an-expression-after-a-2"
+				)
+			)
+		).toEqual(["name", "/", "name", "/", "name"]);
 	});
-
 
 	it("executes no base parser prototype code writing a tree", () => {
 		// every method and accessor on the base parser's prototype is counted
 		// while a feature-rich module parses lazily
 		const { Parser } = require("../../../lib/javascript/syntax-parser");
 
-		const source = fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-executes-no-base-parser-prototype");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-acorn-override-fast-path-gates-executes-no-base-parser-prototype"
+		);
 		const { parseProgram } = require("../../../lib/javascript/syntax-parser");
 
 		const parseSource = () =>
@@ -1060,14 +1513,19 @@ describe("WebpackParser fast paths", () => {
 		expect(hits).toEqual([]);
 	});
 
-
 	it("builds fast- and slow-constructed parsers with one field layout", () => {
 		// the fast construction path replicates the base constructor, so its key
 		// order and option keys must match a super()-built one
 		const { defaultOptions } = require("../../../lib/javascript/syntax-parser");
 
 		const fast = /** @type {EXPECTED_ANY} */ (
-			new WebpackParser(lazyOptions, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-builds-fast-and-slow-constructed"))
+			new WebpackParser(
+				lazyOptions,
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-builds-fast-and-slow-constructed"
+				)
+			)
 		);
 		const slowOptions =
 			/** @type {import("../../../lib/javascript/syntax-parser").Options} */ (
@@ -1080,7 +1538,13 @@ describe("WebpackParser fast paths", () => {
 				)
 			);
 		const slow = /** @type {EXPECTED_ANY} */ (
-			new WebpackParser(slowOptions, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-builds-fast-and-slow-constructed"))
+			new WebpackParser(
+				slowOptions,
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-builds-fast-and-slow-constructed"
+				)
+			)
 		);
 		expect(Object.keys(fast)).toEqual(Object.keys(slow));
 		expect(Object.keys(fast.options)).toEqual(Object.keys(defaultOptions));
@@ -1088,7 +1552,10 @@ describe("WebpackParser fast paths", () => {
 
 	it("adds no field to a parser while it parses", () => {
 		// a field first written mid-parse would change the instance's shape
-		const source = fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-adds-no-field-to-a-parser-while-it");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-acorn-override-fast-path-gates-adds-no-field-to-a-parser-while-it"
+		);
 		for (const options of [lazyOptions, { ecmaVersion: "latest" }]) {
 			const parser = /** @type {EXPECTED_ANY} */ (
 				new WebpackParser(
@@ -1126,7 +1593,6 @@ describe("WebpackParser fast paths", () => {
 		}
 	});
 
-
 	it("fills in the options a caller left out, on a copy of the defaults", () => {
 		const {
 			defaultOptions,
@@ -1152,10 +1618,22 @@ describe("WebpackParser fast paths", () => {
 		expect(defaultOptions).toEqual(defaults);
 		// each fast-built parser has a copy of its own to write to
 		const first = /** @type {EXPECTED_ANY} */ (
-			new WebpackParser(lazyOptions, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left"))
+			new WebpackParser(
+				lazyOptions,
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left"
+				)
+			)
 		);
 		const second = /** @type {EXPECTED_ANY} */ (
-			new WebpackParser(lazyOptions, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left-2"))
+			new WebpackParser(
+				lazyOptions,
+				fixture(
+					"javascript",
+					"webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left-2"
+				)
+			)
 		);
 		first.options.sourceType = "module";
 		expect(second.options.sourceType).toBe("script");
@@ -1183,9 +1661,18 @@ describe("WebpackParser fast paths", () => {
 		// twice: the first round builds each shape, the second finds it again
 		for (let round = 0; round < 2; round++) {
 			for (const variant of variants) {
-				const options = { .../** @type {EXPECTED_ANY} */ (lazyOptions), ...variant };
+				const options = {
+					.../** @type {EXPECTED_ANY} */ (lazyOptions),
+					...variant
+				};
 				const parser = /** @type {EXPECTED_ANY} */ (
-					new WebpackParser(options, fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-finds-a-fast-construction-s-shape"))
+					new WebpackParser(
+						options,
+						fixture(
+							"javascript",
+							"webpack-parser-acorn-override-fast-path-gates-finds-a-fast-construction-s-shape"
+						)
+					)
 				);
 				const expected = /** @type {EXPECTED_ANY} */ (getOptions(options));
 				for (const name of [
@@ -1219,8 +1706,10 @@ describe("WebpackParser fast paths", () => {
 			releaseParserCaches
 		} = require("../../../lib/javascript/syntax-parser");
 
-		const code =
-			fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-release-parser-caches-parses");
+		const code = fixture(
+			"javascript",
+			"webpack-parser-acorn-override-fast-path-gates-release-parser-caches-parses"
+		);
 
 		it("parses identically after the caches are released", () => {
 			const before = JSON.stringify(estree(code, { sourceType: "module" }));
@@ -1379,8 +1868,7 @@ const collectAcornCases = (tests) => {
 	 * @param {string} request what the test file asked for
 	 * @returns {EXPECTED_ANY} the driver, or the acorn it reads token types from
 	 */
-	const resolve = (request) =>
-		request.endsWith("driver.js") ? driver : acorn;
+	const resolve = (request) => (request.endsWith("driver.js") ? driver : acorn);
 
 	for (const entry of fs.readdirSync(tests).sort()) {
 		if (!/^tests.*\.js$/.test(entry)) continue;
@@ -1455,7 +1943,12 @@ const CORPUS_TIMEOUT = 300000;
  * @returns {EXPECTED_ANY} the program
  */
 const parseCase = (code, options) =>
-	estree(code, /** @type {import("../../helpers/javascriptParse").EstreeParseOptions} */ (options));
+	estree(
+		code,
+		/** @type {import("../../helpers/javascriptParse").EstreeParseOptions} */ (
+			options
+		)
+	);
 
 // What is asked on top of the options each case carries. Ranges, locations and
 // the two collectors are off in most of acorn's cases, and turning them on is
@@ -1469,7 +1962,10 @@ const MODES = [
 		{ ranges: true, locations: true, onComment: true, onToken: true }
 	],
 	["as commonjs", { sourceType: "commonjs" }],
-	["with ranges, at the latest edition", { ranges: true, ecmaVersion: "latest" }]
+	[
+		"with ranges, at the latest edition",
+		{ ranges: true, ecmaVersion: "latest" }
+	]
 ];
 
 // How deep input may nest before a parser gives up is the runtime's answer,
@@ -1586,7 +2082,14 @@ const runsAsCommonjs = (testCase) =>
  * @param {VerdictDifference[]} verdicts where verdicts that disagree are collected
  * @returns {void}
  */
-const compareCase = (testCase, parse, engineValidates, mode, trees, verdicts) => {
+const compareCase = (
+	testCase,
+	parse,
+	engineValidates,
+	mode,
+	trees,
+	verdicts
+) => {
 	/** @type {object[]} */
 	const ourComments = [];
 	/** @type {TokenLike[]} */
@@ -1697,21 +2200,42 @@ describe("acorn corpus", () => {
 		const engineValidates = true;
 
 		it.each([
-			["inside", fixture("javascript", "acorn-corpus-keeps-strict-mode-before-the-identifier")],
-			["instanceofValue", fixture("javascript", "acorn-corpus-keeps-strict-mode-before-the-identifier-2")],
-			["in𐐀", fixture("javascript", "acorn-corpus-keeps-strict-mode-before-the-identifier-3")],
-			["instanceof𐐀", fixture("javascript", "acorn-corpus-keeps-strict-mode-before-the-identifier-4")]
-		])(
-			"keeps strict mode before the identifier %s",
-			(_identifier, source) => {
-				expect(() =>
-					parse(source, {
-						ecmaVersion: "latest",
-						sourceType: "script"
-					})
-				).toThrow(/Invalid number/);
-			}
-		);
+			[
+				"inside",
+				fixture(
+					"javascript",
+					"acorn-corpus-keeps-strict-mode-before-the-identifier"
+				)
+			],
+			[
+				"instanceofValue",
+				fixture(
+					"javascript",
+					"acorn-corpus-keeps-strict-mode-before-the-identifier-2"
+				)
+			],
+			[
+				"in𐐀",
+				fixture(
+					"javascript",
+					"acorn-corpus-keeps-strict-mode-before-the-identifier-3"
+				)
+			],
+			[
+				"instanceof𐐀",
+				fixture(
+					"javascript",
+					"acorn-corpus-keeps-strict-mode-before-the-identifier-4"
+				)
+			]
+		])("keeps strict mode before the identifier %s", (_identifier, source) => {
+			expect(() =>
+				parse(source, {
+					ecmaVersion: "latest",
+					sourceType: "script"
+				})
+			).toThrow(/Invalid number/);
+		});
 
 		for (const [modeName, mode] of MODES) {
 			it(
@@ -1924,11 +2448,7 @@ describe("RegExpValidator", () => {
 			const differences = [];
 			let rejected = 0;
 			for (const source of PATTERNS) {
-				const ours = verdictOf(
-					tokenizeAll,
-					source,
-					ecmaVersion
-				);
+				const ours = verdictOf(tokenizeAll, source, ecmaVersion);
 				const theirs = verdictOf(
 					(code, options) => acorn.parse(code, options),
 					source,
@@ -1945,21 +2465,51 @@ describe("RegExpValidator", () => {
 
 	it("reports the flag errors before reading the pattern", () => {
 		// the pattern is malformed too, so the flag error has to win the race
-		expect(() => tokenizeAll(fixture("javascript", "reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern"), { ecmaVersion: 2024 })).toThrow(
-			/Duplicate regular expression flag/
-		);
-		expect(() => tokenizeAll(fixture("javascript", "reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-2"), { ecmaVersion: 2024 })).toThrow(
-			/Invalid regular expression flag/
-		);
-		expect(() => tokenizeAll(fixture("javascript", "reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-3"), { ecmaVersion: 2024 })).toThrow(
-			/Invalid regular expression flag/
-		);
-		expect(() => tokenizeAll(fixture("javascript", "reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-4"), { ecmaVersion: 2023 })).toThrow(
-			/Invalid regular expression flag/
-		);
-		expect(() => tokenizeAll(fixture("javascript", "reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-4"), { ecmaVersion: 2024 })).toThrow(
-			/Unterminated group/
-		);
+		expect(() =>
+			tokenizeAll(
+				fixture(
+					"javascript",
+					"reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern"
+				),
+				{ ecmaVersion: 2024 }
+			)
+		).toThrow(/Duplicate regular expression flag/);
+		expect(() =>
+			tokenizeAll(
+				fixture(
+					"javascript",
+					"reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-2"
+				),
+				{ ecmaVersion: 2024 }
+			)
+		).toThrow(/Invalid regular expression flag/);
+		expect(() =>
+			tokenizeAll(
+				fixture(
+					"javascript",
+					"reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-3"
+				),
+				{ ecmaVersion: 2024 }
+			)
+		).toThrow(/Invalid regular expression flag/);
+		expect(() =>
+			tokenizeAll(
+				fixture(
+					"javascript",
+					"reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-4"
+				),
+				{ ecmaVersion: 2023 }
+			)
+		).toThrow(/Invalid regular expression flag/);
+		expect(() =>
+			tokenizeAll(
+				fixture(
+					"javascript",
+					"reg-exp-validator-reports-the-flag-errors-before-reading-the-pattern-4"
+				),
+				{ ecmaVersion: 2024 }
+			)
+		).toThrow(/Unterminated group/);
 	});
 
 	it("reads a name repeated across alternatives at the cost of distinct ones", () => {
@@ -1979,8 +2529,18 @@ describe("RegExpValidator", () => {
 			}
 			return fastest;
 		};
-		const distinct = best(fixture("javascript", "reg-exp-validator-reads-a-name-repeated-across-alternatives-at-the-cost-of-distinct"));
-		const repeated = best(fixture("javascript", "reg-exp-validator-reads-a-name-repeated-across-alternatives-at-the-cost-of-distinct-2"));
+		const distinct = best(
+			fixture(
+				"javascript",
+				"reg-exp-validator-reads-a-name-repeated-across-alternatives-at-the-cost-of-distinct"
+			)
+		);
+		const repeated = best(
+			fixture(
+				"javascript",
+				"reg-exp-validator-reads-a-name-repeated-across-alternatives-at-the-cost-of-distinct-2"
+			)
+		);
 		// The two were ~80x apart before the rewrite and are within noise of each
 		// other after it, so the bound only has to catch the quadratic walk.
 		expect(repeated).toBeLessThan(distinct * 10);
@@ -2008,802 +2568,3163 @@ const {
 /** @type {string[]} */
 const PROGRAMS = [
 	// statements
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-2"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-3"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-4"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-5"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-6"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-7"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-8"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-9"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-10"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-11"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-12"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-13"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-2"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-14"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-15"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-16"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-17"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-18"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-19"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-20"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-21"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-22"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-23"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-24"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-25"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-26"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-27"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-28"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-29"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-30"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-31"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-32"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-33"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-34"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-35"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-36"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-37"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-38"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-39"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-40"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-41"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-42"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-43"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-44"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-45"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-46"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-47"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-48"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-49"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-50"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-51"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-52"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-53"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-54"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-55"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-56"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-57"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-58"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-59"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-60"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-3"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-61"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-62"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-63"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-64"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-65"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-66"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-67"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-68"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-69"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-70"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-71"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-72"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-73"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-74"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-75"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-76"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-77"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-78"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-79"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-80"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-81"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-82"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-83"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-84"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-85"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-86"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-87"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-88"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-89"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-90"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-91"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-92"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-93"),
-	fixture("javascript", "webpack-parser-reserved-words-and-bindings-should-reject-contextual-and-reserved"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-94"),
-	fixture("javascript", "webpack-parser-reserved-words-and-bindings-should-reject-contextual-and-reserved-2"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-95"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-96"),
-	fixture("javascript", "webpack-parser-expressions-spreads-and-parameter-checks-should-check-identifier-3"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-97"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-98"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-99"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-100"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-101"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-102"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-103"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-104"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-105"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-106"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-107"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-108"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-109"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-110"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-111"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-112"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-113"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-114"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-115"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-116"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-117"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-118"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-119"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-4"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-120"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-121"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-122"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-123"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-124"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-125"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-126"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-127"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-128"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-129"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-130"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-131"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-132"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-133"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-134"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-135"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-136"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-137"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-138"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-139"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-140"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-141"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-142"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-143"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-144"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-145"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-146"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-147"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-148"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-149"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-150"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-151"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-152"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-153"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-154"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-155"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-156"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-157"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-158"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-159"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-160"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-161"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-162"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-163"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-164"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-165"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-166"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-167"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-168"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-169"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-170"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-171"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-172"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-173"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-174"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-175"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-176"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-177"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-178"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-179"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-180"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-181"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-182"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-183"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-184"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-5"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-185"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-186"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-187"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-188"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-189"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-190"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-191"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-192"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-193"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-194"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-195"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-196"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-197"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-198"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-199"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-200"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-201"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-202"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-203"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-204"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-205"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-206"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-207"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-208"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-209"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-210"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-211"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-212"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-213"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-214"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-215"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-216"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-217"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-218"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-219"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-220"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-221"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-222"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-223"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-224"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-225"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-226"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-227"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-228"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-229"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-230"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-231"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-232"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-233"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-6"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-234"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-235"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-236"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-237"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-238"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-239"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-240"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-241"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-242"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-243"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-244"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-245"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-246"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-247"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-248"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-249"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-250"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-251"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-252"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-253"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-254"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-255"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-256"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-257"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-7"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-8"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-258"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-259"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-260"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-261"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-262"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-263"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-264"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-265"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-266"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-267"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-268"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-269"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-270"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-271"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-272"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-273"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-274"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-275"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-276"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-277"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-278"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-279"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-280"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-281"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-282"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-283"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-284"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-285"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-286"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-287"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-288"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-289"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-290"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-291"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-292"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-293"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-294"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-295"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-296"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-297"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-298"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-299"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-300"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-301"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-302"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-303"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-304"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-305"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-306"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-307"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-308"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-309"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-310"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-311"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-312"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-313"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-314"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-315"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-316"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-317"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-318"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-319"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-320"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-321"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-322"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-323"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-324"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-325"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-326"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-327"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-328"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-329"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-330"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-331"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-332"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-333"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-334"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-61"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-335"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-336"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-337"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-338"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-3"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-339"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-340"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-341"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-342"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-343"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-344"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-345"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-346"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-347"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-348"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-349"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-350"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-351"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-352"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-353"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-354"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-355"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-356"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-357"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-358"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-359"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-360"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-361"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-362"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-363"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-364"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-365"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-366"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-367"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-368"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-369"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-370"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-371"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-372"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-373"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-374"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-375"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-376"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-377"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-378"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-379"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-380"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-381"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-382"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-383"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-384"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-385"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-386"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-387"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-388"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-389"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-390"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-391"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-392"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-393"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-394"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-764"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-395"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-396"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-397"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-398"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-399"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-400"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-401"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-402"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-403"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-404"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-405"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-406"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-407"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-408"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-409"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-410"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-411"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-412"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-413"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-414"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-415"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-416"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-417"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-418"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-419"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-420"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-421"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-422"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-423"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-424"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-425"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-426"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-427"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-428"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-429"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-430"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-431"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-432"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-433"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-434"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-435"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-436"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-437"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-438"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-439"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-440"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-440"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-441"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-442"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-442"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-443"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-443"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-444"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-760"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-761"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-762"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-763"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-445"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-446"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-446"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-447"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-448"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-449"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-450"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-451"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-452"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-453"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-454"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-455"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-456"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-457"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-458"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-459"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-460"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-461"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-462"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-463"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-464"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-465"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-466"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-2"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-3"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-4"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-5"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-6"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-7"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-8"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-9"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-10"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-11"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-12"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-13"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-2"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-14"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-15"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-16"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-17"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-18"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-19"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-20"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-21"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-22"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-23"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-24"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-25"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-26"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-27"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-28"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-29"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-30"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-31"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-32"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-33"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-34"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-35"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-36"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-37"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-38"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-39"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-40"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-41"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-42"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-43"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-44"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-45"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-46"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-47"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-48"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-49"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-50"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-51"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-52"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-53"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-54"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-55"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-56"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-57"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-58"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-59"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-60"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-3"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-61"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-62"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-63"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-64"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-65"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-66"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-67"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-68"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-69"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-70"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-71"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-72"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-73"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-74"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-75"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-76"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-77"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-78"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-79"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-80"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-81"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-82"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-83"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-84"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-85"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-86"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-87"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-88"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-89"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-90"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-91"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-92"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-93"
+	),
+	fixture(
+		"javascript",
+		"webpack-parser-reserved-words-and-bindings-should-reject-contextual-and-reserved"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-94"
+	),
+	fixture(
+		"javascript",
+		"webpack-parser-reserved-words-and-bindings-should-reject-contextual-and-reserved-2"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-95"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-96"
+	),
+	fixture(
+		"javascript",
+		"webpack-parser-expressions-spreads-and-parameter-checks-should-check-identifier-3"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-97"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-98"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-99"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-100"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-101"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-102"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-103"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-104"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-105"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-106"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-107"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-108"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-109"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-110"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-111"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-112"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-113"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-114"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-115"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-116"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-117"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-118"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-119"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-4"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-120"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-121"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-122"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-123"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-124"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-125"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-126"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-127"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-128"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-129"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-130"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-131"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-132"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-133"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-134"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-135"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-136"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-137"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-138"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-139"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-140"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-141"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-142"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-143"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-144"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-145"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-146"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-147"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-148"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-149"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-150"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-151"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-152"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-153"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-154"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-155"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-156"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-157"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-158"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-159"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-160"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-161"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-162"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-163"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-164"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-165"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-166"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-167"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-168"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-169"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-170"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-171"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-172"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-173"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-174"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-175"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-176"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-177"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-178"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-179"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-180"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-181"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-182"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-183"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-184"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-5"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-185"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-186"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-187"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-188"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-189"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-190"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-191"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-192"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-193"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-194"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-195"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-196"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-197"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-198"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-199"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-200"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-201"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-202"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-203"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-204"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-205"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-206"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-207"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-208"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-209"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-210"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-211"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-212"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-213"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-214"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-215"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-216"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-217"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-218"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-219"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-220"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-221"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-222"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-223"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-224"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-225"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-226"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-227"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-228"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-229"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-230"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-231"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-232"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-233"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-6"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-234"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-235"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-236"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-237"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-238"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-239"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-240"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-241"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-242"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-243"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-244"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-245"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-246"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-247"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-248"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-249"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-250"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-251"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-252"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-253"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-254"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-255"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-256"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-257"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-7"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-8"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-258"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-259"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-260"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-261"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-262"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-263"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-264"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-265"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-266"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-267"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-268"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-269"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-270"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-271"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-272"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-273"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-274"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-275"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-276"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-277"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-278"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-279"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-280"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-281"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-282"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-283"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-284"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-285"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-286"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-287"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-288"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-289"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-290"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-291"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-292"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-293"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-294"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-295"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-296"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-297"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-298"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-299"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-300"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-301"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-302"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-303"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-304"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-305"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-306"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-307"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-308"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-309"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-310"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-311"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-312"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-313"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-314"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-315"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-316"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-317"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-318"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-319"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-320"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-321"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-322"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-323"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-324"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-325"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-326"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-327"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-328"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-329"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-330"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-331"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-332"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-333"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-334"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-61"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-335"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-336"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-337"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-338"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-3"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-339"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-340"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-341"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-342"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-343"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-344"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-345"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-346"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-347"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-348"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-349"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-350"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-351"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-352"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-353"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-354"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-355"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-356"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-357"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-358"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-359"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-360"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-361"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-362"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-363"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-364"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-365"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-366"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-367"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-368"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-369"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-370"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-371"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-372"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-373"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-374"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-375"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-376"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-377"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-378"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-379"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-380"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-381"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-382"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-383"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-384"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-385"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-386"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-387"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-388"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-389"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-390"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-391"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-392"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-393"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-394"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-764"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-395"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-396"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-397"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-398"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-399"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-400"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-401"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-402"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-403"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-404"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-405"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-406"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-407"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-408"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-409"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-410"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-411"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-412"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-413"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-414"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-415"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-416"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-417"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-418"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-419"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-420"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-421"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-422"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-423"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-424"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-425"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-426"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-427"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-428"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-429"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-430"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-431"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-432"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-433"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-434"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-435"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-436"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-437"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-438"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-439"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-440"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-440"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-441"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-442"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-442"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-443"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-443"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-444"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-760"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-761"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-762"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-763"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-445"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-446"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-446"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-447"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-448"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-449"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-450"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-451"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-452"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-453"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-454"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-455"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-456"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-457"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-458"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-459"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-460"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-461"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-462"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-463"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-464"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-465"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-466"
+	),
 	// explicit resource management
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-467"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-468"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-469"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-470"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-471"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-472"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-473"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-474"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-475"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-476"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-477"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-478"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-479"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-480"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-481"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-482"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-483"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-484"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-9"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-485"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-486"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-487"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-488"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-489"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-490"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-491"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-492"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-493"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-494"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-495"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-496"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-467"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-468"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-469"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-470"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-471"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-472"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-473"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-474"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-475"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-476"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-477"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-478"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-479"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-480"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-481"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-482"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-483"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-484"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-9"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-485"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-486"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-487"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-488"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-489"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-490"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-491"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-492"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-493"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-494"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-495"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-496"
+	),
 	// destructuring and assignment targets
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-497"),
-	fixture("javascript", "webpack-parser-object-literals-and-patterns-single-shape-nodes-should-keep-acorn-4"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-498"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-499"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-500"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-501"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-502"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-503"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-504"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-505"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-506"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-507"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-508"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-509"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-510"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-511"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-512"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-513"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-514"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-515"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-516"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-517"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-518"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-519"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-520"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-521"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-522"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-523"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-524"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-525"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-526"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-527"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-528"),
-	fixture("javascript", "webpack-parser-subscript-parsing-should-parse-async-arrows-through-the-call-2"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-529"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-530"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-531"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-532"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-533"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-534"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-535"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-536"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-537"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-538"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-539"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-540"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-541"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-542"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-543"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-544"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-497"
+	),
+	fixture(
+		"javascript",
+		"webpack-parser-object-literals-and-patterns-single-shape-nodes-should-keep-acorn-4"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-498"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-499"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-500"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-501"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-502"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-503"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-504"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-505"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-506"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-507"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-508"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-509"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-510"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-511"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-512"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-513"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-514"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-515"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-516"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-517"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-518"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-519"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-520"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-521"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-522"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-523"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-524"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-525"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-526"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-527"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-528"
+	),
+	fixture(
+		"javascript",
+		"webpack-parser-subscript-parsing-should-parse-async-arrows-through-the-call-2"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-529"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-530"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-531"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-532"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-533"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-534"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-535"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-536"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-537"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-538"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-539"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-540"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-541"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-542"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-543"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-544"
+	),
 	// statements
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-545"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-546"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-10"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-547"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-548"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-549"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-550"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-551"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-552"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-553"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-554"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-555"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-556"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-557"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-558"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-559"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-560"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-561"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-562"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-563"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-564"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-565"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-566"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-567"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-568"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-545"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-546"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-10"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-547"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-548"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-549"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-550"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-551"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-552"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-553"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-554"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-555"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-556"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-557"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-558"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-559"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-560"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-561"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-562"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-563"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-564"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-565"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-566"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-567"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-568"
+	),
 	// classes
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-569"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-570"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-571"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-11"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-572"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-573"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-574"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-575"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-576"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-577"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-578"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-579"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-580"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-581"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-569"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-570"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-571"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-11"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-572"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-573"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-574"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-575"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-576"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-577"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-578"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-579"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-580"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-581"
+	),
 	// modules
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-582"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-583"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-584"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-585"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-586"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-587"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-588"),
-	fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-12"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-589"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-590"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-591"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-592"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-593"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-594"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-595"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-596"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-597"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-598"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-599"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-600"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-601"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-602"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-603"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-604"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-605"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-606"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-607"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-608"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-582"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-583"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-584"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-585"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-586"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-587"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-588"
+	),
+	fixture(
+		"javascript",
+		"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-12"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-589"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-590"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-591"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-592"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-593"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-594"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-595"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-596"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-597"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-598"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-599"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-600"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-601"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-602"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-603"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-604"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-605"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-606"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-607"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-608"
+	),
 	// tokens
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-609"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-610"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-611"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-612"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-613"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-614"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-615"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-616"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-617"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-618"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-619"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-620"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-621"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-622"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-623"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-624"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-625"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-626"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-627"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-628"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-629"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-630"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-631"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-632"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-633"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-634"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-635"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-636"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-637"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-638"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-639"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-640"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-641"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-642"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-643"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-644"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-645"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-646"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-647"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-648"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-649"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-650"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-651"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-609"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-610"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-611"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-612"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-613"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-614"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-615"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-616"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-617"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-618"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-619"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-620"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-621"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-622"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-623"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-624"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-625"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-626"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-627"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-628"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-629"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-630"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-631"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-632"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-633"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-634"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-635"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-636"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-637"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-638"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-639"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-640"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-641"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-642"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-643"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-644"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-645"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-646"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-647"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-648"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-649"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-650"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-651"
+	),
 	// second pass over the grammar's remaining branches
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-652"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-653"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-654"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-655"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-656"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-657"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-658"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-659"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-660"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-661"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-662"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-663"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-664"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-665"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-666"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-667"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-668"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-669"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-670"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-671"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-672"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-673"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-674"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-675"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-676"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-677"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-678"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-679"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-680"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-681"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-682"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-683"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-684"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-685"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-686"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-687"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-688"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-689"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-690"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-691"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-692"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-693"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-694"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-695"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-696"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-697"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-698"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-699"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-700"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-701"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-702"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-703"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-704"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-705"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-706"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-707"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-708"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-709"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-710"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-711"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-712"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-713"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-714"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-715"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-716"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-717"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-718"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-719"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-720"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-721"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-722"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-723"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-724"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-725"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-726"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-727"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-728"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-729"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-730"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-731"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-732"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-733"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-734"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-688"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-735"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-736"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-737"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-738"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-739"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-740"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-741"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-742"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-652"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-653"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-654"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-655"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-656"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-657"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-658"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-659"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-660"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-661"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-662"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-663"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-664"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-665"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-666"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-667"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-668"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-669"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-670"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-671"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-672"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-673"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-674"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-675"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-676"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-677"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-678"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-679"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-680"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-681"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-682"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-683"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-684"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-685"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-686"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-687"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-688"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-689"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-690"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-691"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-692"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-693"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-694"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-695"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-696"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-697"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-698"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-699"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-700"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-701"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-702"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-703"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-704"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-705"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-706"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-707"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-708"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-709"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-710"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-711"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-712"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-713"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-714"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-715"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-716"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-717"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-718"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-719"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-720"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-721"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-722"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-723"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-724"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-725"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-726"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-727"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-728"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-729"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-730"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-731"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-732"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-733"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-734"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-688"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-735"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-736"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-737"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-738"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-739"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-740"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-741"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-742"
+	),
 	// what the look-ahead past `let`, `async` and `using` skips
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-743"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-744"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-745"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-746"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-747"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-748"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-749"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-750"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-751"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-752"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-753"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-754"),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-743"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-744"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-745"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-746"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-747"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-748"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-749"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-750"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-751"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-752"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-753"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-754"
+	),
 	// more lexical declarations in one block than a bit mask holds
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-755"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-756"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-757"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-758"),
-	fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-759")
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-755"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-756"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-757"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-758"
+	),
+	fixture(
+		"javascript",
+		"parser-parses-like-acorn-for-every-program-as-script-latest-759"
+	)
 ];
 
 /** @type {[string, Record<string, unknown>][]} */
@@ -2964,14 +5885,21 @@ describe("Parser", () => {
 			return counts;
 		};
 
-		for (const [name, divisions, regexps] of /** @type {[string, number, number][]} */ ([
+		for (const [
+			name,
+			divisions,
+			regexps
+		] of /** @type {[string, number, number][]} */ ([
 			["a-function-or-class-expression", 12, 0],
 			["a-keyword-or-of-after-optional-chaining", 6, 0],
 			["an-identifier-named-of", 4, 2],
 			["a-class-or-function-property-after-optional-chaining", 9, 0]
 		])) {
 			it(`reads the slashes after ${name.replace(/-/g, " ")}`, () => {
-				const source = fixture("javascript", `parser-division-after-an-operand-${name}`);
+				const source = fixture(
+					"javascript",
+					`parser-division-after-an-operand-${name}`
+				);
 				// the host engine reads `?.` only from Node.js 14 on
 				if (!source.includes("?.") || supportsOptionalChaining()) {
 					expect(() => new (require("vm").Script)(source)).not.toThrow();
@@ -2980,7 +5908,9 @@ describe("Parser", () => {
 				JavascriptParser._parseTree(source, "auto", false).tree.release();
 				expect(
 					countSlashes(
-						plain(estree(source, { ecmaVersion: "latest", sourceType: "script" }))
+						plain(
+							estree(source, { ecmaVersion: "latest", sourceType: "script" })
+						)
 					)
 				).toEqual({ divisions, regexps });
 			});
@@ -2989,11 +5919,14 @@ describe("Parser", () => {
 
 	it("reads a regexp after await that the tokenizer took for `/=`, unlike acorn", () => {
 		// acorn 8 refuses it; V8 and the spec read `await /=/g` as a regexp
-		const source = fixture("javascript", "parser-reads-a-regexp-after-await-that-the-tokenizer-took-for-unlike-acorn");
+		const source = fixture(
+			"javascript",
+			"parser-reads-a-regexp-after-await-that-the-tokenizer-took-for-unlike-acorn"
+		);
 		expect(() => new (require("vm").Script)(source)).not.toThrow();
-		expect(() =>
-			acorn.Parser.parse(source, { ecmaVersion: "latest" })
-		).toThrow(/Unexpected token/);
+		expect(() => acorn.Parser.parse(source, { ecmaVersion: "latest" })).toThrow(
+			/Unexpected token/
+		);
 		const ast = estree(source);
 		const statement = /** @type {EXPECTED_ANY} */ (ast).body[0].body.body[0];
 		expect(statement.expression.argument.regex).toEqual({
@@ -3004,13 +5937,22 @@ describe("Parser", () => {
 
 	describe("static entry points", () => {
 		it("tokenizes like acorn", () => {
-			const source = fixture("javascript", "parser-static-entry-points-tokenizes-like-acorn");
+			const source = fixture(
+				"javascript",
+				"parser-static-entry-points-tokenizes-like-acorn"
+			);
 			/** @type {PortOptions} */
 			const options = { ecmaVersion: "latest", locations: true, ranges: true };
 			expect(plain([...Parser.tokenizer(source, options)])).toEqual(
 				plain([...acornPort.Parser.tokenizer(source, options)])
 			);
-			const tokenizer = Parser.tokenizer(fixture("javascript", "parser-static-entry-points-tokenizes-like-acorn-2"), { ecmaVersion: 2020 });
+			const tokenizer = Parser.tokenizer(
+				fixture(
+					"javascript",
+					"parser-static-entry-points-tokenizes-like-acorn-2"
+				),
+				{ ecmaVersion: 2020 }
+			);
 			expect(tokenizer.getToken().value).toBe("a");
 			expect(tokenizer.getToken().value).toBe("b");
 			expect(tokenizer.getToken().type).toBe(tokTypes.eof);
@@ -3019,26 +5961,54 @@ describe("Parser", () => {
 		it("normalizes options like acorn", () => {
 			const warn = jest.spyOn(console, "warn").mockImplementation(() => {});
 			try {
-				expect(tokenizeAll(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), {})).not.toHaveLength(0);
-				expect(tokenizeAll(fixture("javascript", "parser-static-entry-points-normalizes-options-like-acorn"), {})).not.toHaveLength(0);
+				expect(
+					tokenizeAll(
+						fixture(
+							"javascript",
+							"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"
+						),
+						{}
+					)
+				).not.toHaveLength(0);
+				expect(
+					tokenizeAll(
+						fixture(
+							"javascript",
+							"parser-static-entry-points-normalizes-options-like-acorn"
+						),
+						{}
+					)
+				).not.toHaveLength(0);
 				expect(warn).toHaveBeenCalledTimes(1);
 				expect(warn.mock.calls[0][0]).toMatch(/ecmaVersion is required/);
 			} finally {
 				warn.mockRestore();
 			}
 			expect(() =>
-				tokenizeAll(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), {
-					ecmaVersion: "latest",
-					sourceType: "commonjs",
-					allowAwaitOutsideFunction: true
-				})
+				tokenizeAll(
+					fixture(
+						"javascript",
+						"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"
+					),
+					{
+						ecmaVersion: "latest",
+						sourceType: "commonjs",
+						allowAwaitOutsideFunction: true
+					}
+				)
 			).toThrow(/allowAwaitOutsideFunction with sourceType: commonjs/);
 			expect(() =>
-				acorn.Parser.parse(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"), {
-					ecmaVersion: "latest",
-					sourceType: "commonjs",
-					allowAwaitOutsideFunction: true
-				})
+				acorn.Parser.parse(
+					fixture(
+						"javascript",
+						"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"
+					),
+					{
+						ecmaVersion: "latest",
+						sourceType: "commonjs",
+						allowAwaitOutsideFunction: true
+					}
+				)
 			).toThrow(/allowAwaitOutsideFunction with sourceType: commonjs/);
 			// The defaults are acorn's but the three only a node reads, plus the hook
 			// webpack adds: a reader takes what it needs off the parser itself.
@@ -3056,7 +6026,10 @@ describe("Parser", () => {
 		});
 
 		it("reports inserted semicolons and trailing commas like acorn", () => {
-			const source = fixture("javascript", "parser-static-entry-points-reports-inserted-semicolons-and-trailing-commas-like");
+			const source = fixture(
+				"javascript",
+				"parser-static-entry-points-reports-inserted-semicolons-and-trailing-commas-like"
+			);
 			/** @type {(parse: (code: string, options: EXPECTED_ANY) => unknown, locations?: boolean) => unknown[][]} */
 			const eventsOf = (parse, locations = true) => {
 				/** @type {unknown[][]} */
@@ -3131,8 +6104,14 @@ describe("Parser", () => {
 		});
 
 		it("reads numbers like acorn", () => {
-			const { parser, toEstreeObject } = require("../../../lib/javascript/syntax");
-			const source = fixture("javascript", "parser-helpers-reads-numbers-like-acorn");
+			const {
+				parser,
+				toEstreeObject
+			} = require("../../../lib/javascript/syntax");
+			const source = fixture(
+				"javascript",
+				"parser-helpers-reads-numbers-like-acorn"
+			);
 			const program = /** @type {import("estree").Program} */ (
 				toEstreeObject(parser.parseProgram(source, 0, { sourceType: "script" }))
 			);
@@ -3153,7 +6132,10 @@ describe("Parser", () => {
 				values(
 					/** @type {import("estree").Program} */ (
 						/** @type {unknown} */ (
-							acorn.parse(source, { ecmaVersion: "latest", sourceType: "script" })
+							acorn.parse(source, {
+								ecmaVersion: "latest",
+								sourceType: "script"
+							})
 						)
 					)
 				)
@@ -3167,8 +6149,12 @@ describe("Parser", () => {
 			expect(Object.keys(keywordTypes).sort()).toEqual(
 				Object.keys(acornPort.keywordTypes).sort()
 			);
+			const acornTokContextNames = Object.keys(acornPort.tokContexts).map(
+				(name) =>
+					name.replace(/_([a-z])/g, (_, character) => character.toUpperCase())
+			);
 			expect(Object.keys(tokContexts).sort()).toEqual(
-				Object.keys(acornPort.tokContexts).sort()
+				acornTokContextNames.sort()
 			);
 		});
 	});
@@ -3187,7 +6173,8 @@ const {
  * @param {WrittenNode} node a parsed node, some children written already
  * @returns {EstreeNode} the node as `addEstree` takes it
  */
-const asEstree = (node) => /** @type {EstreeNode} */ (/** @type {unknown} */ (node));
+const asEstree = (node) =>
+	/** @type {EstreeNode} */ (/** @type {unknown} */ (node));
 
 // The options a build parses with, and the ones the minifier does.
 const TREE_OPTION_SETS = [
@@ -3206,9 +6193,15 @@ const TREE_OPTION_SETS = [
 	}
 ];
 
-const SCRIPT = fixture("javascript", "syntax-tree-rebuilds-every-node-type-the-parser-makes");
+const SCRIPT = fixture(
+	"javascript",
+	"syntax-tree-rebuilds-every-node-type-the-parser-makes"
+);
 
-const MODULE = fixture("javascript", "syntax-tree-rebuilds-every-node-type-the-parser-makes-2");
+const MODULE = fixture(
+	"javascript",
+	"syntax-tree-rebuilds-every-node-type-the-parser-makes-2"
+);
 
 const SKIPPED = new Set(["type", "start", "end", "range", "regex", "bigint"]);
 
@@ -3314,17 +6307,16 @@ describe("SyntaxTree", () => {
 			);
 			const rebuilt = tree.estree(tree.addEstree(asEstree(program)));
 			expect(
-				firstDifference(
-					rebuilt,
-					estree(SCRIPT, options),
-					"Program"
-				)
+				firstDifference(rebuilt, estree(SCRIPT, options), "Program")
 			).toBeNull();
 		}
 	});
 
 	it("writes an import or export an edition before attributes parsed", () => {
-		const source = fixture("javascript", "syntax-tree-writes-an-import-or-export-an-edition-before-attributes-parsed");
+		const source = fixture(
+			"javascript",
+			"syntax-tree-writes-an-import-or-export-an-edition-before-attributes-parsed"
+		);
 		const program = estree(source, {
 			ecmaVersion: 2020,
 			sourceType: "module"
@@ -3337,13 +6329,20 @@ describe("SyntaxTree", () => {
 			const statement = tree.field(i, Field.body, root);
 			expect(tree.fieldCount(Field.attributes, statement)).toBe(0);
 			expect(
-				/** @type {import("estree").ImportDeclaration} */ (tree.estree(statement)).attributes
+				/** @type {import("estree").ImportDeclaration} */ (
+					tree.estree(statement)
+				).attributes
 			).toEqual([]);
 		}
 	});
 
 	it("builds a child's object when its field is first read, on the same object", () => {
-		const { tree, node } = writeExpression(fixture("javascript", "syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"));
+		const { tree, node } = writeExpression(
+			fixture(
+				"javascript",
+				"syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"
+			)
+		);
 		const call = /** @type {EXPECTED_ANY} */ (tree.estree(node));
 		// own keys in ESTree's order, each child read on first access
 		expect(Object.keys(call)).toEqual([
@@ -3391,9 +6390,7 @@ describe("SyntaxTree", () => {
 						)
 					);
 				const eagerTree = new SyntaxTree();
-				const eager = eagerTree.estree(
-					write(eagerTree, parse(), new Set())
-				);
+				const eager = eagerTree.estree(write(eagerTree, parse(), new Set()));
 				const tree = new SyntaxTree();
 				const root = write(tree, parse(), new Set());
 				const lazy = /** @type {import("estree").Program} */ (
@@ -3419,7 +6416,12 @@ describe("SyntaxTree", () => {
 	});
 
 	it("builds a lazy object's child once it is read, and maps it back", () => {
-		const { tree, node } = writeExpression(fixture("javascript", "syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"));
+		const { tree, node } = writeExpression(
+			fixture(
+				"javascript",
+				"syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"
+			)
+		);
 		const call = /** @type {EXPECTED_ANY} */ (tree.lazyEstree(node));
 		// children live on the prototype until read, so they are no own keys
 		expect(Object.keys(call)).not.toContain("callee");
@@ -3437,9 +6439,16 @@ describe("SyntaxTree", () => {
 		).toEqual(["a", "b"]);
 		expect(new SyntaxTree().nodeOf(call)).toBe(0);
 		// an object `toEstreeObject` made first is not served
-		const other = writeExpression(fixture("javascript", "syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"));
+		const other = writeExpression(
+			fixture(
+				"javascript",
+				"syntax-tree-builds-only-the-fields-asked-for-then-the-rest-on-the-same-object"
+			)
+		);
 		const eager = other.tree.estree(other.node);
-		const lazy = /** @type {EXPECTED_ANY} */ (other.tree.lazyEstree(other.node));
+		const lazy = /** @type {EXPECTED_ANY} */ (
+			other.tree.lazyEstree(other.node)
+		);
 		expect(lazy).not.toBe(eager);
 		expect(other.tree.nodeOf(lazy)).toBe(other.node);
 		expect(lazy.arguments).toHaveLength(2);
@@ -3458,8 +6467,10 @@ describe("SyntaxTree", () => {
 			takeParsedTree,
 			toEstreeObject
 		} = require("../../../lib/javascript/syntax-parser");
-		const source =
-			fixture("javascript", "syntax-tree-reads-children-legacy-assert-and-pinned-nodes-of-a-tree-and-a-view");
+		const source = fixture(
+			"javascript",
+			"syntax-tree-reads-children-legacy-assert-and-pinned-nodes-of-a-tree-and-a-view"
+		);
 		const program = /** @type {number} */ (
 			/** @type {unknown} */ (parseProgram(source, 0, { sourceType: "module" }))
 		);
@@ -3488,7 +6499,14 @@ describe("SyntaxTree", () => {
 		// a pinned source is copied on release, so it reads after the tree is reused
 		const pinned = tree.pinSource();
 		tree.release();
-		parseProgram(fixture("javascript", "syntax-tree-reads-children-legacy-assert-and-pinned-nodes-of-a-tree-and-a-view-2"), 0, { sourceType: "module" });
+		parseProgram(
+			fixture(
+				"javascript",
+				"syntax-tree-reads-children-legacy-assert-and-pinned-nodes-of-a-tree-and-a-view-2"
+			),
+			0,
+			{ sourceType: "module" }
+		);
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();
 		expect(
 			/** @type {import("estree").ImportDeclaration} */ (
@@ -3502,7 +6520,14 @@ describe("SyntaxTree", () => {
 			require("../../../lib/javascript/syntax").parser;
 		const program = /** @type {number} */ (
 			/** @type {unknown} */ (
-				parseProgram(fixture("javascript", "syntax-tree-marks-legacy-assert-on-an-export-all"), 0, { sourceType: "module" })
+				parseProgram(
+					fixture(
+						"javascript",
+						"syntax-tree-marks-legacy-assert-on-an-export-all"
+					),
+					0,
+					{ sourceType: "module" }
+				)
 			)
 		);
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
@@ -3513,17 +6538,17 @@ describe("SyntaxTree", () => {
 			true,
 			false
 		]);
-		expect(
-			tree.name(tree.field(0, Field.exported, declarations[1]))
-		).toBe("b");
+		expect(tree.name(tree.field(0, Field.exported, declarations[1]))).toBe("b");
 		tree.release();
 	});
 
 	it("marks legacy assert on a re-export, and writes one an edition before attributes parsed", () => {
 		const { parseProgram, takeParsedTree } =
 			require("../../../lib/javascript/syntax").parser;
-		const source =
-			fixture("javascript", "syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before");
+		const source = fixture(
+			"javascript",
+			"syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before"
+		);
 		const program = /** @type {number} */ (
 			/** @type {unknown} */ (parseProgram(source, 0, { sourceType: "module" }))
 		);
@@ -3537,19 +6562,26 @@ describe("SyntaxTree", () => {
 
 		const before = /** @type {number} */ (
 			/** @type {unknown} */ (
-				parseProgram(fixture("javascript", "syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before-2"), 0, {
-					sourceType: "module",
-					ecmaVersion: 2020
-				})
+				parseProgram(
+					fixture(
+						"javascript",
+						"syntax-tree-marks-legacy-assert-on-a-re-export-and-writes-one-an-edition-before-2"
+					),
+					0,
+					{
+						sourceType: "module",
+						ecmaVersion: 2020
+					}
+				)
 			)
 		);
 		const written = /** @type {SyntaxTree} */ (takeParsedTree());
 		const declaration = written.field(0, Field.body, before);
 		expect(written.type(declaration)).toBe(NodeType.ExportNamedDeclaration);
 		expect(written.legacyAssert(declaration)).toBe(false);
-		expect(
-			written.type(written.field(0, Field.specifiers, declaration))
-		).toBe(NodeType.ExportSpecifier);
+		expect(written.type(written.field(0, Field.specifiers, declaration))).toBe(
+			NodeType.ExportSpecifier
+		);
 		written.release();
 	});
 
@@ -3557,11 +6589,14 @@ describe("SyntaxTree", () => {
 		const { parseProgram, takeParsedTree } =
 			require("../../../lib/javascript/syntax").parser;
 		const program = /** @type {number} */ (
-				parseProgram(
-					fixture("javascript", "syntax-tree-marks-legacy-assert-on-an-export-all"),
-					0,
-					{ sourceType: "module" }
-				)
+			parseProgram(
+				fixture(
+					"javascript",
+					"syntax-tree-marks-legacy-assert-on-an-export-all"
+				),
+				0,
+				{ sourceType: "module" }
+			)
 		);
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		expect(
@@ -3572,11 +6607,14 @@ describe("SyntaxTree", () => {
 		tree.release();
 
 		const before = /** @type {number} */ (
-				parseProgram(
-					fixture("javascript", "syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2"),
-					0,
-					{ sourceType: "module", ecmaVersion: 2020 }
-				)
+			parseProgram(
+				fixture(
+					"javascript",
+					"syntax-tree-marks-legacy-assert-on-a-star-re-export-and-writes-one-an-edition-before-2"
+				),
+				0,
+				{ sourceType: "module", ecmaVersion: 2020 }
+			)
 		);
 		const written = /** @type {SyntaxTree} */ (takeParsedTree());
 		const declaration = written.field(0, Field.body, before);
@@ -3607,19 +6645,39 @@ describe("SyntaxTree", () => {
 			return result;
 		};
 		// before ES2015 a do-while needs its semicolon or a line break
-		expect(types(fixture("javascript", "syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules"))).toEqual([
-			NodeType.DoWhileStatement,
-			NodeType.ExpressionStatement
-		]);
-		expect(() => types(fixture("javascript", "syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules-2"))).toThrow(/Unexpected token/);
+		expect(
+			types(
+				fixture(
+					"javascript",
+					"syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules"
+				)
+			)
+		).toEqual([NodeType.DoWhileStatement, NodeType.ExpressionStatement]);
+		expect(() =>
+			types(
+				fixture(
+					"javascript",
+					"syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules-2"
+				)
+			)
+		).toThrow(/Unexpected token/);
 		// ES5 allows a repeated data property only outside strict mode
-		expect(types(fixture("javascript", "syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules-3"))).toEqual([
-			NodeType.ExpressionStatement,
-			NodeType.ExpressionStatement
-		]);
-		expect(() => types(fixture("javascript", "syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules-4"))).toThrow(
-			/Redefinition of property/
-		);
+		expect(
+			types(
+				fixture(
+					"javascript",
+					"syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules-3"
+				)
+			)
+		).toEqual([NodeType.ExpressionStatement, NodeType.ExpressionStatement]);
+		expect(() =>
+			types(
+				fixture(
+					"javascript",
+					"syntax-tree-ends-an-es5-do-while-and-checks-an-es5-object-literal-by-es5-s-rules-4"
+				)
+			)
+		).toThrow(/Redefinition of property/);
 	});
 
 	it("skips holes and empty fields when pushing children", () => {
@@ -3629,7 +6687,10 @@ describe("SyntaxTree", () => {
 			takeParsedTree,
 			toEstreeObject
 		} = require("../../../lib/javascript/syntax-parser");
-		const code = fixture("javascript", "syntax-tree-skips-holes-and-empty-fields-when-pushing-children");
+		const code = fixture(
+			"javascript",
+			"syntax-tree-skips-holes-and-empty-fields-when-pushing-children"
+		);
 		const program = /** @type {number} */ (
 			/** @type {unknown} */ (parseProgram(code, 0, { sourceType: "module" }))
 		);
@@ -3655,8 +6716,10 @@ describe("SyntaxTree", () => {
 		tree.release();
 
 		// legacy `assert` is kept on each export an ESTree program is written with
-		const source =
-			fixture("javascript", "syntax-tree-skips-holes-and-empty-fields-when-pushing-children-2");
+		const source = fixture(
+			"javascript",
+			"syntax-tree-skips-holes-and-empty-fields-when-pushing-children-2"
+		);
 		const module = /** @type {EXPECTED_ANY} */ (
 			toEstreeObject(parseProgram(source, 0, { sourceType: "module" }))
 		);
@@ -3682,15 +6745,30 @@ describe("SyntaxTree", () => {
 	});
 
 	it("parses into its own tree when a hashbang callback parses again", () => {
-		const { parseProgram, takeParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
-		const program = parseProgram(fixture("javascript", "syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again"), 0, {
-			sourceType: "module",
-			onComment: () => {
-				parseProgram(fixture("javascript", "syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again-2"), 0, { sourceType: "module" });
+		const {
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		const program = parseProgram(
+			fixture(
+				"javascript",
+				"syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again"
+			),
+			0,
+			{
+				sourceType: "module",
+				onComment: () => {
+					parseProgram(
+						fixture(
+							"javascript",
+							"syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again-2"
+						),
+						0,
+						{ sourceType: "module" }
+					);
+				}
 			}
-		});
+		);
 		expect(typeof program).toBe("number");
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		const estree = /** @type {import("estree").Program} */ (
@@ -3707,38 +6785,73 @@ describe("SyntaxTree", () => {
 		).toBe("foo");
 		tree.release();
 		// the nested parse leaves the outer one its own options too
-		const script = parseProgram(fixture("javascript", "syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again-3"), 0, {
-			sourceType: "auto",
-			onComment: () => {
-				parseProgram(fixture("javascript", "syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again-2"), 0, { sourceType: "module" });
+		const script = parseProgram(
+			fixture(
+				"javascript",
+				"syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again-3"
+			),
+			0,
+			{
+				sourceType: "auto",
+				onComment: () => {
+					parseProgram(
+						fixture(
+							"javascript",
+							"syntax-tree-parses-into-its-own-tree-when-a-hashbang-callback-parses-again-2"
+						),
+						0,
+						{ sourceType: "module" }
+					);
+				}
 			}
-		});
+		);
 		expect(typeof script).toBe("number");
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();
 	});
 
 	it("keeps its records when a token callback parses again", () => {
-		const { parseProgram, toEstreeObject } = require(
-			"../../../lib/javascript/syntax-parser"
+		const {
+			parseProgram,
+			toEstreeObject
+		} = require("../../../lib/javascript/syntax-parser");
+		const source = fixture(
+			"javascript",
+			"syntax-tree-keeps-its-records-when-a-token-callback-parses-again"
 		);
-		const source = fixture("javascript", "syntax-tree-keeps-its-records-when-a-token-callback-parses-again");
 		const program = parseProgram(source, 0, {
 			sourceType: "module",
 			onToken: (token) => {
 				if (token.value !== "marker") return;
-				parseProgram(fixture("javascript", "syntax-tree-keeps-its-records-when-a-token-callback-parses-again-2"), 0, { sourceType: "module" });
+				parseProgram(
+					fixture(
+						"javascript",
+						"syntax-tree-keeps-its-records-when-a-token-callback-parses-again-2"
+					),
+					0,
+					{ sourceType: "module" }
+				);
 			}
 		});
 		expect(plain(toEstreeObject(program))).toEqual(
-			plain(acorn.parse(source, { ecmaVersion: "latest", sourceType: "module" }))
+			plain(
+				acorn.parse(source, { ecmaVersion: "latest", sourceType: "module" })
+			)
 		);
 	});
 
 	it("copies a large tree's columns for its lazy objects and frees its own", () => {
-		const { parseProgram, takeParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
+		const {
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
+		parseProgram(
+			fixture(
+				"javascript",
+				"syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"
+			),
+			0,
+			{ sourceType: "script" }
 		);
-		parseProgram(fixture("javascript", "syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"), 0, { sourceType: "script" });
 		const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 		const program = /** @type {import("estree").Program} */ (
 			tree.lazyEstree(tree._nodeCount)
@@ -3753,45 +6866,79 @@ describe("SyntaxTree", () => {
 		// the objects read a copy, so the tree's own columns are freed where
 		// `ArrayBuffer#transfer` exists
 		if (
-			typeof (/** @type {EXPECTED_ANY} */ (types.buffer).transfer) === "function"
+			typeof (/** @type {EXPECTED_ANY} */ (types.buffer).transfer) ===
+			"function"
 		) {
 			expect(types.byteLength).toBe(0);
 		}
 		// a release sizes the next tree after this one: size it back down
-		parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), 0, { sourceType: "script" });
+		parseProgram(
+			fixture(
+				"javascript",
+				"javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"
+			),
+			0,
+			{ sourceType: "script" }
+		);
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();
 	});
 
 	it("starts a large tree's values at the last one's length", () => {
-		const { parseProgram, takeParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
+		const {
+			parseProgram,
+			takeParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
 		// more values than a released tree keeps for the next one
-		const source = fixture("javascript", "syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own").repeat(2);
+		const source = fixture(
+			"javascript",
+			"syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"
+		).repeat(2);
 		for (let i = 0; i < 2; i++) {
 			const program = /** @type {number} */ (
 				parseProgram(source, 0, { sourceType: "script" })
 			);
 			const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 			expect(tree.fieldCount(Field.body, program)).toBe(280000);
-			const last = tree.field(0, Field.expression, tree.field(279999, Field.body, program));
+			const last = tree.field(
+				0,
+				Field.expression,
+				tree.field(279999, Field.body, program)
+			);
 			expect(tree.name(last)).toBe("a");
 			expect(tree.start(last)).toBe(559998);
 			tree.release();
 		}
 		// a release sizes the next tree after this one: size it back down
-		parseProgram(fixture("javascript", "javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"), 0, { sourceType: "script" });
+		parseProgram(
+			fixture(
+				"javascript",
+				"javascript-minifier-mangling-a-syntax-tree-should-refuse-a-node-its-scope"
+			),
+			0,
+			{ sourceType: "script" }
+		);
 		/** @type {SyntaxTree} */ (takeParsedTree()).release();
 	});
 
 	it("reads a literal's regex and bigint forms", () => {
-		const regex = writeExpression(fixture("javascript", "reg-exp-validator-rejects-and-accepts-the-same-patterns-as-acorn-at-ecma-version"));
+		const regex = writeExpression(
+			fixture(
+				"javascript",
+				"reg-exp-validator-rejects-and-accepts-the-same-patterns-as-acorn-at-ecma-version"
+			)
+		);
 		const literal = /** @type {EXPECTED_ANY} */ (regex.tree.estree(regex.node));
 		expect(literal.regex).toEqual({ pattern: "a", flags: "g" });
-		const bigint = writeExpression(fixture("javascript", "syntax-tree-reads-a-literal-s-regex-and-bigint-forms-when-asked-for-alone"));
+		const bigint = writeExpression(
+			fixture(
+				"javascript",
+				"syntax-tree-reads-a-literal-s-regex-and-bigint-forms-when-asked-for-alone"
+			)
+		);
 		expect(
-			/** @type {import("estree").BigIntLiteral} */ (bigint.tree.estree(bigint.node))
-				.bigint
+			/** @type {import("estree").BigIntLiteral} */ (
+				bigint.tree.estree(bigint.node)
+			).bigint
 		).toBe("10");
 	});
 
@@ -3823,7 +6970,8 @@ describe("SyntaxTree", () => {
 			/** @type {import("estree").Identifier} */ (tree.estree(name)).name
 		).toBeNull();
 		expect(
-			"directive" in /** @type {import("estree").Node} */ (tree.estree(statement))
+			"directive" in
+				/** @type {import("estree").Node} */ (tree.estree(statement))
 		).toBe(false);
 		const literal = tree.add(NodeType.Literal, 0, 1);
 		expect(tree.name(name)).toBe("");
@@ -3856,7 +7004,16 @@ describe("SyntaxTree", () => {
 			tree.addList(items, 2)
 		);
 		expect(plain(tree.estree(array))).toEqual(
-			plain(acorn.parseExpressionAt(fixture("javascript", "syntax-tree-writes-a-list-of-nodes-written-first"), 0, { ecmaVersion: "latest" }))
+			plain(
+				acorn.parseExpressionAt(
+					fixture(
+						"javascript",
+						"syntax-tree-writes-a-list-of-nodes-written-first"
+					),
+					0,
+					{ ecmaVersion: "latest" }
+				)
+			)
 		);
 	});
 
@@ -3900,9 +7057,9 @@ describe("SyntaxTree", () => {
 			/** @type {import("estree").ArrayExpression} */ (object.expression)
 				.elements[0]
 		);
-		expect(/** @type {import("estree").Identifier} */ (element.argument).name).toBe(
-			"a"
-		);
+		expect(
+			/** @type {import("estree").Identifier} */ (element.argument).name
+		).toBe("a");
 	});
 
 	it("builds a tree nested deeper than the call stack", () => {
@@ -3922,7 +7079,12 @@ describe("SyntaxTree", () => {
 	});
 
 	it("reads a node as the CSS and HTML paths read theirs", () => {
-		const { tree, node } = writeExpression(fixture("javascript", "syntax-tree-reads-a-node-as-the-css-and-html-paths-read-theirs"));
+		const { tree, node } = writeExpression(
+			fixture(
+				"javascript",
+				"syntax-tree-reads-a-node-as-the-css-and-html-paths-read-theirs"
+			)
+		);
 		expect(tree.type(node)).toBe(NodeType.CallExpression);
 		expect(tree.range(node)).toEqual([0, 19]);
 		expect(tree.flag(Flag.optional, node)).toBe(false);
@@ -3966,17 +7128,28 @@ describe("SyntaxTree", () => {
 
 	it("hands a small tree's columns to the next tree, cleared", () => {
 		const tree = new SyntaxTree();
-		parseInto(tree, fixture("javascript", "syntax-tree-hands-a-small-tree-s-columns-to-the-next-tree-cleared"));
+		parseInto(
+			tree,
+			fixture(
+				"javascript",
+				"syntax-tree-hands-a-small-tree-s-columns-to-the-next-tree-cleared"
+			)
+		);
 		const types = tree._types;
 		const values = tree._values;
 		tree.release();
 		// kept, with its columns, for the next parse, and holding nothing now
-		expect([tree._nodeCount, tree._valueCount, tree._listCount]).toEqual([0, 0, 0]);
+		expect([tree._nodeCount, tree._valueCount, tree._listCount]).toEqual([
+			0, 0, 0
+		]);
 		expect(values.every((value) => value === undefined)).toBe(true);
 		const next = new SyntaxTree();
 		expect(next._types).toBe(types);
 		expect(next._values).toBe(values);
-		const source = fixture("javascript", "syntax-tree-hands-a-small-tree-s-columns-to-the-next-tree-cleared-2");
+		const source = fixture(
+			"javascript",
+			"syntax-tree-hands-a-small-tree-s-columns-to-the-next-tree-cleared-2"
+		);
 		const program = parseInto(next, source);
 		const fresh = new SyntaxTree();
 		expect(next.estree(program)).toEqual(
@@ -4008,8 +7181,18 @@ describe("SyntaxTree", () => {
 		};
 		// Large enough to be let go, it leaves the next tree its list room exactly:
 		// the body's list fits, and the export's one more name does not.
-		parseModule(fixture("javascript", "syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column"))[0].release();
-		const [tree, program] = parseModule(fixture("javascript", "syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2"));
+		parseModule(
+			fixture(
+				"javascript",
+				"syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column"
+			)
+		)[0].release();
+		const [tree, program] = parseModule(
+			fixture(
+				"javascript",
+				"syntax-tree-keeps-a-list-s-items-while-an-item-written-into-it-grows-the-column-2"
+			)
+		);
 		const last = tree.field(
 			tree.fieldCount(Field.body, program) - 1,
 			Field.body,
@@ -4028,16 +7211,21 @@ describe("SyntaxTree", () => {
 
 	it("lets go of a large tree's columns, and the next grows to its size", () => {
 		const tree = new SyntaxTree();
-		parseInto(tree, fixture("javascript", "syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"));
+		parseInto(
+			tree,
+			fixture(
+				"javascript",
+				"syntax-tree-copies-a-large-tree-s-columns-for-its-lazy-objects-and-frees-its-own"
+			)
+		);
 		const types = tree._types;
 		const nodes = tree._nodeCount;
 		tree.release();
 		// A runtime that transfers an ArrayBuffer frees the old one at once.
 		const detached =
 			typeof (
-				/** @type {ArrayBuffer & { transfer?: unknown }} */ (
-					new ArrayBuffer(0)
-				).transfer
+				/** @type {ArrayBuffer & { transfer?: unknown }} */ (new ArrayBuffer(0))
+					.transfer
 			) === "function";
 		expect(types.byteLength === 0).toBe(detached);
 		const next = new SyntaxTree();
@@ -4113,9 +7301,17 @@ describe("SyntaxTree", () => {
 			const twoPass = new SyntaxTree();
 			try {
 				const node = compiled.addEstree(object, input, skipUnknown);
-				expect(twoPass._addEstreeInOrder(object, input, skipUnknown)).toBe(node);
+				expect(twoPass._addEstreeInOrder(object, input, skipUnknown)).toBe(
+					node
+				);
 				expect(compiled._nodeCount).toBe(twoPass._nodeCount);
-				for (const column of ["_types", "_starts", "_ends", "_flags", "_bases"]) {
+				for (const column of [
+					"_types",
+					"_starts",
+					"_ends",
+					"_flags",
+					"_bases"
+				]) {
 					expect(
 						Array.from(
 							/** @type {Int32Array} */ (
@@ -4130,12 +7326,14 @@ describe("SyntaxTree", () => {
 						)
 					);
 				}
-				expect(Array.from(compiled._slots.subarray(0, compiled._slotTop))).toEqual(
-					Array.from(twoPass._slots.subarray(0, twoPass._slotTop))
-				);
+				expect(
+					Array.from(compiled._slots.subarray(0, compiled._slotTop))
+				).toEqual(Array.from(twoPass._slots.subarray(0, twoPass._slotTop)));
 				expect(
 					Array.from(compiled._listItems.subarray(0, compiled._listItemTop))
-				).toEqual(Array.from(twoPass._listItems.subarray(0, twoPass._listItemTop)));
+				).toEqual(
+					Array.from(twoPass._listItems.subarray(0, twoPass._listItemTop))
+				);
 				expect(compiled._values.slice(0, compiled._valueCount)).toEqual(
 					twoPass._values.slice(0, twoPass._valueCount)
 				);
@@ -4151,11 +7349,16 @@ describe("SyntaxTree", () => {
 				"lib/javascript/JavascriptParser.js",
 				"test/configCases/parsing/no-estree-objects/syntax.js"
 			]) {
-				const input = fs.readFileSync(path.resolve(__dirname, "../../..", file), "utf8");
+				const input = fs.readFileSync(
+					path.resolve(__dirname, "../../..", file),
+					"utf8"
+				);
 				expectSameWrite(
 					acorn.parse(input, {
 						ecmaVersion: "latest",
-						sourceType: file.includes("no-estree-objects") ? "module" : "script",
+						sourceType: file.includes("no-estree-objects")
+							? "module"
+							: "script",
 						allowReturnOutsideFunction: true,
 						allowHashBang: true,
 						ranges: true
@@ -4163,8 +7366,10 @@ describe("SyntaxTree", () => {
 					input
 				);
 			}
-			const module =
-				fixture("javascript", "syntax-tree-the-compiled-estree-writer-writes-the-same-tree-as-the-two-pass");
+			const module = fixture(
+				"javascript",
+				"syntax-tree-the-compiled-estree-writer-writes-the-same-tree-as-the-two-pass"
+			);
 			expectSameWrite(
 				acorn.parse(module, {
 					ecmaVersion: "latest",
@@ -4195,7 +7400,12 @@ describe("SyntaxTree", () => {
 					end: 3 + i * 2,
 					operator: "+",
 					left: expression,
-					right: { type: "Identifier", start: 2 + i * 2, end: 3 + i * 2, name: "b" }
+					right: {
+						type: "Identifier",
+						start: 2 + i * 2,
+						end: 3 + i * 2,
+						name: "b"
+					}
 				};
 			}
 			const twoPass = jest.spyOn(SyntaxTree.prototype, "_addEstreeInOrder");
@@ -4251,7 +7461,9 @@ describe("SyntaxTree", () => {
 		});
 
 		it("marks an import written with `assert`", () => {
-			const { LEGACY_ASSERT_ATTRIBUTES } = require("../../../lib/javascript/syntax-parser");
+			const {
+				LEGACY_ASSERT_ATTRIBUTES
+			} = require("../../../lib/javascript/syntax-parser");
 			const attributes = /** @type {EXPECTED_ANY} */ ([]);
 			attributes[LEGACY_ASSERT_ATTRIBUTES] = true;
 			const node = {
@@ -4265,7 +7477,9 @@ describe("SyntaxTree", () => {
 			expectSameWrite(node, "");
 			const tree = new SyntaxTree();
 			try {
-				expect(tree.legacyAssert(tree.addEstree(/** @type {EXPECTED_ANY} */ (node)))).toBe(true);
+				expect(
+					tree.legacyAssert(tree.addEstree(/** @type {EXPECTED_ANY} */ (node)))
+				).toBe(true);
 			} finally {
 				tree.release();
 			}
@@ -4274,16 +7488,34 @@ describe("SyntaxTree", () => {
 
 	it("hands a tree's columns on to the next tree once only, and lets go of a large tree's values", () => {
 		const first = new SyntaxTree();
-		parseInto(first, fixture("javascript", "syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only"));
+		parseInto(
+			first,
+			fixture(
+				"javascript",
+				"syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only"
+			)
+		);
 		const second = new SyntaxTree();
-		parseInto(second, fixture("javascript", "syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-2"));
+		parseInto(
+			second,
+			fixture(
+				"javascript",
+				"syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-2"
+			)
+		);
 		const types = second._types;
 		first.release();
 		// The spare is taken, so this tree's columns are not handed on.
 		second.release();
 		expect(new SyntaxTree()._types).not.toBe(types);
 		const large = new SyntaxTree();
-		parseInto(large, fixture("javascript", "syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3"));
+		parseInto(
+			large,
+			fixture(
+				"javascript",
+				"syntax-tree-hands-a-tree-s-columns-on-to-the-next-tree-once-only-3"
+			)
+		);
 		const values = large._values;
 		large.release();
 		expect(new SyntaxTree()._values).not.toBe(values);
@@ -4307,7 +7539,13 @@ describe("JavaScript SourceProcessor", () => {
 					seen.push(path.name(), isWalkingSyntaxTree());
 				}
 			})
-			.process(fixture("javascript", "javascript-source-processor-walks-past-an-array-s-holes-and-says-it-walks-while"), {});
+			.process(
+				fixture(
+					"javascript",
+					"javascript-source-processor-walks-past-an-array-s-holes-and-says-it-walks-while"
+				),
+				{}
+			);
 		expect(seen).toEqual(["x", true, "a", true, "b", true]);
 		expect(isWalkingSyntaxTree()).toBe(false);
 	});
@@ -4320,8 +7558,10 @@ describe("JavaScript SourceProcessor", () => {
 	});
 
 	it("reads a node as the CSS and HTML paths read theirs", () => {
-		const source =
-			fixture("javascript", "javascript-source-processor-reads-a-node-as-the-css-and-html-paths-read-theirs");
+		const source = fixture(
+			"javascript",
+			"javascript-source-processor-reads-a-node-as-the-css-and-html-paths-read-theirs"
+		);
 		/** @type {Record<string, unknown>} */
 		const read = {};
 		/** @type {import("../../../lib/javascript/syntax").SourceProcessor<string>} */
@@ -4410,8 +7650,18 @@ describe("JavaScript SourceProcessor", () => {
 				if (path.name() === "stop") path.stop();
 			}
 		});
-		processor.process(fixture("javascript", "javascript-source-processor-skips-a-node-s-children-stops-and-fires-every"));
-		processor.process(fixture("javascript", "javascript-source-processor-skips-a-node-s-children-stops-and-fires-every-2"));
+		processor.process(
+			fixture(
+				"javascript",
+				"javascript-source-processor-skips-a-node-s-children-stops-and-fires-every"
+			)
+		);
+		processor.process(
+			fixture(
+				"javascript",
+				"javascript-source-processor-skips-a-node-s-children-stops-and-fires-every-2"
+			)
+		);
 		expect(names).toEqual(["c", "stop", "e"]);
 	});
 
@@ -4421,13 +7671,40 @@ describe("JavaScript SourceProcessor", () => {
 		const processor = new SourceProcessor().use({
 			[NodeType.WithStatement]: (path) => {
 				types.push(path.type());
-				expect(() => processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk-inside"))).toThrow(/already running/);
+				expect(() =>
+					processor.process(
+						fixture(
+							"javascript",
+							"javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk-inside"
+						)
+					)
+				).toThrow(/already running/);
 			}
 		});
-		processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk"), { sourceType: "script" });
+		processor.process(
+			fixture(
+				"javascript",
+				"javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk"
+			),
+			{ sourceType: "script" }
+		);
 		expect(types).toEqual([NodeType.WithStatement]);
-		expect(() => processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk"))).toThrow(SyntaxError);
-		expect(() => processor.process(fixture("javascript", "javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk-inside"))).not.toThrow();
+		expect(() =>
+			processor.process(
+				fixture(
+					"javascript",
+					"javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk"
+				)
+			)
+		).toThrow(SyntaxError);
+		expect(() =>
+			processor.process(
+				fixture(
+					"javascript",
+					"javascript-source-processor-reads-a-script-as-a-script-and-refuses-a-walk-inside"
+				)
+			)
+		).not.toThrow();
 	});
 });
 
@@ -4480,16 +7757,46 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		);
 
 	it.each([
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-use-strict-let-a-b-c-1-d-e-f-g-h-i-2"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-class-a-extends-b-static-x-1-get-y"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-for-const-k-v-of-m-label-for-x-in-y"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-x-a-b-c-d-new-e-t-f-u-re-g-10n-as"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-async-function-g-p-1-q-yield-await-r"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-switch-s-case-1-t-default-as-the"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-try-u-catch-v-finally-w-as-the"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-import-a-b-as-c-from-d-export-c"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-export-const-f-g-h-i-import-meta-as"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-j-k-l-m-n-get-o-return-1-p-q-r-as")
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-use-strict-let-a-b-c-1-d-e-f-g-h-i-2"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-class-a-extends-b-static-x-1-get-y"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-for-const-k-v-of-m-label-for-x-in-y"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-x-a-b-c-d-new-e-t-f-u-re-g-10n-as"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-async-function-g-p-1-q-yield-await-r"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-switch-s-case-1-t-default-as-the"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-try-u-catch-v-finally-w-as-the"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-import-a-b-as-c-from-d-export-c"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-export-const-f-g-h-i-import-meta-as"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-j-k-l-m-n-get-o-return-1-p-q-r-as"
+		)
 	])("writes %s as acorn's objects", (source) => {
 		const { tree, program } = parseIntoTree(source);
 		expect(plain(tree.estree(program))).toEqual(
@@ -4504,13 +7811,15 @@ describe("WebpackParser writing a SyntaxTree", () => {
 			parsedTree,
 			toEstreeObject
 		} = require("../../../lib/javascript/syntax-parser");
-		const source = fixture("javascript", "webpack-parser-writing-a-syntax-tree-parses-into-a-tree-unless-asked-for-estree");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-parses-into-a-tree-unless-asked-for-estree"
+		);
 		const expected = plain(
 			acorn.parse(source, { ecmaVersion: "latest", sourceType: "module" })
 		);
 		const program = parseProgram(source);
-		const tree =
-			/** @type {InstanceType<typeof SyntaxTree>} */ (parsedTree());
+		const tree = /** @type {InstanceType<typeof SyntaxTree>} */ (parsedTree());
 		expect(tree.type(program)).toBe(NodeType.Program);
 		expect(plain(toEstreeObject(program))).toEqual(expected);
 		expect(plain(tree.estree(program))).toEqual(expected);
@@ -4524,13 +7833,41 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		} = require("../../../lib/javascript/syntax-parser");
 		/** @type {[import("../../../lib/javascript/syntax-parser").EcmaVersion, "script" | "module", string][]} */
 		const cases = [
-			[3, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at"],
-			[5, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-2"],
-			[6, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-3"],
-			[8, "script", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-4"],
-			[10, "module", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-5"],
-			[2020, "module", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-6"],
-			["latest", "module", "webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-7"]
+			[
+				3,
+				"script",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at"
+			],
+			[
+				5,
+				"script",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-2"
+			],
+			[
+				6,
+				"script",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-3"
+			],
+			[
+				8,
+				"script",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-4"
+			],
+			[
+				10,
+				"module",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-5"
+			],
+			[
+				2020,
+				"module",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-6"
+			],
+			[
+				"latest",
+				"module",
+				"webpack-parser-writing-a-syntax-tree-builds-acorn-s-objects-for-the-edition-a-tree-was-read-at-7"
+			]
 		];
 		for (const [ecmaVersion, sourceType, name] of cases) {
 			const source = fixture("javascript", name);
@@ -4548,21 +7885,35 @@ describe("WebpackParser writing a SyntaxTree", () => {
 			parseProgram,
 			toEstreeObject
 		} = require("../../../lib/javascript/syntax-parser");
-		const source = fixture("javascript", "parser-to-estree-object-reads-each-option-as-acorn-builds-a-module");
+		const source = fixture(
+			"javascript",
+			"parser-to-estree-object-reads-each-option-as-acorn-builds-a-module"
+		);
 		/** @type {[import("../../../lib/javascript/syntax-parser").EstreeObjectOptions, import("acorn").Options][]} */
 		const cases = [
 			[{ ranges: true }, { ecmaVersion: "latest", ranges: true }],
 			[{ locations: true }, { ecmaVersion: "latest", locations: true }],
 			[
 				{ locations: true, ranges: true, sourceFile: "a.js" },
-				{ ecmaVersion: "latest", locations: true, ranges: true, sourceFile: "a.js" }
+				{
+					ecmaVersion: "latest",
+					locations: true,
+					ranges: true,
+					sourceFile: "a.js"
+				}
 			],
 			[{ ecmaVersion: "latest" }, { ecmaVersion: "latest" }],
 			[{ ecmaVersion: 2019 }, { ecmaVersion: 2019 }],
-			[{ ecmaVersion: 5, ranges: true }, { ecmaVersion: 5, ranges: true }]
+			[
+				{ ecmaVersion: 5, ranges: true },
+				{ ecmaVersion: 5, ranges: true }
+			]
 		];
 		// an edition before the source's syntax reads one that has none of it
-		const older = fixture("javascript", "parser-to-estree-object-reads-each-option-as-acorn-builds-an-older-edition");
+		const older = fixture(
+			"javascript",
+			"parser-to-estree-object-reads-each-option-as-acorn-builds-an-older-edition"
+		);
 		for (const [ours, theirs] of cases) {
 			const text =
 				ours.ecmaVersion === undefined || ours.ecmaVersion === "latest"
@@ -4574,9 +7925,7 @@ describe("WebpackParser writing a SyntaxTree", () => {
 			// the same object for the same options
 			expect(toEstreeObject(program, { ...ours })).toBe(object);
 			expect(JSON.stringify(object)).toBe(
-				JSON.stringify(
-					acorn.parse(text, { ...theirs, sourceType })
-				)
+				JSON.stringify(acorn.parse(text, { ...theirs, sourceType }))
 			);
 		}
 		const program = parseProgram(source, 0, { sourceType: "module" });
@@ -4587,16 +7936,30 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		const statement = /** @type {import("estree").Program} */ (
 			toEstreeObject(program, { locations: true })
 		);
-		parseProgram(fixture("javascript", "webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left"), 0, {});
+		parseProgram(
+			fixture(
+				"javascript",
+				"webpack-parser-acorn-override-fast-path-gates-fills-in-the-options-a-caller-left"
+			),
+			0,
+			{}
+		);
 		expect(
 			/** @type {import("estree").VariableDeclaration} */ (statement.body[1])
 				.declarations[0].id
-		).toMatchObject({ type: "Identifier", name: "c", loc: { start: { line: 2 } } });
+		).toMatchObject({
+			type: "Identifier",
+			name: "c",
+			loc: { start: { line: 2 } }
+		});
 	});
 
 	it("builds the same objects whether the program or a part of it is asked for first", () => {
 		const { Field } = require("../../../lib/javascript/syntax-parser");
-		const source = fixture("javascript", "webpack-parser-writing-a-syntax-tree-builds-the-same-objects-whether-the-program");
+		const source = fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-builds-the-same-objects-whether-the-program"
+		);
 		const whole = parseIntoTree(source);
 		const program = /** @type {import("estree").Program} */ (
 			whole.tree.estree(whole.program)
@@ -4606,7 +7969,8 @@ describe("WebpackParser writing a SyntaxTree", () => {
 		const expected = plain(acorn.parse(source, acornOptions));
 		expect(plain(program)).toEqual(expected);
 		const partFirst = parseIntoTree(source);
-		const part = partFirst.tree.estree(partFirst.tree.field(1, Field.body, partFirst.program)
+		const part = partFirst.tree.estree(
+			partFirst.tree.field(1, Field.body, partFirst.program)
 		);
 		const rest = /** @type {import("estree").Program} */ (
 			partFirst.tree.estree(partFirst.program)
@@ -4616,8 +7980,14 @@ describe("WebpackParser writing a SyntaxTree", () => {
 	});
 
 	it.each([
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-every-child-before-its-parent"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-every-child-before-its-parent-2")
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-every-child-before-its-parent"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-writes-every-child-before-its-parent-2"
+		)
 	])("writes every child of %s before its parent", (source) => {
 		const { Field } = require("../../../lib/javascript/syntax-parser");
 		const { tree } = parseIntoTree(source);
@@ -4636,7 +8006,12 @@ describe("WebpackParser writing a SyntaxTree", () => {
 
 	it("writes a node acorn shares between two fields once per field", () => {
 		const { Field } = require("../../../lib/javascript/syntax-parser");
-		const { tree } = parseIntoTree(fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-a-node-acorn-shares-between-two"));
+		const { tree } = parseIntoTree(
+			fixture(
+				"javascript",
+				"webpack-parser-writing-a-syntax-tree-writes-a-node-acorn-shares-between-two"
+			)
+		);
 		/** @type {Map<number, number>} */
 		const parents = new Map();
 		/** @type {string[]} */
@@ -4656,9 +8031,18 @@ describe("WebpackParser writing a SyntaxTree", () => {
 
 	it("writes an import or export a loop runs, where they are allowed everywhere", () => {
 		for (const source of [
-			fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-an-import-or-export-a-loop-runs"),
-			fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-an-import-or-export-a-loop-runs-2"),
-			fixture("javascript", "webpack-parser-writing-a-syntax-tree-writes-an-import-or-export-a-loop-runs-3")
+			fixture(
+				"javascript",
+				"webpack-parser-writing-a-syntax-tree-writes-an-import-or-export-a-loop-runs"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-writing-a-syntax-tree-writes-an-import-or-export-a-loop-runs-2"
+			),
+			fixture(
+				"javascript",
+				"webpack-parser-writing-a-syntax-tree-writes-an-import-or-export-a-loop-runs-3"
+			)
 		]) {
 			const everywhere = { ...options, allowImportExportEverywhere: true };
 			const tree = new SyntaxTree();
@@ -4679,17 +8063,50 @@ describe("WebpackParser writing a SyntaxTree", () => {
 	});
 
 	it.each([
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-refuses-a-b-as-it-does-otherwise"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-501"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-502"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-503"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-512"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-refuses-f-b-as-it-does-otherwise"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-refuses-a-a-1-as-it-does-otherwise"),
-		fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-530"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-refuses-a-b-c-1-as-it-does-otherwise"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-refuses-for-a-b-of-c-as-it-does-otherwise"),
-		fixture("javascript", "webpack-parser-writing-a-syntax-tree-refuses-for-using-a-b-in-c-as-it-does")
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-refuses-a-b-as-it-does-otherwise"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-501"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-502"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-503"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-512"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-refuses-f-b-as-it-does-otherwise"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-refuses-a-a-1-as-it-does-otherwise"
+		),
+		fixture(
+			"javascript",
+			"parser-parses-like-acorn-for-every-program-as-script-latest-530"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-refuses-a-b-c-1-as-it-does-otherwise"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-refuses-for-a-b-of-c-as-it-does-otherwise"
+		),
+		fixture(
+			"javascript",
+			"webpack-parser-writing-a-syntax-tree-refuses-for-using-a-b-in-c-as-it-does"
+		)
 	])("refuses %s as acorn does", (source) => {
 		/** @type {string | undefined} */
 		let message;
@@ -4699,16 +8116,30 @@ describe("WebpackParser writing a SyntaxTree", () => {
 			message = /** @type {Error} */ (err).message;
 		}
 		expect(message).toBeDefined();
-		expect(() => parseIntoTree(source)).toThrow(/** @type {string} */ (message));
+		expect(() => parseIntoTree(source)).toThrow(
+			/** @type {string} */ (message)
+		);
 	});
 });
 
 describe("parseProgram", () => {
-	const { A, NodeType, parseProgram, toEstreeObject } = require("../../../lib/javascript/syntax-parser");
+	const {
+		A,
+		NodeType,
+		parseProgram,
+		toEstreeObject
+	} = require("../../../lib/javascript/syntax-parser");
 	const { SourceProcessor } = require("../../../lib/javascript/syntax");
 
 	it("returns the program's node, read through A until the next parse", () => {
-		const program = /** @type {number} */ (parseProgram(fixture("javascript", "parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse")));
+		const program = /** @type {number} */ (
+			parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse"
+				)
+			)
+		);
 		expect(A.type(program)).toBe(NodeType.Program);
 		expect(A.children(program).map((node) => A.type(node))).toEqual([
 			NodeType.VariableDeclaration,
@@ -4717,7 +8148,12 @@ describe("parseProgram", () => {
 		const call = A.child(0, A.child(1, program));
 		expect(A.source(call)).toBe("f(a)");
 		expect(A.loc(call)).toEqual([1, 11, 1, 15]);
-		parseProgram(fixture("javascript", "parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2"));
+		parseProgram(
+			fixture(
+				"javascript",
+				"parse-program-returns-the-program-s-node-read-through-a-until-the-next-parse-2"
+			)
+		);
 		expect(A.source(A.child(0, program))).toBe("g()");
 	});
 
@@ -4726,9 +8162,16 @@ describe("parseProgram", () => {
 		const comments = [];
 		const program = /** @type {import("estree").Program} */ (
 			toEstreeObject(
-				parseProgram(fixture("javascript", "parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return"), 0, {
-					comments
-				})
+				parseProgram(
+					fixture(
+						"javascript",
+						"parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return"
+					),
+					0,
+					{
+						comments
+					}
+				)
 			)
 		);
 		expect(program.type).toBe("Program");
@@ -4736,59 +8179,135 @@ describe("parseProgram", () => {
 		expect(comments.map((comment) => comment.value)).toEqual([" a "]);
 		const auto = /** @type {import("estree").Program} */ (
 			toEstreeObject(
-				parseProgram(fixture("javascript", "parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return-2"), 0, {
-					sourceType: "auto"
-				})
+				parseProgram(
+					fixture(
+						"javascript",
+						"parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return-2"
+					),
+					0,
+					{
+						sourceType: "auto"
+					}
+				)
 			)
 		);
 		expect(auto.sourceType).toBe("script");
-		expect(() => parseProgram(fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-111"), 0, { sourceType: "script" })).toThrow(
-			"'return' outside of function"
-		);
+		expect(() =>
+			parseProgram(
+				fixture(
+					"javascript",
+					"parser-parses-like-acorn-for-every-program-as-script-latest-111"
+				),
+				0,
+				{ sourceType: "script" }
+			)
+		).toThrow("'return' outside of function");
 		expect(
 			/** @type {import("estree").Program} */ (
 				toEstreeObject(
-					parseProgram(fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-111"), 0, {
-						sourceType: "script",
-						allowReturnOutsideFunction: true
-					})
+					parseProgram(
+						fixture(
+							"javascript",
+							"parser-parses-like-acorn-for-every-program-as-script-latest-111"
+						),
+						0,
+						{
+							sourceType: "script",
+							allowReturnOutsideFunction: true
+						}
+					)
 				)
 			).body[0].type
 		).toBe("ReturnStatement");
 		expect(() =>
-			parseProgram(fixture("javascript", "parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return-3"), 0, { importPhases: false })
+			parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return-3"
+				),
+				0,
+				{ importPhases: false }
+			)
 		).toThrow(SyntaxError);
-		expect(typeof parseProgram(fixture("javascript", "parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return-3"))).toBe("number");
+		expect(
+			typeof parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-reads-a-build-s-options-estree-comments-auto-a-top-level-return-3"
+				)
+			)
+		).toBe("number");
 	});
 
 	it("reads every grammar option into the tree as acorn reads it", () => {
 		/** @typedef {Pick<import("acorn").Options, "strict" | "allowReserved" | "allowHashBang" | "allowImportExportEverywhere" | "allowAwaitOutsideFunction" | "allowSuperOutsideMethod" | "checkPrivateFields">} GrammarOptions */
 		/** @type {[string, "script" | "module", GrammarOptions, GrammarOptions][]} */
 		const cases = [
-			[fixture("javascript", "parse-program-reads-a-script-where-asked"), "script", { strict: true }, { strict: false }],
-			[fixture("javascript", "parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it"), "script", { allowReserved: "never" }, { allowReserved: true }],
-			[fixture("javascript", "parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-2"), "script", { allowReserved: false }, { allowReserved: true }],
-			[fixture("javascript", "parse-program-reads-a-source-as-event-handler-x-n1"), "script", { allowHashBang: false }, { allowHashBang: true }],
 			[
-				fixture("javascript", "parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-3"),
+				fixture("javascript", "parse-program-reads-a-script-where-asked"),
+				"script",
+				{ strict: true },
+				{ strict: false }
+			],
+			[
+				fixture(
+					"javascript",
+					"parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it"
+				),
+				"script",
+				{ allowReserved: "never" },
+				{ allowReserved: true }
+			],
+			[
+				fixture(
+					"javascript",
+					"parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-2"
+				),
+				"script",
+				{ allowReserved: false },
+				{ allowReserved: true }
+			],
+			[
+				fixture(
+					"javascript",
+					"parse-program-reads-a-source-as-event-handler-x-n1"
+				),
+				"script",
+				{ allowHashBang: false },
+				{ allowHashBang: true }
+			],
+			[
+				fixture(
+					"javascript",
+					"parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-3"
+				),
 				"module",
 				{ allowImportExportEverywhere: true },
 				{ allowImportExportEverywhere: false }
 			],
 			[
-				fixture("javascript", "acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-17"),
+				fixture(
+					"javascript",
+					"acorn-corpus-the-parser-a-build-runs-builds-acorn-s-tree-as-acorn-s-own-suite-17"
+				),
 				"script",
 				{ allowAwaitOutsideFunction: true },
 				{ allowAwaitOutsideFunction: false }
 			],
 			[
-				fixture("javascript", "parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-4"),
+				fixture(
+					"javascript",
+					"parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-4"
+				),
 				"script",
 				{ allowSuperOutsideMethod: true },
 				{ allowSuperOutsideMethod: false }
 			],
 			[
-				fixture("javascript", "parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-5"),
+				fixture(
+					"javascript",
+					"parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-5"
+				),
 				"script",
 				{ checkPrivateFields: false },
 				{ checkPrivateFields: true }
@@ -4821,17 +8340,27 @@ describe("parseProgram", () => {
 				results[1][1]
 			]);
 		}
-		const tree = parseProgram(fixture("javascript", "parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-6"), 0, {
-			sourceType: "script",
-			preserveParens: true
-		});
-		expect(A.type(A.field(0, Field.expression, A.field(0, Field.body, tree)))).toBe(
-			NodeType.ParenthesizedExpression
+		const tree = parseProgram(
+			fixture(
+				"javascript",
+				"parse-program-reads-every-grammar-option-into-the-tree-as-acorn-reads-it-6"
+			),
+			0,
+			{
+				sourceType: "script",
+				preserveParens: true
+			}
 		);
+		expect(
+			A.type(A.field(0, Field.expression, A.field(0, Field.body, tree)))
+		).toBe(NodeType.ParenthesizedExpression);
 	});
 
 	it("reports tokens and the parse's events into the tree as acorn does", () => {
-		const code = fixture("javascript", "parse-program-reports-tokens-and-the-parse-s-events-into-the-tree-as-acorn-does");
+		const code = fixture(
+			"javascript",
+			"parse-program-reports-tokens-and-the-parse-s-events-into-the-tree-as-acorn-does"
+		);
 		/** @type {unknown[]} */
 		const tokens = [];
 		/** @type {unknown[]} */
@@ -4840,7 +8369,8 @@ describe("parseProgram", () => {
 		/** @type {import("acorn").Options} */
 		const callbacks = {
 			ecmaVersion: "latest",
-			onToken: (token) => tokens.push([token.type.label, token.start, token.end]),
+			onToken: (token) =>
+				tokens.push([token.type.label, token.start, token.end]),
 			onComment: (block, text, start) => events.push(["comment", text, start]),
 			onInsertedSemicolon: (end) => events.push(["semicolon", end]),
 			onTrailingComma: (end) => events.push(["comma", end])
@@ -4864,12 +8394,19 @@ describe("parseProgram", () => {
 		const comments = [];
 		/** @type {unknown[]} */
 		const reported = [];
-		parseProgram(fixture("javascript", "parse-program-collects-comments-and-reports-them-to-on-comment-in-one-parse"), 0, {
-			sourceType: "script",
-			comments,
-			onComment: (block, text, start, end) =>
-				reported.push([block, text, start, end])
-		});
+		parseProgram(
+			fixture(
+				"javascript",
+				"parse-program-collects-comments-and-reports-them-to-on-comment-in-one-parse"
+			),
+			0,
+			{
+				sourceType: "script",
+				comments,
+				onComment: (block, text, start, end) =>
+					reported.push([block, text, start, end])
+			}
+		);
 		expect(comments.map((comment) => comment.value)).toEqual([
 			"x",
 			" a ",
@@ -4886,29 +8423,53 @@ describe("parseProgram", () => {
 		expect(() =>
 			new SourceProcessor()
 				.use([NodeType.Identifier], () => {
-					parseProgram(fixture("javascript", "parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"));
+					parseProgram(
+						fixture(
+							"javascript",
+							"parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"
+						)
+					);
 				})
-				.process(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"), { sourceType: "script" })
+				.process(
+					fixture(
+						"javascript",
+						"parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"
+					),
+					{ sourceType: "script" }
+				)
 		).toThrow("a visitor cannot start another JavaScript parse");
 	});
 
 	it("refuses a tree a visitor hands `A` to read", () => {
-		const { _SyntaxTree: SyntaxTree, readParsedTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
+		const {
+			_SyntaxTree: SyntaxTree,
+			readParsedTree
+		} = require("../../../lib/javascript/syntax-parser");
 		expect(() =>
 			new SourceProcessor()
 				.use([NodeType.Identifier], () => {
 					readParsedTree(new SyntaxTree(), "");
 				})
-				.process(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"), { sourceType: "script" })
+				.process(
+					fixture(
+						"javascript",
+						"parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"
+					),
+					{ sourceType: "script" }
+				)
 		).toThrow("a visitor cannot swap the tree it walks");
 	});
 
 	it("reads `await` as a name once `auto` turns into a script", () => {
 		for (const code of [
-			fixture("javascript", "parse-program-reads-await-as-a-name-once-auto-turns-into-a-script"),
-			fixture("javascript", "parse-program-reads-await-as-a-name-once-auto-turns-into-a-script-2")
+			fixture(
+				"javascript",
+				"parse-program-reads-await-as-a-name-once-auto-turns-into-a-script"
+			),
+			fixture(
+				"javascript",
+				"parse-program-reads-await-as-a-name-once-auto-turns-into-a-script-2"
+			)
 		]) {
 			expect(parseProgram(code, 0, { sourceType: "auto" })).toEqual(
 				expect.any(Number)
@@ -4917,20 +8478,36 @@ describe("parseProgram", () => {
 	});
 
 	it("throws the first error without a callback, as acorn does", () => {
-		expect(() => parseProgram(fixture("javascript", "parse-program-reads-past-let-a-let-a"))).toThrow(
-			"Identifier 'a' has already been declared (1:11)"
-		);
-		expect(() => parseProgram(fixture("javascript", "parse-program-stops-at-a-returning-nothing"))).toThrow(SyntaxError);
-		expect(parseProgram(fixture("javascript", "parse-program-stops-at-a-returning-nothing"), 0, { parseError: () => {} })).toBeUndefined();
+		expect(() =>
+			parseProgram(
+				fixture("javascript", "parse-program-reads-past-let-a-let-a")
+			)
+		).toThrow("Identifier 'a' has already been declared (1:11)");
+		expect(() =>
+			parseProgram(
+				fixture("javascript", "parse-program-stops-at-a-returning-nothing")
+			)
+		).toThrow(SyntaxError);
+		expect(
+			parseProgram(
+				fixture("javascript", "parse-program-stops-at-a-returning-nothing"),
+				0,
+				{ parseError: () => {} }
+			)
+		).toBeUndefined();
 	});
 
 	it("rethrows a syntax error the callback throws", () => {
 		expect(() =>
-			parseProgram(fixture("javascript", "parse-program-reads-past-let-a-let-a"), 0, {
-				parseError: () => {
-					throw new SyntaxError("callback");
+			parseProgram(
+				fixture("javascript", "parse-program-reads-past-let-a-let-a"),
+				0,
+				{
+					parseError: () => {
+						throw new SyntaxError("callback");
+					}
 				}
-			})
+			)
 		).toThrow("callback");
 	});
 
@@ -4938,48 +8515,92 @@ describe("parseProgram", () => {
 		/** @type {string[]} */
 		const codes = [];
 		expect(() =>
-			parseProgram(fixture("javascript", "parse-program-reads-past-let-a-let-a"), 0, {
-				parseError: (input, code) => {
-					codes.push(code);
-					parseProgram(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"));
+			parseProgram(
+				fixture("javascript", "parse-program-reads-past-let-a-let-a"),
+				0,
+				{
+					parseError: (input, code) => {
+						codes.push(code);
+						parseProgram(
+							fixture(
+								"javascript",
+								"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"
+							)
+						);
+					}
 				}
-			})
+			)
 		).toThrow("parseProgram() is running");
 		expect(codes).toEqual(["var-redeclaration"]);
 	});
 
 	it("rethrows what is not a syntax error", () => {
 		expect(() =>
-			parseProgram(fixture("javascript", "parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"), 0, {
-				parseError: () => {
-					throw new TypeError("callback");
-				},
-				sourceType: "script"
-			})
+			parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-lets-the-last-tree-go-once-an-estree-parse-starts"
+				),
+				0,
+				{
+					parseError: () => {
+						throw new TypeError("callback");
+					},
+					sourceType: "script"
+				}
+			)
 		).not.toThrow();
 		expect(() =>
-			parseProgram(fixture("javascript", "parse-program-reads-past-let-a-let-a"), 0, {
-				parseError: () => {
-					throw new TypeError("callback");
+			parseProgram(
+				fixture("javascript", "parse-program-reads-past-let-a-let-a"),
+				0,
+				{
+					parseError: () => {
+						throw new TypeError("callback");
+					}
 				}
-			})
+			)
 		).toThrow(TypeError);
 	});
 
 	it("leaves the parsed tree to a SourceProcessor run, and refuses one inside it", () => {
-		parseProgram(fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"));
+		parseProgram(
+			fixture(
+				"javascript",
+				"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at-3"
+			)
+		);
 		/** @type {number[]} */
 		const seen = [];
 		new SourceProcessor()
 			.use({
 				[NodeType.Identifier]: (path) => {
 					seen.push(path.start());
-					expect(() => parseProgram(fixture("javascript", "parser-static-entry-points-normalizes-options-like-acorn"))).toThrow(/process\(\) is running/);
+					expect(() =>
+						parseProgram(
+							fixture(
+								"javascript",
+								"parser-static-entry-points-normalizes-options-like-acorn"
+							)
+						)
+					).toThrow(/process\(\) is running/);
 				}
 			})
-			.process(fixture("javascript", "parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one"));
+			.process(
+				fixture(
+					"javascript",
+					"parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one"
+				)
+			);
 		expect(seen).toEqual([0, 4]);
-		const program = /** @type {number} */ (parseProgram(fixture("javascript", "parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one-2")));
+		const program = /** @type {number} */ (
+			parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-leaves-the-parsed-tree-to-a-source-processor-run-and-refuses-one-2"
+				)
+			)
+		);
 		expect(A.source(program)).toBe("z");
 	});
 
@@ -4989,30 +8610,42 @@ describe("parseProgram", () => {
 			const comments = [];
 			const program = /** @type {import("estree").Program} */ (
 				toEstreeObject(
-					parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-reads-whitespace-and-a-comment-after-an-html-style-comment"), 0, {
-						sourceType: "script",
-						comments
-					})
+					parseProgram(
+						fixture(
+							"javascript",
+							"parser-paths-only-the-tree-s-own-syntax-reaches-reads-whitespace-and-a-comment-after-an-html-style-comment"
+						),
+						0,
+						{
+							sourceType: "script",
+							comments
+						}
+					)
 				)
 			);
-			expect(comments.map((comment) => [comment.type, comment.value])).toEqual(
-				[
-					["Line", " x"],
-					["Block", " c "]
-				]
-			);
+			expect(comments.map((comment) => [comment.type, comment.value])).toEqual([
+				["Line", " x"],
+				["Block", " c "]
+			]);
 			expect(program.body).toHaveLength(1);
 		});
 
 		it("reports each parenthesized binding an arrow's parameters hold", () => {
 			/** @type {[string, number, string][]} */
 			const errors = [];
-			parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-reports-each-parenthesized-binding-an-arrow-s-parameters-hold"), 0, {
-				preserveParens: true,
-				parseError: (input, code, start, end, severity) => {
-					errors.push([code, start, severity]);
+			parseProgram(
+				fixture(
+					"javascript",
+					"parser-paths-only-the-tree-s-own-syntax-reaches-reports-each-parenthesized-binding-an-arrow-s-parameters-hold"
+				),
+				0,
+				{
+					preserveParens: true,
+					parseError: (input, code, start, end, severity) => {
+						errors.push([code, start, severity]);
+					}
 				}
-			});
+			);
 			expect(errors).toEqual([
 				["invalid-parenthesized-assignment", 2, "warning"],
 				["invalid-parenthesized-assignment", 7, "warning"]
@@ -5021,29 +8654,69 @@ describe("parseProgram", () => {
 
 		it("refuses a rest parameter binding a pattern in ES2015 only", () => {
 			expect(() =>
-				parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-refuses-a-rest-parameter-binding-a-pattern-in-es2015-only"), 0, { ecmaVersion: 6 })
+				parseProgram(
+					fixture(
+						"javascript",
+						"parser-paths-only-the-tree-s-own-syntax-reaches-refuses-a-rest-parameter-binding-a-pattern-in-es2015-only"
+					),
+					0,
+					{ ecmaVersion: 6 }
+				)
 			).toThrow("Unexpected token (1:4)");
 			expect(() =>
-				parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-refuses-a-rest-parameter-binding-a-pattern-in-es2015-only"), 0, { ecmaVersion: 7 })
+				parseProgram(
+					fixture(
+						"javascript",
+						"parser-paths-only-the-tree-s-own-syntax-reaches-refuses-a-rest-parameter-binding-a-pattern-in-es2015-only"
+					),
+					0,
+					{ ecmaVersion: 7 }
+				)
 			).not.toThrow();
 		});
 
 		it("logs the scope of a block holding an import", () => {
 			const { ScopeLog } = require("../../../lib/javascript/syntax-parser");
 			const scopes = new ScopeLog();
-			parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-logs-the-scope-of-a-block-holding-an-import"), 0, {
-				allowImportExportEverywhere: true,
-				scopes
-			});
+			parseProgram(
+				fixture(
+					"javascript",
+					"parser-paths-only-the-tree-s-own-syntax-reaches-logs-the-scope-of-a-block-holding-an-import"
+				),
+				0,
+				{
+					allowImportExportEverywhere: true,
+					scopes
+				}
+			);
 			expect(scopes.scopeCount).toBe(1);
-			parseProgram(fixture("javascript", "scope-analyzer-scopes-a-block-only-when-it-declares-something-scopes-a-block"), 0, { scopes });
+			parseProgram(
+				fixture(
+					"javascript",
+					"scope-analyzer-scopes-a-block-only-when-it-declares-something-scopes-a-block"
+				),
+				0,
+				{ scopes }
+			);
 			expect(scopes.scopeCount).toBe(0);
 		});
 
 		it("grows a new tree's columns from a node with no field", () => {
 			// a tree past its reuse capacity is let go: the next parse starts empty
-			parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-grows-a-new-tree-s-columns-from-a-node-with-no-field"));
-			const program = /** @type {number} */ (parseProgram(fixture("javascript", "parser-paths-only-the-tree-s-own-syntax-reaches-grows-a-new-tree-s-columns-from-a-node-with-no-field-2")));
+			parseProgram(
+				fixture(
+					"javascript",
+					"parser-paths-only-the-tree-s-own-syntax-reaches-grows-a-new-tree-s-columns-from-a-node-with-no-field"
+				)
+			);
+			const program = /** @type {number} */ (
+				parseProgram(
+					fixture(
+						"javascript",
+						"parser-paths-only-the-tree-s-own-syntax-reaches-grows-a-new-tree-s-columns-from-a-node-with-no-field-2"
+					)
+				)
+			);
 			expect(A.type(A.child(0, A.child(0, program)))).toBe(
 				NodeType.ThisExpression
 			);
@@ -5069,9 +8742,7 @@ describe("hasOctalEscape", () => {
 });
 
 describe("validateRegExpLiteral", () => {
-	const {
-		validateRegExpLiteral
-	} = require("../../../lib/javascript/regexp");
+	const { validateRegExpLiteral } = require("../../../lib/javascript/regexp");
 
 	it.each(
 		/** @type {[string, string, import("../../../lib/javascript/syntax-parser").EcmaVersion, string | undefined][]} */ ([
@@ -5086,7 +8757,15 @@ describe("validateRegExpLiteral", () => {
 			["a\\", "", 2018, "Unterminated regular expression"],
 			["a/b", "", 2018, "Unterminated regular expression"],
 			["[/]", "", 2018, undefined],
-			[fixture("javascript", "webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"), "", 2018, "Unterminated regular expression"]
+			[
+				fixture(
+					"javascript",
+					"webpack-parser-automatic-semicolon-insertion-should-keep-splitting-statements-at"
+				),
+				"",
+				2018,
+				"Unterminated regular expression"
+			]
 		])
 	)("holds /%s/%s at %s to the spec", (pattern, flags, ecmaVersion, error) => {
 		const validate = () => validateRegExpLiteral(pattern, flags, ecmaVersion);
@@ -5137,12 +8816,28 @@ describe("fromEstreeObject", () => {
 		);
 
 	it.each([
-		["the input", { type: "Literal", value: "ab", start: 0, end: 4 }, '"ab";', '"ab"'],
-		["a string", { type: "Literal", value: "ab", start: 0, end: 0 }, "", '"ab"'],
+		[
+			"the input",
+			{ type: "Literal", value: "ab", start: 0, end: 4 },
+			'"ab";',
+			'"ab"'
+		],
+		[
+			"a string",
+			{ type: "Literal", value: "ab", start: 0, end: 0 },
+			"",
+			'"ab"'
+		],
 		["a number", { type: "Literal", value: 3, start: 0, end: 0 }, "", "3"],
 		[
 			"a pattern",
-			{ type: "Literal", value: null, regex: { pattern: "a", flags: "g" }, start: 0, end: 0 },
+			{
+				type: "Literal",
+				value: null,
+				regex: { pattern: "a", flags: "g" },
+				start: 0,
+				end: 0
+			},
 			"",
 			"/a/g"
 		],
@@ -5200,7 +8895,10 @@ describe("fromEstreeObject", () => {
 	describe("from the objects toEstreeObject built", () => {
 		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
 		// a program and a function long enough for their objects to read lazily
-		const input = fixture("javascript", "parser-from-the-objects-to-estree-object-built-a-program-and-a-function-read-lazily");
+		const input = fixture(
+			"javascript",
+			"parser-from-the-objects-to-estree-object-built-a-program-and-a-function-read-lazily"
+		);
 
 		/**
 		 * @param {EXPECTED_ANY} value an ESTree object or one of its fields
@@ -5221,9 +8919,8 @@ describe("fromEstreeObject", () => {
 		 * @returns {string} its objects as JSON
 		 */
 		const json = (node) =>
-			JSON.stringify(
-				toEstreeObject(node, { ranges: true }),
-				(_key, value) => (typeof value === "bigint" ? `${value}n` : value)
+			JSON.stringify(toEstreeObject(node, { ranges: true }), (_key, value) =>
+				typeof value === "bigint" ? `${value}n` : value
 			);
 
 		/**
@@ -5234,7 +8931,10 @@ describe("fromEstreeObject", () => {
 
 		it.each([
 			["nothing read", () => {}],
-			["the function read", (/** @type {EXPECTED_ANY} */ program) => functionOf(program)],
+			[
+				"the function read",
+				(/** @type {EXPECTED_ANY} */ program) => functionOf(program)
+			],
 			[
 				"a field holding a node assigned",
 				(/** @type {EXPECTED_ANY} */ program) => {
@@ -5301,33 +9001,37 @@ describe("fromEstreeObject", () => {
 					});
 				}
 			]
-		])(
-			"should write the tree its objects hold with %s",
-			(_name, edit) => {
-				for (const options of [undefined, { ranges: true, locations: true }]) {
-					const edited = () => {
-						const program = /** @type {EXPECTED_ANY} */ (
-							toEstreeObject(
-								/** @type {number} */ (
-									parseProgram(input, 0, { sourceType: "module" })
-								),
-								options
-							)
-						);
-						edit(program);
-						return program;
-					};
-					// written before anything else reads it, as `plain` reads every field
-					const program = edited();
-					const written = json(fromEstreeObject(program, input));
-					const expected = json(fromEstreeObject(plain(edited()), input));
-					expect(written).toBe(expected);
-					// and again once the tree they were read from was let go
-					parseProgram(fixture("javascript", "parser-from-the-objects-to-estree-object-built-should-write-the-tree-its-objects-hold-once-it-was-let-go"), 0, {});
-					expect(json(fromEstreeObject(program, input))).toBe(expected);
-				}
+		])("should write the tree its objects hold with %s", (_name, edit) => {
+			for (const options of [undefined, { ranges: true, locations: true }]) {
+				const edited = () => {
+					const program = /** @type {EXPECTED_ANY} */ (
+						toEstreeObject(
+							/** @type {number} */ (
+								parseProgram(input, 0, { sourceType: "module" })
+							),
+							options
+						)
+					);
+					edit(program);
+					return program;
+				};
+				// written before anything else reads it, as `plain` reads every field
+				const program = edited();
+				const written = json(fromEstreeObject(program, input));
+				const expected = json(fromEstreeObject(plain(edited()), input));
+				expect(written).toBe(expected);
+				// and again once the tree they were read from was let go
+				parseProgram(
+					fixture(
+						"javascript",
+						"parser-from-the-objects-to-estree-object-built-should-write-the-tree-its-objects-hold-once-it-was-let-go"
+					),
+					0,
+					{}
+				);
+				expect(json(fromEstreeObject(program, input))).toBe(expected);
 			}
-		);
+		});
 
 		it.each([
 			["nothing done", () => {}, true],
@@ -5411,7 +9115,10 @@ describe("fromEstreeObject", () => {
 		});
 
 		it("should write the fields an older edition's objects leave out", () => {
-			const source = fixture("javascript", "parser-from-the-objects-to-estree-object-built-should-write-the-fields-an-older-edition-s-objects-leave-out");
+			const source = fixture(
+				"javascript",
+				"parser-from-the-objects-to-estree-object-built-should-write-the-fields-an-older-edition-s-objects-leave-out"
+			);
 			const program = /** @type {number} */ (
 				parseProgram(source, 0, { sourceType: "script" })
 			);
@@ -5432,9 +9139,9 @@ describe("fromEstreeObject", () => {
 	});
 
 	it("hands its tree back on the next parse", () => {
-		const { _SyntaxTree: SyntaxTree } = require(
-			"../../../lib/javascript/syntax-parser"
-		);
+		const {
+			_SyntaxTree: SyntaxTree
+		} = require("../../../lib/javascript/syntax-parser");
 		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
 		const program = /** @type {import("estree").Program} */ (
 			/** @type {unknown} */ ({
@@ -5448,7 +9155,14 @@ describe("fromEstreeObject", () => {
 		fromEstreeObject(program, "");
 		const release = jest.spyOn(SyntaxTree.prototype, "release");
 		try {
-			parseProgram(fixture("javascript", "parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"), 0, {});
+			parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-refuses-an-estree-parse-a-visitor-starts-as-a-tree-parse"
+				),
+				0,
+				{}
+			);
 			expect(release).toHaveBeenCalledTimes(1);
 		} finally {
 			release.mockRestore();
@@ -5464,51 +9178,100 @@ describe("parseProgram and parse beside the fast paths", () => {
 		const program = /** @type {EXPECTED_ANY} */ (
 			toEstreeObject(
 				/** @type {number} */ (
-					parseProgram(fixture("javascript", "parse-program-and-parse-beside-the-fast-paths-should-read-es5-s-do-while"), 0, {
-						ecmaVersion: 5,
-						sourceType: "script"
-					})
+					parseProgram(
+						fixture(
+							"javascript",
+							"parse-program-and-parse-beside-the-fast-paths-should-read-es5-s-do-while"
+						),
+						0,
+						{
+							ecmaVersion: 5,
+							sourceType: "script"
+						}
+					)
 				)
 			)
 		);
 
-		expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
-			"DoWhileStatement",
-			"ExpressionStatement"
-		]);
+		expect(
+			program.body.map(
+				(/** @type {{ type: string }} */ statement) => statement.type
+			)
+		).toEqual(["DoWhileStatement", "ExpressionStatement"]);
 		// The tree reads the same.
 		expect(
-			typeof parseProgram(fixture("javascript", "parse-program-and-parse-beside-the-fast-paths-should-read-es5-s-do-while"), 0, { ecmaVersion: 5, sourceType: "script" })
+			typeof parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-and-parse-beside-the-fast-paths-should-read-es5-s-do-while"
+				),
+				0,
+				{ ecmaVersion: 5, sourceType: "script" }
+			)
 		).toBe("number");
 		// ES5 needs the semicolon after a `do`-`while`.
-		expect(() => parseProgram(fixture("javascript", "parse-program-and-parse-beside-the-fast-paths-should-read-es5-s-do-while-2"), 0, { ecmaVersion: 5, sourceType: "script" })).toThrow(SyntaxError);
+		expect(() =>
+			parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-and-parse-beside-the-fast-paths-should-read-es5-s-do-while-2"
+				),
+				0,
+				{ ecmaVersion: 5, sourceType: "script" }
+			)
+		).toThrow(SyntaxError);
 	});
 
 	it("should read an export of an edition before import attributes", () => {
 		const program = /** @type {EXPECTED_ANY} */ (
 			toEstreeObject(
 				/** @type {number} */ (
-					parseProgram(fixture("javascript", "parse-program-and-parse-beside-the-fast-paths-should-read-an-export-of-an"), 0, {
-						ecmaVersion: 2020,
-						sourceType: "module"
-					})
+					parseProgram(
+						fixture(
+							"javascript",
+							"parse-program-and-parse-beside-the-fast-paths-should-read-an-export-of-an"
+						),
+						0,
+						{
+							ecmaVersion: 2020,
+							sourceType: "module"
+						}
+					)
 				)
 			)
 		);
 
-		expect(program.body.map((/** @type {{ type: string }} */ statement) => statement.type)).toEqual([
+		expect(
+			program.body.map(
+				(/** @type {{ type: string }} */ statement) => statement.type
+			)
+		).toEqual([
 			"VariableDeclaration",
 			"ExportNamedDeclaration",
 			"ExportNamedDeclaration"
 		]);
 		expect(
-			typeof parseProgram(fixture("javascript", "parse-program-and-parse-beside-the-fast-paths-should-read-an-export-of-an"), 0, { ecmaVersion: 2020, sourceType: "module" })
+			typeof parseProgram(
+				fixture(
+					"javascript",
+					"parse-program-and-parse-beside-the-fast-paths-should-read-an-export-of-an"
+				),
+				0,
+				{ ecmaVersion: 2020, sourceType: "module" }
+			)
 		).toBe("number");
 	});
 
 	it("should throw an error it could go on past where no `parseError` takes it", () => {
-		expect(() => parseProgram(fixture("javascript", "parser-parses-like-acorn-for-every-program-as-script-latest-98"), 0, { sourceType: "module" })).toThrow(
-			"Identifier 'a' has already been declared"
-		);
+		expect(() =>
+			parseProgram(
+				fixture(
+					"javascript",
+					"parser-parses-like-acorn-for-every-program-as-script-latest-98"
+				),
+				0,
+				{ sourceType: "module" }
+			)
+		).toThrow("Identifier 'a' has already been declared");
 	});
 });

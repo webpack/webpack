@@ -25,9 +25,15 @@ describe("HotModuleReplacementPlugin.getParserHooks", () => {
 		const parser = new JavascriptParserOtherCopy();
 
 		expect(parser instanceof JavascriptParser).toBe(false);
-		const hooks = HotModuleReplacementPlugin.getParserHooks(/** @type {EXPECTED_ANY} */ (parser));
+		const hooks = HotModuleReplacementPlugin.getParserHooks(
+			/** @type {EXPECTED_ANY} */ (parser)
+		);
 		expect(typeof hooks.hotAcceptCallback.tap).toBe("function");
-		expect(HotModuleReplacementPlugin.getParserHooks(/** @type {EXPECTED_ANY} */ (parser))).toBe(hooks);
+		expect(
+			HotModuleReplacementPlugin.getParserHooks(
+				/** @type {EXPECTED_ANY} */ (parser)
+			)
+		).toBe(hooks);
 	});
 
 	it("rejects anything that is not a JavascriptParser", () => {

@@ -516,15 +516,16 @@ ${details(snapshot)}`)
 	describe("path classification cache", () => {
 		const options = { timestamp: true };
 
-		const noopLogger = /** @type {import("../../lib/logging/Logger").Logger} */ (
-			/** @type {unknown} */ ({
-				error: () => {},
-				warn: () => {},
-				info: () => {},
-				log: () => {},
-				debug: () => {}
-			})
-		);
+		const noopLogger =
+			/** @type {import("../../lib/logging/Logger").Logger} */ (
+				/** @type {unknown} */ ({
+					error: () => {},
+					warn: () => {},
+					info: () => {},
+					log: () => {},
+					debug: () => {}
+				})
+			);
 
 		const createRegExpFsInfo = (/** @type {IFs} */ fs) =>
 			/** @type {import("../../lib/fs/FileSystemInfo") & Record<string, unknown>} */ (
@@ -1643,9 +1644,7 @@ ${details(snapshot)}`)
 				undefined,
 				(err) => {
 					expect(err).toBeInstanceOf(Error);
-					expect(/** @type {Error} */ (err).message).toContain(
-						"./missing.mjs"
-					);
+					expect(/** @type {Error} */ (err).message).toContain("./missing.mjs");
 					done();
 				}
 			);

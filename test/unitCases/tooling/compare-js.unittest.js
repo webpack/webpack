@@ -154,14 +154,16 @@ describe("the printing table's last column", () => {
 	it("should name the legal notices and property names the output dropped", () => {
 		expect(
 			roundTrip(acorn, new Set(["b", "c"]), ["! a ", "! b "], "a.b=1", "script")
-		).toBe(
-			"1 names! e.g. c, 2 legal notices!"
-		);
+		).toBe("1 names! e.g. c, 2 legal notices!");
 		expect(
-			roundTrip(acorn, new Set(), ["! a license ", "! b "], "/*! a license */", "script")
-		).toBe(
-			"1 legal notice!"
-		);
+			roundTrip(
+				acorn,
+				new Set(),
+				["! a license ", "! b "],
+				"/*! a license */",
+				"script"
+			)
+		).toBe("1 legal notice!");
 	});
 
 	it("should name a notice the output changed or replaced with another", () => {
@@ -198,10 +200,18 @@ describe("the meaning relation", () => {
 	it("should read a named class exported as the default otherwise than one in parentheses", () => {
 		const module = { sourceType: "module", ecmaVersion: "latest" };
 		expect(
-			meaningReports("export default class C {}", "export default (class C{});", module)
+			meaningReports(
+				"export default class C {}",
+				"export default (class C{});",
+				module
+			)
 		).toHaveLength(1);
 		expect(
-			meaningReports("export default class {}", "export default (class{});", module)
+			meaningReports(
+				"export default class {}",
+				"export default (class{});",
+				module
+			)
 		).toEqual([]);
 	});
 });
@@ -215,15 +225,18 @@ describe("the respelling sweep", () => {
 	const wideScript = (count) => `"use strict";${"0;".repeat(count)}`;
 
 	it("should read the directives of a program wider than a call's arguments", () => {
-		expect(sweepRespellings(() => "", wideScript(200000), false, "")).toEqual([]);
+		expect(sweepRespellings(() => "", wideScript(200000), false, "")).toEqual(
+			[]
+		);
 	});
 });
 
 describe("the behavior relation", () => {
 	it("should report a printed script printing otherwise than its source", () => {
-		const [report] = /** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
-			behaviorDifference("console.log((1, 2));", "console.log(1,2);")
-		);
+		const [report] =
+			/** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
+				behaviorDifference("console.log((1, 2));", "console.log(1,2);")
+			);
 
 		expect(report.relation).toBe("behavior");
 		expect(report.repro).toContain("2");
@@ -277,9 +290,10 @@ describe("the behavior relation", () => {
 	});
 
 	it("should report a printed script that times out", () => {
-		const [report] = /** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
-			behaviorDifference("console.log(1);", "for (;;) {}")
-		);
+		const [report] =
+			/** @type {import("../../helpers/syntaxInvariants/relations").Report[]} */ (
+				behaviorDifference("console.log(1);", "for (;;) {}")
+			);
 
 		expect(report.what).toBe("times out");
 		expect(report.repro).toContain("<timeout>");

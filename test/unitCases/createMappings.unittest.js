@@ -184,7 +184,12 @@ describe("decodeMappings", () => {
 
 describe("encodeDecodedMappings", () => {
 	it("should write back what decodeMappings reads", () => {
-		for (const mappings of ["AAAAA,EAAC;;IACAC,C", "", ";;A", "AAAA;AACA,MAAMC"]) {
+		for (const mappings of [
+			"AAAAA,EAAC;;IACAC,C",
+			"",
+			";;A",
+			"AAAA;AACA,MAAMC"
+		]) {
 			expect(encodeDecodedMappings(decodeMappings(mappings))).toBe(mappings);
 		}
 	});

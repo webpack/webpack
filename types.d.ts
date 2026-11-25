@@ -42285,6 +42285,7 @@ declare namespace exports {
 		ParserState,
 		JavascriptParserTag,
 		ResolvePluginInstance,
+		Resolver,
 		RenderManifestEntry,
 		RenderManifestOptions,
 		TemplatePath,

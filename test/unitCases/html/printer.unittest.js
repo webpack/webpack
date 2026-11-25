@@ -102,8 +102,13 @@ describe("builtinEmbeddedRenderer — what it loads", () => {
 describe("SourceProcessor — a print inside a print", () => {
 	it("prints a document a visitor starts while the outer print runs", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
-		const source = fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints");
-		const alone = new SourceProcessor().process(source, { mode: "minify" }).code;
+		const source = fixture(
+			"html",
+			"html-syntax-the-facade-holds-no-printer-until-something-prints"
+		);
+		const alone = new SourceProcessor().process(source, {
+			mode: "minify"
+		}).code;
 		/** @type {string[]} */
 		const inner = [];
 		const nested = new SourceProcessor()
@@ -111,10 +116,16 @@ describe("SourceProcessor — a print inside a print", () => {
 				/** @type {import("../../../lib/html/syntax-printer").VisitorMap} */ ({
 					[NodeType.Element]: () => {
 						inner.push(
-							new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-nested-print-inner"), {
-								mode: "minify",
-								collapseWhitespace: true
-							}).code
+							new SourceProcessor().process(
+								fixture(
+									"html",
+									"source-processor-a-run-inside-a-run-nested-print-inner"
+								),
+								{
+									mode: "minify",
+									collapseWhitespace: true
+								}
+							).code
 						);
 					}
 				})
@@ -127,17 +138,20 @@ describe("SourceProcessor — a print inside a print", () => {
 
 	it("minifies an embedded document with a print of its own", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
-		const { code } = new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-srcdoc-renderer"), {
-			mode: "minify",
-			collapseWhitespace: true,
-			renderEmbeddedSource: (body, offer) =>
-				offer.type === "html"
-					? new SourceProcessor().process(body, {
-							mode: "minify",
-							collapseWhitespace: true
-						}).code
-					: undefined
-		});
+		const { code } = new SourceProcessor().process(
+			fixture("html", "source-processor-a-run-inside-a-run-srcdoc-renderer"),
+			{
+				mode: "minify",
+				collapseWhitespace: true,
+				renderEmbeddedSource: (body, offer) =>
+					offer.type === "html"
+						? new SourceProcessor().process(body, {
+								mode: "minify",
+								collapseWhitespace: true
+							}).code
+						: undefined
+			}
+		);
 		expect(code).toMatchSnapshot();
 	});
 
@@ -148,22 +162,34 @@ describe("SourceProcessor — a print inside a print", () => {
 		 * @returns {string} the outer print
 		 */
 		const print = (nest) =>
-			new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-sorted-attributes-outer"), {
-				mode: "minify",
-				sortAttributes: true,
-				sortTokenLists: true,
-				renderEmbeddedSource: (body) => {
-					if (nest) {
-						new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-sorted-attributes-inner"), {
-							mode: "minify",
-							sortAttributes: true,
-							sortTokenLists: true,
-							renderEmbeddedSource: (inner) => inner
-						});
+			new SourceProcessor().process(
+				fixture(
+					"html",
+					"source-processor-a-run-inside-a-run-sorted-attributes-outer"
+				),
+				{
+					mode: "minify",
+					sortAttributes: true,
+					sortTokenLists: true,
+					renderEmbeddedSource: (body) => {
+						if (nest) {
+							new SourceProcessor().process(
+								fixture(
+									"html",
+									"source-processor-a-run-inside-a-run-sorted-attributes-inner"
+								),
+								{
+									mode: "minify",
+									sortAttributes: true,
+									sortTokenLists: true,
+									renderEmbeddedSource: (inner) => inner
+								}
+							);
+						}
+						return body;
 					}
-					return body;
 				}
-			}).code;
+			).code;
 		const alone = print(false);
 		expect(print(true)).toBe(alone);
 		expect(alone).toContain('class="a b"');
@@ -180,56 +206,171 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 	 * @returns {string} the minified serialization
 	 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	it("closes a sheet as its end of input closes it", () => {
 		const { _sheetClosing } = require("../../../lib/html/syntax-parser");
 
 		for (const [sheet, closing] of /** @type {[string, string | null][]} */ ([
 			// §4.3.6: whitespace may open and end a url; a bad one runs to a `)`.
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3"), "}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5"), "}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6"), "){}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10"), ")}"],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-2"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-3"
+				),
+				"}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-4"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-5"
+				),
+				"}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-6"
+				),
+				"){}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-7"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-8"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-9"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-10"
+				),
+				")}"
+			],
 			// A quoted url is a function holding a string.
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11"), '")}'],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-11"
+				),
+				'")}'
+			],
 			// Part of a longer name, `url(` is a function's name, not a url token.
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13"), ")}"],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-12"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-13"
+				),
+				")}"
+			],
 			// An escape starts a name, so `@` opens an at-rule; one before a
 			// newline is no escape, and `@` a delimiter opening a prelude.
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14"), ";"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15"), ";"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16"), "{}"],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-14"
+				),
+				";"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-15"
+				),
+				";"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-16"
+				),
+				"{}"
+			],
 			// Past whitespace and comments, a custom property's open value is kept.
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17"), null],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18"), null],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19"), ")}"],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20"), "*/}"],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-17"
+				),
+				null
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-18"
+				),
+				null
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-19"
+				),
+				")}"
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-20"
+				),
+				"*/}"
+			],
 			// A lone backslash escapes whatever would follow it.
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21"), null],
-			[fixture("html", "source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22"), null]
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-21"
+				),
+				null
+			],
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22"
+				),
+				null
+			]
 		])) {
 			expect({ sheet, closing: _sheetClosing(sheet) }).toEqual({
 				sheet,
@@ -243,7 +384,10 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 		/** @type {string[]} */
 		const offered = [];
 		const { code } = await new SourceProcessor().processAsync(
-			fixture("html", "source-processor-merging-adjacent-style-minifies-a-joined-run-as-one-sheet-on"),
+			fixture(
+				"html",
+				"source-processor-merging-adjacent-style-minifies-a-joined-run-as-one-sheet-on"
+			),
 			{
 				mode: "minify",
 				mergeStyles: true,
@@ -267,7 +411,10 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 	// `output.html.inline` prints a sentinel and swaps the chunk's code in after
 	// the print, so what a guard would read there is not what ends up running.
 	it("declines a run whose bodies the print does not itself write", () => {
-		const html = fixture("html", "source-processor-merging-adjacent-script-folds-a-run-into-one-element");
+		const html = fixture(
+			"html",
+			"source-processor-merging-adjacent-script-folds-a-run-into-one-element"
+		);
 		/** @type {import("../../../lib/util/dataURL").DeferredEmbeddedSource[]} */
 		const holes = [];
 		const printed = new SourceProcessor().process(html, {
@@ -280,9 +427,6 @@ describe("SourceProcessor — merging adjacent <script>", () => {
 		expect(printed.match(/<script\b/g)).toHaveLength(2);
 	});
 });
-
-
-
 
 describe("SourceProcessor — enumerated attribute values", () => {
 	const { ENUMERATED_KEYWORDS } = require("../../../lib/html/data");
@@ -405,20 +549,51 @@ describe("SourceProcessor — removeRedundantAttributes and script charset", () 
 		const { declaresUtf8 } = require("../../../lib/html/syntax-parser");
 
 		for (const html of [
-			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing"),
-			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2"),
-			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3"),
-			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4"),
-			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5"),
-			fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6")
+			fixture(
+				"html",
+				"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing"
+			),
+			fixture(
+				"html",
+				"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-2"
+			),
+			fixture(
+				"html",
+				"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-3"
+			),
+			fixture(
+				"html",
+				"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-4"
+			),
+			fixture(
+				"html",
+				"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-5"
+			),
+			fixture(
+				"html",
+				"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-6"
+			)
 		]) {
 			expect(declaresUtf8(html)).toBe(false);
 		}
-		expect(declaresUtf8(fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7"))).toBe(true);
-		expect(declaresUtf8(fixture("html", "source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8"))).toBe(true);
+		expect(
+			declaresUtf8(
+				fixture(
+					"html",
+					"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-7"
+				)
+			)
+		).toBe(true);
+		expect(
+			declaresUtf8(
+				fixture(
+					"html",
+					"source-processor-remove-redundant-attributes-and-script-charset-reads-nothing-8"
+				)
+			)
+		).toBe(true);
 	});
 });
-
 
 describe("SourceProcessor — renderEmbeddedSource", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
@@ -434,8 +609,6 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			renderEmbeddedSource
 		}).code;
 
-
-
 	it("is usable again after a deferred print throws", async () => {
 		// The throw never reaches where `process` clears the deferred callback, so
 		// without a teardown the next ordinary print returns nothing.
@@ -447,24 +620,39 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		});
 
 		await expect(
-			processor.processAsync(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), {
-				mode: "minify",
-				renderEmbeddedSource: () => undefined
-			})
+			processor.processAsync(
+				fixture(
+					"html",
+					"html-syntax-the-facade-holds-no-printer-until-something-prints"
+				),
+				{
+					mode: "minify",
+					renderEmbeddedSource: () => undefined
+				}
+			)
 		).rejects.toThrow("boom");
 
 		explode = false;
 
-		expect(processor.process(fixture("html", "source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"), { mode: "minify" }).code).toMatchSnapshot();
+		expect(
+			processor.process(
+				fixture(
+					"html",
+					"source-processor-render-embedded-source-is-usable-again-after-a-deferred-print"
+				),
+				{ mode: "minify" }
+			).code
+		).toMatchSnapshot();
 	});
-
-
 
 	it("prints again where an answer overturns a choice made on the source", async () => {
 		// Each choice is one a deferred print makes on the source: the emptied
 		// sheet and list go with their elements; the sheet the input left open
 		// in a custom property's value is kept as written, on its own.
-		const html = fixture("html", "source-processor-render-embedded-source-prints-again-where-an-answer-overturns-a");
+		const html = fixture(
+			"html",
+			"source-processor-render-embedded-source-prints-again-where-an-answer-overturns-a"
+		);
 		const options = {
 			mode: /** @type {"minify"} */ ("minify"),
 			mergeStyles: true,
@@ -498,60 +686,13 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 		]);
 	});
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	it("writes a rendered srcdoc back so it parses to what came out", () => {
 		const payload = "<p class=\"a\" data-x='y'>a & b < c > d</p>";
 		const out = minify(
-			fixture("html", "source-processor-render-embedded-source-writes-a-rendered-srcdoc-back-so-it"),
+			fixture(
+				"html",
+				"source-processor-render-embedded-source-writes-a-rendered-srcdoc-back-so-it"
+			),
 			(source, info) => (info.type === "html" ? payload : source)
 		);
 		/** @type {string | undefined} */
@@ -571,8 +712,10 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 
 	it("keeps the body when the renderer answers with something other than text", () => {
 		// `srcdoc` is written back escaped, so a non-string would reach the escaper.
-		const doc =
-			fixture("html", "source-processor-render-embedded-source-keeps-the-body-when-the-renderer-answers");
+		const doc = fixture(
+			"html",
+			"source-processor-render-embedded-source-keeps-the-body-when-the-renderer-answers"
+		);
 		const untouched = minify(doc);
 		for (const answer of [undefined, null, 42, {}]) {
 			expect(minify(doc, () => /** @type {EXPECTED_ANY} */ (answer))).toBe(
@@ -580,8 +723,6 @@ describe("SourceProcessor — renderEmbeddedSource", () => {
 			);
 		}
 	});
-
-
 });
 
 describe("SourceProcessor — inline CSS honors the target's abilities", () => {
@@ -598,7 +739,10 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 	 */
 	const minifyFor = (browser) =>
 		new SourceProcessor().process(
-			fixture("html", "source-processor-inline-css-honors-the-target-s-abilities-shortens-both-the"),
+			fixture(
+				"html",
+				"source-processor-inline-css-honors-the-target-s-abilities-shortens-both-the"
+			),
 			{
 				mode: "minify",
 				renderEmbeddedSource: builtinEmbeddedRenderer({
@@ -607,50 +751,54 @@ describe("SourceProcessor — inline CSS honors the target's abilities", () => {
 			}
 		).code;
 
-
-
 	it("does not carry one print's target into the next", () => {
 		minifyFor("chrome 62");
 		expect(minifyFor("chrome 50")).toMatchSnapshot();
 	});
-
-
-
-
-
 });
-
-
 
 describe("htmlMinify — embedded code a minifier fails on", () => {
 	const htmlMinify = require("../../../lib/html/htmlMinify");
 
-	const page =
-		fixture("html", "html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css");
-
-
+	const page = fixture(
+		"html",
+		"html-minify-embedded-code-a-minifier-fails-on-reports-what-webpack-s-own-css"
+	);
 
 	it("keeps a style element whose CSS answer would close it early", async () => {
-		const { code } = await htmlMinify({ "page.html": fixture("html", "html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css") }, undefined, {
-			renderEmbeddedSource: (
-				/** @type {string} */ _source,
-				/** @type {{ type: string }} */ info
-			) => (info.type === "css" ? "a{b:'</style><b>x</b>'}" : undefined)
-		});
+		const { code } = await htmlMinify(
+			{
+				"page.html": fixture(
+					"html",
+					"html-minify-embedded-code-a-minifier-fails-on-keeps-a-style-element-whose-css"
+				)
+			},
+			undefined,
+			{
+				renderEmbeddedSource: (
+					/** @type {string} */ _source,
+					/** @type {{ type: string }} */ info
+				) => (info.type === "css" ? "a{b:'</style><b>x</b>'}" : undefined)
+			}
+		);
 		// The quoted attribute holds the answer as it is.
 		expect(code).toMatchSnapshot();
 	});
 
 	it("keeps a body the caller's minifier fails on, reported once", async () => {
-		const { code, errors } = await htmlMinify({ "page.html": page }, undefined, {
-			renderEmbeddedSource: (
-				/** @type {string} */ _source,
-				/** @type {{ type: string }} */ info
-			) => {
-				if (info.type === "css") throw new Error("failing CSS minifier");
-				return undefined;
+		const { code, errors } = await htmlMinify(
+			{ "page.html": page },
+			undefined,
+			{
+				renderEmbeddedSource: (
+					/** @type {string} */ _source,
+					/** @type {{ type: string }} */ info
+				) => {
+					if (info.type === "css") throw new Error("failing CSS minifier");
+					return undefined;
+				}
 			}
-		});
+		);
 		// Webpack's own CSS minifier is not asked after the caller's failed.
 		expect(code).toMatchSnapshot();
 		expect(errors).toEqual([
@@ -661,7 +809,12 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 
 	it("keeps a body the caller's minifier answers with errors beside code", async () => {
 		const { code, errors } = await htmlMinify(
-			{ "page.html": fixture("html", "html-minify-embedded-code-a-minifier-fails-on-keeps-a-body-the-caller-s-minifier") },
+			{
+				"page.html": fixture(
+					"html",
+					"html-minify-embedded-code-a-minifier-fails-on-keeps-a-body-the-caller-s-minifier"
+				)
+			},
 			undefined,
 			{
 				renderEmbeddedSource: () => ({
@@ -675,7 +828,6 @@ describe("htmlMinify — embedded code a minifier fails on", () => {
 	});
 });
 
-
 describe("SourceProcessor — print modes", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
@@ -686,7 +838,14 @@ describe("SourceProcessor — print modes", () => {
 	 */
 
 	it("prints nothing unless output is asked for", () => {
-		expect(new SourceProcessor().process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"))).toBeUndefined();
+		expect(
+			new SourceProcessor().process(
+				fixture(
+					"html",
+					"html-syntax-the-facade-holds-no-printer-until-something-prints"
+				)
+			)
+		).toBeUndefined();
 	});
 });
 
@@ -725,7 +884,6 @@ describe("SourceProcessor — the leading newline of `<pre>`", () => {
 	});
 });
 
-
 describe("SourceProcessor — reusing work across a print", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
 
@@ -737,10 +895,11 @@ describe("SourceProcessor — reusing work across a print", () => {
 	const minify = (html, options) =>
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
-
-
 	it("does not carry a style attribute's result into a renderer with other options", () => {
-		const html = fixture("html", "source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s");
+		const html = fixture(
+			"html",
+			"source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s"
+		);
 		const plain = { renderEmbeddedSource: builtinEmbeddedRenderer() };
 		expect(minify(html, plain)).toMatchSnapshot();
 		expect(
@@ -754,8 +913,14 @@ describe("SourceProcessor — reusing work across a print", () => {
 	});
 
 	it("marks each stylesheet it offers as one embedded in this document", async () => {
-		const html = fixture("html", "html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document");
-		const svg = fixture("xml", "html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document");
+		const html = fixture(
+			"html",
+			"html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document"
+		);
+		const svg = fixture(
+			"xml",
+			"html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document"
+		);
 		/** @type {(string | undefined)[]} */
 		const offered = [];
 		/** @type {import("../../../lib/html/syntax-printer").EmbeddedSourceRenderer} */
@@ -814,17 +979,28 @@ describe("SourceProcessor — reusing work across a print", () => {
 				}
 			}
 		};
-		walk(parseHtmlRefs(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document")));
+		walk(
+			parseHtmlRefs(
+				fixture(
+					"html",
+					"source-processor-reusing-work-across-a-print-reads-back-every-name-of-a-document"
+				)
+			)
+		);
 		expect(names).toHaveLength(SLOTS + 3);
 		expect(names[3]).toBe("x-a");
 		expect(names[names.length - 1]).toBe(`x-${"a".repeat(SLOTS)}`);
 		// A second parse must not be handed anything the first left in a slot.
-		expect(deepestTagName(fixture("html", "source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given"))).toBe("my-widget");
+		expect(
+			deepestTagName(
+				fixture(
+					"html",
+					"source-processor-reusing-work-across-a-print-reads-back-the-name-it-was-given"
+				)
+			)
+		).toBe("my-widget");
 	});
 });
-
-
-
 
 describe("htmlMinify export", () => {
 	it("is the minifier itself, reachable from the public entry", () => {
@@ -853,7 +1029,10 @@ describe("htmlMinify export", () => {
 		const { htmlMinify } = webpack.html;
 
 		const { code } = await htmlMinify({
-			"a.html": fixture("html", "html-minify-export-minifies-through-the-public-entry")
+			"a.html": fixture(
+				"html",
+				"html-minify-export-minifies-through-the-public-entry"
+			)
 		});
 
 		// `</p>` is an optional end tag, so minifying drops it.
@@ -872,11 +1051,7 @@ describe("htmlMinify export", () => {
 		);
 		expect(htmlMinify.getBannerPosition()).toBe("end");
 	});
-
 });
-
-
-
 
 describe("SourceProcessor — parseError while printing", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
@@ -884,7 +1059,10 @@ describe("SourceProcessor — parseError while printing", () => {
 	it("reports the source's errors, not the printed form's", () => {
 		// Foster parenting makes the print read itself back, and the printed form
 		// opens with text: an error of its own that the source does not have.
-		const html = fixture("html", "source-processor-parse-error-while-printing-reports-the-source-s-errors-not-the");
+		const html = fixture(
+			"html",
+			"source-processor-parse-error-while-printing-reports-the-source-s-errors-not-the"
+		);
 		/** @type {string[]} */
 		const parsed = [];
 		parseHtmlRefs(html, 0, {
@@ -908,7 +1086,6 @@ describe("SourceProcessor — parseError while printing", () => {
 
 /** @typedef {import("../../../lib/html/syntax-printer").HtmlProcessOptions & import("../../../lib/html/syntax-printer").HtmlPrintOptions & { mode: "minify" | "beautify" }} HtmlPrint */
 
-
 // Prints read back as a browser reads them: with scripting on, as `grammar`
 // parses the source it prints, and in the fragment context it was parsed in.
 describe("SourceProcessor — printing what re-parses to the same tree", () => {
@@ -926,9 +1103,15 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 		// `</template>` clears the formatting list back to one marker only, so
 		// the one an open cell or caption pushed is taken and the template's stays.
 		const minify = (/** @type {string} */ name) =>
-			print(fixture("html", `source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template${name}`), {
-				mode: "minify"
-			});
+			print(
+				fixture(
+					"html",
+					`source-processor-printing-what-re-parses-to-the-same-tree-keeps-the-end-tag-of-a-cell-or-caption-last-in-a-template${name}`
+				),
+				{
+					mode: "minify"
+				}
+			);
 		expect(minify("")).toContain("<td>x</td></template>");
 		expect(minify("-2")).toContain("<caption>x</caption></template>");
 		// An element that pushes no marker still leaves its end tag to it.
@@ -938,35 +1121,42 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 	it("prints as written where a noscript body leaves a comment open", () => {
 		// With scripting off the comment runs past `</noscript>` into the attribute,
 		// whose value the print would spell another way.
-		const source = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open");
+		const source = fixture(
+			"html",
+			"source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open"
+		);
 		expect(print(source, { mode: "minify" })).toBe(source);
 		// Markup that reads alike either way is still minified.
-		const plain = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2");
+		const plain = fixture(
+			"html",
+			"source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-a-noscript-body-leaves-a-comment-open-2"
+		);
 		expect(print(plain, { mode: "minify" })).toMatchSnapshot();
 	});
 
 	it("prints as written where the doctype mode depends on the reader", () => {
 		// An empty system id is given for the standard, missing for some browsers,
 		// and the mode it picks decides whether `<table>` closes the `<p>`.
-		const disputed = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader");
+		const disputed = fixture(
+			"html",
+			"source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader"
+		);
 		expect(print(disputed, { mode: "minify" })).toBe(disputed);
-		const named = fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2");
+		const named = fixture(
+			"html",
+			"source-processor-printing-what-re-parses-to-the-same-tree-prints-as-written-where-the-doctype-mode-depends-on-the-reader-2"
+		);
 		expect(print(named, { mode: "minify" })).toMatchSnapshot();
 	});
 
-
-
-
-
-
 	describe("a fragment", () => {
-
-
 		it("reads a checked print back as the options leave it, reporting nothing twice", () => {
 			// A foreign context is read back, with what the options drop dropped there
 			// too, and the read back reports no error of its own.
-			const source =
-				fixture("html", "source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-reads-a");
+			const source = fixture(
+				"html",
+				"source-processor-printing-what-re-parses-to-the-same-tree-a-fragment-reads-a"
+			);
 			/** @type {string[]} */
 			const errors = [];
 			const options = {
@@ -994,13 +1184,10 @@ describe("SourceProcessor — printing what re-parses to the same tree", () => {
 			);
 		});
 	});
-
-
 });
 
 describe("SourceProcessor — attribute values the minifier rewrites", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-
 
 	/**
 	 * @param {string} source html source
@@ -1031,22 +1218,58 @@ describe("SourceProcessor — attribute values the minifier rewrites", () => {
 	it.each([
 		// The shortest spelling of a value carrying references, `=` keeping it
 		// quoted and the `&` that opens nothing left bare.
-		[fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-title-a-amp-b-c"), fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-title-a-amp-b-c-2")],
+		[
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-title-a-amp-b-c"
+			),
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-title-a-amp-b-c-2"
+			)
+		],
 		// `&#` opens a numeric reference whatever follows it.
 		[
-			fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title"),
-			fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title-2")
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title"
+			),
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-amp-x-p-a-title-2"
+			)
 		],
 		// A rewrite holding both quotes and no reference cannot take other quotes, so
 		// the source spelling stands.
-		[fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b"), fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b")],
 		[
-			fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-x-p"),
-			fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-x-p-2")
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b"
+			),
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-img-srcset-a-b"
+			)
 		],
 		[
-			fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-quot-b"),
-			fixture("html", "source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-quot-b-2")
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-x-p"
+			),
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-x-p-2"
+			)
+		],
+		[
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-quot-b"
+			),
+			fixture(
+				"html",
+				"source-processor-attribute-values-the-minifier-rewrites-writes-p-class-a-quot-b-2"
+			)
 		]
 	])("writes %s in the shortest quoting", (source, expected) => {
 		// Respelled, not changed: every value but a rewritten list reads the same.
@@ -1062,10 +1285,7 @@ describe("SourceProcessor — attribute values the minifier rewrites", () => {
 			unlisted(attributes(source))
 		);
 	});
-
-
 });
-
 
 describe("SourceProcessor — the markup generators", () => {
 	const {
@@ -1090,7 +1310,12 @@ describe("SourceProcessor — the markup generators", () => {
 		expect(escapeText(text)).toBe("a &amp; b &lt; c &gt; d&nbsp;e&#10;f&#13;g");
 		// The fixture is `<p>` and that escape, which reads back as the text.
 		expect(
-			tree(fixture("html", "source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as"))
+			tree(
+				fixture(
+					"html",
+					"source-processor-the-markup-generators-escapes-text-so-that-it-reads-back-as"
+				)
+			)
 		).toBe(`| <html>\n|   <head>\n|   <body>\n|     <p>\n|       "${text}"`);
 	});
 
@@ -1137,21 +1362,8 @@ describe("SourceProcessor — the markup generators", () => {
 	});
 });
 
-
 describe("SourceProcessor — the streamed walk", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-
-
-
-
-
-
-
-
-
-
-
 
 	it("ends a walk a visitor stopped, and fires its visitors on the next", () => {
 		const processor = new SourceProcessor();
@@ -1163,36 +1375,53 @@ describe("SourceProcessor — the streamed walk", () => {
 				if (path.name() === "b") path.stop();
 			}
 		});
-		processor.process(fixture("html", "source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2"));
+		processor.process(
+			fixture(
+				"html",
+				"source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its-2"
+			)
+		);
 		expect(log.slice(-2)).toEqual(["p", "b"]);
 		log.length = 0;
-		processor.process(fixture("html", "source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its"));
+		processor.process(
+			fixture(
+				"html",
+				"source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its"
+			)
+		);
 		expect(log).toEqual(["html", "head", "body", "b"]);
 	});
-
 });
-
-
-
 
 describe("htmlMinify — what it reads as written", () => {
 	it("reads a spaced base64 flag in a data URL as base64", async () => {
 		// `; base64` is the flag to a browser, so the payload is bytes, not a page
 		// whose comment could be minified away.
-		const source = fixture("html", "html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64");
-		const { code } = await require("../../..").html.htmlMinify({ "a.html": source });
+		const source = fixture(
+			"html",
+			"html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64"
+		);
+		const { code } = await require("../../..").html.htmlMinify({
+			"a.html": source
+		});
 		expect(code).toContain("data:text/html; base64,<!-- x -->PGI+aGk8L2I+");
 	});
 
 	it("leaves a document in another encoding as written", async () => {
 		const { htmlMinify } = require("../../..").html;
 		// Read as UTF-8, the escapes inside the comments would not be text.
-		const source = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written");
+		const source = fixture(
+			"html",
+			"html-minify-leaves-a-document-in-another-encoding-as-written"
+		);
 		const result = await htmlMinify({ "a.html": source });
 		expect(result.code).toBe(source);
 		expect(result.warnings).toHaveLength(1);
 		// One that holds only printable ASCII reads alike in either.
-		const ascii = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-2");
+		const ascii = fixture(
+			"html",
+			"html-minify-leaves-a-document-in-another-encoding-as-written-2"
+		);
 		const minified = await htmlMinify({ "a.html": ascii });
 		expect(minified.code).toMatchSnapshot();
 		expect(minified.warnings).toBeUndefined();
@@ -1201,7 +1430,10 @@ describe("htmlMinify — what it reads as written", () => {
 	it("leaves character references in another encoding as written", async () => {
 		const { htmlMinify } = require("../../..").html;
 		// Printed as its character, `&#233;` would be written in UTF-8.
-		const source = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-3");
+		const source = fixture(
+			"html",
+			"html-minify-leaves-a-document-in-another-encoding-as-written-3"
+		);
 		const result = await htmlMinify({ "a.html": source });
 		expect(result.code).toBe(source);
 		expect(result.warnings).toHaveLength(1);
@@ -1209,9 +1441,14 @@ describe("htmlMinify — what it reads as written", () => {
 
 	it("leaves a data: page in another encoding as written", async () => {
 		const { htmlMinify } = require("../../..").html;
-		const source = fixture("html", "html-minify-leaves-a-document-in-another-encoding-as-written-4");
+		const source = fixture(
+			"html",
+			"html-minify-leaves-a-document-in-another-encoding-as-written-4"
+		);
 		const { code } = await htmlMinify({ "a.html": source });
 		// The page around it is minified; the nested page keeps its comments.
-		expect(code).toBe(`<!doctype html>${source.slice(15, source.indexOf("<!-- c -->"))}\n`);
+		expect(code).toBe(
+			`<!doctype html>${source.slice(15, source.indexOf("<!-- c -->"))}\n`
+		);
 	});
 });

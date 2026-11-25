@@ -53,7 +53,10 @@ describe("CSS styles compared under the color-scheme relaxation", () => {
 
 	beforeAll(async () => {
 		const { GENERIC_FONT_FAMILIES } = require("../../../lib/css/data");
-		const { POLICED_PAGE, installHelpers } = require("../../helpers/syntaxEquivalence");
+		const {
+			POLICED_PAGE,
+			installHelpers
+		} = require("../../helpers/syntaxEquivalence");
 
 		browser = await require("../../helpers/launchBrowser")();
 		page = await browser.newPage();
@@ -70,7 +73,10 @@ describe("CSS styles compared under the color-scheme relaxation", () => {
 	 * @returns {Promise<Record<string, number>>} per pair how many lines differ
 	 */
 	const differences = async (pairs) => {
-		const { cascadeLines, compareStyles } = require("../../helpers/syntaxEquivalence");
+		const {
+			cascadeLines,
+			compareStyles
+		} = require("../../helpers/syntaxEquivalence");
 		/** @type {import("../../helpers/syntaxEquivalence").StyleReport[]} */
 		/** @type {import("../../helpers/syntaxEquivalence").StylePair[]} */
 		const compared = pairs.map(([name, before, after]) => ({
@@ -89,8 +95,7 @@ describe("CSS styles compared under the color-scheme relaxation", () => {
 	};
 
 	it("leaves out only what the used color scheme alone moves", async () => {
-		const lowered =
-			":where(:root){--webpack-light:initial;--webpack-dark:}";
+		const lowered = ":where(:root){--webpack-light:initial;--webpack-dark:}";
 		const counts = await differences([
 			[
 				"lowered",

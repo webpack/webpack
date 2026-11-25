@@ -201,8 +201,7 @@ const ENTRIES = {
 		roots: asRoots
 	}),
 	parseABlocksContents: parseEntry({
-		parse: (source, pos, options) =>
-			parseABlocksContents(source, pos, options),
+		parse: (source, pos, options) => parseABlocksContents(source, pos, options),
 		serialize: ({ decls, rules }, source) => {
 			// Declarations first: reading the rules parses their blocks again.
 			const declarations = decls.map(serializeDeclaration);

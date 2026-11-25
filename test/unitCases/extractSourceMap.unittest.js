@@ -55,13 +55,16 @@ describe("getSourceMappingURL", () => {
 		'/*# sourceMappingURL=missing.map*/ /* " */',
 		"/* ordinary /*# sourceMappingURL=missing.map*/",
 		"module.exports = `\n//# sourceMappingURL=missing.map\n/* ordinary\n`; const tail = /.*/"
-	])("should ignore missing or ambiguous trailing annotations in %j", code => {
-		expect(getSourceMappingURL(code).sourceMappingURL).toBe("");
-	});
+	])(
+		"should ignore missing or ambiguous trailing annotations in %j",
+		(code) => {
+			expect(getSourceMappingURL(code).sourceMappingURL).toBe("");
+		}
+	);
 
 	it.each(["\n", "\r\n", "\r", "\u2028", "\u2029"])(
 		"should recognize trailing comment lines separated by %j",
-		separator => {
+		(separator) => {
 			const code = [
 				"run();",
 				"\uFEFF //# sourceMappingURL=source%20map.map",
@@ -97,9 +100,21 @@ describe("getSourceMappingURL", () => {
 			"a.map",
 			"/*  # sourceMappingURL  =  a.map  */"
 		],
-		["/*# sourceMappingURL=a*b.map*/", "a*b.map", "/*# sourceMappingURL=a*b.map*/"],
-		["/*# sourceMappingURL=a.map/ */", "a.map/", "/*# sourceMappingURL=a.map/ */"],
-		["/*\n//# sourceMappingURL=a.map\n*/", "a.map", "/*\n//# sourceMappingURL=a.map\n*/"],
+		[
+			"/*# sourceMappingURL=a*b.map*/",
+			"a*b.map",
+			"/*# sourceMappingURL=a*b.map*/"
+		],
+		[
+			"/*# sourceMappingURL=a.map/ */",
+			"a.map/",
+			"/*# sourceMappingURL=a.map/ */"
+		],
+		[
+			"/*\n//# sourceMappingURL=a.map\n*/",
+			"a.map",
+			"/*\n//# sourceMappingURL=a.map\n*/"
+		],
 		[
 			"/*\r\n//  @sourceMappingURL=a.map\r\n*/",
 			"a.map",
@@ -135,7 +150,7 @@ describe("getSourceMappingURL", () => {
 
 	it.each(["\n", "\r\n", "\r", "\u2028", "\u2029"])(
 		"should handle consecutive block comments across %j line boundaries",
-		separator => {
+		(separator) => {
 			const code = [
 				"run(); /*# sourceMappingURL=source.map */ /* first */ /* second */",
 				" /* third */ /* fourth */"

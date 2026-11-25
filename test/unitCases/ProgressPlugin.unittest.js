@@ -562,18 +562,18 @@ describe("ProgressPlugin", () => {
 								context: path.join(testDirectory, "fixtures"),
 								entry: "./a.js",
 								infrastructureLogging: {
-								progress: true,
-								appendOnly: false,
-								colors: false
+									progress: true,
+									appendOnly: false,
+									colors: false
+								}
+							},
+							{
+								context: path.join(testDirectory, "fixtures"),
+								entry: "./b.js"
 							}
-						},
-						{
-							context: path.join(testDirectory, "fixtures"),
-							entry: "./b.js"
-						}
-					],
-					{ plugins: [new webpack.ProgressPlugin({ progressBar: false })] }
-				)
+						],
+						{ plugins: [new webpack.ProgressPlugin({ progressBar: false })] }
+					)
 				)
 			);
 			for (const c of compiler.compilers) {

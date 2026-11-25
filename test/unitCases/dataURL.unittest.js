@@ -30,9 +30,9 @@ describe("dataURL", () => {
 	it("should keep a malformed percent escape as written", () => {
 		const decoded = decodeDataURI("data:text/plain,100%25%20done%");
 		expect(/** @type {Buffer} */ (decoded).toString()).toBe("100% done%");
-		expect(
-			[.../** @type {Buffer} */ (decodeDataURI("data:text/plain,%E0%A4%A"))]
-		).toEqual([0xe0, 0xa4, 0x25, 0x41]);
+		expect([
+			.../** @type {Buffer} */ (decodeDataURI("data:text/plain,%E0%A4%A"))
+		]).toEqual([0xe0, 0xa4, 0x25, 0x41]);
 	});
 
 	it("should decode an escape that is not UTF-8 to its byte", () => {
@@ -209,7 +209,9 @@ describe("decodeDataURIPayload", () => {
 		// Spaces and quotes around the charset are read as Fetch reads them.
 		expect(decode("data:text/css; charset=windows-1252,a")).toBeNull();
 		expect(decode('data:text/css;charset="iso-8859-1",a')).toBeNull();
-		expect(decode("data:text/css;charset=iso-8859-1;charset=utf-8,a")).toBeNull();
+		expect(
+			decode("data:text/css;charset=iso-8859-1;charset=utf-8,a")
+		).toBeNull();
 		// A `;` inside a quoted value starts no parameter; a form feed is no space.
 		expect(
 			decode('data:text/css;x=";charset=utf-8;";charset=windows-1252,a')
@@ -218,11 +220,11 @@ describe("decodeDataURIPayload", () => {
 			decode("data:text/css;\fcharset=utf-8;charset=windows-1252,a")
 		).toBeNull();
 		// The URL parser escapes a non-ASCII charset, which then still comes first.
-		expect(
-			decode('data:text/css;charset="\u2603";charset=utf-8,a')
-		).toBeNull();
+		expect(decode('data:text/css;charset="\u2603";charset=utf-8,a')).toBeNull();
 		expect(decode('data:text/css; charset="UTF-8" ,a')).toBe("a");
-		expect(decode("data:text/css;charset=utf-8;charset=iso-8859-1,a")).toBe("a");
+		expect(decode("data:text/css;charset=utf-8;charset=iso-8859-1,a")).toBe(
+			"a"
+		);
 		expect(decode("data:text/css;charset=utf-8;base64,YXtjb2xvcjpyZWR9")).toBe(
 			"a{color:red}"
 		);
@@ -318,7 +320,9 @@ describe("readEmbeddedDataURI", () => {
 	});
 
 	it("should decline a raw # a browser reads as a fragment", () => {
-		expect(readEmbeddedDataURI('data:application/json,{ "b" : "#" }')).toBeNull();
+		expect(
+			readEmbeddedDataURI('data:application/json,{ "b" : "#" }')
+		).toBeNull();
 		// An escaped one is content, so the payload is offered.
 		expect(
 			readEmbeddedDataURI('data:application/json,{ "b" : "%23" }')

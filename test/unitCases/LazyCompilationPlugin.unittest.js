@@ -87,7 +87,11 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 	it("starts the backend a tap sets, with the options the taps settled on", async () => {
 		const api = {
 			dispose: jest.fn((/** @type {() => void} */ callback) => callback()),
-			module: () => ({ client: "./ws-client.js?ws://localhost:1", data: "", active: false })
+			module: () => ({
+				client: "./ws-client.js?ws://localhost:1",
+				data: "",
+				active: false
+			})
 		};
 		const ws = jest.fn(async () => api);
 		const { compiler, started } = startBackend(async (transport) => ({
@@ -156,7 +160,9 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 	});
 
 	it("starts the backend through the hook again once watching closed", async () => {
-		const disposed = jest.fn((/** @type {() => void} */ callback) => callback());
+		const disposed = jest.fn((/** @type {() => void} */ callback) =>
+			callback()
+		);
 		const transport = jest.fn(async (/** @type {BackendOptions} */ value) => ({
 			...value,
 			backend: async () => ({
@@ -236,21 +242,26 @@ describe("LazyCompilationPlugin.getCompilerHooks", () => {
 		async (error) => {
 			/** @type {((error?: Error) => void) | undefined} */
 			let finishDispose;
-			const transport = jest.fn(async (/** @type {BackendOptions} */ options) => ({
-				...options,
-				backend: async () => ({
-					dispose: (/** @type {(error?: Error) => void} */ done) => {
-						finishDispose = done;
-					},
-					module: () => ({ client: "", data: "", active: false })
+			const transport = jest.fn(
+				async (/** @type {BackendOptions} */ options) => ({
+					...options,
+					backend: async () => ({
+						dispose: (/** @type {(error?: Error) => void} */ done) => {
+							finishDispose = done;
+						},
+						module: () => ({ client: "", data: "", active: false })
+					})
 				})
-			}));
+			);
 			const { compiler, started } = startBackend(transport);
 			await started;
 			compiler.hooks.watchClose.call();
 			/** @type {Promise<Error | null | undefined>} */
 			const restarting = new Promise((resolve) => {
-				compiler.hooks.beforeCompile.callAsync(compiler.newCompilationParams(), resolve);
+				compiler.hooks.beforeCompile.callAsync(
+					compiler.newCompilationParams(),
+					resolve
+				);
 			});
 			await new Promise((resolve) => setImmediate(resolve));
 			try {

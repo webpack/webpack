@@ -59,9 +59,8 @@ const treeText = (value) => {
 const valueText = (value) => {
 	if (typeof value === "bigint") return `${value}n`;
 	if (value !== null && typeof value === "object") {
-		const { pattern, flags } = /** @type {{ pattern: string, flags: string }} */ (
-			value
-		);
+		const { pattern, flags } =
+			/** @type {{ pattern: string, flags: string }} */ (value);
 		return `/${pattern}/${flags}`;
 	}
 	return JSON.stringify(value);
@@ -231,7 +230,15 @@ const PRINTERS = {
 // needs no code.
 describe("JavaScript syntax — invariants", () => {
 	const all = fixtures("javascript");
-	for (const { name, dir, source, options, behavior, parses, expected } of all) {
+	for (const {
+		name,
+		dir,
+		source,
+		options,
+		behavior,
+		parses,
+		expected
+	} of all) {
 		describe(name, () => {
 			it("tokenizes", () => {
 				expect(
@@ -314,29 +321,28 @@ describe("JavaScript syntax — invariants", () => {
 			// run; the invariants run every script under the presets printing alone.
 			if (behavior.length > 0) {
 				it.each(behavior.map((one) => [JSON.stringify(one), one]))(
-				"runs as its source when printed %s",
-				(title, one) => {
-					const { code } = /** @type {{ code: string }} */ (
-						new SourceProcessor().process(source, printOptions(one).options)
-					);
-					const reports = behaviorDifference(source, code);
-					// A marked fixture that is never run would hold nothing; Bun runs no
-					// program that may make a promise, which Node.js runs instead.
-					if (reports === null && process.versions.bun !== undefined) return;
-					expect(reports).not.toBeNull();
-					expect(
-						unexplained(
-							/** @type {Report[]} */ (reports).map((report) => ({
-								preset: title,
-								report
-							})),
-							marked,
-							source
-						)
-					).toEqual([]);
-				}
-			);
-
+					"runs as its source when printed %s",
+					(title, one) => {
+						const { code } = /** @type {{ code: string }} */ (
+							new SourceProcessor().process(source, printOptions(one).options)
+						);
+						const reports = behaviorDifference(source, code);
+						// A marked fixture that is never run would hold nothing; Bun runs no
+						// program that may make a promise, which Node.js runs instead.
+						if (reports === null && process.versions.bun !== undefined) return;
+						expect(reports).not.toBeNull();
+						expect(
+							unexplained(
+								/** @type {Report[]} */ (reports).map((report) => ({
+									preset: title,
+									report
+								})),
+								marked,
+								source
+							)
+						).toEqual([]);
+					}
+				);
 			}
 
 			it("holds its invariants", () => {

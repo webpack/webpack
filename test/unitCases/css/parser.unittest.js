@@ -24,24 +24,74 @@ const {
 
 describe("CssSyntax — parser entry points", () => {
 	it("takes the start offset and the options as optional", () => {
-		expect(parseACommaSeparatedListOfComponentValues(fixture("css", "css-syntax-parser-entry-points-takes-the-start-offset-and-the-options-as"))).toHaveLength(2);
-		expect(parseAStylesheetsContents(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"))).toHaveLength(1);
-		expect(parseABlocksContents(fixture("css", "css-syntax-parser-entry-points-takes-the-start-offset-and-the-options-as-2")).decls).toHaveLength(1);
-		expect(parseARule(fixture("css", "source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"))).toBeDefined();
-		expect(parseAComponentValue(fixture("css", "css-syntax-parse-error-callback-reports-a"))).toBeDefined();
+		expect(
+			parseACommaSeparatedListOfComponentValues(
+				fixture(
+					"css",
+					"css-syntax-parser-entry-points-takes-the-start-offset-and-the-options-as"
+				)
+			)
+		).toHaveLength(2);
+		expect(
+			parseAStylesheetsContents(
+				fixture(
+					"css",
+					"source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"
+				)
+			)
+		).toHaveLength(1);
+		expect(
+			parseABlocksContents(
+				fixture(
+					"css",
+					"css-syntax-parser-entry-points-takes-the-start-offset-and-the-options-as-2"
+				)
+			).decls
+		).toHaveLength(1);
+		expect(
+			parseARule(
+				fixture(
+					"css",
+					"source-processor-merging-adjacent-style-drops-a-run-s-first-element-only-where-4"
+				)
+			)
+		).toBeDefined();
+		expect(
+			parseAComponentValue(
+				fixture("css", "css-syntax-parse-error-callback-reports-a")
+			)
+		).toBeDefined();
 	});
 
 	it("accepts a pre-built TokenStream as input", () => {
-		const ss = parseAStylesheet(new TokenStream(fixture("css", "css-syntax-parser-entry-points-accepts-a-pre-built-token-stream-as-input")));
+		const ss = parseAStylesheet(
+			new TokenStream(
+				fixture(
+					"css",
+					"css-syntax-parser-entry-points-accepts-a-pre-built-token-stream-as-input"
+				)
+			)
+		);
 		expect(A.fieldCount(Field.rules, ss)).toBe(1);
 	});
 
 	it("returns refs valid until the next parse", () => {
-		const first = /** @type {import("../../../lib/css/syntax-parser").Declaration} */ (
-			parseADeclaration(fixture("css", "css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and"))
-		);
+		const first =
+			/** @type {import("../../../lib/css/syntax-parser").Declaration} */ (
+				parseADeclaration(
+					fixture(
+						"css",
+						"css-syntax-parser-entry-points-parse-a-declaration-parses-name-value-and"
+					)
+				)
+			);
 		expect(A.name(first)).toBe("color");
-		parseADeclaration(fixture("css", "css-syntax-parser-entry-points-returns-refs-valid-until-the-next-parse"));
+		parseADeclaration(
+			fixture(
+				"css",
+				"css-syntax-parser-entry-points-returns-refs-valid-until-the-next-parse"
+			)
+		);
 		expect(A.name(first)).toBe("margin");
 	});
 
@@ -49,7 +99,10 @@ describe("CssSyntax — parser entry points", () => {
 		const { gc } = global;
 		// `yarn test:base` exposes it; without it nothing can be counted.
 		if (gc === undefined) return;
-		const sheet = fixture("css", "css-syntax-parser-entry-points-keeps-no-list-of-rules-for-each-stylesheet-it-par");
+		const sheet = fixture(
+			"css",
+			"css-syntax-parser-entry-points-keeps-no-list-of-rules-for-each-stylesheet-it-par"
+		);
 		const settle = () => {
 			gc();
 			gc();
@@ -60,14 +113,37 @@ describe("CssSyntax — parser entry points", () => {
 		for (let i = 0; i < 20; i++) parseAStylesheet(sheet);
 		// A list of 30000 rules kept by each of 20 parses is over 4 MB.
 		expect(settle() - before).toBeLessThan(1 << 20);
-		expect(A.fieldCount(Field.rules, parseAStylesheet(fixture("css", "css-syntax-parser-entry-points-keeps-no-list-of-rules-for-each-stylesheet-it-par-2")))).toBe(2);
-		expect(parseAStylesheetsContents(fixture("css", "css-syntax-parser-entry-points-keeps-no-list-of-rules-for-each-stylesheet-it-par-3"))).toHaveLength(3);
+		expect(
+			A.fieldCount(
+				Field.rules,
+				parseAStylesheet(
+					fixture(
+						"css",
+						"css-syntax-parser-entry-points-keeps-no-list-of-rules-for-each-stylesheet-it-par-2"
+					)
+				)
+			)
+		).toBe(2);
+		expect(
+			parseAStylesheetsContents(
+				fixture(
+					"css",
+					"css-syntax-parser-entry-points-keeps-no-list-of-rules-for-each-stylesheet-it-par-3"
+				)
+			)
+		).toHaveLength(3);
 	});
 
 	it("reads a small input after a large one, and the large one again", () => {
 		// 40000 rules are over 65536 nodes: more than is kept for a small input.
-		const large = fixture("css", "css-syntax-parser-entry-points-reads-a-small-input-after-a-large-one-and-the-lar");
-		const small = fixture("css", "css-syntax-parser-entry-points-reads-a-small-input-after-a-large-one-and-the-lar-2");
+		const large = fixture(
+			"css",
+			"css-syntax-parser-entry-points-reads-a-small-input-after-a-large-one-and-the-lar"
+		);
+		const small = fixture(
+			"css",
+			"css-syntax-parser-entry-points-reads-a-small-input-after-a-large-one-and-the-lar-2"
+		);
 		/**
 		 * @param {string} input a stylesheet
 		 * @returns {string[]} how many rules it has, and its first and last
@@ -105,8 +181,14 @@ describe("CssSyntax — substitution span searches", () => {
 	const { _hasSubstitutionInSpan } = require("../../../lib/css/syntax-parser");
 
 	it.each([
-		["", "css-syntax-substitution-span-searches-shares-one-search-across-values-without"],
-		[";last:var(--x)", "css-syntax-substitution-span-searches-shares-one-search-across-values-without-2"]
+		[
+			"",
+			"css-syntax-substitution-span-searches-shares-one-search-across-values-without"
+		],
+		[
+			";last:var(--x)",
+			"css-syntax-substitution-span-searches-shares-one-search-across-values-without-2"
+		]
 	])(
 		"shares one search across values without calls before %s",
 		(_suffix, name) => {
@@ -140,7 +222,10 @@ describe("CssSyntax — substitution span searches", () => {
 
 	it("handles overlapping and backward spans after a hit or end of input", () => {
 		expect.assertions(7);
-		const css = fixture("css", "css-syntax-substitution-span-searches-handles-overlapping-and-backward-spans");
+		const css = fixture(
+			"css",
+			"css-syntax-substitution-span-searches-handles-overlapping-and-backward-spans"
+		);
 		const first = css.indexOf("var");
 		const second = css.indexOf("calc");
 		const last = css.indexOf("c:0");
@@ -163,11 +248,41 @@ describe("CssSyntax — substitution span searches", () => {
 	it("resets search results between stylesheets, including escaped calls", () => {
 		expect.assertions(5);
 		for (const { css, expected } of [
-			{ css: fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), expected: false },
-			{ css: fixture("css", "css-syntax-substitution-span-searches-resets-search-results-between-stylesheets"), expected: true },
-			{ css: fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), expected: false },
-			{ css: fixture("css", "css-syntax-substitution-span-searches-resets-search-results-between-stylesheets-2"), expected: true },
-			{ css: fixture("css", "css-syntax-substitution-span-searches-resets-search-results-between-stylesheets-3"), expected: true }
+			{
+				css: fixture(
+					"css",
+					"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+				),
+				expected: false
+			},
+			{
+				css: fixture(
+					"css",
+					"css-syntax-substitution-span-searches-resets-search-results-between-stylesheets"
+				),
+				expected: true
+			},
+			{
+				css: fixture(
+					"css",
+					"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+				),
+				expected: false
+			},
+			{
+				css: fixture(
+					"css",
+					"css-syntax-substitution-span-searches-resets-search-results-between-stylesheets-2"
+				),
+				expected: true
+			},
+			{
+				css: fixture(
+					"css",
+					"css-syntax-substitution-span-searches-resets-search-results-between-stylesheets-3"
+				),
+				expected: true
+			}
 		]) {
 			new SourceProcessor()
 				.use({
@@ -182,13 +297,19 @@ describe("CssSyntax — substitution span searches", () => {
 
 describe("CssSyntax — SourceProcessor", () => {
 	it("reports an empty body for a streamed rule with no prelude", () => {
-		const css = fixture("css", "css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude");
+		const css = fixture(
+			"css",
+			"css-syntax-source-processor-reports-an-empty-body-for-a-streamed-rule-with-no-prelude"
+		);
 		/** @type {number[]} */
 		const counts = [];
 		// A parser of its own: its list store starts empty, as in a fresh process.
 		jest.isolateModules(() => {
 			const syntax = require("../../../lib/css/syntax");
-			const { Field: fields, NodeType: types } = require("../../../lib/css/syntax-parser");
+			const {
+				Field: fields,
+				NodeType: types
+			} = require("../../../lib/css/syntax-parser");
 			new syntax.SourceProcessor()
 				.use({
 					[types.QualifiedRule]: (
@@ -216,7 +337,10 @@ describe("CssSyntax — SourceProcessor", () => {
 
 		it("prints a rule large enough to stream as written, and what follows it too", () => {
 			// Past the streaming threshold the block is written out as it is read.
-			const css = fixture("css", "css-syntax-source-processor-replacing-a-node-prints-a-rule-large-enough-to");
+			const css = fixture(
+				"css",
+				"css-syntax-source-processor-replacing-a-node-prints-a-rule-large-enough-to"
+			);
 			const plain = print(css, {});
 			for (const event of ["enter", "exit"]) {
 				expect(
@@ -241,7 +365,12 @@ describe("CssSyntax — SourceProcessor", () => {
 			.use({ [NodeType.Declaration]: () => a++ })
 			.use({ [NodeType.Declaration]: () => b++ });
 		expect(sp).toBeInstanceOf(SourceProcessor);
-		sp.process(fixture("css", "css-syntax-source-processor-use-chains-and-accumulates-visitors-per-type"));
+		sp.process(
+			fixture(
+				"css",
+				"css-syntax-source-processor-use-chains-and-accumulates-visitors-per-type"
+			)
+		);
 		expect([a, b]).toEqual([1, 1]);
 	});
 
@@ -249,7 +378,10 @@ describe("CssSyntax — SourceProcessor", () => {
 		// one top-level rule with > 64 Ki component-value nodes grows the SoA
 		// buffers past the shrink threshold; the next parse must work after the
 		// post-parse release re-shrinks them
-		const big = fixture("css", "css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically-2");
+		const big = fixture(
+			"css",
+			"css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically-2"
+		);
 		let idents = 0;
 		new SourceProcessor()
 			.use({ [NodeType.Ident]: () => idents++ })
@@ -272,7 +404,12 @@ describe("CssSyntax — SourceProcessor", () => {
 					) => names.push(path.name())
 				})
 			)
-			.process(fixture("css", "css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically"));
+			.process(
+				fixture(
+					"css",
+					"css-syntax-source-processor-re-shrinks-the-so-a-buffers-after-a-pathologically"
+				)
+			);
 		expect(names).toEqual(["c"]);
 	});
 });
@@ -297,9 +434,22 @@ describe("CssSyntax — the facade", () => {
 
 	it("holds no printer until something prints", () => {
 		const processor = new SourceProcessor();
-		processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"));
+		processor.process(
+			fixture(
+				"css",
+				"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+			)
+		);
 		expect(processor._printer).toBeUndefined();
-		expect(processor.process(fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"), { mode: "minify" }).code).toMatchSnapshot();
+		expect(
+			processor.process(
+				fixture(
+					"css",
+					"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+				),
+				{ mode: "minify" }
+			).code
+		).toMatchSnapshot();
 		expect(typeof processor._printer).toBe("function");
 	});
 });
@@ -318,17 +468,34 @@ describe("CssSyntax — nesting and error recovery", () => {
 		).toThrow(SyntaxError);
 		// The parse after it starts clean.
 		expect(
-			new SourceProcessor().process(fixture("css", "css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack"), { mode: "minify" })
-		).toMatchObject({ code: fixture("css", "css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is") });
+			new SourceProcessor().process(
+				fixture(
+					"css",
+					"css-syntax-nesting-and-error-recovery-fails-on-a-nesting-deeper-than-the-stack"
+				),
+				{ mode: "minify" }
+			)
+		).toMatchObject({
+			code: fixture(
+				"css",
+				"css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"
+			)
+		});
 	});
 
 	it("rethrows what else fails a parse as it is", () => {
 		const unreadable = /** @type {string[]} */ (/** @type {unknown} */ (42));
 		expect(() =>
-			new SourceProcessor().process(fixture("css", "css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"), {
-				mode: "minify",
-				unusedSymbols: unreadable
-			})
+			new SourceProcessor().process(
+				fixture(
+					"css",
+					"css-syntax-nesting-and-error-recovery-rethrows-what-else-fails-a-parse-as-it-is"
+				),
+				{
+					mode: "minify",
+					unusedSymbols: unreadable
+				}
+			)
 		).toThrow(TypeError);
 	});
 });
@@ -337,8 +504,7 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 	// A bare declaration, parsed as block-contents so no selector prelude pollutes
 	// the counts. Every leaf type appears both at the top level and inside `bar(…)`,
 	// so one skip proves both the value-list and function-arg builders honour it.
-	const VALUE_CSS =
-		fixture("css", "parser");
+	const VALUE_CSS = fixture("css", "parser");
 	// Leaf types present in VALUE_CSS's value (Whitespace too, from the spaces).
 	/** @type {[string, number][]} */
 	const LEAF_TYPES = [
@@ -366,7 +532,9 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		/** @type {import("../../../lib/css/syntax-parser").VisitorMap} */
 		const map = {};
 		for (const t of Object.values(NodeType)) {
-			map[t] = (/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path) => {
+			map[t] = (
+				/** @type {import("../../../lib/css/syntax-parser").CssPath} */ path
+			) => {
 				counts[path.type()] = (counts[path.type()] || 0) + 1;
 			};
 		}
@@ -425,31 +593,160 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 		// Without one the tokenizer would consume the shape as one of the two.
 		/** @type {[string, string][]} */
 		const CASES = [
-			["a plain run of leaves", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-10")],
-			["a string hiding the braces", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-18")],
-			["a single-quoted string", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-15")],
-			["a quote hiding the brace", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-12")],
-			["a brace inside an attribute block", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the")],
-			["a comment hiding the brace", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-2")],
-			["an escaped brace", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-21")],
-			["a function and its name", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-4")],
-			["a url inside the prelude's function", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-19")],
-			["an attribute block", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-20")],
-			["a non-ASCII selector", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-8")],
-			["a stray closer in the prelude", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-17")],
-			["a stray brace in the prelude", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-16")],
-			["a one-token prelude", fixture("css", "css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14")],
-			["a nested rule under a block", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-7")],
-			["a nested prelude stopped by a semicolon", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-5")],
+			[
+				"a plain run of leaves",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-10"
+				)
+			],
+			[
+				"a string hiding the braces",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-18"
+				)
+			],
+			[
+				"a single-quoted string",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-15"
+				)
+			],
+			[
+				"a quote hiding the brace",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-12"
+				)
+			],
+			[
+				"a brace inside an attribute block",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the"
+				)
+			],
+			[
+				"a comment hiding the brace",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-2"
+				)
+			],
+			[
+				"an escaped brace",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-21"
+				)
+			],
+			[
+				"a function and its name",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-4"
+				)
+			],
+			[
+				"a url inside the prelude's function",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-19"
+				)
+			],
+			[
+				"an attribute block",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-20"
+				)
+			],
+			[
+				"a non-ASCII selector",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-8"
+				)
+			],
+			[
+				"a stray closer in the prelude",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-17"
+				)
+			],
+			[
+				"a stray brace in the prelude",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-16"
+				)
+			],
+			[
+				"a one-token prelude",
+				fixture(
+					"css",
+					"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
+				)
+			],
+			[
+				"a nested rule under a block",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-7"
+				)
+			],
+			[
+				"a nested prelude stopped by a semicolon",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-5"
+				)
+			],
 			[
 				"a nested prelude stopped by the block's brace",
-				fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-6")
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-6"
+				)
 			],
-			["a rule inside an at-rule", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-13")],
-			["a selector that reads as a declaration", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-14")],
-			["a custom-property block", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-3")],
-			["a prelude running to EOF", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-11")],
-			["a NUL in the prelude", fixture("css", "css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-9")]
+			[
+				"a rule inside an at-rule",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-13"
+				)
+			],
+			[
+				"a selector that reads as a declaration",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-14"
+				)
+			],
+			[
+				"a custom-property block",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-3"
+				)
+			],
+			[
+				"a prelude running to EOF",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-11"
+				)
+			],
+			[
+				"a NUL in the prelude",
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-skip-selector-prelude-reads-the-9"
+				)
+			]
 		];
 
 		it.each(CASES)("%s", (_name, css) => {
@@ -459,12 +756,21 @@ describe("CssSyntax — skip set (CssProcessOptions.skip)", () => {
 
 	it('maps an as: "block-contents" print to where the list starts', () => {
 		const { code, map } = /** @type {{ code: string, map: EXPECTED_ANY }} */ (
-			new SourceProcessor().process(fixture("css", "css-syntax-skip-set-css-process-options-skip-maps-an-as-block-contents-print-to"), {
-				mode: "minify",
-				as: "block-contents",
-				source: "style",
-				content: fixture("css", "css-syntax-skip-set-css-process-options-skip-maps-an-as-block-contents-print-to")
-			})
+			new SourceProcessor().process(
+				fixture(
+					"css",
+					"css-syntax-skip-set-css-process-options-skip-maps-an-as-block-contents-print-to"
+				),
+				{
+					mode: "minify",
+					as: "block-contents",
+					source: "style",
+					content: fixture(
+						"css",
+						"css-syntax-skip-set-css-process-options-skip-maps-an-as-block-contents-print-to"
+					)
+				}
+			)
 		);
 
 		expect(code).toMatchSnapshot();
@@ -508,7 +814,10 @@ describe("CssSyntax — SourceProcessor without visitors", () => {
 			new SourceProcessor()
 				.use({})
 				.process(
-					fixture("css", "css-syntax-source-processor-without-visitors-streams-a-stylesheet-through-the")
+					fixture(
+						"css",
+						"css-syntax-source-processor-without-visitors-streams-a-stylesheet-through-the"
+					)
 				)
 		).not.toThrow();
 	});
@@ -543,7 +852,8 @@ describe("CssSyntax — token value decoding", () => {
 			return count;
 		};
 		// Linear work reads about four times as much for four times the input.
-		const name = "css-syntax-token-value-decoding-scans-escaped-at-signs-in-linear-time";
+		const name =
+			"css-syntax-token-value-decoding-scans-escaped-at-signs-in-linear-time";
 		expect(reads(`${name}-2`) / reads(name)).toBeLessThan(6);
 	});
 });
@@ -586,12 +896,30 @@ describe("CssSyntax — a skip set keeps the tree a full parse builds", () => {
 	const types = (types) => ({ types: buildSkipSet(types) });
 
 	it.each([
-		fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-div-hover-color"),
-		fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-foo-x-1-the"),
-		fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-foo-the"),
-		fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-1-x-1-the"),
-		fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-f-x-1-the"),
-		fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-the-same")
+		fixture(
+			"css",
+			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-div-hover-color"
+		),
+		fixture(
+			"css",
+			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-foo-x-1-the"
+		),
+		fixture(
+			"css",
+			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-foo-the"
+		),
+		fixture(
+			"css",
+			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-1-x-1-the"
+		),
+		fixture(
+			"css",
+			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-f-x-1-the"
+		),
+		fixture(
+			"css",
+			"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-reads-a-b-x-1-the-same"
+		)
 	])("reads %s the same with leaves dropped", (css) => {
 		const full = shape(css).filter((l) => !l.startsWith("decl"));
 		for (const type of [
@@ -600,24 +928,47 @@ describe("CssSyntax — a skip set keeps the tree a full parse builds", () => {
 			NodeType.Whitespace,
 			NodeType.Function
 		]) {
-			expect(shape(css, types([type])).filter((l) => !l.startsWith("decl"))).toEqual(
-				full
-			);
+			expect(
+				shape(css, types([type])).filter((l) => !l.startsWith("decl"))
+			).toEqual(full);
 		}
 	});
 
 	it("skip.selectorPrelude still drops a top-level `--name:` rule", () => {
 		const skip = { selectorPrelude: true };
 		for (const css of [
-			fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude"),
-			fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-2"),
-			fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-3"),
-			fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-4"),
-			fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-5")
+			fixture(
+				"css",
+				"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude"
+			),
+			fixture(
+				"css",
+				"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-2"
+			),
+			fixture(
+				"css",
+				"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-3"
+			),
+			fixture(
+				"css",
+				"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-4"
+			),
+			fixture(
+				"css",
+				"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude-5"
+			)
 		]) {
 			expect(shape(css, skip)).toEqual(shape(css));
 		}
-		expect(shape(fixture("css", "css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude"), skip)).toEqual(["rule:b{}"]);
+		expect(
+			shape(
+				fixture(
+					"css",
+					"css-syntax-a-skip-set-keeps-the-tree-a-full-parse-builds-skip-selector-prelude"
+				),
+				skip
+			)
+		).toEqual(["rule:b{}"]);
 	});
 });
 
@@ -652,21 +1003,36 @@ describe("CssSyntax — block streaming reads the same tree", () => {
 	};
 
 	it("streams a block grown on declarations after a child rule", () => {
-		const log = walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-streams-a-block-grown-on"));
+		const log = walk(
+			fixture(
+				"css",
+				"css-syntax-block-streaming-reads-the-same-tree-streams-a-block-grown-on"
+			)
+		);
 		expect(log.slice(0, 3)).toEqual(["rule:a", "rule:b", "c"]);
 		expect(log).toHaveLength(MANY + 3);
 		expect(log[log.length - 1]).toBe("d");
 	});
 
 	it("streams the rest of a block a descendant's growth activated", () => {
-		const log = walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-streams-the-rest-of-a-block-a"));
+		const log = walk(
+			fixture(
+				"css",
+				"css-syntax-block-streaming-reads-the-same-tree-streams-the-rest-of-a-block-a"
+			)
+		);
 		expect(log.slice(0, 3)).toEqual(["rule:a", "rule:b", "c"]);
 		expect(log.slice(-2)).toEqual(["rule:e", "d"]);
 		expect(log).toHaveLength(MANY + 4);
 	});
 
 	it("streams a block grown on child rules", () => {
-		const log = walk(fixture("css", "css-syntax-block-streaming-reads-the-same-tree-streams-a-block-grown-on-child"));
+		const log = walk(
+			fixture(
+				"css",
+				"css-syntax-block-streaming-reads-the-same-tree-streams-a-block-grown-on-child"
+			)
+		);
 		expect(log).toHaveLength(MANY * 2 + 2);
 		expect(log.slice(0, 2)).toEqual(["rule:a", "rule:b"]);
 		expect(log[log.length - 1]).toBe("d");
@@ -685,7 +1051,10 @@ describe("CssSyntax — what a minifying print reads off the parse", () => {
 		).code;
 
 	it("collects a block of declarations alone for the longhand merge", () => {
-		const css = fixture("css", "css-syntax-what-a-minifying-print-reads-off-the-parse-collects-a-block-of");
+		const css = fixture(
+			"css",
+			"css-syntax-what-a-minifying-print-reads-off-the-parse-collects-a-block-of"
+		);
 		expect(minify(css)).toMatchSnapshot();
 	});
 });

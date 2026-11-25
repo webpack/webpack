@@ -12,7 +12,9 @@ const installed = jest.fn(() => Promise.resolve(CACHE_NAME));
 // Names decode as webpack decodes them: the stand-in answers parses, not escapes.
 const mockCssTree = {
 	parse: jest.fn(),
-	ident: { decode: require("../../../lib/css/syntax-parser").unescapeIdentifier }
+	ident: {
+		decode: require("../../../lib/css/syntax-parser").unescapeIdentifier
+	}
 };
 
 jest.mock("../../../tooling/compare-tools-harness", () => ({
@@ -59,14 +61,38 @@ describe("the CSS tool comparison", () => {
 // zero over every stylesheet on disk before the fixture was written, so an edit
 // dropping one would take a branch out of reach with it.
 const REDUCED = [
-	["matrix to a scale", "compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale"],
-	["matrix to a translate", "compare-css-tools-the-cold-branches-fixture-writes-matrix-to-a-translate-as-the"],
-	["matrix to a quarter turn", "compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn"],
-	["matrix to three quarters", "compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters"],
-	["matrix3d to a 2D matrix", "compare-css-tools-the-cold-branches-fixture-writes-matrix3d-to-a-2-d-matrix-as"],
-	["matrix3d to a translate3d", "compare-css-tools-the-cold-branches-fixture-writes-matrix3d-to-a-translate3d-as"],
-	["matrix3d to a scale3d", "compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d"],
-	["scale3d to a scaleZ", "compare-css-tools-the-cold-branches-fixture-writes-scale3d-to-a-scale-z-as-the"]
+	[
+		"matrix to a scale",
+		"compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-scale"
+	],
+	[
+		"matrix to a translate",
+		"compare-css-tools-the-cold-branches-fixture-writes-matrix-to-a-translate-as-the"
+	],
+	[
+		"matrix to a quarter turn",
+		"compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-a-quarter-turn"
+	],
+	[
+		"matrix to three quarters",
+		"compare-css-tools-the-cold-branches-fixture-reduces-matrix-to-three-quarters"
+	],
+	[
+		"matrix3d to a 2D matrix",
+		"compare-css-tools-the-cold-branches-fixture-writes-matrix3d-to-a-2-d-matrix-as"
+	],
+	[
+		"matrix3d to a translate3d",
+		"compare-css-tools-the-cold-branches-fixture-writes-matrix3d-to-a-translate3d-as"
+	],
+	[
+		"matrix3d to a scale3d",
+		"compare-css-tools-the-cold-branches-fixture-reduces-matrix3d-to-a-scale3d"
+	],
+	[
+		"scale3d to a scaleZ",
+		"compare-css-tools-the-cold-branches-fixture-writes-scale3d-to-a-scale-z-as-the"
+	]
 ];
 
 /**
@@ -78,9 +104,18 @@ const transformOf = (css) => css.slice("a{transform:".length, -1);
 // The value each rewrite must decline, which is what says the guard is read
 // rather than the branch alone.
 const KEPT = [
-	["a matrix of no named shape", "compare-css-tools-the-cold-branches-fixture-keeps-a-matrix-of-no-named-shape"],
-	["a matrix3d that is a shear", "compare-css-tools-the-cold-branches-fixture-keeps-a-matrix3d-that-is-a-shear"],
-	["a rotation about no axis", "compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis"]
+	[
+		"a matrix of no named shape",
+		"compare-css-tools-the-cold-branches-fixture-keeps-a-matrix-of-no-named-shape"
+	],
+	[
+		"a matrix3d that is a shear",
+		"compare-css-tools-the-cold-branches-fixture-keeps-a-matrix3d-that-is-a-shear"
+	],
+	[
+		"a rotation about no axis",
+		"compare-css-tools-the-cold-branches-fixture-keeps-a-rotation-about-no-axis"
+	]
 ];
 
 /**
@@ -113,37 +148,71 @@ describe("compare-css-tools — the notices relation", () => {
 describe("compare-css-tools — the meaning relation", () => {
 	it("should read the space before a pseudo-class as the combinator it is", () => {
 		const beautify = { mode: /** @type {const} */ ("beautify") };
-		expect(meaningReports(".a :hover{}", ".a:hover{}", beautify)).toHaveLength(1);
+		expect(meaningReports(".a :hover{}", ".a:hover{}", beautify)).toHaveLength(
+			1
+		);
 		expect(meaningReports(".a :hover{}", ".a :hover {}", beautify)).toEqual([]);
-		expect(meaningReports(".a > :hover{}", ".a>:hover{}", beautify)).toEqual([]);
+		expect(meaningReports(".a > :hover{}", ".a>:hover{}", beautify)).toEqual(
+			[]
+		);
 	});
 
 	it("should decode a name once, so an escaped backslash stays a backslash", () => {
 		const beautify = { mode: /** @type {const} */ ("beautify") };
-		expect(meaningReports("a{\\5c 74op:0}", "a{top:0}", beautify)).toHaveLength(1);
+		expect(meaningReports("a{\\5c 74op:0}", "a{top:0}", beautify)).toHaveLength(
+			1
+		);
 		expect(meaningReports("@\\5c 6d{}", "@m{}", beautify)).toHaveLength(1);
-		expect(meaningReports("a{b:\\5c 63(1px)}", "a{b:c(1px)}", beautify)).toHaveLength(1);
-		expect(meaningReports("a{CO\\4cOR:red}", "a{color:red}", beautify)).toEqual([]);
+		expect(
+			meaningReports("a{b:\\5c 63(1px)}", "a{b:c(1px)}", beautify)
+		).toHaveLength(1);
+		expect(meaningReports("a{CO\\4cOR:red}", "a{color:red}", beautify)).toEqual(
+			[]
+		);
 	});
 
 	it("should keep an escaped space ending a URL, and drop only the layout around it", () => {
 		const beautify = { mode: /** @type {const} */ ("beautify") };
-		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a\\20)}", beautify)).toEqual([]);
-		expect(meaningReports("a{b:url( a\\20  )}", "a{b:url(a\\ )}", beautify)).toEqual([]);
-		expect(meaningReports("a{b:url(a\\ )}", "a{b:url(a)}", beautify)).toHaveLength(1);
+		expect(
+			meaningReports("a{b:url(a\\ )}", "a{b:url(a\\20)}", beautify)
+		).toEqual([]);
+		expect(
+			meaningReports("a{b:url( a\\20  )}", "a{b:url(a\\ )}", beautify)
+		).toEqual([]);
+		expect(
+			meaningReports("a{b:url(a\\ )}", "a{b:url(a)}", beautify)
+		).toHaveLength(1);
 	});
 
 	it("should tell a value holding the digest's own separators from two values", () => {
 		const beautify = { mode: /** @type {const} */ ("beautify") };
-		expect(meaningReports('a{--x:"a,String b"}', 'a{--x:"a" "b"}', beautify)).toHaveLength(1);
+		expect(
+			meaningReports('a{--x:"a,String b"}', 'a{--x:"a" "b"}', beautify)
+		).toHaveLength(1);
 	});
 
 	it("should keep the whitespace a sign needs in a value, and drop the rest as layout", () => {
 		const beautify = { mode: /** @type {const} */ ("beautify") };
-		expect(meaningReports("a{b:calc(1px + 2px)}", "a{b:calc(1px+ 2px)}", beautify)).toHaveLength(1);
-		expect(meaningReports("a{b:calc(1px - 2px)}", "a{b:calc(1px -/**/2px)}", beautify)).toHaveLength(1);
-		expect(meaningReports("a{b:calc( 1px  +  2px )}", "a{b:calc(1px + 2px)}", beautify)).toEqual([]);
-		expect(meaningReports("a{b:1px/**/2px}", "a{b: 1px 2px }", beautify)).toEqual([]);
+		expect(
+			meaningReports("a{b:calc(1px + 2px)}", "a{b:calc(1px+ 2px)}", beautify)
+		).toHaveLength(1);
+		expect(
+			meaningReports(
+				"a{b:calc(1px - 2px)}",
+				"a{b:calc(1px -/**/2px)}",
+				beautify
+			)
+		).toHaveLength(1);
+		expect(
+			meaningReports(
+				"a{b:calc( 1px  +  2px )}",
+				"a{b:calc(1px + 2px)}",
+				beautify
+			)
+		).toEqual([]);
+		expect(
+			meaningReports("a{b:1px/**/2px}", "a{b: 1px 2px }", beautify)
+		).toEqual([]);
 		expect(
 			meaningReports(
 				"a{--op:+;width:calc(1px var(--op) 2px)}",
@@ -152,7 +221,11 @@ describe("compare-css-tools — the meaning relation", () => {
 			)
 		).toHaveLength(1);
 		expect(
-			meaningReports("a{b:calc(1px env(x) 2px)}", "a{b:calc(1px env(x)2px)}", beautify)
+			meaningReports(
+				"a{b:calc(1px env(x) 2px)}",
+				"a{b:calc(1px env(x)2px)}",
+				beautify
+			)
 		).toHaveLength(1);
 	});
 });
@@ -202,7 +275,9 @@ describe("compare-css-tools — the cold branches fixture", () => {
 	it("is its own output under every preset it is swept with", () => {
 		for (const options of [
 			{},
-			{ environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] } }
+			{
+				environment: { browsers: ["chrome 100", "firefox 100", "safari 15.4"] }
+			}
 		]) {
 			const once = minify(COLD_BRANCHES, options);
 			expect(minify(once, options)).toBe(once);
@@ -221,7 +296,9 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 	 */
 	const at = (text, before = "") => {
 		const offset = css.indexOf(before + text) + before.length;
-		return { loc: { start: { offset }, end: { offset: offset + text.length } } };
+		return {
+			loc: { start: { offset }, end: { offset: offset + text.length } }
+		};
 	};
 
 	/**
@@ -280,7 +357,12 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 
 	const nestedRule = rule(".b", [
 		{ type: "Declaration", property: "x", important: false, value: at("y") },
-		{ type: "Declaration", property: "z", important: false, value: at("", "z:") }
+		{
+			type: "Declaration",
+			property: "z",
+			important: false,
+			value: at("", "z:")
+		}
 	]);
 
 	it("holds webpack and postcss to css-tree's rules, at-rules and declarations", async () => {
@@ -296,10 +378,14 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 	 * @param {string} source a stylesheet
 	 * @returns {(text: string, before?: string) => { loc: { start: { offset: number }, end: { offset: number } } }} where a part of it is
 	 */
-	const within = (source) => (text, before = "") => {
-		const offset = source.indexOf(before + text) + before.length;
-		return { loc: { start: { offset }, end: { offset: offset + text.length } } };
-	};
+	const within =
+		(source) =>
+		(text, before = "") => {
+			const offset = source.indexOf(before + text) + before.length;
+			return {
+				loc: { start: { offset }, end: { offset: offset + text.length } }
+			};
+		};
 
 	/**
 	 * A css-tree that answers each parse from a table, keyed by the context
@@ -338,7 +424,9 @@ describe("compare-css-tools — agreeing with css-tree", () => {
 					}
 				}
 			],
-			[`declarationList@${source.indexOf(raw)}`]: [{ type: "Raw", ...loc(raw) }],
+			[`declarationList@${source.indexOf(raw)}`]: [
+				{ type: "Raw", ...loc(raw) }
+			],
 			[`stylesheet@${source.indexOf(raw)}`]: [
 				{
 					type: "Rule",

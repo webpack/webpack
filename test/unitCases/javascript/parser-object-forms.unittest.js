@@ -174,7 +174,10 @@ describe("JavascriptParser object forms", () => {
 				);
 			});
 			parser.parse(
-				fixture("javascript", "javascript-parser-object-forms-statement-path-should-give-an-object-tap-the"),
+				fixture(
+					"javascript",
+					"javascript-parser-object-forms-statement-path-should-give-an-object-tap-the"
+				),
 				/** @type {import("../../../lib/module/Parser").ParserState} */ (
 					/** @type {unknown} */ ({})
 				)

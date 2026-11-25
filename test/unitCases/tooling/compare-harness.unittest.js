@@ -755,9 +755,9 @@ describe("compare-tools-harness", () => {
 				printed: "a!",
 				reports: []
 			});
-			expect(
-				idempotence({ minify, source: "a", says }).reports[0].what
-			).toBe("differs, +1 B");
+			expect(idempotence({ minify, source: "a", says }).reports[0].what).toBe(
+				"differs, +1 B"
+			);
 		});
 
 		it("reports a first print that throws", () => {
@@ -793,9 +793,9 @@ describe("compare-tools-harness", () => {
 	describe("formatSecond", () => {
 		it("writes each second-pass outcome as its cell", () => {
 			expect(formatSecond(undefined)).toBe("-");
-			expect(
-				formatSecond({ stable: false, delta: 0, error: "x" })
-			).toBe("threw");
+			expect(formatSecond({ stable: false, delta: 0, error: "x" })).toBe(
+				"threw"
+			);
 			expect(formatSecond({ stable: true, delta: 0 })).toBe("-");
 			expect(formatSecond({ stable: false, delta: 0 })).toBe("moved");
 			expect(formatSecond({ stable: false, delta: -3 })).toBe("-3 B");
@@ -927,7 +927,11 @@ describe("compare-tools-harness", () => {
 		it("gathers one repro found in several sources into one finding", () => {
 			const groups = findingGroups();
 			groups.add(finding("idempotence", "    a -> b"), "default", "one.html");
-			groups.add(finding("idempotence", "    a -> b"), "aggressive", "two.html");
+			groups.add(
+				finding("idempotence", "    a -> b"),
+				"aggressive",
+				"two.html"
+			);
 			const { text, count } = written(groups);
 			expect(count).toBe(1);
 			expect(text).toContain("2 sources, from one.html");
@@ -1204,7 +1208,11 @@ describe("sweepExitCode", () => {
 
 	it("reads the flag out of the whole command line", () => {
 		expect(
-			sweepExitCode(0, ["A"], ["node", "x.js", "--invariants", "--require-corpus"])
+			sweepExitCode(
+				0,
+				["A"],
+				["node", "x.js", "--invariants", "--require-corpus"]
+			)
 		).toBe(1);
 		expect(sweepExitCode(0, ["A"], ["node", "x.js", "--invariants"])).toBe(0);
 	});
@@ -1212,12 +1220,12 @@ describe("sweepExitCode", () => {
 
 describe("sweepMode", () => {
 	it("reads the mode whichever side of the modifier it stands", () => {
-		expect(sweepMode(["node", "x.js", "--invariants", "--require-corpus"])).toBe(
-			"--invariants"
-		);
-		expect(sweepMode(["node", "x.js", "--require-corpus", "--invariants"])).toBe(
-			"--invariants"
-		);
+		expect(
+			sweepMode(["node", "x.js", "--invariants", "--require-corpus"])
+		).toBe("--invariants");
+		expect(
+			sweepMode(["node", "x.js", "--require-corpus", "--invariants"])
+		).toBe("--invariants");
 	});
 
 	it("reads the other modes unchanged", () => {
@@ -1234,12 +1242,26 @@ describe("sweepMode", () => {
 
 describe("profileShares", () => {
 	it("counts each sample toward its file, the engine's work by name", () => {
-		const frame = (/** @type {string} */ functionName, /** @type {string} */ url) => ({
+		const frame = (
+			/** @type {string} */ functionName,
+			/** @type {string} */ url
+		) => ({
 			callFrame: { functionName, url }
 		});
 		const nodes = [
-			{ id: 1, ...frame("minify", "file:///x/node_modules/terser/lib/minify.js") },
-			{ id: 2, ...frame("print", pathToFileURL(path.join(__dirname, "../../../lib/javascript/syntax-printer.js")).href) },
+			{
+				id: 1,
+				...frame("minify", "file:///x/node_modules/terser/lib/minify.js")
+			},
+			{
+				id: 2,
+				...frame(
+					"print",
+					pathToFileURL(
+						path.join(__dirname, "../../../lib/javascript/syntax-printer.js")
+					).href
+				)
+			},
 			{ id: 3, ...frame("(garbage collector)", "") },
 			{ id: 4, ...frame("anonymous", "") },
 			{ id: 5, ...frame("helper", "file:///x/node_modules/other/index.js") }
@@ -1257,9 +1279,9 @@ describe("profileShares", () => {
 			["(generated)", 5 / 80]
 		]);
 		expect(profileShares({ nodes, samples: [], timeDeltas: [] })).toEqual([]);
-		expect(
-			profileShares({ nodes, samples: [1], timeDeltas: [0] })
-		).toEqual([["terser minify.js", 0]]);
+		expect(profileShares({ nodes, samples: [1], timeDeltas: [0] })).toEqual([
+			["terser minify.js", 0]
+		]);
 	});
 });
 
@@ -1332,7 +1354,11 @@ describe("parser agreement", () => {
 		]);
 		// A node one side lacks is one difference, not one per node after it.
 		expect(
-			treeDifferences(paragraphs(["a", "c"]), paragraphs(["a", "b", "c"]), "ref")
+			treeDifferences(
+				paragraphs(["a", "c"]),
+				paragraphs(["a", "b", "c"]),
+				"ref"
+			)
 		).toEqual(['/body[1]/p[2]: ref nothing, tool text "b"']);
 		expect(
 			treeDifferences(
@@ -1400,16 +1426,16 @@ describe("parser agreement", () => {
 		/** @typedef {import("../../../tooling/compare-tools-harness").TreeReader} TreeReader */
 		const readers = new Map(
 			/** @type {[string, TreeReader][]} */ ([
-			["ref", reference],
-			["same", (source) => Promise.resolve(paragraphs(source.split(" ")))],
-			["other", () => paragraphs(["no", "b", "x"])],
-			[
-				"throws",
-				() => {
-					throw new Error("bad input\nmore");
-				}
-			]
-		])
+				["ref", reference],
+				["same", (source) => Promise.resolve(paragraphs(source.split(" ")))],
+				["other", () => paragraphs(["no", "b", "x"])],
+				[
+					"throws",
+					() => {
+						throw new Error("bad input\nmore");
+					}
+				]
+			])
 		);
 		const cell = agreement("ref", readers, "a b");
 		expect(await cell("ref")).toBe("reference");

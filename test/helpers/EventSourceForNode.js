@@ -17,22 +17,22 @@ module.exports = class EventSource {
 		/** @type {boolean} */
 		this.closed = false;
 
-		const request = require(
-			url.startsWith("https:") ? "https" : "http"
-		).request(
-			url,
-			{
-				agent: false,
-				rejectUnauthorized: false,
-				headers: { accept: "text/event-stream" }
-			},
-			(res) => {
-				this.response = res;
-				res.on("error", (err) => {
-					if (!this.closed && this.onerror) this.onerror(err);
-				});
-			}
-		);
+		const request =
+			// eslint-disable-next-line unicorn/prefer-minimal-ternary -- Preserve request callback types.
+			(url.startsWith("https:") ? require("https") : require("http")).request(
+				url,
+				{
+					agent: false,
+					rejectUnauthorized: false,
+					headers: { accept: "text/event-stream" }
+				},
+				(res) => {
+					this.response = res;
+					res.on("error", (err) => {
+						if (!this.closed && this.onerror) this.onerror(err);
+					});
+				}
+			);
 
 		request.on("error", (err) => {
 			if (!this.closed && this.onerror) this.onerror({ message: err });

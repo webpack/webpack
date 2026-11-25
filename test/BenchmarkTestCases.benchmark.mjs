@@ -462,7 +462,7 @@ class BenchmarkRunner {
 				continue;
 			}
 
-			const options = await import(pathToFileURL(optionsPath));
+			const options = await import(pathToFileURL(optionsPath).href);
 
 			if (typeof options.setup !== "undefined") {
 				await options.setup();
@@ -499,7 +499,9 @@ class BenchmarkRunner {
 			const names = [];
 
 			try {
-				const registerBenchmarks = await import(pathToFileURL(benchmarkPath));
+				const registerBenchmarks = await import(
+					pathToFileURL(benchmarkPath).href
+				);
 
 				registerBenchmarks.default({
 					/**

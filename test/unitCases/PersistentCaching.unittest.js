@@ -501,7 +501,10 @@ export default 40 + file;
 			...configAdditions,
 			plugins: [new webpack.HotModuleReplacementPlugin()]
 		});
-		const hotSource = await readFile(path.resolve(outputPath, "main.js"), "utf8");
+		const hotSource = await readFile(
+			path.resolve(outputPath, "main.js"),
+			"utf8"
+		);
 		expect(hotSource).toMatch(/module\.hot\.accept\(\d+, /);
 		await compile(configAdditions);
 		await expect(execute()).resolves.toBe(42);
@@ -539,5 +542,4 @@ export default VALUE;
 			expect(source).toContain(`inlined export .VALUE */${value}`);
 		}
 	}, 120000);
-
 });
