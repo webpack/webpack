@@ -424,10 +424,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what swc's `pass-1` tests cover",
-		[
-			"swc minifier: pass-1/issue-6788/1/input.js",
-			"swc minifier: pass-1/issue-6405/1/input.js"
-		]
+		["swc minifier: pass-1/issue-6788/1/input.js"]
 	],
 	[
 		"swc restructures conditionals: an `if` as `&&` or `?:`, a shared tail or call factored out, `continue` and `break` folded into the condition",
