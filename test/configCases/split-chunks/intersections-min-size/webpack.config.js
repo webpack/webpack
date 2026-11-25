@@ -75,11 +75,11 @@ module.exports = variants.map(
 			target: "node",
 			entry: {
 				a: "./a",
-				...(singleton ? {} : { b: "./b" }),
+				...(!singleton && { b: "./b" }),
 				...(higherOrder || filtered
 					? { c: "./pair01", d: "./pair02", e: "./pair12" }
 					: { c: "./c0", d: "./c1", e: "./c2" }),
-				...(filtered ? { p0: "./c0", p1: "./c1", p2: "./c2" } : {})
+				...(filtered && { p0: "./c0", p1: "./c1", p2: "./c2" })
 			},
 			output: {
 				filename: `[name]-${index}.js`,
@@ -94,8 +94,8 @@ module.exports = variants.map(
 						? (chunk) => !["c", "d", "e"].includes(chunk.name || "")
 						: "all",
 					usedExports,
-					...(dedupDepth === undefined ? {} : { dedupDepth }),
-					...(singleton ? { minChunks: 1 } : {}),
+					...(dedupDepth !== undefined && { dedupDepth }),
+					...(singleton && { minChunks: 1 }),
 					minSize: sharedSize + (belowThreshold ? 1 : 0),
 					minSizeReduction: 0,
 					maxInitialRequests: Infinity,

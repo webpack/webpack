@@ -367,8 +367,8 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			if (
 				!declarations ||
 				declarations.length === 0 ||
-				!declarations.every((declaration) =>
-					isPlatformFile(declaration.getSourceFile())
+				declarations.some(
+					(declaration) => !isPlatformFile(declaration.getSourceFile())
 				)
 			) {
 				return false;
@@ -506,7 +506,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 			const indexInfos = typeChecker.getIndexInfosOfType(type);
 			return (
 				indexInfos.length > 0 &&
-				indexInfos.every((info) => Boolean(info.type.flags & ts.TypeFlags.Any))
+				indexInfos.every((info) => info.type.flags & ts.TypeFlags.Any)
 			);
 		};
 
@@ -826,7 +826,7 @@ for (const [sourceFile, typeChecker, program] of sourceFiles) {
 				isTypeReference(type) &&
 				typeChecker
 					.getTypeArguments(type)
-					.some((argument) => Boolean(argument.flags & ts.TypeFlags.Any))
+					.some((argument) => argument.flags & ts.TypeFlags.Any)
 			);
 		};
 
@@ -1132,7 +1132,7 @@ const findEscapeHatches = (source, file) => {
 		}
 		// JSDoc hangs off the node it documents rather than being one of its children.
 		const { jsDoc } = /** @type {ts.Node & { jsDoc?: ts.JSDoc[] }} */ (node);
-		if (jsDoc) for (const comment of jsDoc) visit(comment);
+		for (const comment of jsDoc || []) visit(comment);
 		ts.forEachChild(node, visit);
 	};
 	visit(sourceFile);
@@ -1296,7 +1296,7 @@ for (const fileReport of Object.values(coverageReport)) {
  */
 const countCell = (head, baseCount) => {
 	const change = baseCount === undefined ? 0 : head - baseCount;
-	if (change === 0) return head === 0 ? "" : `${head}`;
+	if (change === 0) return head === 0 ? "" : String(head);
 	return `${head} (${formatChange(change)})`;
 };
 

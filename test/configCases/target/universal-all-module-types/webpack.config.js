@@ -2,7 +2,7 @@
 
 const path = require("path");
 
-const nodeMajor = process.versions.node.split(".")[0];
+const nodeMajor = process.versions.node.split(".", 1)[0];
 
 /** @type {import("../../../../").ModuleOptions["rules"]} */
 const rules = [

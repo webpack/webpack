@@ -7,7 +7,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Needle built here so it is not a source string literal the search would find.
-const handlers = `${"__webpack_require__"}.f`;
+const handlers = "__webpack_require__.f";
 
 /**
  * @param {number} index position of this config, so it finds its own bundle

@@ -70,7 +70,9 @@ const run = async (args) => {
 	const errors = [];
 	const errorSpy = jest
 		.spyOn(console, "error")
-		.mockImplementation((message) => errors.push(`${message}`));
+		.mockImplementation((message) => {
+			errors.push(String(message));
+		});
 	let exitCode = 0;
 	try {
 		await new WebpackCLI().run(["node", "webpack", "build", ...args]);

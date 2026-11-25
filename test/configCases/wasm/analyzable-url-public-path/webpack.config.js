@@ -5,8 +5,8 @@
 
 const webpack = require("../../../../");
 
-const INSTANTIATE = `${"__webpack_require__"}.v(exports, `;
-const COMPILE = `${"__webpack_require__"}.vs(`;
+const INSTANTIATE = "__webpack_require__.v(exports, ";
+const COMPILE = "__webpack_require__.vs(";
 
 /**
  * @param {string} name prefix keeping the emitted files of each config apart

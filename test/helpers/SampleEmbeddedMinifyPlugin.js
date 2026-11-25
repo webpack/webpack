@@ -8,10 +8,10 @@ const {
 	HTML_TYPE
 } = require("../../lib/module/ModuleSourceTypeConstants");
 
-/** @typedef {import("../../lib/Compiler")} Compiler */
-/** @typedef {import("../../lib/module/Module")} Module */
-/** @typedef {import("../../lib/html/syntax-printer").EmbeddedSourceRenderer} EmbeddedSourceRenderer */
-/** @typedef {import("webpack-sources").Source} Source */
+/** @import Compiler from "../../lib/Compiler" */
+/** @import Module from "../../lib/module/Module" */
+/** @import { EmbeddedSourceRenderer } from "../../lib/html/syntax-printer" */
+/** @import { Source } from "webpack-sources" */
 
 const PLUGIN_NAME = "SampleEmbeddedMinifyPlugin";
 

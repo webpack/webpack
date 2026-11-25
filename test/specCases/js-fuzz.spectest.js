@@ -26,7 +26,7 @@ const {
 const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code: string, map: string | undefined }>} Minify */
-/** @typedef {import("../helpers/jsFuzzProgram").Program} Program */
+/** @import { Program } from "../helpers/jsFuzzProgram" */
 /** @typedef {Record<string, EXPECTED_ANY>} MinifyOptions */
 
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -274,9 +274,10 @@ const checksInPart = (key) =>
  * @returns {string} the identifier, or "" where none starts
  */
 const identifierAt = (code, offset) => {
-	const match = /^(?:[\p{ID_Continue}$\u200C\u200D]|\\u[\da-fA-F]{4}|\\u\{[\da-fA-F]+\})+/u.exec(
-		code.slice(offset)
-	);
+	const match =
+		/^(?:[\p{ID_Continue}$\u200C\u200D]|\\u[\da-fA-F]{4}|\\u\{[\da-fA-F]+\})+/u.exec(
+			code.slice(offset)
+		);
 	return match === null
 		? ""
 		: match[0].replace(
@@ -309,7 +310,11 @@ const sourceMapMisfit = (code, source, map, named = true) => {
 			}
 			if (index === undefined) continue;
 			const text = sourceLines[/** @type {number} */ (originalLine)];
-			if (index !== 0 || text === undefined || /** @type {number} */ (originalColumn) > text.length) {
+			if (
+				index !== 0 ||
+				text === undefined ||
+				/** @type {number} */ (originalColumn) > text.length
+			) {
 				return `maps ${line}:${column} to ${originalLine}:${originalColumn}, past the source`;
 			}
 			if (name === undefined || !named) continue;
@@ -323,7 +328,14 @@ const sourceMapMisfit = (code, source, map, named = true) => {
 					? identifierAt(text, text[at] === "#" ? at + 1 : at)
 					: quoted[2];
 			if (written !== names[name]) {
-				return `maps ${line}:${column} to ${originalLine}:${originalColumn} named ${names[name]}, where the source holds ${JSON.stringify(text.slice(/** @type {number} */ (originalColumn), /** @type {number} */ (originalColumn) + 20))}`;
+				return `maps ${line}:${column} to ${originalLine}:${originalColumn} named ${
+					names[name]
+				}, where the source holds ${JSON.stringify(
+					text.slice(
+						/** @type {number} */ (originalColumn),
+						/** @type {number} */ (originalColumn) + 20
+					)
+				)}`;
 			}
 		}
 	}
@@ -349,7 +361,9 @@ const showExports = (namespace) =>
 			if (type === "object" && value !== null) {
 				return `${name}:{${Object.keys(value).join(",")}}`;
 			}
-			return `${name}:${type === "bigint" ? `${value}n` : JSON.stringify(value)}`;
+			return `${name}:${
+				type === "bigint" ? `${value}n` : JSON.stringify(value)
+			}`;
 		})
 		.join(" ");
 
@@ -365,7 +379,11 @@ const run = async (code, isModule, functionText = "[function]") => {
 	/** @type {string[]} */
 	const lines = [];
 	const context = vm.createContext({
-		console: { log: (/** @type {string} */ line) => lines.push(line) },
+		console: {
+			log: (/** @type {string} */ line) => {
+				lines.push(line);
+			}
+		},
 		_functionText: functionText
 	});
 	try {
@@ -382,8 +400,9 @@ const run = async (code, isModule, functionText = "[function]") => {
 						await dependency.link(() => {
 							throw new Error("dep imports nothing");
 						});
+					} else if (dependency.status === "linked") {
+						await dependency.evaluate();
 					}
-					if (dependency.status === "linked") await dependency.evaluate();
 					return dependency;
 				}
 			});
@@ -408,7 +427,9 @@ const run = async (code, isModule, functionText = "[function]") => {
 		const error = /** @type {Error} */ (err);
 		lines.push(
 			`threw <${
-				error !== null && typeof error === "object" && typeof error.name === "string"
+				error !== null &&
+				typeof error === "object" &&
+				typeof error.name === "string"
 					? error.name
 					: typeof error
 			}>`
@@ -471,7 +492,8 @@ const normalize = (node, tagged) => {
 		// An empty statement in a list, as after `export default function () {}`,
 		// prints as nothing.
 		return node
-			.filter((item) => !(item !== null && item.type === "EmptyStatement"))
+
+			.filter((item) => item === null || item.type !== "EmptyStatement")
 			.map((item) => normalize(item));
 	}
 	if (node === null || typeof node !== "object") return node;
@@ -492,7 +514,9 @@ const normalize = (node, tagged) => {
 	/** @type {Record<string, unknown>} */
 	const out = {};
 	for (const key of Object.keys(source)) {
-		if (key === "start" || key === "end" || key === "range" || key === "loc") continue;
+		if (key === "start" || key === "end" || key === "range" || key === "loc") {
+			continue;
+		}
 		// A block of one statement a loop or `if` runs prints with or without braces.
 		if (
 			BRACED_BODIES.has(source.type) &&
@@ -503,10 +527,8 @@ const normalize = (node, tagged) => {
 			!/^(?:FunctionDeclaration|ClassDeclaration)$/.test(
 				source[key].body[0].type
 			) &&
-			!(
-				source[key].body[0].type === "VariableDeclaration" &&
-				source[key].body[0].kind !== "var"
-			)
+			(source[key].body[0].type !== "VariableDeclaration" ||
+				source[key].body[0].kind === "var")
 		) {
 			out[key] = normalize(source[key].body[0]);
 			continue;
@@ -518,8 +540,8 @@ const normalize = (node, tagged) => {
 		}
 		out[key] =
 			source.type === "TemplateLiteral" && key === "quasis"
-				? source.quasis.map(
-						(/** @type {EXPECTED_ANY} */ quasi) => normalize(quasi, tagged)
+				? source.quasis.map((/** @type {EXPECTED_ANY} */ quasi) =>
+						normalize(quasi, tagged)
 					)
 				: normalize(
 						source[key],
@@ -546,8 +568,13 @@ const normalize = (node, tagged) => {
 			source.declaration.type === "ClassExpression") &&
 		source.declaration.id === null
 	) {
-		const declaration = /** @type {Record<string, unknown>} */ (out.declaration);
-		declaration.type = source.declaration.type.replace("Expression", "Declaration");
+		const declaration = /** @type {Record<string, unknown>} */ (
+			out.declaration
+		);
+		declaration.type = source.declaration.type.replace(
+			"Expression",
+			"Declaration"
+		);
 	}
 	return out;
 };
@@ -671,16 +698,17 @@ const eagerParserDifference = (code, isModule) => {
  * @type {Minify}
  */
 const minify = async (code, { sourceMap, ...options }) => {
-	const result = /** @type {{ code: string, map: EXPECTED_OBJECT | undefined }} */ (
-		new SourceProcessor().process(code, {
-			mode: "minify",
-			compress: {},
-			mangle: true,
-			...options,
-			sourceType: options.module ? "module" : "script",
-			...(sourceMap ? { source: "0", content: code } : undefined)
-		})
-	);
+	const result =
+		/** @type {{ code: string, map: EXPECTED_OBJECT | undefined }} */ (
+			new SourceProcessor().process(code, {
+				mode: "minify",
+				compress: {},
+				mangle: true,
+				...options,
+				sourceType: options.module ? "module" : "script",
+				...(sourceMap && { source: "0", content: code })
+			})
+		);
 	return { code: result.code, map: result.map && JSON.stringify(result.map) };
 };
 
@@ -765,7 +793,9 @@ const checkProgram = async ({ code: source, module: isModule }, optionSets) => {
 					: readsBackTheSame(code, reprinted, isModule);
 		} catch (err) {
 			if (compileError(reprinted, isModule) !== undefined) {
-				return `minify ${label}: printer writes its output as what does not parse: ${/** @type {Error} */ (err).message}\n\toutput:    ${code}\n\treprinted: ${reprinted}`;
+				return `minify ${label}: printer writes its output as what does not parse: ${
+					/** @type {Error} */ (err).message
+				}\n\toutput:    ${code}\n\treprinted: ${reprinted}`;
 			}
 			// acorn's defect: the tokens go unread, the rest is checked.
 			sameTokens = true;
@@ -803,7 +833,11 @@ const checkProgram = async ({ code: source, module: isModule }, optionSets) => {
 			if (mapped.code !== code) {
 				return `minify ${label}: writes otherwise with a source map\n\toutput: ${code}\n\tmapped: ${mapped.code}`;
 			}
-			const misfit = sourceMapMisfit(code, source, /** @type {string} */ (mapped.map));
+			const misfit = sourceMapMisfit(
+				code,
+				source,
+				/** @type {string} */ (mapped.map)
+			);
 			if (misfit !== undefined) {
 				return `minify ${label}: source map ${misfit}\n\toutput: ${code}`;
 			}
@@ -910,8 +944,12 @@ describe("JavaScript fuzzer", () => {
 				const code = next();
 				const ours = [...collectCjsRequireSpecifiers(code)].sort();
 				const theirs = requiredSpecifiers(code);
-				if (ours.join() !== theirs.join()) {
-					failures.push(`found ${ours.join()} where acorn finds ${theirs.join()} in:\n${code}`);
+				if (ours.join(",") !== theirs.join(",")) {
+					failures.push(
+						`found ${ours.join(",")} where acorn finds ${theirs.join(
+							","
+						)} in:\n${code}`
+					);
 				}
 			}
 
@@ -963,7 +1001,9 @@ describe("JavaScript fuzzer", () => {
 					// A failing program is the finding: the rest of the seed waits on it.
 					if (failure !== undefined) {
 						failures.push(
-							`round ${round}${program.module ? " (module)" : ""}: ${failure}\n\tprogram:\n${program.code}`
+							`round ${round}${
+								program.module ? " (module)" : ""
+							}: ${failure}\n\tprogram:\n${program.code}`
 						);
 						break;
 					}

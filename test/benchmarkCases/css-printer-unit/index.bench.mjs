@@ -24,9 +24,7 @@ import { fileURLToPath } from "url";
 const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/css/syntax")} */
-const cssSyntax = require("../../../lib/css/syntax.js");
-
-const { SourceProcessor } = cssSyntax;
+const { SourceProcessor } = require("../../../lib/css/syntax.js");
 
 // Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
 // `css/large` configCase and the parser benchmark.

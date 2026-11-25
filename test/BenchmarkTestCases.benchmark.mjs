@@ -316,7 +316,7 @@ class BenchmarkRunner {
 					baselineRevision
 				]);
 
-				await git.raw(["reset", "--soft", prevHead.split("\n")[0]]);
+				await git.raw(["reset", "--soft", prevHead.split("\n", 1)[0]]);
 				await fs.writeFile(gitIndex, index);
 			} finally {
 				baselines.push({
@@ -462,7 +462,7 @@ class BenchmarkRunner {
 				continue;
 			}
 
-			const options = await import(`${pathToFileURL(optionsPath)}`);
+			const options = await import(pathToFileURL(optionsPath));
 
 			if (typeof options.setup !== "undefined") {
 				await options.setup();
@@ -499,9 +499,7 @@ class BenchmarkRunner {
 			const names = [];
 
 			try {
-				const registerBenchmarks = await import(
-					`${pathToFileURL(benchmarkPath)}`
-				);
+				const registerBenchmarks = await import(pathToFileURL(benchmarkPath));
 
 				registerBenchmarks.default({
 					/**

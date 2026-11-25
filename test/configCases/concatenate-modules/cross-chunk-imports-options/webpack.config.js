@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../types").Configuration} Configuration */
+/** @import { Configuration } from "../../../../types" */
 
 /**
  * Returns the configuration for one option under test.

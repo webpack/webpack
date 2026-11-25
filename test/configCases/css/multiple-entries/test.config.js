@@ -16,7 +16,9 @@ module.exports = {
 
 		expect(files).toMatchSnapshot();
 
-		for (const file of files.filter((item) => /\.css/.test(item))) {
+		for (const file of files) {
+			if (!/\.css/.test(file)) continue;
+
 			expect(
 				fs.readFileSync(path.join(options.output.path, file), "utf8")
 			).toMatchSnapshot(file);

@@ -186,15 +186,14 @@ async function createTree(
 							? `require.ensure([], function() { const module${i} = require(${JSON.stringify(`./${module}.js`)}); });\n`
 							: `const module${i} = await import(${JSON.stringify(`./${module}.js`)});\n`
 					);
-					list.push(`counter += module${i};\nconsole.log(counter)`);
 				} else {
 					list.push(
 						useRequire
 							? `const module${i} = require(${JSON.stringify(`./${module}.js`)});\n`
 							: `import module${i} from ${JSON.stringify(`./${module}.js`)};\n`
 					);
-					list.push(`counter += module${i};\nconsole.log(counter)`);
 				}
+				list.push(`counter += module${i};\nconsole.log(counter)`);
 
 				await make(
 					module,

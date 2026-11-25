@@ -6,7 +6,7 @@ const {
 	_SyntaxTree: SyntaxTree
 } = require("../../../../lib/javascript/syntax-parser");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 /** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
 
 const PLUGIN_NAME = "no-estree-objects";

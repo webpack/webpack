@@ -1,5 +1,6 @@
 "use strict";
 
+// eslint-disable-next-line import-x/no-extraneous-dependencies
 const { defineConfig } = require("webpack");
 
 // `defineConfig` is an identity function at runtime; it exists so editors type-check

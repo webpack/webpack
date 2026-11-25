@@ -9,7 +9,7 @@ module.exports = ["memory", "filesystem"].map((type) => ({
 	mode: "development",
 	devtool: false,
 	entry: { main: "./index.js", trigger: ["./keep.js", "./tick.js"] },
-	cache: type === "memory" ? { type: "memory" } : { type: "filesystem" },
+	cache: { type: type === "memory" ? "memory" : "filesystem" },
 	experiments: { cacheUnaffected: true },
 	output: { filename: `${type}-[name].js`, clean: false },
 	plugins: [

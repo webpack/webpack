@@ -172,11 +172,11 @@ describe("StatsTestCases", () => {
 					if (err) return done(err);
 					const stats = /** @type {import("../").Stats} */ (_stats);
 					const statsAny = /** @type {EXPECTED_ANY} */ (stats);
-					for (const compilation of /** @type {import("../").Compilation[]} */ (
-						[...(statsAny.stats ? statsAny.stats : [stats])].map(
-							(/** @type {EXPECTED_ANY} */ s) => s.compilation
-						)
-					)) {
+					/** @type {import("../").Compilation[]} */
+					const compilations = [
+						...(statsAny.stats ? statsAny.stats : [stats])
+					].map((/** @type {EXPECTED_ANY} */ s) => s.compilation);
+					for (const compilation of compilations) {
 						compilation.logging.delete("webpack.Compilation.ModuleProfile");
 					}
 					expect(stats.hasErrors()).toBe(testName.endsWith("error"));
@@ -283,7 +283,7 @@ describe("StatsTestCases", () => {
 						.replace(/[.0-9]+(\s?(bytes|KiB|MiB|GiB))/g, "X$1")
 						.replace(
 							/ms\s\([0-9a-f]{6,32}\)|(?!\d+-)[0-9a-f-]{6,32}\./g,
-							(match) => `${match.replace(/[0-9a-f]/g, "X")}`
+							(match) => match.replace(/[0-9a-f]/g, "X")
 						)
 						// Normalize stack traces between Jest v27 and v30
 						// Jest v27: at Object.<anonymous>.module.exports

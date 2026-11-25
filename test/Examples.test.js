@@ -41,7 +41,10 @@ const createLogger = (appendErrors) => ({
 	status: () => {}
 });
 
-const nodeVersion = Number.parseInt(process.version.slice(1).split(".")[0], 10);
+const nodeVersion = Number.parseInt(
+	process.version.slice(1).split(".", 1)[0],
+	10
+);
 // eslint-disable-next-line no-new-func
 const dynamicImport = new Function("specifier", "return import(specifier)");
 

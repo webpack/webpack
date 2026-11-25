@@ -1,7 +1,5 @@
 "use strict";
 
-/** @import { Compiler, Compilation } from "../../../../" */
-
 const path = require("path");
 const webpack = require("../../../../");
 

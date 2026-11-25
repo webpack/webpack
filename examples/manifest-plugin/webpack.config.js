@@ -28,11 +28,7 @@ const config = {
 			filename: "manifest.yml",
 			prefix: "/nested/[publicpath]",
 			filter(item) {
-				if (/.map$/.test(item.file)) {
-					return false;
-				}
-
-				return true;
+				return !/.map$/.test(item.file);
 			},
 			generate(manifest) {
 				delete manifest.assets["manifest.json"];

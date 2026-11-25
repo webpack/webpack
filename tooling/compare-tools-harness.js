@@ -35,7 +35,7 @@ const {
 	thrownText
 } = require("../test/helpers/syntaxInvariants/relations");
 
-/** @typedef {import("../test/helpers/syntaxInvariants/relations").Report} Report */
+/** @import { Report } from "../test/helpers/syntaxInvariants/relations" */
 
 const ROOT = path.resolve(__dirname, "..");
 
@@ -63,10 +63,10 @@ const log = (message) => {
  * @returns {Promise<boolean>} whether it exists
  */
 const exists = (file) =>
-	fs.promises.access(file).then(
-		() => true,
-		() => false
-	);
+	fs.promises
+		.access(file)
+		.then(() => true)
+		.catch(() => false);
 
 /**
  * @param {string} command executable
@@ -544,7 +544,9 @@ const measureInWorker = (
 			timedOut = true;
 			child.kill();
 		}, budget);
-		child.stdout.on("data", (chunk) => chunks.push(chunk));
+		child.stdout.on("data", (chunk) => {
+			chunks.push(chunk);
+		});
 		child.on("error", reject);
 		child.on("close", (code) => {
 			clearTimeout(timer);

@@ -52,8 +52,8 @@ module.exports = [
 		module: {
 			parser: {
 				html: {
-					chunkName: ({ page, name, index, type }) =>
-						`${page}.${name || "inline"}.${index}.${type}`
+					chunkName: ({ page, name = "inline", index, type }) =>
+						`${page}.${name}.${index}.${type}`
 				}
 			}
 		},

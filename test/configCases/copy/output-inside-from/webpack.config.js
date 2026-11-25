@@ -6,9 +6,7 @@ const path = require("path");
 const rimraf = require("rimraf");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Compilation} Compilation */
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Configuration, Compiler, Compilation } from "../../../../" */
 
 const PLUGIN_NAME = "OutputInsideFromTest";
 

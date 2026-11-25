@@ -105,7 +105,7 @@ const setup = () => installPackages(CACHE_NAME);
  * @property {{ startOffset: number, endOffset: number }=} sourceCodeLocation where it was written, when asked for
  */
 /** @typedef {{ parse: (html: string, options?: { sourceCodeLocationInfo: boolean, scriptingEnabled: boolean }) => Parse5Node }} Parse5 */
-/** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
+/** @import { HtmlPath } from "../lib/html/syntax-parser" */
 
 // An app shell, whose weight is inline critical CSS and form markup: without
 // it no fixture carries a `<style>`, a `srcset` or a boolean attribute.
@@ -332,7 +332,7 @@ const DOCTYPE_DECLARATIONS = [
 	'<!DOCTYPE html SYSTEM "about:legacy-compat">',
 	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">',
 	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "">',
-	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">',
+	'<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "https://www.w3.org/TR/html4/strict.dtd">',
 	'<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "">',
 	"<!DOCTYPE html PUBLIC 'HTML'>",
 	'<!DOCTYPE html SYSTEM "HTTP://WWW.IBM.COM/data/dtd/v11/ibmxhtml1-transitional.dtd">',
@@ -494,9 +494,9 @@ const fixtures = async () => {
 	]);
 	return out;
 };
-/** @typedef {import("../lib/html/syntax-printer").HtmlPrintOptions} HtmlPrintOptions */
+/** @import { HtmlPrintOptions } from "../lib/html/syntax-printer" */
 
-/** @typedef {import("../lib/html/builtinEmbeddedRenderer").BuiltinEmbeddedRendererOptions} CssOptions */
+/** @import { BuiltinEmbeddedRendererOptions as CssOptions } from "../lib/html/builtinEmbeddedRenderer" */
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
@@ -1496,9 +1496,11 @@ const main = async () => {
 	await reportInvariants();
 	await setup();
 	const parse5 = /** @type {Parse5} */ (load("parse5"));
-	for (const [label, html] of (await fixtures()).filter(([name]) =>
-		wantedFixture(name)
-	)) {
+	for (const [label, html] of await fixtures()) {
+		if (!wantedFixture(label)) {
+			continue;
+		}
+
 		const before = fingerprint(parse5, html);
 		const agrees = agreement(REFERENCE_PARSER, TREE_READERS, html);
 		const input = await compress(Buffer.from(html));
@@ -1507,7 +1509,9 @@ const main = async () => {
 				input.brotli
 			)} brotli, ${kb(input.zstd)} zstd), ${before.elements.size} tags\n`
 		);
-		for (const stage of STAGES.filter(wantedStage)) {
+		for (const stage of STAGES) {
+			if (!wantedStage(stage)) continue;
+
 			const tools = TOOLS.filter(
 				(tool) => tool.stage === stage && wantedTool(tool.name)
 			);

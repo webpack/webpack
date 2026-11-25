@@ -279,10 +279,9 @@ const fetchUrl = (url) =>
 					const status = /** @type {number} */ (res.statusCode);
 					if (status >= 301 && status <= 308 && res.headers.location) {
 						res.resume();
-						return fetchUrl(new URL(res.headers.location, url).toString()).then(
-							resolve,
-							reject
-						);
+						return fetchUrl(new URL(res.headers.location, url).href)
+							.then(resolve)
+							.catch(reject);
 					}
 					if (status !== 200) {
 						res.resume();
@@ -290,7 +289,9 @@ const fetchUrl = (url) =>
 					}
 					/** @type {Buffer[]} */
 					const chunks = [];
-					res.on("data", (/** @type {Buffer} */ chunk) => chunks.push(chunk));
+					res.on("data", (/** @type {Buffer} */ chunk) => {
+						chunks.push(chunk);
+					});
 					res.on("end", () => resolve(Buffer.concat(chunks).toString("utf8")));
 					res.on("error", reject);
 				}
@@ -546,7 +547,7 @@ const domTokenLists = [
 	...new Set([...Object.keys(reflect.tokenList), ...SUPPLEMENT.domTokenList])
 ].sort();
 for (const name of domTokenLists) {
-	if (!tokenLists.some(([listName]) => listName === name)) {
+	if (tokenLists.every(([listName]) => listName !== name)) {
 		throw new Error(`domTokenList.${name} is not a token list at all`);
 	}
 }
@@ -1426,16 +1427,16 @@ const PARSER_TABLES = [
 		"set",
 		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
 		[
-			"http://www.inkscape.org/namespaces/inkscape",
-			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
-			"http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
-			"http://krita.org/namespaces/svg/krita",
-			"http://ns.adobe.com/AdobeIllustrator/10.0/",
-			"http://ns.adobe.com/Extensibility/1.0/",
-			"http://ns.adobe.com/SaveForWeb/1.0/",
-			"http://schemas.microsoft.com/visio/2003/SVGExtensions/",
-			"http://www.bohemiancoding.com/sketch/ns",
-			"http://www.figma.com/figma/ns"
+			"https://www.inkscape.org/namespaces/inkscape",
+			"https://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+			"https://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
+			"https://krita.org/namespaces/svg/krita",
+			"https://ns.adobe.com/AdobeIllustrator/10.0/",
+			"https://ns.adobe.com/Extensibility/1.0/",
+			"https://ns.adobe.com/SaveForWeb/1.0/",
+			"https://schemas.microsoft.com/visio/2003/SVGExtensions/",
+			"https://www.bohemiancoding.com/sketch/ns",
+			"https://www.figma.com/figma/ns"
 		]
 	],
 	[

@@ -48,7 +48,7 @@ for (const module of modules) {
 		if (!module.variables.includes(variable)) {
 			// the module doesn't include the env variable, an error is expected when requiring the variable
 			regex.push([
-				{ compilerPath: new RegExp(`${module.name}`) },
+				{ compilerPath: new RegExp(String(module.name)) },
 				new RegExp(`Can't resolve '${variable}'`)
 			]);
 		}

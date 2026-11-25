@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
 // Large graph in memory mode only — see scale.mjs; keeps the simulation bench small.
-const items = Array.from({ length: memoryScaledCount(25, 500) }).fill("image");
+const items = Array.from({ length: memoryScaledCount(25, 500) }, () => "image");
 
 /**
  * @param {string} text text in svg code
@@ -42,7 +42,7 @@ export async function setup() {
 		code += `const ${name} = new URL(${JSON.stringify(request)}, import.meta.url);\nconsole.log(${name});\nexport { ${name} };\n`;
 	}
 
-	for (const [i, _item] of items.entries()) {
+	for (const i of items.keys()) {
 		const base64 = Buffer.from(
 			generateSVG(`Data URI URL, Number - ${i}`),
 			"utf8"
@@ -66,7 +66,7 @@ export async function setup() {
 		code += `import ${name} from ${JSON.stringify(request)};\nconsole.log(${name});\nexport { ${name} };\n`;
 	}
 
-	for (const [i, _item] of items.entries()) {
+	for (const i of items.keys()) {
 		const base64 = Buffer.from(
 			generateSVG(`Import Data URI, Number - ${i}`),
 			"utf8"

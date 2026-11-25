@@ -2,9 +2,9 @@
 
 const { Compilation } = require("../../../../");
 
+/** @import { StatsCallback, ReaddirDirentCallback } from "../../../../lib/fs/fs" */
+
 /** @typedef {NonNullable<import("../../../../").Compiler["inputFileSystem"]>} InputFileSystem */
-/** @typedef {import("../../../../lib/fs/fs").StatsCallback} StatsCallback */
-/** @typedef {import("../../../../lib/fs/fs").ReaddirDirentCallback} ReaddirDirentCallback */
 
 const PLUGIN_NAME = "DenyReadingPlugin";
 

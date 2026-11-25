@@ -192,9 +192,12 @@ const createXmlDocumentGenerator = (seed, createRandom) => {
 			} else if (kind === 4) {
 				body += cdata();
 			} else if (kind === 5) {
-				body += hasEntityDeclaration
-					? pick(random, ["&ent;", "&#x26;", "&amp;"])
-					: pick(random, ["&#x26;", "&amp;"]);
+				body += pick(
+					random,
+					hasEntityDeclaration
+						? ["&ent;", "&#x26;", "&amp;"]
+						: ["&#x26;", "&amp;"]
+				);
 			} else {
 				body += node(depth + 1, hasEntityDeclaration);
 			}

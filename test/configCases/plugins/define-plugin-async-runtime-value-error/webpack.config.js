@@ -1,8 +1,6 @@
 "use strict";
 
-const webpack = require("../../../../");
-
-const { DefinePlugin } = webpack;
+const { DefinePlugin } = require("../../../../");
 
 // one instance, thrown again for every module the value reaches
 const sharedError = new Error("boom-shared");

@@ -23,26 +23,6 @@ function getSharedConfig(name) {
 	return sharedConfig;
 }
 
-/**
- * The `jsdoc` plugin as `eslint-config-webpack` already registers it: a rule set
- * to anything but "off" needs the plugin resolved, and taking it from the shared
- * config keeps the version webpack lints with in one place.
- * @returns {import("eslint").ESLint.Plugin} the plugin object
- */
-function getJsdocPlugin() {
-	const shared = getSharedConfig("typescript/jsdoc");
-	const flat = Array.isArray(shared) ? shared : [shared];
-	const holder = flat.find((one) => one && one.plugins && one.plugins.jsdoc);
-
-	if (!holder) {
-		throw new Error(
-			'eslint-config-webpack\'s "typescript/jsdoc" config registers no `jsdoc` plugin. The installed one is older than the version package.json asks for — run `yarn setup`.'
-		);
-	}
-
-	return holder.plugins.jsdoc;
-}
-
 export default defineConfig([
 	globalIgnores([
 		// Ignore some test files
@@ -138,101 +118,15 @@ export default defineConfig([
 					reportUsedIgnorePattern: false
 				}
 			],
-			// TODO enable me in future
-			"prefer-destructuring": "off"
+
+			// TODO Enable in future
+			"prefer-destructuring": "off",
+			"unicorn/prefer-single-object-destructuring": "off"
 		}
 	},
-	{
-		files: ["lib/**/*.js"],
-		extends: [getSharedConfig("webpack/special")],
-		rules: {
-			// WORKAROUND(eslint-config-webpack): the released rule rejects https
-			// headers; turn it back on after bumping to a release with #228.
-			"webpack/require-license-comment": "off"
-		}
-	},
+	getSharedConfig("webpack/special"),
 	getSharedConfig("webpack/schemas"),
-	getSharedConfig("webpack/types"),
-	{
-		files: ["lib/**/*.js"],
-		plugins: { jsdoc: getJsdocPlugin() },
-		rules: {
-			// The keywords an option type states for `tooling/generate-schemas.js`,
-			// which JSON Schema has and JSDoc does not, and `augmentable`, which
-			// `tooling/generate-types.js` exports for declaration merging
-			"jsdoc/check-tag-names": [
-				"error",
-				{
-					definedTags: [
-						"schema",
-						"publishes",
-						"required",
-						"definition",
-						"inline",
-						"title",
-						"minLength",
-						"minItems",
-						"minProperties",
-						"minimum",
-						"uniqueItems",
-						"absolutePath",
-						"pattern",
-						"additionalProperties",
-						"emptyProperties",
-						"undefinedAsNull",
-						"cliHelper",
-						"cliExclude",
-						"jsonType",
-						"tsType",
-						"typeOnly",
-						"properties",
-						"not",
-						"augmentable"
-					]
-				}
-			]
-		}
-	},
 	getSharedConfig("webpack/comments"),
-	{
-		// The option sources `tooling/generate-schemas.js` derives the schemas from
-		// are modules, and their comments are what a schema says rather than prose.
-		files: ["declarations/**/*.ts"],
-		languageOptions: { parser: tseslint.parser, sourceType: "module" },
-		rules: {
-			"webpack/comment-length": "off",
-			// They declare types and emit nothing, so the runtime baseline is moot
-			"n/no-unsupported-features/es-syntax": "off",
-			// TypeScript resolves the names here, including the ambient ones
-			"no-undef": "off",
-			// The spellings are the ones the option takes, not ones to choose from
-			"unicorn/text-encoding-identifier-case": "off"
-		}
-	},
-	{
-		// An example's commented-out config is what a reader copies, and its prose
-		// is the example's own documentation — neither is commentary to shorten.
-		files: ["examples/**/*.{js,cjs,mjs}"],
-		rules: {
-			"webpack/comment-length": "off"
-		}
-	},
-	{
-		files: ["lib/**/*.js"],
-		rules: {
-			// TODO drop once eslint-config-webpack#200 ships: the parser `webpack/types`
-			// brings puts the TypeScript `lib` globals in scope, so a local `Cache` clashes
-			"no-global-assign": "off",
-			"no-redeclare": "off"
-		}
-	},
-	{
-		rules: {
-			// Converting a re-exported `@typedef` to `@import` drops the re-export,
-			// and that is webpack's public type surface in lib/index.js
-			"webpack/prefer-import-tag": "off"
-		}
-	},
 	{
 		files: ["bin/**/*.js"],
 		// Allow to use `dynamic` import
@@ -253,7 +147,6 @@ export default defineConfig([
 	},
 	{
 		files: ["lib/**/*.runtime.js", "hot/*.js"],
-		ignores: ["hot/load-http.js"],
 		extends: [getSharedConfig("javascript/es5")],
 		languageOptions: {
 			sourceType: "commonjs",
@@ -289,6 +182,20 @@ export default defineConfig([
 		}
 	},
 	{
+		files: ["hot/load-http.js"],
+		languageOptions: {
+			ecmaVersion: 2022,
+			globals: {
+				...globals.browser
+			}
+		}
+	},
+	{
+		rules: {
+			"webpack/require-license-comment": "off"
+		}
+	},
+	{
 		files: ["test/**/*.js"],
 		rules: {
 			// Some our tests contain `package.json` without `engines`, but tests should work on Node.js@10, so let's disable it
@@ -301,21 +208,9 @@ export default defineConfig([
 			"jest/expect-expect": "off",
 
 			// We have a lot of custom tests
-			"jest/no-confusing-set-timeout": "off"
-		}
-	},
-	{
-		// The equivalence helpers are installed into the page, so they run in the
-		// browser rather than in Node. So does what the color measurement hands to
-		// `page.evaluate`.
-		files: [
-			"test/helpers/syntaxEquivalence.js",
-			"tooling/measure-color-agreement.js"
-		],
-		languageOptions: {
-			globals: {
-				...globals.browser
-			}
+			"jest/no-confusing-set-timeout": "off",
+
+			"webpack/require-license-comment": "off"
 		}
 	},
 	{
@@ -336,105 +231,17 @@ export default defineConfig([
 		}
 	},
 	{
+		// The equivalence helpers are installed into the page, so they run in the
+		// browser rather than in Node. So does what the color measurement hands to
+		// `page.evaluate`.
 		files: [
-			"setup/**/*.js",
-			"tooling/**/*.js",
-			"test/*.benchmark.mjs",
-			"test/harness/benchmark/**/*.mjs",
-			"test/benchmarkCases/**/webpack.config.mjs",
-			"test/benchmarkCases/**/options.mjs",
-			"test/benchmarkCases/**/index.bench.mjs"
+			"test/helpers/syntaxEquivalence.js",
+			"tooling/measure-color-agreement.js"
 		],
 		languageOptions: {
-			ecmaVersion: 2022
-		},
-		rules: {
-			"no-console": "off"
-		}
-	},
-	{
-		// Fetches the browsers for the suites that compare against one, from a package
-		// that is ESM-only — so it runs on modern Node rather than the baseline.
-		files: ["tooling/install-browsers.js"],
-		languageOptions: {
-			ecmaVersion: 2022
-		},
-		rules: {
-			"n/no-unsupported-features/es-syntax": [
-				"error",
-				{
-					ignores: ["dynamic-import"]
-				}
-			]
-		}
-	},
-	{
-		// The tool comparisons run on modern Node, not webpack's runtime baseline:
-		// they measure with post-10 APIs (fs.promises, zstd, resourceUsage).
-		files: [
-			"tooling/compare-css-tools.js",
-			"tooling/compare-html-tools.js",
-			"tooling/compare-js-tools.js",
-			"tooling/compare-tools-harness.js",
-			"tooling/compare-xml-tools.js"
-		],
-		rules: {
-			"n/no-unsupported-features/node-builtins": "off"
-		}
-	},
-	{
-		// Records every module a fresh process loads through `module.registerHooks`,
-		// so it runs on the Node `lint` uses and skips itself on an older one.
-		files: ["tooling/check-module-loading.js"],
-		rules: {
-			"n/no-unsupported-features/es-syntax": "off",
-			"n/no-unsupported-features/node-builtins": "off"
-		}
-	},
-	{
-		// The code generators run under the repo's own Node, not the baseline the
-		// code they emit has to meet.
-		files: [
-			"tooling/generate-types.js",
-			"tooling/precompile-schemas.js",
-			"tooling/type-coverage.js"
-		],
-		rules: {
-			"n/no-unsupported-features/es-builtins": "off",
-			"n/no-unsupported-features/es-syntax": "off",
-			"n/no-unsupported-features/node-builtins": "off"
-		}
-	},
-	{
-		// Walking the TypeScript compiler's own AST: the checker hands back nodes
-		// whose shape is only known once a kind has been tested for.
-		files: ["tooling/generate-types.js"],
-		rules: {
-			"jsdoc/reject-any-type": "off"
-		}
-	},
-	{
-		// `color-name` is ESM, so the CSS data generator reaches its table through a
-		// dynamic import rather than a `require` no jest `vm` supports; the HTML and
-		// XML comparisons import their ESM-only tools the same way.
-		files: [
-			"tooling/generate-css-data.js",
-			"tooling/compare-html-tools.js",
-			"tooling/compare-xml-tools.js"
-		],
-		rules: {
-			"n/no-unsupported-features/es-syntax": [
-				"error",
-				{
-					ignores: ["error-cause", "dynamic-import"]
-				}
-			]
-		}
-	},
-	{
-		files: ["test/unitCases/Compiler-filesystem-caching.unittest.js"],
-		languageOptions: {
-			ecmaVersion: 2022
+			globals: {
+				...globals.browser
+			}
 		}
 	},
 	{
@@ -444,8 +251,38 @@ export default defineConfig([
 			"test/unitCases/PersistentCaching.unittest.js"
 		],
 		rules: {
-			"import/extensions": "off",
-			"import/no-unresolved": "off"
+			"import-x/extensions": "off",
+			"import-x/no-unresolved": "off"
+		}
+	},
+	{
+		files: [
+			".changeset/**/*.mjs",
+			".github/scripts/**/*.mjs",
+			"examples/**/*.js",
+			"setup/**/*.js",
+			"tooling/**/*.js",
+			"test/*.benchmark.mjs",
+			"test/harness/benchmark/**/*.mjs",
+			"test/benchmarkCases/**/webpack.config.mjs",
+			"test/benchmarkCases/**/options.mjs",
+			"test/benchmarkCases/**/index.bench.mjs"
+		],
+		languageOptions: {
+			ecmaVersion: 2025,
+			globals: {
+				...globals.browser
+			}
+		},
+		rules: {
+			"no-console": "off",
+
+			"n/no-unsupported-features/es-builtins": "off",
+			"n/no-unsupported-features/es-syntax": "off",
+			"n/no-unsupported-features/node-builtins": "off",
+
+			"webpack/require-license-comment": "off",
+			"webpack/comment-length": "off"
 		}
 	},
 	{
@@ -457,45 +294,23 @@ export default defineConfig([
 			"no-loss-of-precision": "off",
 			"new-cap": ["error", { capIsNew: false }],
 			strict: "off",
-			"n/no-unsupported-features/es-syntax": "off"
-		}
-	},
-	{
-		files: ["examples/**/*.js"],
-		rules: {
-			"no-console": "off",
-
-			// For examples purposes
-			"n/no-unsupported-features/es-builtins": "off",
 			"n/no-unsupported-features/es-syntax": "off",
-			"n/no-unsupported-features/node-builtins": "off",
-
-			"import/extensions": "off",
-			"import/no-unresolved": "off",
-			// examples reference `webpack` as the demonstrated package
-			"import/no-extraneous-dependencies": "off"
+			"unicorn/no-constant-zero-expression": "off"
 		}
 	},
 	{
-		// The parser keeps acorn's method and property names, since any acorn
-		// plugin calls them by those names.
-		files: ["lib/javascript/regexp.js", "lib/javascript/syntax-parser.js"],
+		// The option sources `tooling/generate-schemas.js` derives the schemas from
+		// are modules, and their comments are what a schema says rather than prose.
+		files: ["declarations/**/*.ts"],
+		languageOptions: { parser: tseslint.parser, sourceType: "module" },
 		rules: {
-			camelcase: "off"
-		}
-	},
-	{
-		files: [".changeset/**/*.mjs"],
-		languageOptions: {
-			ecmaVersion: 2025
-		},
-		settings: {
-			// exports-only package, which the node resolver predates
-			"import/core-modules": ["@changesets/get-github-info"]
-		},
-		rules: {
-			"no-console": "off",
-			"n/no-unsupported-features/node-builtins": "off"
+			"webpack/comment-length": "off",
+			// They declare types and emit nothing, so the runtime baseline is moot
+			"n/no-unsupported-features/es-syntax": "off",
+			// TypeScript resolves the names here, including the ambient ones
+			"no-undef": "off",
+			// The spellings are the ones the option takes, not ones to choose from
+			"unicorn/text-encoding-identifier-case": "off"
 		}
 	}
 ]);

@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 const path = require("path");
-// eslint-disable-next-line import/no-extraneous-dependencies -- transitive via webpack-sources, used only to verify the emitted map
+// eslint-disable-next-line import-x/no-extraneous-dependencies -- transitive via webpack-sources, used only to verify the emitted map
 const { SourceMapConsumer } = require("source-map");
 
 const BOM = "\uFEFF";

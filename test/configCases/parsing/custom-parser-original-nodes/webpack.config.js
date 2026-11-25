@@ -2,9 +2,8 @@
 
 const acorn = require("acorn");
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
-/** @import { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler" */
+/** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
 
 const PLUGIN_NAME = "custom-parser-original-nodes";
 

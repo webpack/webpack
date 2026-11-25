@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
 // Large graph in memory mode only (see scale.mjs); small for simulation/walltime.
-const items = Array.from({ length: memoryScaledCount(25, 500) }).fill("image");
+const items = Array.from({ length: memoryScaledCount(25, 500) }, () => "image");
 
 /**
  * @param {string} text text in svg code

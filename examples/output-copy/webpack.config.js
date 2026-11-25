@@ -1,5 +1,6 @@
 "use strict";
 
+// eslint-disable-next-line import-x/no-extraneous-dependencies
 const { Compilation, CopyPlugin, sources } = require("webpack");
 
 /** @import { Compiler } from "webpack" */

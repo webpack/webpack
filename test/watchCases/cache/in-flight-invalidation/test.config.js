@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("./webpack.config").Events} Events */
+/** @import { Events } from "./webpack.config" */
 
 module.exports = {
 	/**

@@ -18,10 +18,10 @@ module.exports = {
 			EMPTY_STRING: '""',
 			BIGINT: BigInt("9007199254740993"),
 			ZERO_BIGINT: BigInt(0),
-			POSITIVE_ZERO: +0,
+			POSITIVE_ZERO: 0,
 			NEGATIVE_ZER0: -0,
 			NEGATIVE_NUMBER: -100.25,
-			POSITIVE_NUMBER: +100.25,
+			POSITIVE_NUMBER: 100.25,
 			/**
 			 * @param {number} a a
 			 * @returns {number} result

@@ -90,12 +90,11 @@ if (!name) {
 	);
 }
 
-run(name, tscArgs).then(
-	(code) => {
+run(name, tscArgs)
+	.then((code) => {
 		process.exitCode = code;
-	},
-	(err) => {
+	})
+	.catch((err) => {
 		console.error(err);
 		process.exitCode = 1;
-	}
-);
+	});

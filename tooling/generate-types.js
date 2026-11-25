@@ -1190,11 +1190,16 @@ const collectTypes = ({ program, checker, options }) => {
 				.trim();
 
 		const block = declaringJsDoc(symbol);
-		const commentText = block
-			? normalizeText([
-					{ kind: "text", text: ts.getTextOfJSDocComment(block.comment) || "" }
-				])
-			: normalizeText(symbol.getDocumentationComment(checker));
+		const commentText = normalizeText(
+			block
+				? [
+						{
+							kind: "text",
+							text: ts.getTextOfJSDocComment(block.comment) || ""
+						}
+					]
+				: symbol.getDocumentationComment(checker)
+		);
 		const jsDocTags = block
 			? (block.tags || []).map((tag) => ({
 					name: tag.tagName.text,
@@ -2014,15 +2019,11 @@ const collectTypes = ({ program, checker, options }) => {
 					typeUsedInUnion.add(inner);
 					captureType(type, inner);
 				}
-				if (parsed.typeParameters) {
-					for (const prop of parsed.typeParameters) captureType(type, prop);
-				}
+				for (const prop of parsed.typeParameters || []) captureType(type, prop);
 				break;
 			case "intersection":
 				for (const inner of parsed.types) captureType(type, inner);
-				if (parsed.typeParameters) {
-					for (const prop of parsed.typeParameters) captureType(type, prop);
-				}
+				for (const prop of parsed.typeParameters || []) captureType(type, prop);
 				break;
 			case "index":
 				captureType(type, parsed.objectType);
@@ -2074,9 +2075,7 @@ const collectTypes = ({ program, checker, options }) => {
 				}
 				if (parsed.numberIndex) captureType(type, parsed.numberIndex);
 				if (parsed.stringIndex) captureType(type, parsed.stringIndex);
-				if (parsed.typeParameters) {
-					for (const prop of parsed.typeParameters) captureType(type, prop);
-				}
+				for (const prop of parsed.typeParameters || []) captureType(type, prop);
 				break;
 		}
 	}
@@ -2373,10 +2372,10 @@ const convertInterfacesToNamespaces = ({
 			if (typeUsedAsReturnValue.has(type)) continue;
 			// heuristic: only referenced from other namespaces
 			if (
-				!Array.from(
+				Array.from(
 					typeReferencedBy.get(type) || [],
 					(t) => /** @type {MergedType} */ (parsedCollectedTypes.get(t))
-				).every((p) => p.type === "namespace")
+				).some((p) => p.type !== "namespace")
 			) {
 				continue;
 			}
@@ -2665,9 +2664,7 @@ const generateDeclarations = ({
 					.join(", ")}>`
 			: "";
 		const innerTypeArgs = new Set(typeArgs);
-		if (sig.typeParameters) {
-			for (const t of sig.typeParameters) innerTypeArgs.add(t);
-		}
+		for (const t of sig.typeParameters || []) innerTypeArgs.add(t);
 		let canBeOptional = true;
 		const args = `(${
 			sig.thisType
@@ -2727,16 +2724,15 @@ const generateDeclarations = ({
 	 */
 	const getInterfaceItems = (type, parsed, typeArgs) => {
 		/** @type {string[]} */
-		const items = [];
-		for (const construct of parsed.constructors) {
-			items.push(
+		const items = Array.from(
+			parsed.constructors,
+			(construct) =>
 				`${construct.documentation}${sigToString(
 					construct,
 					typeArgs,
 					parsed.type === "interface" ? "constructor" : "class-constructor"
 				)}`
-			);
-		}
+		);
 		if (parsed.type === "interface") {
 			for (const call of parsed.calls) {
 				items.push(`${call.documentation}${sigToString(call, typeArgs)}`);
@@ -2959,7 +2955,7 @@ const generateDeclarations = ({
 							getCode(t, typeArgs)
 						)}>`;
 					}
-					return `${variable}`;
+					return variable;
 				}
 				return code(typeArgs);
 			}
@@ -3143,7 +3139,7 @@ const generateDeclarations = ({
 									: ""
 							} = (${checkType} extends ${extendsType} ? ${trueType} : ${falseType});`
 					);
-					return `${variable}`;
+					return variable;
 				}
 
 				return `(${checkType} extends ${extendsType} ? ${trueType} : ${falseType})`;
@@ -3194,7 +3190,7 @@ const generateDeclarations = ({
 							getCode(t, typeArgs)
 						)}>`;
 					}
-					return `${name}`;
+					return name;
 				}
 				if (isSimpleFunction(parsed)) {
 					return `(${sigToString(parsed.calls[0], typeArgs, "arrow")})`;
@@ -3242,7 +3238,7 @@ const generateDeclarations = ({
 						getCode(t, typeArgs)
 					)}>`;
 				}
-				return `${variable}`;
+				return String(variable);
 			}
 			case "namespace": {
 				/**

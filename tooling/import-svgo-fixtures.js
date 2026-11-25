@@ -84,7 +84,7 @@ for (const file of fs.readdirSync(plugins).sort()) {
 	if (match === null) continue;
 	const [test, expected, params] = fs
 		.readFileSync(path.join(plugins, file), "utf8")
-		.split(/\r?\n\s*@@@\s*\r?\n/);
+		.split(/\r?\n\s*@@@\s*\r?\n/, 3);
 	// A case may open with what it checks, above a `===` line.
 	const parts = test.split(/^===\r?$/m);
 	const input = parts[parts.length - 1].replace(/^\s+/, "");

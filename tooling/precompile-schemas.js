@@ -23,11 +23,9 @@ const path = require("path");
 const { pathToFileURL } = require("url");
 const { globSync } = require("glob");
 const { precompile } = require("schema-utils");
-const argv = require("./argv");
+const { root, schemas: schemasGlob, write: doWrite } = require("./argv");
 
 /** @import { ExtendedSchema, JSONSchema7 } from "schema-utils" */
-
-const { write: doWrite, root, schemas: schemasGlob } = argv;
 
 /**
  * @param {string} path the file to compare against

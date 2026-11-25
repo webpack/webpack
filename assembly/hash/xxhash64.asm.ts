@@ -1,10 +1,10 @@
 // //////////////////////////////////////////////////////////
 // xxhash64.h
 // Copyright (c) 2016 Stephan Brumme. All rights reserved.
-// see http://create.stephan-brumme.com/disclaimer.html
+// see https://create.stephan-brumme.com/disclaimer.html
 //
 // XXHash (64 bit), based on Yann Collet's descriptions, see
-// http://cyan4973.github.io/xxHash/
+// https://cyan4973.github.io/xxHash/
 //
 // Modified for hash-wasm by Dani Biró
 //

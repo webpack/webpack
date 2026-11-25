@@ -324,7 +324,7 @@ const unescapeComment = (text) => text.replace(/\*\\\//g, "*/");
  * @returns {{ name: string, from: string }} the name, and the module it comes from
  */
 const readReference = (reference) => {
-	const [file, pointer] = reference.split("#/definitions/");
+	const [file, pointer] = reference.split("#/definitions/", 2);
 	return { name: pointer, from: file.replace(/\.json$/, "") };
 };
 
@@ -624,7 +624,7 @@ const describedItems = (node, known) => {
 	const carries = description !== "" || Object.keys(stated).length > 0;
 	return carries
 		? {
-				...(description ? { description } : {}),
+				...(description && { description }),
 				...stated,
 				...wrapReference(items, carries)
 			}
@@ -913,16 +913,15 @@ const fromTypeNode = (node, known, spoken = 0) => {
 			const body = wrapReference(described, carries);
 			return carries
 				? {
-						...(description ? { description } : {}),
+						...(description && { description }),
 						...stated,
-						...(tagsAreWholeType(stated)
-							? {}
-							: // WHY: the branch's `@additionalProperties` keeps it open
-								// though the type names only the keys webpack reads.
-								stated.additionalProperties === true &&
-								  body.additionalProperties === false
+						...(!tagsAreWholeType(stated) &&
+							// WHY: the branch's `@additionalProperties` keeps it open
+							// though the type names only the keys webpack reads.
+							(stated.additionalProperties === true &&
+							body.additionalProperties === false
 								? omit(body, ["additionalProperties"])
-								: body)
+								: body))
 					}
 				: described;
 		});
@@ -1080,7 +1079,7 @@ const fromMembers = (members, known, head) => {
 			const { description, tags } = readJsDoc(member);
 			const value = fromTypeNode(valueType, known);
 			additionalProperties = {
-				...(description ? { description } : {}),
+				...(description && { description }),
 				...fromDocumentationTags(tags),
 				...wrapReference(value, Boolean(description))
 			};
@@ -1101,7 +1100,7 @@ const fromMembers = (members, known, head) => {
 		const stated = echoed ? {} : fromDocumentationTags(tags);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		properties[name] = applyTypeOnly({
-			...(description ? { description } : {}),
+			...(description && { description }),
 			...stated,
 			...wrapReference(value, carries)
 		});
@@ -1207,9 +1206,9 @@ const toObjectSchema = (head, properties, required, additionalProperties) => {
 	return {
 		...omit(head, ["required"]),
 		type: "object",
-		...(additionalProperties === undefined ? {} : { additionalProperties }),
-		...(named ? { properties } : {}),
-		...(required.length > 0 ? { required } : {})
+		...(additionalProperties !== undefined && { additionalProperties }),
+		...(named && { properties }),
+		...(required.length > 0 && { required })
 	};
 };
 
@@ -1243,7 +1242,7 @@ const fromPropertyTags = (propertyTags, known, head) => {
 		);
 		const description = echoed ? "" : written;
 		properties[name] = applyTypeOnly({
-			...(description ? { description } : {}),
+			...(description && { description }),
 			...wrapReference(value, description !== "")
 		});
 		if (!optional && !tag.isBracketed) required.push(name);
@@ -1307,10 +1306,10 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 			.split(path.sep)
 			.join("/");
 		const target = named
-			? `${path
+			? path
 					.relative(here || ".", named)
 					.split(path.sep)
-					.join("/")}`
+					.join("/")
 			: from;
 		return {
 			$ref: `${target.startsWith(".") ? target : `./${target}`}.json#/definitions/${exported.elements[0].name.text}`
@@ -1372,12 +1371,12 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 		const stated = omit(keywords, ["required"]);
 		const carries = description !== "" || Object.keys(stated).length > 0;
 		const schema = applyTypeOnly({
-			...(description ? { description } : {}),
+			...(description && { description }),
 			...stated,
 			...wrapReference(body, carries),
 			// WHY: a type the source names for the schema is what the schema says,
 			// where the type it is written as is what the module reads it by.
-			...(stated.tsType ? { tsType: stated.tsType } : {})
+			...(stated.tsType && { tsType: stated.tsType })
 		});
 		if (
 			type &&
@@ -1407,9 +1406,9 @@ const typeScriptToSchema = (source, schemaOf = new Map()) => {
 	}
 	const document = root
 		? {
-				...(Object.keys(definitions).length > 0 ? { definitions } : {}),
+				...(Object.keys(definitions).length > 0 && { definitions }),
 				title: rootName,
-				...(root.description ? { description: root.description } : {}),
+				...(root.description && { description: root.description }),
 				...wrapReference(omit(root, ["description"]), true)
 			}
 		: { definitions };

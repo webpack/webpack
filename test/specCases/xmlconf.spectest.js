@@ -16,7 +16,12 @@
 const fs = require("fs");
 const path = require("path");
 const { SourceProcessor } = require("../../lib/html/syntax");
-const { A, Field, NodeType, parseHtml } = require("../../lib/html/syntax-parser");
+const {
+	A,
+	Field,
+	NodeType,
+	parseHtml
+} = require("../../lib/html/syntax-parser");
 
 const suiteDir = path.resolve(
 	__dirname,

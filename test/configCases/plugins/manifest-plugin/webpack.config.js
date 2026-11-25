@@ -103,11 +103,7 @@ module.exports = [
 			new webpack.ManifestPlugin({
 				filename: "other.json",
 				filter(item) {
-					if (/file-loader.png/.test(item.file)) {
-						return false;
-					}
-
-					return true;
+					return !/file-loader.png/.test(item.file);
 				},
 				generate: (manifest) => {
 					manifest.custom = "value";

@@ -39,7 +39,7 @@
 - [Support](#support)
 - [Current project members](#current-project-members)
   - [TSC (Technical Steering Committee)](#tsc-technical-steering-committee)
-  - [Core Collaborators](#core-collaborators)
+  - [Maintenance](#maintenance)
 - [Sponsoring](#sponsoring)
   - [Premium Partners](#premium-partners)
   - [Gold Sponsors](#gold-sponsors)
@@ -76,7 +76,7 @@ or packaging just about any resource or asset.
 - Loaders can preprocess files while compiling, e.g. TypeScript to JavaScript, Handlebars strings to compiled functions, images to Base64, etc.
 - Highly modular plugin system to do whatever else your application requires.
 
-#### Learn about webpack through videos!
+### Learn about webpack through videos!
 
 - [Understanding Webpack - Video 1](https://www.youtube.com/watch?v=xj93pvQIsRo)
 - [Understanding Webpack - Video 2](https://www.youtube.com/watch?v=4tQiJaFzuJ8)
@@ -115,10 +115,6 @@ before `page.js`). See what that covers for
 |  [html-bundler-webpack-plugin][bundler]   |   ![bundler-npm]   |   ![bundler-size]   | Renders a template (EJS, Handlebars, Pug) with referenced source asset files into HTML. |
 |         [pug-plugin][pug-plugin]          | ![pug-plugin-npm]  | ![pug-plugin-size]  | Renders Pug files to HTML, extracts JS and CSS from sources specified directly in Pug.  |
 
-[common-npm]: https://img.shields.io/npm/v/webpack.svg
-[component]: https://github.com/webpack-contrib/component-webpack-plugin
-[component-npm]: https://img.shields.io/npm/v/component-webpack-plugin.svg
-[component-size]: https://packagephobia.com/badge?p=component-webpack-plugin
 [compression]: https://github.com/webpack-contrib/compression-webpack-plugin
 [compression-npm]: https://img.shields.io/npm/v/compression-webpack-plugin.svg
 [compression-size]: https://packagephobia.com/badge?p=compression-webpack-plugin
@@ -179,8 +175,6 @@ but preprocessors and template engines keep their loaders.
 
 [pug-npm]: https://img.shields.io/npm/v/@webdiscus/pug-loader.svg
 [pug-size]: https://packagephobia.com/badge?p=@webdiscus/pug-loader
-[jade-npm]: https://img.shields.io/npm/v/jade-loader.svg
-[jade-size]: https://packagephobia.com/badge?p=jade-loader
 [md-npm]: https://img.shields.io/npm/v/markdown-loader.svg
 [md-size]: https://packagephobia.com/badge?p=markdown-loader
 [posthtml-npm]: https://img.shields.io/npm/v/posthtml-loader.svg

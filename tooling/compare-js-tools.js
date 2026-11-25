@@ -1340,9 +1340,9 @@ const main = async () => {
 	await reportInvariants();
 	await installPackages(CACHE_NAME);
 	const acorn = load("acorn");
-	for (const [label, file, goal] of fixtures().filter(([name]) =>
-		wantedFixture(name)
-	)) {
+	for (const [label, file, goal] of fixtures()) {
+		if (!wantedFixture(label)) continue;
+
 		const code = await fs.promises.readFile(file, "utf8");
 		process.env[SOURCE_TYPE_VARIABLE] = goal;
 		/** @type {{ type: string, value: string }[]} */
@@ -1357,7 +1357,9 @@ const main = async () => {
 				before.size
 			} property names\n`
 		);
-		for (const stage of STAGES.filter(wantedStage)) {
+		for (const stage of STAGES) {
+			if (!wantedStage(stage)) continue;
+
 			const tools = TOOLS.filter(
 				(tool) => tool.stage === stage && wantedTool(tool.name)
 			);

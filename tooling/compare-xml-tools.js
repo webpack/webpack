@@ -82,7 +82,7 @@ const {
 	wantedExpectations
 } = require("./compare-tools-harness");
 
-/** @typedef {import("../lib/html/syntax-parser").HtmlPath} HtmlPath */
+/** @import { HtmlPath } from "../lib/html/syntax-parser" */
 
 const ROOT = path.resolve(__dirname, "..");
 const CACHE_NAME = "xml-tool-comparison";
@@ -132,11 +132,11 @@ const INSTALLED_DOCUMENTS = [
 // its own, and a stylesheet in a CDATA section.
 const EDITOR_SVG = `<?xml version="1.0" encoding="utf-8"?>
 <!-- Generator: Adobe Illustrator 27.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "https://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd" [
 	<!ENTITY ns_svg "http://www.w3.org/2000/svg">
 	<!ENTITY ns_xlink "http://www.w3.org/1999/xlink">
-	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
-	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_extend "https://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "https://ns.adobe.com/AdobeIllustrator/10.0/">
 	<!ENTITY st0 "fill:#FFFFFF;stroke:#000000;stroke-miterlimit:10;">
 ]>
 <svg version="1.1" id="Layer_1" xmlns="&ns_svg;" xmlns:xlink="&ns_xlink;" xmlns:i="&ns_ai;"
@@ -1239,9 +1239,11 @@ const main = async () => {
 	await reportInvariants();
 	await setup();
 	const { parseXml } = await importPackage("@rgrove/parse-xml");
-	for (const [label, xml] of (await fixtures()).filter(([name]) =>
-		wantedFixture(name)
-	)) {
+	for (const [label, xml] of await fixtures()) {
+		if (!wantedFixture(label)) {
+			continue;
+		}
+
 		const before = fingerprint(parseXml, xml);
 		const agrees = agreement(REFERENCE_PARSER, TREE_READERS, xml);
 		const input = await compress(Buffer.from(xml));
@@ -1257,7 +1259,11 @@ const main = async () => {
 						)} elements`
 			}\n`
 		);
-		for (const stage of STAGES.filter(wantedStage)) {
+		for (const stage of STAGES) {
+			if (!wantedStage(stage)) {
+				continue;
+			}
+
 			const tools = toolsFor(stage, xml);
 			if (tools.length === 0) continue;
 			process.stdout.write(

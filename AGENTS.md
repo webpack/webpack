@@ -2,7 +2,7 @@
 
 ## Conventions in this guide
 
-A `> [!REQUIRED]` callout under a heading makes the whole section **mandatory**: follow it exactly, never paraphrase, skip it or swap in a similar convention from other tooling. A skipped or partly filled REQUIRED section (above all the [Pull request body](docs/pull-requests.md#pull-request-body)) blocks the PR, so re-read each one in full whenever it applies, not from memory or an earlier task's output. Sections without the callout are guidance: use judgement.
+A `> [!REQUIRED]` callout under a heading makes the whole section **mandatory**: follow it exactly, never paraphrase, skip it or swap in a similar convention from other tooling. A skipped or partly filled REQUIRED section (above all the [Pull request body](./docs/pull-requests.md#pull-request-body)) blocks the PR, so re-read each one in full whenever it applies, not from memory or an earlier task's output. Sections without the callout are guidance: use judgement.
 
 **Editing this guide.** Every session loads this file whole, so each line costs every task. Keep changes short and simple:
 
@@ -45,8 +45,8 @@ Applies to everything you write: replies, docs, code comments, commit messages a
 - **Same term for the same thing** throughout; no idioms or jargon. Spell out an abbreviation on first use.
 - **No greetings, politeness, empathy or closing summaries.** Don't restate what the reader can see.
 - **Only what the reader needs to act**: facts, code, schemas, steps. Lead with what couldn't be verified, a failed test or a skipped step; never round partial work up to done.
-- **Lists, tables and short paragraphs**, never walls of text. Show rather than describe: before/after code blocks for changes (as the PR body's [Summary](docs/pull-requests.md#pull-request-body) asks), a table or code block for what moved, what a run printed or where a regression sits. Cite code as `path:line`, one per sentence.
-- **Summarize a change by example**, in replies and PR bodies alike: per change, one sentence on what was wrong, the real input (code or configuration), then what it produced before and after, from actual runs. End with a short note on limits, what wasn't verified and what waits on a decision. Group related changes under one heading, number them, skip ones with nothing to show. Shape and example: [Summary](docs/pull-requests.md#summary-by-example).
+- **Lists, tables and short paragraphs**, never walls of text. Show rather than describe: before/after code blocks for changes (as the PR body's [Summary](./docs/pull-requests.md#pull-request-body) asks), a table or code block for what moved, what a run printed or where a regression sits. Cite code as `path:line`, one per sentence.
+- **Summarize a change by example**, in replies and PR bodies alike: per change, one sentence on what was wrong, the real input (code or configuration), then what it produced before and after, from actual runs. End with a short note on limits, what wasn't verified and what waits on a decision. Group related changes under one heading, number them, skip ones with nothing to show. Shape and example: [Summary](./docs/pull-requests.md#summary-by-example).
 
 ### Model and effort
 
@@ -75,38 +75,38 @@ Use **yarn**, not npm. A fresh checkout has no `node_modules`: if a script fails
 - `yarn test:base --testPathPatterns="<pattern>"` / `-t "<name>"` — Targeted tests; `-u` updates snapshots (eyeball the diff first).
 - `yarn test` — Full suite — only when asked.
 
-Every other script: [TESTING_DOCS.md](TESTING_DOCS.md#more-scripts).
+Every other script: [TESTING_DOCS.md](./TESTING_DOCS.md#more-scripts).
 
-Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](TESTING_DOCS.md).
+Never run `yarn jest`/`npx jest`: the required `--experimental-vm-modules` flag lives only in `test:base`, and bare jest crashes the ESM/test262 suites. Running a single case: [TESTING_DOCS.md](./TESTING_DOCS.md).
 
-**CI must come back fully green** ([details](docs/pull-requests.md#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Watch two unusual jobs when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (`benchmarks / benchmark (1/8)`); on `main` nothing gates them (`benchmark (1/8)`) so CodSpeed always has a baseline.
+**CI must come back fully green** ([details](./docs/pull-requests.md#after-opening-the-pr--every-check-ends-green)); read the job list from `.github/workflows/`, not memory. Watch two unusual jobs when touching hot paths or large fixtures: the benchmark's memory mode is sensitive to fixture size and to which cases share its process, and the Bun job runs under `--smol` and surfaces OOMs Node doesn't. Every job costing more than a few minutes waits on `lint`, `basic` and `unit` (needed for merge anyway), so while one is red most of the run reports `skipped`. That includes the benchmarks: on a PR `test.yml` calls `benchmarks.yml` behind those three (`benchmarks / benchmark (1/8)`); on `main` nothing gates them (`benchmark (1/8)`) so CodSpeed always has a baseline.
 
 ## Architecture
 
 > [!REQUIRED]
 
-The repository map is [docs/architecture.md](docs/architecture.md): read it before placing or moving a file; to find one, search (`rg`, glob) rather than reading the map. **When you add, rename or remove a top-level directory** (under the repo root, `lib/`, `test/` or `schemas/`), update its bullet there in the same commit; CI doesn't check it. A directory that fits no group gets a new group, never a dropped entry.
+The repository map is [docs/architecture.md](./docs/architecture.md): read it before placing or moving a file; to find one, search (`rg`, glob) rather than reading the map. **When you add, rename or remove a top-level directory** (under the repo root, `lib/`, `test/` or `schemas/`), update its bullet there in the same commit; CI doesn't check it. A directory that fits no group gets a new group, never a dropped entry.
 
 Rules from the map that apply everywhere:
 
 - **A plugin never belongs in `lib/` root**: it goes in the directory for what it acts on (asset set → `lib/output/`, module graph → `lib/optimize/`, entry → `lib/entry/`); if none fits, add a directory, with its bullet in the map, in the same commit.
 - **Documentation lives in `docs/`**, never under `lib/` (published via `package.json` `files`); docs about `test/` or `tooling/` may sit there.
 - **Edit an option's declaration, never its schema**: JSDoc typedefs in `lib/` for a plugin, `declarations/WebpackOptions.ts` for the configuration; `generate-schemas.js` derives `schemas/**`.
-- **Git submodules** live under `test/external/`, fetched on demand and always `--depth 1` (`wpt` alone is ~161k files); each is described in [TESTING_DOCS.md](TESTING_DOCS.md#external-test-corpora).
+- **Git submodules** live under `test/external/`, fetched on demand and always `--depth 1` (`wpt` alone is ~161k files); each is described in [TESTING_DOCS.md](./TESTING_DOCS.md#external-test-corpora).
 
-**Adding or renaming a webpack option** touches every layer in order (type, defaults, normalization, implementation, generated output and five snapshot files no `configCases/` pattern matches); skipping one silently breaks the option. Read [docs/options.md](docs/options.md) first; it also covers the `@since`/`@experimental` JSDoc keywords and what `webpack/valid-schema` rejects.
+**Adding or renaming a webpack option** touches every layer in order (type, defaults, normalization, implementation, generated output and five snapshot files no `configCases/` pattern matches); skipping one silently breaks the option. Read [docs/options.md](./docs/options.md) first; it also covers the `@since`/`@experimental` JSDoc keywords and what `webpack/valid-schema` rejects.
 
 > [!REQUIRED] > **Never hand-edit what `yarn fix:special` generates**, even when it also reformats files you didn't touch. That churn means your toolchain resolved differently from CI's: commit only your own hunks, then **verify them against the generator** (re-run and diff), never hand-write what you think it would emit. A hand-written JSDoc block missing the `@since` line the schema's `added` keyword produces, or a `types.d.ts` member the JSDoc implies, fails `lint` with only `… need to be updated`.
 
 **A nested minifier gets the outer one's options.** When one language is minified inside another (CSS or SVG inside HTML, SVG inside CSS), pass the inner minifier every outer option it supports that affects its output, or the same code minifies differently inline and on its own.
 
-**Adding a dependency type or runtime requirement** wires three pieces together (a `makeSerializable` registration among them): read [docs/architecture.md](docs/architecture.md#adding-a-dependency-type-or-runtime-requirement) first.
+**Adding a dependency type or runtime requirement** wires three pieces together (a `makeSerializable` registration among them): read [docs/architecture.md](./docs/architecture.md#adding-a-dependency-type-or-runtime-requirement) first.
 
 ### Moving a file out of `lib/` root
 
 > [!REQUIRED]
 
-**Read [docs/architecture.md](docs/architecture.md#moving-a-file-out-of-lib-root) before moving any file under `lib/`**, out of its root or between directories. It enforces:
+**Read [docs/architecture.md](./docs/architecture.md#moving-a-file-out-of-lib-root) before moving any file under `lib/`**, out of its root or between directories. It enforces:
 
 - Run `yarn find-deep-imports:check` on every move, before committing; a path a webpack 5 package imports unconditionally owes a `// TODO in the next major release: remove` re-export at its old path.
 - Rewrite all six places a path hides (`require`, JSDoc `@import`, `@typedef {import()}`, schema `tsType`, `makeSerializable` requests with the old ones kept after the new, configs and generators outside `lib/`), then confirm by regenerating, not reading.
@@ -120,7 +120,7 @@ Rules from the map that apply everywhere:
 
 A hint reuses existing reporting: `SizeLimitsPlugin` and `DuplicatePackagesPlugin` both end in `hints === "error" ? compilation.errors : compilation.warnings`; hardcoding one list makes a hint impossible to escalate. Prefer an option saying _whether_ to run the check and leave severity to `performance.hints`.
 
-**`makeSerializable` follows from where a diagnostic is created**: register one reachable from a module, not one pushed onto `compilation.warnings` after seal, and cover a new diagnostic under `ConfigCacheTestCases` ([why](docs/caching.md#diagnostics)).
+**`makeSerializable` follows from where a diagnostic is created**: register one reachable from a module, not one pushed onto `compilation.warnings` after seal, and cover a new diagnostic under `ConfigCacheTestCases` ([why](./docs/caching.md#diagnostics)).
 
 ## Code conventions
 
@@ -134,15 +134,15 @@ Use the most specific real type, in `test/` too. `EXPECTED_ANY`, `EXPECTED_OBJEC
 
 ### Naming
 
-Spell names out in full (`attributeCount`, not `attrCnt`), beyond abbreviations the codebase already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class. Exceptions and reasons: [docs/code-style.md](docs/code-style.md#naming).
+Spell names out in full (`attributeCount`, not `attrCnt`), beyond abbreviations the codebase already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class. Exceptions and reasons: [docs/code-style.md](./docs/code-style.md#naming).
 
-**The CSS, HTML and JavaScript syntax modules name one concept one way** (columns, walk state, helpers): reuse the names in [docs/syntax.md](docs/syntax.md#shared-names) and rename the other languages' copies with yours; only what one grammar alone has takes its own name.
+**The CSS, HTML and JavaScript syntax modules name one concept one way** (columns, walk state, helpers): reuse the names in [docs/syntax.md](./docs/syntax.md#shared-names) and rename the other languages' copies with yours; only what one grammar alone has takes its own name.
 
 ### Path regexps and helpers live in one file
 
 > [!REQUIRED]
 
-Path-shape regexps and their helpers live in `lib/util/identifier.js`: **import from there, never re-declare a local copy**, even a one-liner like `/\\/g`. Export one that is defined but not exported; define one locally only when nothing fits ([details](docs/code-style.md#path-regexps-and-helpers-live-in-one-file)).
+Path-shape regexps and their helpers live in `lib/util/identifier.js`: **import from there, never re-declare a local copy**, even a one-liner like `/\\/g`. Export one that is defined but not exported; define one locally only when nothing fits ([details](./docs/code-style.md#path-regexps-and-helpers-live-in-one-file)).
 
 ### No private exports
 
@@ -154,7 +154,7 @@ Path-shape regexps and their helpers live in `lib/util/identifier.js`: **import 
 
 > [!REQUIRED]
 
-A list of module, source or dependency types in `lib/` is silently wrong the day a type is added. Read [docs/code-style.md](docs/code-style.md#dont-enumerate-module-or-source-types) before writing one; it enforces:
+A list of module, source or dependency types in `lib/` is silently wrong the day a type is added. Read [docs/code-style.md](./docs/code-style.md#dont-enumerate-module-or-source-types) before writing one; it enforces:
 
 - **Ask the object** (`module.getSourceTypes()`, `chunkGraph.getModuleSourceTypes(module)`, `moduleGraph.getParentModule(dependency)`).
 - **Ask the kind, not the class** (`module.is("css")`, `isDependencyKind(dependency, "url")`); keep `instanceof` for built-ins and plain values.
@@ -169,7 +169,7 @@ Code that runs outside webpack's own module graph (tests, examples, tooling, a m
 
 Outside a language's syntax layer (`lib/{css,html,javascript}/syntax*.js`, the minifiers, the generated tables, and JavaScript's `regexp.js` and `ScopeAnalyzer.js`), require that language's `syntax.js`, webpack's `css.syntax`, `html.syntax` or `javascript.syntax`, and read the parser from its `parser` getter (`const { Field, NodeType } = require("./syntax").parser`), never `syntax-parser.js` or `syntax-printer.js` directly, so the internals can move behind it. Type-only `@import`s may name `syntax-parser.js`.
 
-**Every language's `syntax` facade and the JavaScript parser's `{ path: true }` taps are experimental**: tag each new public name they expose with `@experimental <where it is exposed>; unstable API` ([convention](docs/options.md)).
+**Every language's `syntax` facade and the JavaScript parser's `{ path: true }` taps are experimental**: tag each new public name they expose with `@experimental <where it is exposed>; unstable API` ([convention](./docs/options.md)).
 
 ### Source file headers
 
@@ -179,7 +179,7 @@ Every source file in `lib/`, `hot/` and `tooling/` opens with the MIT license he
 
 > [!REQUIRED]
 
-Full rules, exemptions and the `WHY:` example: [docs/code-style.md](docs/code-style.md#code-comments). It enforces:
+Full rules, exemptions and the `WHY:` example: [docs/code-style.md](./docs/code-style.md#code-comments). It enforces:
 
 - **A plain comment is at most three lines. Count them.** Every `//` and `/* … */` in `lib/`, `hot/`, `tooling/` and `test/`, and every comment a generator emits; `webpack/comment-length` fails `lint`. Only `examples/` is exempt.
 - **Exempt, none of them commentary**: JSDoc, the block before a file's first statement, and a comment opening `// WHY:` (only when every line carries something the code can't).
@@ -191,7 +191,7 @@ Full rules, exemptions and the `WHY:` example: [docs/code-style.md](docs/code-st
 
 > [!REQUIRED]
 
-Work waiting for the next breaking release is marked `// TODO in the next major release: <what to do>` in every file type: **never name a version** (in the marker, the prose beside it or a `@deprecated` tag) and **always say what to do**. Examples and the one-command list: [docs/code-style.md](docs/code-style.md#marking-work-for-the-next-major).
+Work waiting for the next breaking release is marked `// TODO in the next major release: <what to do>` in every file type: **never name a version** (in the marker, the prose beside it or a `@deprecated` tag) and **always say what to do**. Examples and the one-command list: [docs/code-style.md](./docs/code-style.md#marking-work-for-the-next-major).
 
 ### A dependency's bug is fixed in the dependency
 
@@ -199,23 +199,23 @@ When the root cause is in a dependency (`watchpack`, `enhanced-resolve`, `webpac
 
 ## Testing
 
-Directory structure, naming and running one case: [TESTING_DOCS.md](TESTING_DOCS.md).
+Directory structure, naming and running one case: [TESTING_DOCS.md](./TESTING_DOCS.md).
 
 - **Bug fix: test first**, confirm it fails, then fix and re-run. Features may add tests alongside or after.
 - **Prefer integration tests** (`configCases/`, `watchCases/`, `hotCases/`, `statsCases/`, …) driving a real `webpack()` build whenever the behavior is reachable that way; they catch regressions mocked unit tests miss. `*.unittest.js` is for pure helpers a build can't naturally reach.
-- **Syntax tests are fixtures first.** A tokenizer, parser, printer or minifier input (CSS, HTML, XML, JavaScript) goes in `test/fixtures/<lang>/<name>/`, so `invariants.unittest.js` snapshots its prints and holds it to the invariants. Add a `configCases/` case only when the change can break what a build adds: dependencies, emitted runtime code or another webpack integration. Put a printer-only integration case in its language's merged case (`optimization/minify-javascript/`, `css/minify-css/`, `html/minify-html/`), one directory per case ([how](TESTING_DOCS.md#configcases)).
-- **An HMR change gets a `hotCases/` case for the default output and a twin under `hotCases/esm-output/`** ([why](TESTING_DOCS.md#hotcases)).
-- **Behavior across rebuilds is a `watchCases/` case**, never a unit test calling `compiler.run` in a loop ([how](TESTING_DOCS.md#writing-a-test)).
-- **Snapshot printed code; assert everything else**: never snapshot a value some machine can't produce, and keep control characters out ([details](TESTING_DOCS.md#writing-a-test)).
+- **Syntax tests are fixtures first.** A tokenizer, parser, printer or minifier input (CSS, HTML, XML, JavaScript) goes in `test/fixtures/<lang>/<name>/`, so `invariants.unittest.js` snapshots its prints and holds it to the invariants. Add a `configCases/` case only when the change can break what a build adds: dependencies, emitted runtime code or another webpack integration. Put a printer-only integration case in its language's merged case (`optimization/minify-javascript/`, `css/minify-css/`, `html/minify-html/`), one directory per case ([how](./TESTING_DOCS.md#configcases)).
+- **An HMR change gets a `hotCases/` case for the default output and a twin under `hotCases/esm-output/`** ([why](./TESTING_DOCS.md#hotcases)).
+- **Behavior across rebuilds is a `watchCases/` case**, never a unit test calling `compiler.run` in a loop ([how](./TESTING_DOCS.md#writing-a-test)).
+- **Snapshot printed code; assert everything else**: never snapshot a value some machine can't produce, and keep control characters out ([details](./TESTING_DOCS.md#writing-a-test)).
 - **Run targeted tests only** (`--testPathPatterns` / `-t`) covering the touched code; leave broad suites to CI. Eyeball the diff before `-u`.
 
-> [!REQUIRED] > **Two kinds of change widen the blast radius**: touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates. Still don't sweep suites locally: run only the touched `configCases/`, `yarn fix:special` and `yarn lint`, push, and let CI sweep. A red `lint`, `basic` or `unit` stops every integration upload, so a coverage drop then isn't one ([details](docs/verifying.md#changes-that-widen-the-blast-radius)).
+> [!REQUIRED] > **Two kinds of change widen the blast radius**: touching `schemas/**`, `lib/config/**` or anything `yarn fix:special` generates. Still don't sweep suites locally: run only the touched `configCases/`, `yarn fix:special` and `yarn lint`, push, and let CI sweep. A red `lint`, `basic` or `unit` stops every integration upload, so a coverage drop then isn't one ([details](./docs/verifying.md#changes-that-widen-the-blast-radius)).
 
-> [!REQUIRED] > **Run every stage of `lint` before every push — `yarn lint`, not a chosen few, not only your files**, and read each stage's output whole, never through `tail`/`grep`. A generated file is stale as soon as any JSDoc it copies changes, prose included ([details](docs/verifying.md#running-lint)).
+> [!REQUIRED] > **Run every stage of `lint` before every push — `yarn lint`, not a chosen few, not only your files**, and read each stage's output whole, never through `tail`/`grep`. A generated file is stale as soon as any JSDoc it copies changes, prose included ([details](./docs/verifying.md#running-lint)).
 
-A local failure is yours only if it doesn't reproduce on `main` (check in a worktree). **Hard rule: no broad local sweeps** (spec-conformance suites, the full `test:integration` matrix); **never read pass/fail through a pipe**; **never attribute a failure without a base run** of that exact case. Known sandbox failures and why: [docs/verifying.md](docs/verifying.md#local-failures-and-broad-sweeps).
+A local failure is yours only if it doesn't reproduce on `main` (check in a worktree). **Hard rule: no broad local sweeps** (spec-conformance suites, the full `test:integration` matrix); **never read pass/fail through a pipe**; **never attribute a failure without a base run** of that exact case. Known sandbox failures and why: [docs/verifying.md](./docs/verifying.md#local-failures-and-broad-sweeps).
 
-**A check longer than a few minutes is CI's** (the minify corpora, a spec-conformance suite, a benchmark): run the fast checks, push, then wait for CI's result rather than running it locally in parallel ([details](docs/verifying.md#long-checks-belong-to-ci)).
+**A check longer than a few minutes is CI's** (the minify corpora, a spec-conformance suite, a benchmark): run the fast checks, push, then wait for CI's result rather than running it locally in parallel ([details](./docs/verifying.md#long-checks-belong-to-ci)).
 
 **Cover every line you add or change**: a commit must not lower coverage (CI enforces patch coverage, target 90%+). Every new branch, fast path and fallback needs a test: `configCases/` when a real build reaches it, a focused `*.unittest.js` only when a config case can't reasonably drive it or adds nothing (e.g. tokenizer cold-path fallbacks, where fast and delegated branches each still need exercising). Check with `yarn cover:unit` or the PR's "patch" report until no changed line is missing.
 
@@ -225,33 +225,33 @@ A local failure is yours only if it doesn't reproduce on `main` (check in a work
 
 > [!REQUIRED]
 
-**When CI is red, read the failing job's log first, before any local run**: it names the failing case and why (an assertion diff, a size over a reference, a crashed worker). Then reproduce **only the named case**; never run a long suite locally (a spec corpus, the integration matrix, the full unit run) to find a failure CI already names. Save logs and large reports to a file and grep them, never inline; re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](docs/verifying.md#read-ci-rather-than-re-running-it).
+**When CI is red, read the failing job's log first, before any local run**: it names the failing case and why (an assertion diff, a size over a reference, a crashed worker). Then reproduce **only the named case**; never run a long suite locally (a spec corpus, the integration matrix, the full unit run) to find a failure CI already names. Save logs and large reports to a file and grep them, never inline; re-fetch check runs only when a push, re-run or CI event changed them. Commands and traps (a step is not a job; `yarn lint` stops at its first failing stage): [docs/verifying.md](./docs/verifying.md#read-ci-rather-than-re-running-it).
 
 **A red check on the PR's head is the PR's until a base run of the same job shows it too**: never assume a flake and wait for a re-run.
 
-**A failure with no error message (a crashed worker, `Call retries were exceeded`) gets its error surfaced first**, then is cut to a one-`it` test; no full-suite, load or environment reproductions before that ([how](docs/verifying.md#a-failure-with-no-error)).
+**A failure with no error message (a crashed worker, `Call retries were exceeded`) gets its error surfaced first**, then is cut to a one-`it` test; no full-suite, load or environment reproductions before that ([how](./docs/verifying.md#a-failure-with-no-error)).
 
 ### Verifying a performance or memory change
 
 > [!REQUIRED]
 
-Read [docs/performance.md](docs/performance.md) before claiming or measuring a performance, memory or emitted-size change. In short: prefer counting over CPU-profile attribution over retained heap over wall timing, inside a real build, never a micro-benchmark; for size, gzip decides and a re-encoding must show a compressed win; `readString` and `finishToken` in `lib/javascript/syntax-parser.js` sit just under V8's inlining budget: check their bytecode size before and after touching them.
+Read [docs/performance.md](./docs/performance.md) before claiming or measuring a performance, memory or emitted-size change. In short: prefer counting over CPU-profile attribution over retained heap over wall timing, inside a real build, never a micro-benchmark; for size, gzip decides and a re-encoding must show a compressed win; `readString` and `finishToken` in `lib/javascript/syntax-parser.js` sit just under V8's inlining budget: check their bytecode size before and after touching them.
 
 ## Git & PR rules
 
 > [!REQUIRED]
 
-**Read [docs/pull-requests.md](docs/pull-requests.md) in full once per session, before branching, committing or opening a PR** (PR events don't need a re-read): changeset format, branch and commit conventions, the PR body template and driving the PR to green. It enforces:
+**Read [docs/pull-requests.md](./docs/pull-requests.md) in full once per session, before branching, committing or opening a PR** (PR events don't need a re-read): changeset format, branch and commit conventions, the PR body template and driving the PR to green. It enforces:
 
 - **Changeset**: every user-facing change needs one in `.changeset/`: one sentence, one per PR.
 - **Branch** `<type>/<short-description>`, the type picked from the diff and matching the PR's "What kind of change…" answer; never a `claude/`, `bot/`, `ai/` or other tool prefix. Rename before the first push; a task leaves one branch on `origin` and ends with a `Branches on origin:` line.
 - **Commit author** is the requester's GitHub account, never a bot; no `Co-authored-by` trailers; ask when the identity is unknown.
 - **Open from a branch not behind `main`**: rebase, never merge `main` in. Before opening, rebase onto the PR's base (`origin/main`, or the branch a stacked PR depends on), resolve conflicts, re-run the checks, then `git push --force-with-lease -u origin <branch>` and open the PR. Force-pushing your own branch before its PR exists needs no asking.
-- **Stack a PR on the open PR it depends on** (needs it or changes the same code): branch from that PR's branch and use it as the base; branch from `main` only when the two are unrelated and merge cleanly in either order. Two PRs each green against `main` can still turn `main` red together ([details](docs/pull-requests.md#stacked-prs)).
+- **Stack a PR on the open PR it depends on** (needs it or changes the same code): branch from that PR's branch and use it as the base; branch from `main` only when the two are unrelated and merge cleanly in either order. Two PRs each green against `main` can still turn `main` red together ([details](./docs/pull-requests.md#stacked-prs)).
 - **PR body**: paste the org template yourself with every section, bold labels spelled exactly and `n/a` where one doesn't apply, including **Use of AI** and a **What kind of change…** answer matching the branch prefix. Keep it brief; for a fix or improvement, show a real before/after (code, output, size, memory or CPU) under **Summary**.
 - **Subscribe to every PR you open**; unsubscribe once CI is green and every automated review is handled, or the requester says stop. A PR waiting only on human review needs no live session.
 - **Never post to GitHub on your own initiative**: comments, review replies, PR body edits after opening (except installing the template over an auto-created body), replies to bots other than CodeRabbit. Bring the finding and your draft reply into the session.
-- **Resolve CodeRabbit threads yourself** ([how](docs/pull-requests.md#after-opening-the-pr--wait-for-the-automated-reviews)).
+- **Resolve CodeRabbit threads yourself** ([how](./docs/pull-requests.md#after-opening-the-pr--wait-for-the-automated-reviews)).
 - **Don't rebase or merge the base branch into an open PR unasked.**
 - **A question is not a go-ahead**: asked what happened, why, or whether you changed something, answer and propose the change, then push only once the requester agrees, even to fix your own mistake. A request phrased as a question ("could you…?") is still a request.
 - **Every check ends green**; read coverage only once every uploading suite has reported. **A missing wake is not a green check**: read the check runs and commit statuses of every open PR you own before other work, before stacking on it and before ending a turn.
@@ -266,7 +266,7 @@ Produced by `yarn fix:special`; never edit by hand:
 - `types.d.ts`, from JSDoc + schemas.
 - `schemas/**/*.check.{js,d.ts}`, precompiled schema validators.
 - Generated runtime code under `lib/` (`tooling/generate-runtime-code.js`).
-- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js`, `lib/javascript/syntax-printer-data.js`, `lib/javascript/parse-error-codes.js`: every lookup table the CSS minifier, HTML parser/minifier and JS parser and printer read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources, contents and how a generator derives its tables and per-construct descriptors: [docs/syntax.md](docs/syntax.md#generated-tables).
+- `lib/css/data.js`, `lib/html/data.js`, `lib/javascript/data.js`, `lib/javascript/syntax-printer-data.js`, `lib/javascript/parse-error-codes.js`: every lookup table the CSS minifier, HTML parser/minifier and JS parser and printer read, by `tooling/generate-css-data.js`, `generate-html-data.js` and `generate-js-data.js`; `generate-html-data.js` also writes the `// #region html entities` block in `lib/html/syntax-parser.js`. Sources, contents and how a generator derives its tables and per-construct descriptors: [docs/syntax.md](./docs/syntax.md#generated-tables).
 
 A `syntax-parser.js` or `syntax-printer.js` is algorithm only: a new lookup table belongs in the matching generator. Generator-written regions such as `// #region html entities` are the exception; `syntax.js` is a facade, neither.
 
@@ -286,17 +286,17 @@ CI's `lint` job verifies these are current; `yarn fix` is the preferred final st
 
 `lib/` and `hot/` ship as raw source (no build step) and must run on **Node ≥ 10.13** (CI goes down to 10.x): no newer syntax or APIs, e.g. no `?.` or `??`, or it passes locally and fails the Node 10 job.
 
-**This covers what tests execute too**: fixtures aren't transpiled, so newer syntax in a `configCases/` fixture fails the Node 10 job. Write fixtures in baseline syntax; where the syntax _is_ the point, gate the case with a `test.filter.js` ([example](docs/code-style.md#target-the-node-baseline)), unrelated to the cache-suite silencing forbidden [below](#the-persistent-cache-has-to-keep-working).
+**This covers what tests execute too**: fixtures aren't transpiled, so newer syntax in a `configCases/` fixture fails the Node 10 job. Write fixtures in baseline syntax; where the syntax _is_ the point, gate the case with a `test.filter.js` ([example](./docs/code-style.md#target-the-node-baseline)), unrelated to the cache-suite silencing forbidden [below](#the-persistent-cache-has-to-keep-working).
 
 ### Runtime code ships to every target
 
-Runtime-emitting code (chunk loading, resource hints, library and externals presets) is **per-target**: apply a change to **every** affected target with an integration case per target, then check wire cost with `yarn test:size` and say in the PR what moved. Targets, the universal runtime's DOM guard and reading the size report: [docs/runtime.md](docs/runtime.md).
+Runtime-emitting code (chunk loading, resource hints, library and externals presets) is **per-target**: apply a change to **every** affected target with an integration case per target, then check wire cost with `yarn test:size` and say in the PR what moved. Targets, the universal runtime's DOM guard and reading the size report: [docs/runtime.md](./docs/runtime.md).
 
 ### Keep emitted runtime small
 
 > [!REQUIRED]
 
-**Emitted runtime is paid for in every user's bundle, so emit the shortest equivalent.** Read the checklist in [docs/runtime.md](docs/runtime.md#keep-emitted-runtime-small) before writing or changing an emitted string; it enforces:
+**Emitted runtime is paid for in every user's bundle, so emit the shortest equivalent.** Read the checklist in [docs/runtime.md](./docs/runtime.md#keep-emitted-runtime-small) before writing or changing an emitted string; it enforces:
 
 - **Never hand-write a form a `RuntimeTemplate` helper covers** (`function(`, `var`, `x = x || y`, `hasOwnProperty.call`, `a && a.b`): the helper picks the shortest form per `output.environment`.
 - **Minifiers can't do it for you**: unused parameters, guards on values already known to be set, repeated property chains and default arguments survive terser.
@@ -311,7 +311,7 @@ Runtime-emitting code (chunk loading, resource hints, library and externals pres
 
 > [!REQUIRED]
 
-**Read [docs/caching.md](docs/caching.md) whenever `ConfigCacheTestCases` fails.** It enforces:
+**Read [docs/caching.md](./docs/caching.md) whenever `ConfigCacheTestCases` fails.** It enforces:
 
 - `Pack got invalid because of write to: <identifier>` means work redone every incremental build: **treat it as a defect and find the cause**.
 - Every new serializable class (`Module`, `Dependency`, error subclass, cached value) calls `makeSerializable(...)`; `yarn fix:serializables` regenerates `internalSerializables`.
@@ -334,6 +334,6 @@ Every process starts cold, and loading code is most of that start, so pay only f
 
 ### Keep instance shapes stable
 
-Initialize **every** instance field in the constructor (`undefined`/`null` for those first assigned later) and never `delete` one: set it to `undefined`; symbol-keyed sparse slots are the documented exception. Why (V8 shapes, inline caches, `wrong map` deopts): [docs/performance.md](docs/performance.md#keep-instance-shapes-stable).
+Initialize **every** instance field in the constructor (`undefined`/`null` for those first assigned later) and never `delete` one: set it to `undefined`; symbol-keyed sparse slots are the documented exception. Why (V8 shapes, inline caches, `wrong map` deopts): [docs/performance.md](./docs/performance.md#keep-instance-shapes-stable).
 
 Adding a public (non-`_`) field to a class compiled into `types.d.ts` needs `yarn fix:special`: constructor order sets member order in the generated declarations.

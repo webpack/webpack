@@ -3,7 +3,7 @@
 /** @type {import("webpack").Configuration[]} */
 module.exports = ["memory", "filesystem"].map((type) => ({
 	mode: "development",
-	cache: type === "memory" ? { type: "memory" } : { type: "filesystem" },
+	cache: { type: type === "memory" ? "memory" : "filesystem" },
 	experiments: { cacheUnaffected: true },
 	optimization: {
 		usedExports: true,

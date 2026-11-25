@@ -66,10 +66,18 @@ const categories = fs.readdirSync(casesPath).map((cat) => ({
  * @returns {EXPECTED_ANY} logger object
  */
 const createLogger = (appendTarget, appendErrors) => ({
-	log: (/** @type {string} */ l) => appendTarget.push(l),
-	debug: (/** @type {string} */ l) => appendTarget.push(l),
-	trace: (/** @type {string} */ l) => appendTarget.push(l),
-	info: (/** @type {string} */ l) => appendTarget.push(l),
+	log: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
+	debug: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
+	trace: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
+	info: (/** @type {string} */ l) => {
+		appendTarget.push(l)
+	},
 	// Collect warn/error separately: every infrastructure warning/error must be
 	// declared in the case's infrastructure-log.js or the test fails, so a cache
 	// store/restore failure can't slip through unnoticed.

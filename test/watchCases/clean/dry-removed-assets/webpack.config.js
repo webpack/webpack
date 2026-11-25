@@ -48,12 +48,12 @@ module.exports = {
 					const expected = Array.from(
 						{ length: step },
 						(_, i) => `extra.${i}.txt`
-					).join();
+					).join(",");
 					// nothing is removed in dry mode, so every earlier asset is reported again
-					if (checked.sort().join() !== expected) {
+					if (checked.sort().join(",") !== expected) {
 						compilation.errors.push(
 							new compiler.webpack.WebpackError(
-								`checked [${checked.join()}], expected [${expected}]`
+								`checked [${checked.join(",")}], expected [${expected}]`
 							)
 						);
 					}

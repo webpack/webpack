@@ -23,7 +23,7 @@ const {
 	walkValueSyntax
 } = require("../../tooling/generate-css-data");
 
-/** @typedef {import("../../tooling/generate-css-data").SyntaxNode} SyntaxNode */
+/** @import { SyntaxNode } from "../../tooling/generate-css-data" */
 
 /**
  * Where a value is written, which decides what a block's contents are and

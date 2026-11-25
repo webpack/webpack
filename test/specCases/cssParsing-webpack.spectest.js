@@ -114,7 +114,7 @@ const buildBatch = (inputs, mode) =>
 			};
 			if (err) {
 				// Compiler-level throw can't be attributed to one entry; mark all.
-				const line = String(err.message).split("\n")[0].slice(0, 160);
+				const line = String(err.message).split("\n", 1)[0].slice(0, 160);
 				for (const i of inputs.keys()) add(i, line);
 				resolve(internalByEntry);
 				return;
@@ -122,7 +122,7 @@ const buildBatch = (inputs, mode) =>
 			const json = stats.toJson({ errors: true, warnings: true });
 			for (const item of [...json.errors, ...json.warnings]) {
 				if (!INTERNAL.test(item.message)) continue;
-				const line = item.message.split("\n")[0].slice(0, 160);
+				const line = item.message.split("\n", 1)[0].slice(0, 160);
 				const match = /c(\d+)\.css/.exec(item.moduleName || "");
 				if (match) add(Number(match[1]), line);
 				else for (const i of inputs.keys()) add(i, line);
@@ -149,8 +149,7 @@ describe("css-parsing-tests webpack build", () => {
 			const byId = new Map();
 			let pending = [];
 			const flush = async () => {
-				const inputs = [];
-				for (const c of pending) inputs.push(c.input);
+				const inputs = Array.from(pending, (c) => c.input);
 				const internalByEntry = await buildBatch(inputs, mode);
 				for (const [k, c] of pending.entries()) {
 					byId.set(c.id, internalByEntry.get(k) || []);
@@ -241,7 +240,9 @@ describe("css-parsing-tests block contents", () => {
 		if (typeof source !== "string") continue;
 		const want = expected(data[i + 1]);
 
-		it(`reads ${JSON.stringify(source)} as ${want.join(" + ") || "nothing"}`, () => {
+		it(`reads ${JSON.stringify(source)} as ${
+			want.join(" + ") || "nothing"
+		}`, () => {
 			expect(actual(source)).toEqual(want);
 		});
 	}
@@ -319,10 +320,13 @@ describe("css-parsing-tests trees", () => {
 	const ENTRY_POINTS = [
 		[
 			"component_value_list",
-			(source) =>
-				serializeComponentValues(parseAListOfComponentValues(source))
+			(source) => serializeComponentValues(parseAListOfComponentValues(source))
 		],
-		["one_component_value", one(parseAComponentValue, serializeComponentValue), true],
+		[
+			"one_component_value",
+			one(parseAComponentValue, serializeComponentValue),
+			true
+		],
 		["one_declaration", one(parseADeclaration, serializeDeclaration), true],
 		[
 			"one_rule",
@@ -334,13 +338,11 @@ describe("css-parsing-tests trees", () => {
 		// the flag set, and the two differ over whether CDO/CDC are discarded.
 		[
 			"rule_list",
-			(source) =>
-				serializeRules(parseABlocksContents(source).rules, source)
+			(source) => serializeRules(parseABlocksContents(source).rules, source)
 		],
 		[
 			"stylesheet",
-			(source) =>
-				serializeStylesheet(parseAStylesheet(source), source)
+			(source) => serializeStylesheet(parseAStylesheet(source), source)
 		]
 	];
 

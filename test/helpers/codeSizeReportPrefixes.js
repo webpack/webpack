@@ -13,8 +13,8 @@ const codeSizeReportPrefixes = (names) => {
 	if (names.length === 1) return [""];
 	/** @type {Map<string, number>} */
 	const counts = new Map();
-	for (const [index, name] of names.entries()) {
-		const key = `${name || index}/`;
+	for (const [index, name = index] of names.entries()) {
+		const key = `${name}/`;
 		counts.set(key, (counts.get(key) || 0) + 1);
 	}
 	/** @type {Set<string>} */

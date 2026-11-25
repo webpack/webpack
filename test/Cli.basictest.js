@@ -905,7 +905,7 @@ describe("Cli", () => {
 			expect(colors.blue("")).toBe("");
 			expect(colors.blue(undefined)).toBe("");
 			expect(colors.blue(0)).toBe("\u001B[34m0\u001B[39m");
-			// eslint-disable-next-line unicorn/prefer-number-properties
+
 			expect(colors.blue(NaN)).toBe("\u001B[34mNaN\u001B[39m");
 			expect(colors.blue(Number.NaN)).toBe("\u001B[34mNaN\u001B[39m");
 			/* cspell:disable-next-line */

@@ -8,9 +8,9 @@ const path = require("path");
 
 // Needles built here so they are not source string literals the search would find.
 const needles = [
-	`${"installed"}Chunks`,
-	`${"__webpack_require__"}.m`,
-	`${"__webpack_require__"}.o`
+	"installedChunks",
+	"__webpack_require__.m",
+	"__webpack_require__.o"
 ];
 
 /**

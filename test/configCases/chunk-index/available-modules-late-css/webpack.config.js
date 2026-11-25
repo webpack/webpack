@@ -1,8 +1,10 @@
 "use strict";
 
-const webpack = require("../../../../");
-
-const { Compilation, NormalModuleReplacementPlugin, WebpackError } = webpack;
+const {
+	Compilation,
+	NormalModuleReplacementPlugin,
+	WebpackError
+} = require("../../../../");
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [false, true].map((late, index) => ({

@@ -22,7 +22,14 @@ const fs = require("fs");
 const path = require("path");
 const { Volume, createFsFromVolume } = require("memfs");
 const webpack = require("../..");
-const { A, NodeType, Quote, decodeEntities, parseHtml, tokenize } = require("../../lib/html/syntax-parser");
+const {
+	A,
+	NodeType,
+	Quote,
+	decodeEntities,
+	parseHtml,
+	tokenize
+} = require("../../lib/html/syntax-parser");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const serialize = require("../helpers/serializeHtmlTree");
 const { isInPart } = require("../helpers/testParts");
@@ -149,7 +156,7 @@ const buildBatch = (inputs, mode) =>
 			};
 			if (err) {
 				// Compiler-level throw can't be attributed to one entry; mark all.
-				const line = String(err.message).split("\n")[0].slice(0, 160);
+				const line = String(err.message).split("\n", 1)[0].slice(0, 160);
 				for (const i of inputs.keys()) add(i, line);
 				resolve(internalByEntry);
 				return;
@@ -157,7 +164,7 @@ const buildBatch = (inputs, mode) =>
 			const json = stats.toJson({ errors: true, warnings: true });
 			for (const item of [...json.errors, ...json.warnings]) {
 				if (!INTERNAL.test(item.message)) continue;
-				const line = item.message.split("\n")[0].slice(0, 160);
+				const line = item.message.split("\n", 1)[0].slice(0, 160);
 				const match = /c(\d+)\.html/.exec(item.moduleName || "");
 				if (match) add(Number(match[1]), line);
 				else for (const i of inputs.keys()) add(i, line);
@@ -189,8 +196,7 @@ describe("html5lib-tests webpack build", () => {
 			const byId = new Map();
 			let pending = [];
 			const flush = async () => {
-				const inputs = [];
-				for (const c of pending) inputs.push(c.input);
+				const inputs = Array.from(pending, (c) => c.input);
 				const internalByEntry = await buildBatch(inputs, mode);
 				for (const [k, c] of pending.entries()) {
 					byId.set(c.id, internalByEntry.get(k) || []);
@@ -228,7 +234,10 @@ describe("html5lib-tests webpack build", () => {
 // ---------------------------------------------------------------------------
 
 // The corpus html5lib-tests carried until 224991e, in html5lib's `.dat` format.
-const treeDir = path.resolve(__dirname, "../external/wpt/html/syntax/parsing/resources");
+const treeDir = path.resolve(
+	__dirname,
+	"../external/wpt/html/syntax/parsing/resources"
+);
 
 /** @type {Set<string>} intentional, documented exceptions */
 const KNOWN_DIVERGENCES = new Set();
@@ -673,7 +682,7 @@ for (const testCase of tokenizerCases) {
 			(stateTags !== undefined &&
 				(lastStartTag === undefined || stateTags.tags.has(lastStartTag)));
 		if (!reachable) {
-			const key = `${state}\u0000${lastStartTag}`;
+			const key = `${state}\0${lastStartTag}`;
 			const entry = unreachableByShape.get(key);
 			if (entry === undefined) {
 				unreachableByShape.set(key, {

@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
+/** @import { Compiler } from "../../../../" */
 /** @typedef {import("webpack-sources").Source & { _value?: unknown, _valueAsString?: unknown, _valueAsBuffer?: unknown }} CachingSource */
 
 const PLUGIN_NAME = "SourceReleaseTest";

@@ -31,11 +31,11 @@ module.exports = (env, { testPath }) =>
 		return {
 			name: mode,
 			// experiments.futureDefaults emits ECMAScript modules
-			...(mode === "future-defaults"
-				? { experiments: { futureDefaults: true } }
-				: {}),
+			...(mode === "future-defaults" && {
+				experiments: { futureDefaults: true }
+			}),
 			output: {
-				...(mode === "future-defaults" ? { filename: "[name].mjs" } : {}),
+				...(mode === "future-defaults" && { filename: "[name].mjs" }),
 				path: outputPath,
 				...(mode === "allowed" || mode === "allowed-link"
 					? // with "allowed-link", the link "elsewhere" holds leads out of it

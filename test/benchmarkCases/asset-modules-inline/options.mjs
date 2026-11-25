@@ -2,7 +2,7 @@ import fs from "fs/promises";
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
-const items = Array.from({ length: 25 }).fill("image");
+const items = Array.from({ length: 25 }, () => "image");
 
 /**
  * @param {string} text text in svg code
@@ -40,7 +40,7 @@ export async function setup() {
 		code += `const ${name} = new URL(${JSON.stringify(request)}, import.meta.url);\nconsole.log(${name});\nexport { ${name} };\n`;
 	}
 
-	for (const [i, _item] of items.entries()) {
+	for (const i of items.keys()) {
 		const base64 = Buffer.from(
 			generateSVG(`Data URI URL, Number - ${i}`),
 			"utf8"
@@ -64,7 +64,7 @@ export async function setup() {
 		code += `import ${name} from ${JSON.stringify(request)};\nconsole.log(${name});\nexport { ${name} };\n`;
 	}
 
-	for (const [i, _item] of items.entries()) {
+	for (const i of items.keys()) {
 		const base64 = Buffer.from(
 			generateSVG(`Import Data URI, Number - ${i}`),
 			"utf8"

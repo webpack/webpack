@@ -227,7 +227,7 @@ const readTransfers = async (page, spaces) => {
 		for (const [at, text] of read.entries()) {
 			const parsed = /^color\(xyz-d65 ([^)]+)\)$/.exec(text);
 			if (parsed === null) continue;
-			const theirs = Number(parsed[1].split(/\s+/)[1]);
+			const theirs = Number(parsed[1].split(/\s+/, 2)[1]);
 			const mine = transfer(ramp[at]);
 			if (mine > 0 && theirs > 0) ratios.push(theirs / mine);
 		}
@@ -368,7 +368,9 @@ const main = async () => {
 		`\nspaces read through another transfer: measured ${
 			suspect.sort().join(", ") || "none"
 		}; stated ${stated.join(", ") || "none"}${
-			suspect.join() === stated.join() ? "" : "   <- the generator disagrees"
+			suspect.join(",") === stated.join(",")
+				? ""
+				: "   <- the generator disagrees"
 		}`
 	);
 };

@@ -27,7 +27,7 @@ const {
 	PACKED_FIXTURES
 } = require("./compare-css-tools");
 
-/** @typedef {import("../lib/css/cssMinify")} CssMinify */
+/** @import CssMinify from "../lib/css/cssMinify" */
 /** @typedef {NonNullable<Parameters<CssMinify>[2]>} CssMinifyOptions */
 
 const ROOT = path.resolve(__dirname, "..");
@@ -137,13 +137,14 @@ const main = async (repo) => {
 		const css = fs.readFileSync(file, "utf8");
 		for (const [preset, options] of PRESETS) {
 			try {
-				const { code, map, warnings, errors } = await cssMinify(
-					{ "a.css": css },
-					undefined,
-					options
-				);
+				const {
+					code,
+					map = null,
+					warnings,
+					errors
+				} = await cssMinify({ "a.css": css }, undefined, options);
 				hashes[`${label} | ${preset}`] = digest(
-					`${code}\0${JSON.stringify(map || null)}\0${JSON.stringify(
+					`${code}\0${JSON.stringify(map)}\0${JSON.stringify(
 						diagnostics(warnings)
 					)}\0${JSON.stringify(diagnostics(errors))}`
 				);
@@ -152,13 +153,11 @@ const main = async (repo) => {
 			}
 		}
 		try {
-			const { code, map } = new SourceProcessor().process(css, {
+			const { code, map = null } = new SourceProcessor().process(css, {
 				mode: "beautify",
 				source: "a.css"
 			});
-			hashes[`${label} | beautify`] = digest(
-				`${code}\0${JSON.stringify(map || null)}`
-			);
+			hashes[`${label} | beautify`] = digest(`${code}\0${JSON.stringify(map)}`);
 		} catch (error) {
 			hashes[`${label} | beautify`] = `throws ${String(error)}`;
 		}

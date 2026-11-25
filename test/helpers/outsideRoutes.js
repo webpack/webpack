@@ -68,7 +68,7 @@ module.exports = (testPath, mode) => {
 					to: OUT
 				}
 			],
-			...(mode === "allowed" ? { allowOutside: [outside] } : {})
+			...(mode === "allowed" && { allowOutside: [outside] })
 		},
 		module: { rules: [{ test: /\.png$/, type: "asset/resource" }] },
 		// a refused copy is an error, so each route reaches its own write

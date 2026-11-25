@@ -5,7 +5,7 @@
 
 const webpack = require("../../../../");
 
-const INSTANTIATE = `${"__webpack_require__"}.v(exports, `;
+const INSTANTIATE = "__webpack_require__.v(exports, ";
 
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats

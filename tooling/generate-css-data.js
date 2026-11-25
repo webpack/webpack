@@ -27,10 +27,7 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @typedef {import("@mdn/browser-compat-data").SimpleSupportStatement} BcdSupport */
-/** @typedef {import("@mdn/browser-compat-data").CompatStatement} BcdCompat */
-/** @typedef {import("@mdn/browser-compat-data").Identifier} BcdNode */
-/** @typedef {import("@mdn/browser-compat-data").BrowserName} BcdBrowser */
+/** @import { SimpleSupportStatement as BcdSupport, CompatStatement as BcdCompat, Identifier as BcdNode, BrowserName as BcdBrowser } from "@mdn/browser-compat-data" */
 
 // `require()` returns the package's `data.json` itself, while its `require.d.ts`
 // declares that table as a default export, so it is read as the JSON it is.
@@ -751,8 +748,7 @@ const collectCustomIdentListProperties = () => {
 		const tree = grammarOf(property.syntax);
 		let listed = false;
 		walkValueSyntax(tree, (node) => {
-			if (listed) return;
-			if (node.type !== "multiplier" || node.comma !== true) return;
+			if (listed || node.type !== "multiplier" || node.comma !== true) return;
 			if (reachesCustomIdent(node.body, new Set())) listed = true;
 		});
 		if (listed) out.push(name);
@@ -2004,7 +2000,7 @@ const SRGB_TRANSFER = "srgbTransfer";
  */
 const spaceConversion = (name, gamut, transfer) => {
 	if (
-		!SUPPLEMENT.colorTransfers.some(([spelling]) => spelling === SRGB_TRANSFER)
+		SUPPLEMENT.colorTransfers.every(([spelling]) => spelling !== SRGB_TRANSFER)
 	) {
 		throw new Error(
 			`no ${SRGB_TRANSFER} among the transfers: they were renamed`
@@ -2375,14 +2371,16 @@ const collectPositionProperties = () => {
 	for (const [name, entry] of Object.entries(properties)) {
 		if (typeof entry.syntax !== "string") continue;
 		const alternatives = entry.syntax.split("|").map((one) => one.trim());
-		if (!alternatives.some((one) => POSITION_ALTERNATIVE_REGEXP.test(one))) {
+		if (alternatives.every((one) => !POSITION_ALTERNATIVE_REGEXP.test(one))) {
 			continue;
 		}
 		if (
-			!alternatives.every(
+			alternatives.some(
 				(one) =>
-					POSITION_ALTERNATIVE_REGEXP.test(one) ||
-					KEYWORD_ALTERNATIVE_REGEXP.test(one)
+					!(
+						POSITION_ALTERNATIVE_REGEXP.test(one) ||
+						KEYWORD_ALTERNATIVE_REGEXP.test(one)
+					)
 			)
 		) {
 			continue;
@@ -2488,7 +2486,7 @@ const collectMergeableAtRules = (atRuleTable) => {
 	for (const [name, entry] of Object.entries(atRuleTable)) {
 		const syntax = entry.syntax;
 		if (typeof syntax !== "string") continue;
-		if (!RULE_HOLDING_BLOCKS.some((one) => syntax.includes(one))) continue;
+		if (RULE_HOLDING_BLOCKS.every((one) => !syntax.includes(one))) continue;
 		const bare = name.slice(1);
 		if (!replaced.has(bare)) out.push(bare);
 	}
@@ -2528,7 +2526,7 @@ const collectFilterFunctionOmitted = () => {
 		out.push([name, omitted]);
 	}
 	for (const [name] of stated) {
-		if (!out.some(([one]) => one === name)) {
+		if (out.every(([one]) => one !== name)) {
 			throw new Error(`\`${name}()\` no longer takes an optional argument`);
 		}
 	}
@@ -3405,7 +3403,7 @@ const collectNegativeAcceptingProperties = () => {
 				}
 			});
 			if (ownNumber || referenced.length === 0) continue;
-			if (!referenced.every((child) => accepting.has(child))) continue;
+			if (referenced.some((child) => !accepting.has(child))) continue;
 			accepting.add(name);
 			changed = true;
 		}
@@ -3427,7 +3425,7 @@ const collectLengthOnlyFunctions = () => {
 	for (const [name, syntax] of definitions) {
 		if (!name.endsWith("()")) continue;
 		const leaves = numericLeaves(syntax);
-		if (!leaves.some(([type]) => type === "length")) continue;
+		if (leaves.every(([type]) => type !== "length")) continue;
 		if (leaves.every(([type]) => type === "length" || type === "percentage")) {
 			names.add(name.slice(0, -2).toLowerCase());
 		}
@@ -5880,7 +5878,7 @@ const encodeVersion = (version) => {
 	if (version === false || version === null || version === undefined) {
 		return null;
 	}
-	const [major, minor] = String(version).replace(/^≤/, "").split(".");
+	const [major, minor] = String(version).replace(/^≤/, "").split(".", 2);
 	const parsedMajor = Number.parseInt(major, 10);
 	if (Number.isNaN(parsedMajor)) return null;
 	return parsedMajor * 100000 + (Number.parseInt(minor, 10) || 0);
@@ -6005,11 +6003,11 @@ const collectSelectorSupport = () => {
 		if (entry.groups.includes("CSS Paged Media")) continue;
 		const match = /^(::?)([-\w]+)(\()?/.exec(entry.syntax || "");
 		if (match === null) continue;
-		const [, colons, name, call] = match;
+		const [, colons, name, call = ""] = match;
 		if (!bcd.css.selectors[name]) continue;
 		// `::cue` and `::cue()` are two pseudos to a parser, each valid only in
 		// its own shape.
-		const spelling = `${colons}${name}${call || ""}`;
+		const spelling = `${colons}${name}${call}`;
 		if (spellings.has(spelling)) continue;
 		spellings.add(spelling);
 		table.push([spelling, collectSupportedFrom([`css.selectors.${name}`])]);
@@ -6273,7 +6271,7 @@ const collectPrefixes = (compat, name, alternatives) => {
 			? allowed
 			: ENGINE_PREFIXES;
 		for (const [entry, spelling, prefixedFrom] of covering) {
-			if (!reachable.some((prefix) => spelling.startsWith(prefix))) continue;
+			if (reachable.every((prefix) => !spelling.startsWith(prefix))) continue;
 			// A spelling the engine itself dropped ends there rather than where the
 			// unprefixed one arrived: `-moz-outline` went in Firefox 3.6, six years
 			// before the property it stood for was complete.
@@ -6343,8 +6341,8 @@ const collectPrefixTable = (
 		const kept =
 			excluded === undefined
 				? spellings
-				: spellings.filter(
-						([spelling]) => !excluded.some((p) => spelling.startsWith(p))
+				: spellings.filter(([spelling]) =>
+						excluded.every((p) => !spelling.startsWith(p))
 					);
 		if (kept.length !== 0) table.push([name, kept]);
 	}
@@ -7890,7 +7888,7 @@ const COLOR_KEYWORDS = ${setLiteral(colorKeywords)};
 // \`border\`, \`border-top\` and \`border-block-start-color\` all write its longhands
 // and \`mdn-data\`'s \`computed\` lists only some of them.
 const BOX_FAMILY_PREFIX = new Map([${boxLonghands
-		.map(([shorthand]) => `["${shorthand}", "${shorthand.split("-")[0]}"]`)
+		.map(([shorthand]) => `["${shorthand}", "${shorthand.split("-", 1)[0]}"]`)
 		.join(", ")}]);
 
 // Functions that take a \`<color>\` directly, so a hash among their arguments is a

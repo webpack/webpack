@@ -1,6 +1,6 @@
 "use strict";
 
-/** @typedef {import("../../../../types").Configuration} Configuration */
+/** @import { Configuration } from "../../../../types" */
 
 /**
  * @param {Configuration} config the config differences

@@ -2,14 +2,7 @@
 
 const fs = require("fs");
 
-const findFile = (files, regex) =>
-	files.find((file) => {
-		if (regex.test(file)) {
-			return true;
-		}
-
-		return false;
-	});
+const findFile = (files, regex) => files.find((file) => regex.test(file));
 
 const verifyFilenameLength = (filename, expectedNameLength) => {
 	expect(filename).toMatch(new RegExp(`^.{${expectedNameLength}}$`));

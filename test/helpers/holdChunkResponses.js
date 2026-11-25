@@ -47,7 +47,9 @@ const moduleScope = (scope, options) => {
 			for (const response of held.splice(0)) response.deliver();
 		},
 		fail(pattern) {
-			for (const response of held.filter((item) => pattern.test(item.url))) {
+			for (const response of held) {
+				if (!pattern.test(response.url)) continue;
+
 				held.splice(held.indexOf(response), 1);
 				response.fail();
 			}

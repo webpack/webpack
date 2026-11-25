@@ -1,8 +1,6 @@
 "use strict";
 
-const webpack = require("../../../../");
-
-const { DefinePlugin } = webpack;
+const { DefinePlugin } = require("../../../../");
 
 /** @type {import("../../../../").Configuration} */
 module.exports = {

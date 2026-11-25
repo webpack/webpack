@@ -38,8 +38,8 @@ const SWC_SMALLER = {
 	...BY_DESIGN.SWC_SMALLER
 };
 
-/** @typedef {import("terser").MinifyOptions} MinifyOptions */
-/** @typedef {import("../../lib/javascript/syntax-parser").JavascriptProcessOptions} JavascriptProcessOptions */
+/** @import { MinifyOptions } from "terser" */
+/** @import { JavascriptProcessOptions } from "../../lib/javascript/syntax-parser" */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }> | { code?: string }} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */
@@ -94,7 +94,9 @@ const keptNames = (own) => {
 	if (!compress || typeof compress !== "object") return {};
 	/** @type {{ keep_fnames?: boolean, keep_classnames?: boolean }} */
 	const names = {};
-	if (compress.keep_fnames !== undefined) names.keep_fnames = compress.keep_fnames;
+	if (compress.keep_fnames !== undefined) {
+		names.keep_fnames = compress.keep_fnames;
+	}
 	if (compress.keep_classnames !== undefined) {
 		names.keep_classnames = compress.keep_classnames;
 	}
@@ -178,9 +180,7 @@ if (fs.existsSync(reminifyFile)) {
 			stdout,
 			reminify
 		}) =>
-			stdout && reminify
-				? { ...copy(set), ...keptNames(own) }
-				: undefined;
+			stdout && reminify ? { ...copy(set), ...keptNames(own) } : undefined;
 	}
 }
 
@@ -211,7 +211,7 @@ const listFiles = (directory) =>
 const nodeSatisfies = (range) => {
 	const match = /^>=\s*(\d+)(?:\.0\.0)?$/.exec(range);
 	if (!match) throw new Error(`Unsupported node_version "${range}"`);
-	return Number(process.versions.node.split(".")[0]) >= Number(match[1]);
+	return Number(process.versions.node.split(".", 1)[0]) >= Number(match[1]);
 };
 
 /**
@@ -273,7 +273,13 @@ const readSwcPortOutput = (file, label) => {
 	// swc ported the files before terser renamed `drop_unused.js` and others
 	// to `drop-unused.js`, and keeps the older spelling.
 	for (const name of new Set([file.replace(/-/g, "_"), file])) {
-		const output = path.join(swcTestsDir, "terser/compress", name, label, "output.js");
+		const output = path.join(
+			swcTestsDir,
+			"terser/compress",
+			name,
+			label,
+			"output.js"
+		);
 		if (
 			swcPortPassing.has(`${name}/${label}/input.js`) &&
 			fs.existsSync(output)
@@ -339,7 +345,7 @@ const readCompressCases = (file, { AST, parse }) => {
 				if (body instanceof AST.AST_BlockStatement) {
 					test[label] = blockBody(body.start.pos);
 				} else if (!(body instanceof AST.AST_SimpleStatement)) {
-					continue;
+					// Nothing
 				} else if (label === "expect_stdout") {
 					test.expect_stdout = readExpectedStdout(body.body, AST, name);
 				} else if (label === "reminify") {
@@ -480,7 +486,10 @@ const readSwcTest = (file, { knows }) => {
 	const readJson = (at) =>
 		fs.existsSync(at) ? JSON.parse(fs.readFileSync(at, "utf8")) : undefined;
 	let dir = path.dirname(file);
-	while (dir.startsWith(swcTestsDir) && !fs.existsSync(path.join(dir, "config.json"))) {
+	while (
+		dir.startsWith(swcTestsDir) &&
+		!fs.existsSync(path.join(dir, "config.json"))
+	) {
 		dir = path.dirname(dir);
 	}
 	// swc reads a config that leaves `defaults` unnamed as naming it true, where
@@ -560,7 +569,15 @@ const readRustString = (text, at) => {
 	}
 	if (text[at] !== '"') return undefined;
 	/** @type {Record<string, string>} */
-	const escaped = { n: "\n", r: "\r", t: "\t", 0: "\0", "\\": "\\", '"': '"', "'": "'" };
+	const escaped = {
+		n: "\n",
+		r: "\r",
+		t: "\t",
+		0: "\0",
+		"\\": "\\",
+		'"': '"',
+		"'": "'"
+	};
 	let value = "";
 	let i = at + 1;
 	for (; text[i] !== '"'; i++) {
@@ -571,10 +588,14 @@ const readRustString = (text, at) => {
 		const next = text[++i];
 		if (next === "u") {
 			const close = text.indexOf("}", i);
-			value += String.fromCodePoint(Number.parseInt(text.slice(i + 2, close), 16));
+			value += String.fromCodePoint(
+				Number.parseInt(text.slice(i + 2, close), 16)
+			);
 			i = close;
 		} else if (next === "x") {
-			value += String.fromCharCode(Number.parseInt(text.slice(i + 1, i + 3), 16));
+			value += String.fromCharCode(
+				Number.parseInt(text.slice(i + 1, i + 3), 16)
+			);
 			i += 2;
 		} else if (next === "\n") {
 			// A line continuation, which drops the break and the indent after it.
@@ -632,7 +653,11 @@ const readSwcExecTests = (file, { knows }) => {
 			const word = /^\w+/.exec(test.slice(i));
 			if (!word) throw new Error(`Unread argument to ${call[1]} in ${name}`);
 			args.push(
-				word[0] === "true" ? true : word[0] === "false" ? false : bound.get(word[0])
+				word[0] === "true"
+					? true
+					: word[0] === "false"
+						? false
+						: bound.get(word[0])
 			);
 			i += word[0].length;
 		}
@@ -645,7 +670,10 @@ const readSwcExecTests = (file, { knows }) => {
 		/** @type {EXPECTED_ANY} */
 		let mangle = SWC_EXEC_MANGLE;
 		if (call[1] === "run_exec_test") {
-			compress = { defaults: true, ...JSON.parse(/** @type {string} */ (config)) };
+			compress = {
+				defaults: true,
+				...JSON.parse(/** @type {string} */ (config))
+			};
 			mangle = skipMangle ? false : SWC_EXEC_MANGLE;
 		} else if (call[1] === "run_mangle_props_exec_test") {
 			compress = false;
@@ -687,7 +715,8 @@ const readSwcMangleTests = (file, { knows }) => {
 	 * @param {string} list a `vec![atom!("…"), …]`
 	 * @returns {string[]} the names in it
 	 */
-	const atoms = (list) => [...list.matchAll(/atom!\("([^"]*)"\)/g)].map((m) => m[1]);
+	const atoms = (list) =>
+		[...list.matchAll(/atom!\("([^"]*)"\)/g)].map((m) => m[1]);
 	/** @type {Source[]} */
 	const sources = [];
 	for (const test of text.split("#[test]").slice(1)) {
@@ -701,9 +730,8 @@ const readSwcMangleTests = (file, { knows }) => {
 		);
 		if (!literal) throw new Error(`Unread source in ${name}`);
 		const struct = test.slice(at);
-		const props = /props:\s*Some\(ManglePropertiesOptions\s*\{([\s\S]*?)\}\)/.exec(
-			struct
-		);
+		const props =
+			/props:\s*Some\(ManglePropertiesOptions\s*\{([\s\S]*?)\}\)/.exec(struct);
 		const outside = props ? struct.replace(props[0], "") : struct;
 		/** @type {Record<string, EXPECTED_ANY>} */
 		const mangle = {};
@@ -721,7 +749,10 @@ const readSwcMangleTests = (file, { knows }) => {
 		// A field read by none of the above is an option this would drop unseen.
 		const read = new Set(["top_level", "reserved", ...Object.keys(mangle)]);
 		for (const [scope, fields] of [
-			["MangleOptions", outside.slice(0, outside.indexOf("..Default::default()"))],
+			[
+				"MangleOptions",
+				outside.slice(0, outside.indexOf("..Default::default()"))
+			],
 			["ManglePropertiesOptions", props ? props[1] : ""]
 		]) {
 			for (const field of fields
@@ -876,7 +907,11 @@ const CORPORA = [
 		name: "terser input",
 		submodule: "test/external/terser",
 		directory: path.join(referenceDir, "test/input"),
-		groups: groupByDirectory(path.join(referenceDir, "test/input"), 0, () => true),
+		groups: groupByDirectory(
+			path.join(referenceDir, "test/input"),
+			0,
+			() => true
+		),
 		read: readWholeFile,
 		optionSets: Object.keys(OPTION_SETS),
 		minimum: 30
@@ -931,7 +966,9 @@ const CORPORA = [
 		name: "swc exec",
 		submodule: "test/external/swc",
 		directory: swcTestsDir,
-		groups: () => [{ name: "exec.rs", files: [path.join(swcTestsDir, "exec.rs")] }],
+		groups: () => [
+			{ name: "exec.rs", files: [path.join(swcTestsDir, "exec.rs")] }
+		],
 		read: readSwcExecTests,
 		optionSets: [
 			"its own options",
@@ -1067,7 +1104,11 @@ const REFUSED_BY_REFERENCE = {
 
 // terser's parse options for what is not a program in the spec's sense: an
 // expression alone, TypeScript, and a stricter reading than the spec's.
-const DROPPED_PARSE_OPTIONS = ["expression", "experimental_typescript", "strict"];
+const DROPPED_PARSE_OPTIONS = [
+	"expression",
+	"experimental_typescript",
+	"strict"
+];
 
 const PRIVATE_UNDECLARED =
 	"a private name must be declared by a class enclosing it (AllPrivateIdentifiersValid)";
@@ -1075,17 +1116,20 @@ const SETTER_ARITY = "a setter has exactly one parameter";
 const EXPORT_RESERVED =
 	"an export with no `from` names a binding, which a reserved word cannot be";
 const DUPLICATE_EXPORT = "a module exports each name once";
-const NEW_TARGET = "`new.target` is only allowed inside a function or static block";
+const NEW_TARGET =
+	"`new.target` is only allowed inside a function or static block";
 const PARAMETER_CLASH =
 	"a parameter list with a pattern may not bind a name twice, sloppy or not";
 const REDECLARED =
 	"a lexical binding, an import's included, may not share a name in its scope";
 const SUPER_OUTSIDE = "`super` is only allowed inside a method";
 const AWAIT_IN_SCRIPT = "top-level `await` is only allowed in a module";
-const USING_IN_SCRIPT = "`using` may not be declared at the top level of a script";
+const USING_IN_SCRIPT =
+	"`using` may not be declared at the top level of a script";
 const AUTO_ACCESSOR =
 	"`accessor` fields are a proposal; the spec reads `accessor` as a field name, which a name may not follow";
-const INVALID_PATTERN = "a regular expression literal must hold a valid pattern";
+const INVALID_PATTERN =
+	"a regular expression literal must hold a valid pattern";
 const ARGUMENTS_LABEL =
 	"a label named `arguments` is no reference to it, which acorn refuses in a class field or static block, as webpack's parser does";
 const FOR_OF_SEQUENCE =
@@ -1098,34 +1142,62 @@ const FOR_OF_SEQUENCE =
  * @type {Record<string, string>}
  */
 const REFUSED_BY_WEBPACK = {
-	"oxc minifier: ecmascript/may_have_side_effects.rs:closure_compiler_tests:356c6931": SUPER_OUTSIDE,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:307b737b": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:65c76813": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:d13726c2": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:c25bcaeb": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:861375ff": AUTO_ACCESSOR,
-	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:e5e35fde": AUTO_ACCESSOR,
-	"oxc minifier: mangler/property_mangler.rs:rewrites_defaults_class_fields_and_accessors:924d5604": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_declaration.rs:remove_unused_class_declaration:2afd40bb": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_declaration.rs:remove_unused_class_declaration:e5017813": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:f6f9d41d": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:58ff03dc": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_expression.rs:test_property_write_side_effects:5af693d4": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_accessors:d782c9b2": AUTO_ACCESSOR,
-	"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_accessors:ad77658e": AUTO_ACCESSOR,
-	"oxc minifier: peephole/replace_known_methods.rs:test_fold_regex_source:a1e7aaf5": INVALID_PATTERN,
-	"oxc minifier: peephole/replace_known_methods.rs:test_fold_regex_source:b15dc347": INVALID_PATTERN,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:8fd646b7": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:853a086e": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:d04aa03a": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:d339968e": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:0cb88d8f": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:6755e2dd": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:33c3ebc8": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:0cdfae5d": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:698b1c42": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:31e75e2c": AUTO_ACCESSOR,
-	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:9cb323d3": AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:closure_compiler_tests:356c6931":
+		SUPER_OUTSIDE,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:307b737b":
+		AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:65c76813":
+		AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:d13726c2":
+		AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:c25bcaeb":
+		AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:861375ff":
+		AUTO_ACCESSOR,
+	"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:e5e35fde":
+		AUTO_ACCESSOR,
+	"oxc minifier: mangler/property_mangler.rs:rewrites_defaults_class_fields_and_accessors:924d5604":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_declaration.rs:remove_unused_class_declaration:2afd40bb":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_declaration.rs:remove_unused_class_declaration:e5017813":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:f6f9d41d":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:58ff03dc":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_expression.rs:test_property_write_side_effects:5af693d4":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_accessors:d782c9b2":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/remove_unused_private_members.rs:test_remove_unused_private_accessors:ad77658e":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/replace_known_methods.rs:test_fold_regex_source:a1e7aaf5":
+		INVALID_PATTERN,
+	"oxc minifier: peephole/replace_known_methods.rs:test_fold_regex_source:b15dc347":
+		INVALID_PATTERN,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:8fd646b7":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:853a086e":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:d04aa03a":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:d339968e":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:0cb88d8f":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:6755e2dd":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:33c3ebc8":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:0cdfae5d":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:698b1c42":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:31e75e2c":
+		AUTO_ACCESSOR,
+	"oxc minifier: peephole/substitute_alternate_syntax.rs:test_property_key:9cb323d3":
+		AUTO_ACCESSOR,
 	"swc minifier: fixture/issues/11133/input.js": REDECLARED,
 	"terser compress: class-properties/parens_in": PRIVATE_UNDECLARED,
 	"terser compress: class-properties/parens_in_10": PRIVATE_UNDECLARED,
@@ -1139,11 +1211,14 @@ const REFUSED_BY_WEBPACK = {
 	"terser compress: class-properties/parens_in_8": PRIVATE_UNDECLARED,
 	"terser compress: class-properties/parens_in_9": PRIVATE_UNDECLARED,
 	"terser compress: class-properties/privatein_precedence": PRIVATE_UNDECLARED,
-	"terser compress: class-properties/privatein_precedence_2": PRIVATE_UNDECLARED,
-	"terser compress: class-properties/privatein_precedence_3": PRIVATE_UNDECLARED,
+	"terser compress: class-properties/privatein_precedence_2":
+		PRIVATE_UNDECLARED,
+	"terser compress: class-properties/privatein_precedence_3":
+		PRIVATE_UNDECLARED,
 	"terser compress: evaluate/unsafe_object_accessor": SETTER_ARITY,
 	"terser compress: export/export_default_string": EXPORT_RESERVED,
-	"terser compress: export/export_multiple_named_default_string": EXPORT_RESERVED,
+	"terser compress: export/export_multiple_named_default_string":
+		EXPORT_RESERVED,
 	"terser compress: export/export_named_string": DUPLICATE_EXPORT,
 	"terser compress: export/keyword_invalid_1": EXPORT_RESERVED,
 	"terser compress: export/keyword_invalid_2": EXPORT_RESERVED,
@@ -1154,26 +1229,29 @@ const REFUSED_BY_WEBPACK = {
 	"terser compress: harmony/issue_2794_6": FOR_OF_SEQUENCE,
 	"terser compress: harmony/new_target": NEW_TARGET,
 	"terser compress: issue-12/keep_name_of_setter": SETTER_ARITY,
-	"terser compress: parameters/accept_duplicated_parameters_in_non_strict_without_spread_or_default_assignment": PARAMETER_CLASH,
+	"terser compress: parameters/accept_duplicated_parameters_in_non_strict_without_spread_or_default_assignment":
+		PARAMETER_CLASH,
 	"terser compress: pure_getters/issue_2265_3": SETTER_ARITY,
 	"terser compress: reduce_vars/defun_catch_4": REDECLARED,
 	"terser compress: reduce_vars/defun_catch_5": REDECLARED,
 	"terser compress: super/super_can_be_parsed": SUPER_OUTSIDE,
 	"terser compress: toplevel-await/toplevel_await": AWAIT_IN_SCRIPT,
 	"terser compress: toplevel-await/toplevel_await_for": AWAIT_IN_SCRIPT,
-	"terser compress: using/multiple_using_can_be_joined_with_join_vars": USING_IN_SCRIPT,
+	"terser compress: using/multiple_using_can_be_joined_with_join_vars":
+		USING_IN_SCRIPT,
 	"terser compress: using/unused_using_should_be_kept": USING_IN_SCRIPT,
 	"terser compress: using/using_basic": USING_IN_SCRIPT,
 	"terser compress: using/using_definition_transformer": USING_IN_SCRIPT,
 	"terser compress: using/using_multiple": USING_IN_SCRIPT,
-	"terser compress: using/using_should_be_kept_with_defaults_unsafe": USING_IN_SCRIPT,
+	"terser compress: using/using_should_be_kept_with_defaults_unsafe":
+		USING_IN_SCRIPT,
 	"terser compress: using/using_with_comments": USING_IN_SCRIPT,
 	"terser compress: yield/yield_as_identifier_outside_strict_mode": REDECLARED,
 	"test262: grammar-field-accessor.js": AUTO_ACCESSOR,
 	"test262: private-auto-accessor.js": AUTO_ACCESSOR,
 	"test262: public-auto-accessor.js": AUTO_ACCESSOR,
 	"test262: arrow-body-arguments-label.js": ARGUMENTS_LABEL,
-	"test262: static-init-arguments-label.js": ARGUMENTS_LABEL,
+	"test262: static-init-arguments-label.js": ARGUMENTS_LABEL
 };
 /* cspell:enable */
 
@@ -1273,7 +1351,9 @@ const minifyAllWithOxc = (jobs) => {
 	});
 	if (child.status === 0) return JSON.parse(child.stdout.toString("utf8"));
 	if (jobs.length === 1) {
-		return [new Error(child.stderr.toString("utf8").split("\n")[1] || "aborted")];
+		return [
+			new Error(child.stderr.toString("utf8").split("\n", 2)[1] || "aborted")
+		];
 	}
 	return jobs.flatMap((job) => minifyAllWithOxc([job]));
 };
@@ -1327,7 +1407,9 @@ const formatLeads = (leads) => {
 			)
 			.map(
 				(lead) =>
-					`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${lead.ours - lead.theirs} | ${lead.oursGzip - lead.theirsGzip} |`
+					`| ${lead.source} | ${lead.rival} | ${lead.ours} | ${lead.theirs} | ${
+						lead.ours - lead.theirs
+					} | ${lead.oursGzip - lead.theirsGzip} |`
 			)
 	];
 	/**
@@ -1341,7 +1423,9 @@ const formatLeads = (leads) => {
 		"",
 		"Both printed alone by webpack's printer; gzip decides, raw breaks a tie.",
 		"",
-		`Worse: ${count("worse")}, the same: ${count("same")}, better: ${count("better")}.`,
+		`Worse: ${count("worse")}, the same: ${count("same")}, better: ${count(
+			"better"
+		)}.`,
 		"",
 		"## Worse",
 		"",
@@ -1383,7 +1467,10 @@ const staleEntries = (seen) => {
 describe("JavaScript minifier", () => {
 	const [part, parts] = currentPart();
 	// Shared by the parts of one jest run, which all have its process as parent.
-	const runDir = path.join(os.tmpdir(), `webpack-minify-corpora-${process.ppid}`);
+	const runDir = path.join(
+		os.tmpdir(),
+		`webpack-minify-corpora-${process.ppid}`
+	);
 
 	/** @type {{ reader?: CaseReader, sandbox?: { run_code: (code: string, prepend: string) => string | Error, same_stdout: (expected: string | Error, actual: string | Error) => boolean } }} */
 	const loaded = {};
@@ -1556,7 +1643,11 @@ describe("JavaScript minifier", () => {
 				: undefined;
 			if (ours > theirs && (budget === undefined || ours > theirs * budget)) {
 				bigger.push(
-					`${name}: ${ours} B gzip, against terser's ${theirs} B, ${(ours / theirs).toFixed(4)} times it${budget === undefined ? "" : ` where the budget is ${budget}`}`
+					`${name}: ${ours} B gzip, against terser's ${theirs} B, ${(
+						ours / theirs
+					).toFixed(4)} times it${
+						budget === undefined ? "" : ` where the budget is ${budget}`
+					}`
 				);
 			} else if (ours <= theirs && budget !== undefined) {
 				bigger.push(
@@ -1566,13 +1657,15 @@ describe("JavaScript minifier", () => {
 		}
 		if (bigger.length > 0) {
 			throw new Error(
-				`Corpora whose outputs gzip bigger than terser's in total:\n${bigger.join("\n")}`
+				`Corpora whose outputs gzip bigger than terser's in total:\n${bigger.join(
+					"\n"
+				)}`
 			);
 		}
 	};
 
 	it("should run only the node_version ranges it can read", () => {
-		const major = Number(process.versions.node.split(".")[0]);
+		const major = Number(process.versions.node.split(".", 1)[0]);
 		expect(nodeSatisfies(`>=${major}`)).toBe(true);
 		expect(nodeSatisfies(`>= ${major}`)).toBe(true);
 		expect(nodeSatisfies(`>=${major}.0.0`)).toBe(true);
@@ -1586,9 +1679,8 @@ describe("JavaScript minifier", () => {
 	 * @returns {string | Error} what it prints, or the error it throws
 	 */
 	const run = (stdout, code) => {
-		const { run_code: runCode } = /** @type {NonNullable<typeof loaded.sandbox>} */ (
-			loaded.sandbox
-		);
+		const { run_code: runCode } =
+			/** @type {NonNullable<typeof loaded.sandbox>} */ (loaded.sandbox);
 		microtasks = Boolean(stdout.microtasks);
 		try {
 			return runCode(code, stdout.prepend);
@@ -1614,12 +1706,16 @@ describe("JavaScript minifier", () => {
 				? { expected: printed }
 				: {};
 		}
-		if (sameStdout(stdout.expected, printed)) return { expected: stdout.expected };
+		if (sameStdout(stdout.expected, printed)) {
+			return { expected: stdout.expected };
+		}
 		// swc's harness runs a whole Node process, with `process` and timers,
 		// where terser's sandbox has neither: only terser's own cases must agree.
 		return stdout.strict
 			? {
-					disagrees: `the input prints ${String(printed)}, not ${String(stdout.expected)}`
+					disagrees: `the input prints ${String(printed)}, not ${String(
+						stdout.expected
+					)}`
 				}
 			: {};
 	};
@@ -1639,48 +1735,52 @@ describe("JavaScript minifier", () => {
 
 			if (part === 1) {
 				it("should read every source the corpus holds", () => {
-				const reader = /** @type {CaseReader} */ (loaded.reader);
-				let count = 0;
-				let own = 0;
-				let defaultsUnnamed = 0;
-				let runnable = 0;
-				let rivals = 0;
-				for (const { files } of allGroups) {
-					for (const file of files) {
-						for (const source of corpus.read(file, reader)) {
-							count++;
-							if (source.own) own++;
-							if (source.stdout) runnable++;
-							if (source.rival) rivals++;
-							if (
-								source.own &&
-								source.own.compress &&
-								source.own.compress.defaults === undefined
-							) {
-								defaultsUnnamed++;
+					const reader = /** @type {CaseReader} */ (loaded.reader);
+					let count = 0;
+					let own = 0;
+					let defaultsUnnamed = 0;
+					let runnable = 0;
+					let rivals = 0;
+					for (const { files } of allGroups) {
+						for (const file of files) {
+							for (const source of corpus.read(file, reader)) {
+								count++;
+								if (source.own) own++;
+								if (source.stdout) runnable++;
+								if (source.rival) rivals++;
+								if (
+									source.own &&
+									source.own.compress &&
+									source.own.compress.defaults === undefined
+								) {
+									defaultsUnnamed++;
+								}
 							}
 						}
 					}
-				}
-				expect(count).toBeGreaterThan(corpus.minimum);
-				if (corpus.minimumOwn !== undefined) {
-					expect(own).toBeGreaterThan(corpus.minimumOwn);
-				}
-				if (corpus.minimumRun !== undefined) {
-					expect(runnable).toBeGreaterThan(corpus.minimumRun);
-				}
-				// Rivals are read from swc's checkout, which another corpus may run without.
-				if (corpus.minimumRival !== undefined && isPresent(swcTestsDir)) {
-					expect(rivals).toBeGreaterThan(corpus.minimumRival);
-				}
-				if (corpus.ownDefaultsNamed) expect(defaultsUnnamed).toBe(0);
-			});
+					expect(count).toBeGreaterThan(corpus.minimum);
+					if (corpus.minimumOwn !== undefined) {
+						expect(own).toBeGreaterThan(corpus.minimumOwn);
+					}
+					if (corpus.minimumRun !== undefined) {
+						expect(runnable).toBeGreaterThan(corpus.minimumRun);
+					}
+					// Rivals are read from swc's checkout, which another corpus may run without.
+					if (corpus.minimumRival !== undefined && isPresent(swcTestsDir)) {
+						expect(rivals).toBeGreaterThan(corpus.minimumRival);
+					}
+					if (corpus.ownDefaultsNamed) {
+						expect(defaultsUnnamed).toBe(0);
+					}
+				});
 			}
 
 			groupCounts.defined += allGroups.length;
 			for (const group of allGroups) {
 				it(
-					`should run as the input does, no bigger than the reference: ${group.name || "."}`,
+					`should run as the input does, no bigger than the reference: ${
+						group.name || "."
+					}`,
 					async () => {
 						groupCounts.run++;
 
@@ -1751,8 +1851,14 @@ describe("JavaScript minifier", () => {
 						// `--parts=<n>`: each part claims the next chunk of sources no other part
 						// took, so one that ends its chunks early takes more and the parts end
 						// together; a chunk is minified by oxc in one batch.
-						for (let start = 0; start < allSources.length; start += CLAIM_SIZE) {
-							if (!claimInPart(`${corpus.name}/${group.name}/${start}`)) continue;
+						for (
+							let start = 0;
+							start < allSources.length;
+							start += CLAIM_SIZE
+						) {
+							if (!claimInPart(`${corpus.name}/${group.name}/${start}`)) {
+								continue;
+							}
 							const sources = allSources.slice(start, start + CLAIM_SIZE);
 							const oxcSet = "the default minimizer's options";
 							// webpack's minimizer reads `ecma` off `output.environment`, 2020 for a
@@ -1852,10 +1958,15 @@ describe("JavaScript minifier", () => {
 										}
 										return sameStdout(wanted, actual)
 											? undefined
-											: `\n\toutput:   ${code}\n\texpected: ${String(wanted)}\n\tprinted:  ${String(actual)}`;
+											: `\n\toutput:   ${code}\n\texpected: ${String(
+													wanted
+												)}\n\tprinted:  ${String(actual)}`;
 									};
 									const key = `${corpus.name}: ${source.name} (${setName})`;
-									if ((theirs.error === undefined) !== (ours.error === undefined)) {
+									if (
+										(theirs.error === undefined) !==
+										(ours.error === undefined)
+									) {
 										const webpackRefusal =
 											ours.error !== undefined
 												? `${corpus.name}: ${source.name}`
@@ -1887,10 +1998,17 @@ describe("JavaScript minifier", () => {
 											refusalsSeen.add(/** @type {string} */ (theirs.error));
 										} else {
 											differences.push(
-												`${source.name} (${setName}) refused by one minifier alone\n\treference: ${JSON.stringify(theirs)}\n\twebpack:   ${JSON.stringify(ours)}`
+												`${
+													source.name
+												} (${setName}) refused by one minifier alone\n\treference: ${JSON.stringify(
+													theirs
+												)}\n\twebpack:   ${JSON.stringify(ours)}`
 											);
 										}
-									} else if (theirs.code !== undefined && ours.code !== undefined) {
+									} else if (
+										theirs.code !== undefined &&
+										ours.code !== undefined
+									) {
 										const total =
 											terserTotals[corpus.name] ||
 											(terserTotals[corpus.name] = { ours: 0, theirs: 0 });
@@ -1931,7 +2049,9 @@ describe("JavaScript minifier", () => {
 									const oxc = oxcOutputs.get(source);
 									const oxcKey = `${corpus.name}: ${source.name}`;
 									if (oxc instanceof Error && setName === oxcSet) {
-										if (Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)) {
+										if (
+											Object.prototype.hasOwnProperty.call(OXC_SMALLER, oxcKey)
+										) {
 											rivalSmallerSeen.add(`OXC_SMALLER: ${oxcKey}`);
 										} else {
 											differences.push(`${oxcKey} aborts oxc: ${oxc.message}`);
@@ -1943,7 +2063,9 @@ describe("JavaScript minifier", () => {
 										// A smaller output that prints wrong is no lead to follow.
 										!(expected !== undefined && runs && misprint(oxc))
 									) {
-										const plain = /** @type {MinifyOptions} */ (optionsFor(source));
+										const plain = /** @type {MinifyOptions} */ (
+											optionsFor(source)
+										);
 										// As webpack's minimizer passes it, to the compressor too.
 										const modern = await outcome(minify, source.input, {
 											...plain,
@@ -1988,5 +2110,4 @@ describe("JavaScript minifier", () => {
 			}
 		});
 	}
-
 });

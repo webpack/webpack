@@ -113,17 +113,16 @@ const validate = async (filePath) => {
 	return errors;
 };
 
-const main = async () => {
-	const changedFiles = await getChangedFiles();
+const changedFiles = await getChangedFiles();
 
-	if (changedFiles.length === 0) {
-		console.log("No changed changeset files found.");
-		return;
-	}
-
+if (changedFiles.length === 0) {
+	console.log("No changed changeset files found.");
+} else {
 	const failures = [];
+
 	for (const filePath of changedFiles) {
 		const errors = await validate(filePath);
+
 		for (const error of errors) {
 			failures.push(`${filePath}: ${error}`);
 		}
@@ -131,11 +130,11 @@ const main = async () => {
 
 	if (failures.length > 0) {
 		console.error("Changeset validation failed:");
+
 		for (const failure of failures) {
 			console.error(`- ${failure}`);
 		}
+
 		process.exitCode = 1;
 	}
-};
-
-main();
+}

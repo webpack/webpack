@@ -1,8 +1,8 @@
 "use strict";
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
-/** @typedef {import("../../../../lib/module/NormalModule")} NormalModule */
-/** @typedef {import("../../../../lib/javascript/syntax").JavascriptScopes} JavascriptScopes */
+/** @import Compiler from "../../../../lib/Compiler" */
+/** @import NormalModule from "../../../../lib/module/NormalModule" */
+/** @import { JavascriptScopes } from "../../../../lib/javascript/syntax" */
 /** @typedef {ReturnType<JavascriptScopes["analyzeScope"]>} ScopeAnalysis */
 
 const PLUGIN_NAME = "scope-analysis-api";

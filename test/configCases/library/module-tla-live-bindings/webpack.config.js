@@ -73,14 +73,12 @@ module.exports = ["node14", "web", ["web", "node14"]].flatMap(
 										import: library,
 										library: { type: "module", entryExports: "all" }
 									},
-									...(index === 0
-										? {
-												legacy: {
-													import: "./store.js",
-													library: { type: "modern-module" }
-												}
-											}
-										: {})
+									...(index === 0 && {
+										legacy: {
+											import: "./store.js",
+											library: { type: "modern-module" }
+										}
+									})
 								},
 								output: { module: true, filename: `[name]-${index}.mjs` },
 								externalsType: "module",

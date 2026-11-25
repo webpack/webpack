@@ -49,11 +49,11 @@ const variant = (
 });
 
 // Built here so the assertions don't self-match this file's source.
-const define = `${"__webpack_require__"}.d(`;
-const requireScope = `${"__webpack_require__"}`;
-const defineGetters = `${"__webpack_require__"}.d =`;
-const markNamespace = `${"__webpack_require__"}.r(`;
-const defineMarkNamespace = `${"__webpack_require__"}.r =`;
+const define = "__webpack_require__.d(";
+const requireScope = "__webpack_require__";
+const defineGetters = "__webpack_require__.d =";
+const markNamespace = "__webpack_require__.r(";
+const defineMarkNamespace = "__webpack_require__.r =";
 
 /** @type {import("../../../../").Configuration[]} */
 module.exports = [

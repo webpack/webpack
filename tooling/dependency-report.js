@@ -151,10 +151,7 @@ const collect = (dir) => {
 		if (location !== "" && !parent) continue;
 		const entry = packages[location];
 		/** @type {Map<string, string>} */
-		const ranges = new Map();
-		for (const [name, range] of Object.entries(entry.dependencies || {})) {
-			ranges.set(name, range);
-		}
+		const ranges = new Map(Object.entries(entry.dependencies || {}));
 		for (const [name, range] of Object.entries(
 			entry.optionalDependencies || {}
 		)) {
@@ -517,7 +514,6 @@ const install = (root) => {
 			installed
 		};
 	} finally {
-		// eslint-disable-next-line n/no-unsupported-features/node-builtins
 		fs.rmSync(dir, { recursive: true, force: true });
 	}
 };

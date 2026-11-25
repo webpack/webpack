@@ -39,10 +39,10 @@ module.exports = {
 				 * @returns {boolean} true when the file is there
 				 */
 				const exists = (file) => fs.existsSync(path.join(outputPath, file));
-				const expected =
-					currentWatchStep.step === "0"
-						? { "x.txt": true, "dir/a.txt": true }
-						: { "x.txt": true, "dir/a.txt": false };
+				const expected = {
+					"x.txt": true,
+					"dir/a.txt": currentWatchStep.step === "0"
+				};
 				for (const [file, present] of Object.entries(expected)) {
 					if (exists(file) !== present) {
 						compilation.errors.push(

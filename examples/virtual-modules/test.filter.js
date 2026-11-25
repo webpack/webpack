@@ -2,7 +2,7 @@
 
 module.exports = () => {
 	const nodeVersionMajor = Number.parseInt(
-		process.version.slice(1).split(".")[0],
+		process.version.slice(1).split(".", 1)[0],
 		10
 	);
 

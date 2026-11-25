@@ -20,9 +20,11 @@ export async function setup() {
 	}
 
 	const outputPath = fileURLToPath(
+		// eslint-disable-next-line unicorn/no-missing-local-resource
 		new URL("../../js/benchmark/three.module.min.js", import.meta.url)
 	);
 
+	// eslint-disable-next-line unicorn/no-missing-local-resource
 	await fs.mkdir(new URL("../../js/benchmark/", import.meta.url), {
 		recursive: true
 	});

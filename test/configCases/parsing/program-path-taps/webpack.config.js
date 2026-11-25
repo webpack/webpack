@@ -2,8 +2,8 @@
 
 const acorn = require("acorn");
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
-/** @typedef {import("../../../../lib/module/NormalModule")} NormalModule */
+/** @import Compiler from "../../../../lib/Compiler" */
+/** @import NormalModule from "../../../../lib/module/NormalModule" */
 /** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
 
 const PLUGIN_NAME = "program-path-taps";

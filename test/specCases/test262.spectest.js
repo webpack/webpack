@@ -473,7 +473,7 @@ const MODES = [
 
 const compile = async (entry, scenario, options = {}) =>
 	new Promise((resolve, reject) => {
-		const { exportsPresence, minify, ...webpackOptions } = options;
+		const { exportsPresence = false, minify, ...webpackOptions } = options;
 		const compiler = webpack({
 			...webpackOptions,
 			entry,
@@ -524,8 +524,8 @@ const compile = async (entry, scenario, options = {}) =>
 						// the exports object a CommonJS module gets.
 						topLevelThis: "global",
 						// For testing purposes, where the `export` is tested that it is not defined
-						exportsPresence: exportsPresence || false,
-						reexportExportsPresence: exportsPresence || false
+						exportsPresence,
+						reexportExportsPresence: exportsPresence
 					}
 				},
 				rules:
@@ -685,9 +685,10 @@ const create262Host = (context) => ({
 
 const createImportModuleDynamically =
 	(context, testFile, moduleCache) => async (specifier, referencing) => {
-		const identifier = referencing.identifier
-			? path.resolve(path.dirname(referencing.identifier), specifier)
-			: path.resolve(path.dirname(testFile), specifier);
+		const identifier = path.resolve(
+			path.dirname(referencing.identifier ? referencing.identifier : testFile),
+			specifier
+		);
 
 		if (moduleCache.has(identifier)) {
 			return moduleCache.get(identifier);
@@ -965,7 +966,7 @@ describe("test262", () => {
 						const stats = await compile(testFile, scenario, {
 							mode,
 							minify,
-							...(isLinkErrorTest ? { exportsPresence: "error" } : {}),
+							...(isLinkErrorTest && { exportsPresence: "error" }),
 							output: {
 								path: outputPath,
 								filename: path.relative(outputPath, outputFile)
@@ -1261,9 +1262,7 @@ describe("test262", () => {
 							byPromise.clear();
 						}
 						if (failed) return;
-						stale.push(
-							`${minify}: ${name} (${scenario}) — ${expected}`
-						);
+						stale.push(`${minify}: ${name} (${scenario}) — ${expected}`);
 					});
 				}
 			}
@@ -1273,7 +1272,11 @@ describe("test262", () => {
 	it("should list no case in MINIFIED_FAILURES that passes", () => {
 		if (stale.length === 0) return;
 		throw new Error(
-			`${stale.length} case(s) in MINIFIED_FAILURES pass now and must leave it:\n${stale.join("\n")}`
+			`${
+				stale.length
+			} case(s) in MINIFIED_FAILURES pass now and must leave it:\n${stale.join(
+				"\n"
+			)}`
 		);
 	});
 });

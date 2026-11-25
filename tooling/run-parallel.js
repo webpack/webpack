@@ -27,8 +27,12 @@ const runScript = (script) =>
 			: spawn("yarn", ["run", "--silent", script], { cwd: root, shell: true });
 		/** @type {Buffer[]} */
 		const output = [];
-		child.stdout.on("data", (chunk) => output.push(chunk));
-		child.stderr.on("data", (chunk) => output.push(chunk));
+		child.stdout.on("data", (chunk) => {
+			output.push(chunk);
+		});
+		child.stderr.on("data", (chunk) => {
+			output.push(chunk);
+		});
 		child.on("error", reject);
 		child.on("close", (code) => {
 			// Each script's output is printed whole, so runs never interleave.
@@ -38,16 +42,16 @@ const runScript = (script) =>
 	});
 
 const scripts = process.argv.slice(2);
+
 if (scripts.length === 0) {
 	throw new Error("Usage: node tooling/run-parallel.js <script> [<script>...]");
 }
 
-Promise.all(scripts.map(runScript)).then(
-	(codes) => {
+Promise.all(scripts.map(runScript))
+	.then((codes) => {
 		process.exitCode = Math.max(0, ...codes);
-	},
-	(err) => {
+	})
+	.catch((err) => {
 		console.error(err);
 		process.exitCode = 1;
-	}
-);
+	});

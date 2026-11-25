@@ -2,7 +2,7 @@
 
 const { WebpackError } = require("../../../../");
 
-/** @typedef {import("../../../../").Compilation} Compilation */
+/** @import { Compilation } from "../../../../" */
 
 /**
  * @param {Compilation} compilation the compilation

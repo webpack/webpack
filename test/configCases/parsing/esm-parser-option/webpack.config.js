@@ -1,7 +1,7 @@
 "use strict";
 
-/** @typedef {import("../../../../lib/Compiler")} Compiler */
-/** @typedef {import("../../../../lib/javascript/JavascriptParser")} JavascriptParser */
+/** @import Compiler from "../../../../lib/Compiler" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
 
 const PLUGIN_NAME = "CheckParserStateAliasPlugin";
 

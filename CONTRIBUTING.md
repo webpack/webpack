@@ -40,7 +40,7 @@ If you have created your own loader/plugin please include it on the relevant doc
 
 ## Setup
 
-[Set up your local webpack repository](_SETUP.md)
+[Set up your local webpack repository](./_SETUP.md)
 
 ## Submitting Changes
 

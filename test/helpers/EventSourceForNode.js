@@ -16,8 +16,9 @@ module.exports = class EventSource {
 		this.onerror = undefined;
 		/** @type {boolean} */
 		this.closed = false;
-		const request = (
-			url.startsWith("https:") ? require("https") : require("http")
+
+		const request = require(
+			url.startsWith("https:") ? "https" : "http"
 		).request(
 			url,
 			{
@@ -32,6 +33,7 @@ module.exports = class EventSource {
 				});
 			}
 		);
+
 		request.on("error", (err) => {
 			if (!this.closed && this.onerror) this.onerror({ message: err });
 		});

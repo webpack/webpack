@@ -46,8 +46,8 @@ module.exports.expectOnlyListedDeprecations = (getTestDirectory) => {
 		const file = path.join(getTestDirectory(), "deprecations.js");
 		/** @type {{ code: RegExp }[]} */
 		const allowed = fs.existsSync(file) ? require(file) : [];
-		const unexpected = deprecationTracker().filter(
-			({ code }) => !allowed.some((a) => a.code.test(code))
+		const unexpected = deprecationTracker().filter(({ code }) =>
+			allowed.every((a) => !a.code.test(code))
 		);
 		expect(unexpected).toEqual([]);
 	});

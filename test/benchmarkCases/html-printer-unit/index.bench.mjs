@@ -20,9 +20,7 @@ import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 
 /** @type {typeof import("../../../lib/html/syntax")} */
-const htmlSyntax = require("../../../lib/html/syntax.js");
-
-const { SourceProcessor } = htmlSyntax;
+const { SourceProcessor } = require("../../../lib/html/syntax.js");
 
 // No large real-world HTML ships in the repo, so generate a deterministic
 // document mixing tree construction, entity references, comments, lists/tables

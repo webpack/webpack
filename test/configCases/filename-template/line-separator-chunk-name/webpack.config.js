@@ -3,8 +3,7 @@
 const acorn = require("acorn");
 const webpack = require("../../../../");
 
-/** @typedef {import("../../../../").Compiler} Compiler */
-/** @typedef {import("../../../../").Configuration} Configuration */
+/** @import { Compiler, Configuration } from "../../../../" */
 
 /**
  * Fails the build when an emitted script does not parse as ES5, or a module

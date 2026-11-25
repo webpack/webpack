@@ -1,7 +1,5 @@
 "use strict";
 
-/** @import { Module } from "../../../" */
-
 const webpack = require("../../../");
 const ProvideSharedModule = require("../../../lib/sharing/ProvideSharedModule");
 
@@ -33,20 +31,18 @@ module.exports = {
 			const { chunk } = pathData;
 			if (chunk && "groupsIterable" in chunk) {
 				for (const group of chunk.groupsIterable) {
-					if (group.origins) {
-						for (const origin of group.origins) {
-							if (origin.module instanceof ProvideSharedModule && chunk.id) {
-								if (chunkIdChunkNameMap.has(chunk.id)) {
-									return `${chunkIdChunkNameMap.get(chunk.id)}.js`;
-								}
-
-								const sharedModuleName = origin.module._name;
-								const chunkName = `${sharedModuleName}-${chunk.id}--shared`;
-								usedSharedModuleNames.add(sharedModuleName);
-								chunkIdChunkNameMap.set(chunk.id, chunkName);
-
-								return `${chunkName}.js`;
+					for (const origin of group.origins || []) {
+						if (origin.module instanceof ProvideSharedModule && chunk.id) {
+							if (chunkIdChunkNameMap.has(chunk.id)) {
+								return `${chunkIdChunkNameMap.get(chunk.id)}.js`;
 							}
+
+							const sharedModuleName = origin.module._name;
+							const chunkName = `${sharedModuleName}-${chunk.id}--shared`;
+							usedSharedModuleNames.add(sharedModuleName);
+							chunkIdChunkNameMap.set(chunk.id, chunkName);
+
+							return `${chunkName}.js`;
 						}
 					}
 				}

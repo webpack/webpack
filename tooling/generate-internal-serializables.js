@@ -79,7 +79,7 @@ const forEachCall = (source, name, onCall) => {
  * @returns {string | undefined} request
  */
 const extractWebpackLibRequest = (call) => {
-	const match = call.match(/["'`](webpack\/lib\/[^"'`]+)["'`]/);
+	const match = /["'`](webpack\/lib\/[^"'`]+)["'`]/.exec(call);
 	return match ? match[1] : undefined;
 };
 
