@@ -18,7 +18,9 @@ it("fails both matching held chunk responses", async () => {
 		expect(second).rejects.toThrow("Failed to fetch second.js")
 	]);
 	hold.fail(/\.js$/);
-	if (hold.count() !== 0) hold.release();
+	const countAfterFail = hold.count();
+	if (countAfterFail !== 0) hold.release();
 	await failures;
+	expect(countAfterFail).toBe(0);
 	expect(hold.count()).toBe(0);
 });
