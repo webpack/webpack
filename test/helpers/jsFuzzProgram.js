@@ -1299,7 +1299,7 @@ _print(${name}.m(), ${name}.t, ${name}[${key}], new ${name}().g, typeof new ${na
 				)}) continue ${outer}; if (${expression(body, 1)}) break ${innerLabel}; ${block(body, 2)} _print(${i}, ${j}); } } }`;
 			}
 			case 8: {
-				const name = fresh(chance(0.5) ? "ä" : "v");
+				const name = chance(0.5) ? fresh("ä") : fresh("v");
 				const value = expression(context, 2);
 				context.bindings.push({ name, kind: "var" });
 				return `var ${chance(0.5) ? escapedName(name) : name} = ${value};`;

@@ -227,6 +227,21 @@ export default defineConfig([
 		}
 	},
 	{
+		files: [
+			"test/helpers/EventSourceForNode.js",
+			"test/helpers/jsFuzzProgram.js"
+		],
+		rules: {
+			"unicorn/prefer-minimal-ternary": "off"
+		}
+	},
+	{
+		files: ["tooling/generate-internal-serializables.js"],
+		rules: {
+			"unicorn/prefer-regexp-exec": "off"
+		}
+	},
+	{
 		files: ["test/**/*.js"],
 		rules: {
 			// Some our tests contain `package.json` without `engines`, but tests should work on Node.js@10, so let's disable it
