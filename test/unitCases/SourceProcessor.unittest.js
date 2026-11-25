@@ -387,6 +387,78 @@ describe("SourceProcessor", () => {
 	// A map is built only for a caller that named the input, since building one
 	// walks the whole output — an inline `style=""` asks for none.
 	describe("source map", () => {
+		it("preserves mappings while growing past skipped generated lines", () => {
+			const context = new PrintContext(
+				{ mode: "minify", source: "in.js" },
+				() => ""
+			);
+			context.anchorWithin([0, 0, 0, -1, 5001, 1, 0, -1], []);
+			context.printedAs(1, `x${"\n".repeat(5000)}y`);
+			context.take(1);
+			expect(context.sourceMap({ source: "in.js" }).mappings).toBe(
+				`AAAA${";".repeat(5000)}AACA`
+			);
+		});
+
+		it("encodes seven-byte positive and negative source deltas", () => {
+			const context = new PrintContext(
+				{ mode: "minify", source: "in.js" },
+				() => ""
+			);
+			context.anchorWithin(
+				[0, 0, 0, -1, 1, 2147483647, 2147483647, -1, 2, 0, 0, -1],
+				[]
+			);
+			context.printedAs(1, "xyz");
+			context.take(1);
+			expect(context.sourceMap({ source: "in.js" }).mappings).toBe(
+				"AAAA,CA+/////D+/////D,CA//////D//////D"
+			);
+		});
+
+		it("keeps name and line deltas across large encoded maps", () => {
+			const count = 10000;
+			const context = new PrintContext(
+				{ mode: "minify", source: "in.js" },
+				() => ""
+			);
+			/** @type {number[]} */
+			const mappings = [];
+			for (let line = 0; line < count; line++) {
+				mappings.push(line * 3, line, 0, 0, line * 3 + 1, line, 1, 1);
+			}
+			context.anchorWithin(mappings, ["first", "second"]);
+			context.printedAs(1, "xy\n".repeat(count));
+			context.take(1);
+
+			const map = context.sourceMap({ source: "in.js" });
+			expect(map.names).toEqual(["first", "second"]);
+			expect(map.mappings).toBe(
+				`AAAAA,CAACC${";AACDD,CAACC".repeat(count - 1)}`
+			);
+			expect(context.sourceMap({ source: "in.js" })).toEqual(map);
+		});
+
+		it("keeps names and unnamed mappings across multiple anchored ranges", () => {
+			const context = new PrintContext(
+				{ mode: "minify", source: "in.js" },
+				() => ""
+			);
+			context.anchorWithin([0, 0, 0, 0, 1, 0, 1, -1], ["first"]);
+			context.take(undefined, undefined, undefined, undefined, "ab");
+			context.anchorWithin(
+				[0, 1, 0, 0, 1, 1, 1, 1, 2, 1, 2, -1, 3, 1, 3, 0],
+				["second", "first"]
+			);
+			context.take(undefined, undefined, undefined, undefined, "cdeg");
+			context.anchor(undefined, 2, 0);
+			context.take(undefined, undefined, undefined, undefined, "f");
+			expect(context.result()).toBe("abcdegf");
+			const map = context.sourceMap({ source: "in.js" });
+			expect(map.names).toEqual(["first", "second"]);
+			expect(map.mappings).toBe("AAAAA,CAAC,CACDC,CAACD,CAAC,CAACC,CACH");
+		});
+
 		for (const [language, Processor, source] of LANGUAGES) {
 			describe(language, () => {
 				it("is absent when the input is not named", () => {

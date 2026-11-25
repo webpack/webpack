@@ -80,6 +80,67 @@ const decodeLine = (mappings) => {
 };
 
 describe("syntax-printer", () => {
+	it("should reuse numeric spellings across prints without changing formats", () => {
+		const source = fixture("javascript", "minify-number-spelling-reuse");
+		const options = { compress: false, mangle: false };
+		const toString = jest.spyOn(Number.prototype, "toString");
+		try {
+			const first = minifyOnePass(source, options).code;
+			const conversions = toString.mock.calls.length;
+			expect(minifyOnePass(source, options).code).toBe(first);
+			expect(toString.mock.calls.length).toBe(conversions);
+			expect(runProgram(first)).toBe(runProgram(source));
+			const kept = minifyOnePass(source, {
+				...options,
+				format: { keepNumbers: true }
+			}).code;
+			expect(kept).toContain("0.00000123");
+			expect(runProgram(kept)).toBe(runProgram(source));
+		} finally {
+			toString.mockRestore();
+		}
+	});
+
+	it("should preserve numeric spellings after many distinct literals", () => {
+		const { distinct } = require("../../fixtures/javascript/minify-number-spelling-reuse/fixture");
+		const options = { compress: false, mangle: false };
+		const source = fixture("javascript", "minify-number-spelling-reuse");
+		const before = minifyOnePass(source, options).code;
+		const large = distinct(17000);
+		const printed = minifyOnePass(large, options).code;
+		expect(runProgram(printed)).toBe(runProgram(large));
+		expect(minifyOnePass(source, options).code).toBe(before);
+	});
+
+	it("should preserve joins in arrows with and without parameters", () => {
+		const source = fixture("javascript", "minify-join-arrow-parameters");
+		const { code } = minifyOnePass(source, {
+			compress: { inline: false },
+			mangle: false
+		});
+		expect(runProgram(code)).toBe(runProgram(source));
+	});
+
+	it("should eliminate uninitialized variables with linear work", () => {
+		const { uninitialized } = require("../../fixtures/javascript/minify-redeclaration-scaling/fixture");
+		const { scalingFindings } = require("../../helpers/syntaxInvariants");
+		const source = uninitialized();
+		expect(runProgram(minifyOnePass(source, { compress: {}, mangle: true }).code)).toBe(
+			runProgram(source)
+		);
+		const findings = scalingFindings(() => {
+			/** @type {typeof import("../../helpers/syntaxInvariants/javascript") | undefined} */
+			let syntax;
+			jest.isolateModules(() => {
+				syntax = require("../../helpers/syntaxInvariants/javascript");
+			});
+			return /** @type {typeof import("../../helpers/syntaxInvariants/javascript")} */ (
+				syntax
+			);
+		}, [["uninitialized variables", uninitialized]]);
+		if (findings !== null) expect(findings).toEqual([]);
+	});
+
 	it("should count mangling characters without encoding the source", () => {
 		const source = fixture(
 			"javascript",
