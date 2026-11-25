@@ -4,7 +4,6 @@ These fixtures contain the distinct selector inputs exercised by
 [postcss-selector-parser](https://github.com/postcss/postcss-selector-parser)
 at commit `44deaeb329a74aedb1e21709028bd2566a6b24fc`. Each input is followed by
 `{color:red}` to make a stylesheet, including invalid and nonstandard inputs.
-`cases.json` maps each fixture to the upstream tests that used its selector.
 The upstream MIT license is in `LICENSE`.
 
 The upstream suite also tests its own tree manipulation, options and timing.
