@@ -102,7 +102,9 @@ describe("syntax-printer", () => {
 	});
 
 	it("should preserve numeric spellings after many distinct literals", () => {
-		const { distinct } = require("../../fixtures/javascript/minify-number-spelling-reuse/fixture");
+		const {
+			distinct
+		} = require("../../fixtures/javascript/minify-number-spelling-reuse/fixture");
 		const options = { compress: false, mangle: false };
 		const source = fixture("javascript", "minify-number-spelling-reuse");
 		const before = minifyOnePass(source, options).code;
@@ -122,12 +124,14 @@ describe("syntax-printer", () => {
 	});
 
 	it("should eliminate uninitialized variables with linear work", () => {
-		const { uninitialized } = require("../../fixtures/javascript/minify-redeclaration-scaling/fixture");
+		const {
+			uninitialized
+		} = require("../../fixtures/javascript/minify-redeclaration-scaling/fixture");
 		const { scalingFindings } = require("../../helpers/syntaxInvariants");
 		const source = uninitialized();
-		expect(runProgram(minifyOnePass(source, { compress: {}, mangle: true }).code)).toBe(
-			runProgram(source)
-		);
+		expect(
+			runProgram(minifyOnePass(source, { compress: {}, mangle: true }).code)
+		).toBe(runProgram(source));
 		const findings = scalingFindings(() => {
 			/** @type {typeof import("../../helpers/syntaxInvariants/javascript") | undefined} */
 			let syntax;

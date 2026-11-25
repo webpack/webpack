@@ -1,5 +1,7 @@
 "use strict";
 
+// cspell:ignore CAACC AACDD cdeg abcdegf CAAC CACDC CAACD CACH
+
 const { fixture } = require("../helpers/fixture");
 
 const { SourceProcessor: CssSourceProcessor } = require("../../lib/css/syntax");
