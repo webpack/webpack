@@ -34,7 +34,19 @@ function spread(b) {
 	var a = [1, ...b];
 	return a.length;
 }
+function probed() {
+	const array = [1, 2];
+	return [array.probe, array.length];
+}
 function grow(list) {
 	list.push(0);
 }
-console.log(sum(), pushed(), indexed(), cut(), handed(), returned(), spread([2, 3]));
+Object.defineProperty(Array.prototype, "probe", {
+	configurable: true,
+	get() {
+		this.push(3);
+		return 1;
+	}
+});
+console.log(sum(), pushed(), indexed(), cut(), handed(), returned(), spread([2, 3]), probed());
+delete Array.prototype.probe;
