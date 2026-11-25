@@ -1,0 +1,2 @@
+:not(.foo),
+#foo > :matches(ol, ul){color:red}

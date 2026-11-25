@@ -1,0 +1,1 @@
+a:where(:not(:hover)){color:red}

@@ -1,0 +1,1 @@
+[data-weird-attr*="Something=weird"],[data-weird-attr^="Something=weird"],[data-weird-attr$="Something=weird"],[data-weird-attr|="Something=weird"]{color:red}

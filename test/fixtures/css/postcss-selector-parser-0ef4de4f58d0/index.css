@@ -1,0 +1,1 @@
+:not([attr="test"]:not([attr="test"]){color:red}

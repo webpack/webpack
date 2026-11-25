@@ -1,0 +1,15 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "foo",
+		"presets": [
+			"default"
+		],
+		"why": "the interpolation is not CSS; its block is kept as authored, including this identifier's spelling"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/.#[1]: css-tree unparsed foo, tool nothing",
+		"why": "the selector contains non-CSS interpolation; css-tree keeps the block as raw text while webpack reads its contents"
+	}
+]

@@ -1,0 +1,1 @@
+[href*=test],[href^=test],[href$=test],[href|=test]{color:red}

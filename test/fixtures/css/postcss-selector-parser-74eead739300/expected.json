@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]: css-tree unparsed color:red, tool color: red",
+		"why": "css-tree keeps declarations in an at-rule block as raw text; webpack reads them as declarations"
+	}
+]

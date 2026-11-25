@@ -1,0 +1,4 @@
+h1:not(
+	.one,
+	.two
+){color:red}
