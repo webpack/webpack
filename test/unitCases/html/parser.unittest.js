@@ -66,55 +66,65 @@ describe("HtmlSyntax — the facade", () => {
 
 	it("holds no printer until something prints", () => {
 		const processor = new syntax.SourceProcessor();
-		processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"));
+		processor.process(
+			fixture(
+				"html",
+				"html-syntax-the-facade-holds-no-printer-until-something-prints"
+			)
+		);
 		expect(processor._printer).toBeUndefined();
-		expect(processor.process(fixture("html", "html-syntax-the-facade-holds-no-printer-until-something-prints"), { mode: "minify" }).code).toMatchSnapshot();
+		expect(
+			processor.process(
+				fixture(
+					"html",
+					"html-syntax-the-facade-holds-no-printer-until-something-prints"
+				),
+				{ mode: "minify" }
+			).code
+		).toMatchSnapshot();
 		expect(typeof processor._printer).toBe("function");
 	});
 });
 
 describe("parseHtml", () => {
-
 	it("should keep attribute values raw with source offsets", () => {
-		const a = body(fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets"))[0];
+		const a = body(
+			fixture(
+				"html",
+				"parse-html-should-keep-attribute-values-raw-with-source-offsets"
+			)
+		)[0];
 		expect(a.attributes).toHaveLength(2);
 		expect(a.attributes[0].name).toBe("href");
 		expect(a.attributes[0].value).toBe("test.html");
 		// Raw (undecoded) value preserved; consumers re-resolve from it.
-		const raw = body(fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets-2"))[0];
+		const raw = body(
+			fixture(
+				"html",
+				"parse-html-should-keep-attribute-values-raw-with-source-offsets-2"
+			)
+		)[0];
 		expect(raw.attributes[0].value).toBe("a&amp;b");
 		// Offsets line up with the source.
-		const src = fixture("html", "parse-html-should-keep-attribute-values-raw-with-source-offsets-3");
+		const src = fixture(
+			"html",
+			"parse-html-should-keep-attribute-values-raw-with-source-offsets-3"
+		);
 		const link = body(src)[0];
 		const attr = link.attributes[0];
 		expect(src.slice(attr.valueStart, attr.valueEnd)).toBe("test.html");
 	});
-
-
 
 	it("should export namespace constants", () => {
 		expect(Namespace.HTML).toBe(0);
 		expect(Namespace.MathML).toBe(1);
 		expect(Namespace.SVG).toBe(2);
 	});
-
-
-
-
-
-
-
 });
-
 
 describe("parseHtml — SourceProcessor", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-const { NodeType } = require("../../../lib/html/syntax-parser");
-
-
-
-
-
+	const { NodeType } = require("../../../lib/html/syntax-parser");
 
 	it("use() chains and accumulates visitors per type", () => {
 		let a = 0;
@@ -123,7 +133,12 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 			.use({ [NodeType.Element]: () => a++ })
 			.use({ [NodeType.Element]: () => b++ });
 		expect(sp).toBeInstanceOf(SourceProcessor);
-		sp.process(fixture("html", "parse-html-source-processor-visits-the-document-root-with-a-null-parent"));
+		sp.process(
+			fixture(
+				"html",
+				"parse-html-source-processor-visits-the-document-root-with-a-null-parent"
+			)
+		);
 		expect(a).toBe(b);
 		expect(a).toBeGreaterThan(0);
 	});
@@ -133,7 +148,6 @@ const { NodeType } = require("../../../lib/html/syntax-parser");
 // still run identically, so the element tree — tags, nesting, offsets and
 // attributes — is the same under any combination as under none.
 describe("parseHtml — skip options preserve element structure", () => {
-
 	/**
 	 * @param {MatDocument} doc document
 	 * @returns {string} a signature of the element tree (tags, nesting, offsets, attrs)
@@ -180,9 +194,11 @@ describe("parseHtml — skip options preserve element structure", () => {
 		{ text: true, comments: true, doctype: true }
 	];
 
-
 	it("skip.text drops every text node; raw-text bodies stay readable via contentEnd", () => {
-		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-drops-every-text");
+		const src = fixture(
+			"html",
+			"parse-html-skip-options-preserve-element-structure-skip-text-drops-every-text"
+		);
 		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {MatText[]} */
 		const texts = [];
@@ -208,12 +224,13 @@ describe("parseHtml — skip options preserve element structure", () => {
 		).toBe("var x=1;");
 	});
 
-
 	it("skip.text records every raw-text element body span on contentEnd", () => {
 		// script/style (raw text) + textarea/title (escapable raw text): each body
 		// is the element's raw value, recorded as [tagEnd, contentEnd] — no Text node.
-		const src =
-			fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-records-every-raw");
+		const src = fixture(
+			"html",
+			"parse-html-skip-options-preserve-element-structure-skip-text-records-every-raw"
+		);
 		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
@@ -242,7 +259,10 @@ describe("parseHtml — skip options preserve element structure", () => {
 		// SVG <style>/<script> stay in the SVG namespace and their bodies are plain
 		// text; HtmlParser extracts them regardless of namespace, so contentEnd must
 		// be recorded here too.
-		const src = fixture("html", "parse-html-skip-options-preserve-element-structure-skip-text-records-content-end");
+		const src = fixture(
+			"html",
+			"parse-html-skip-options-preserve-element-structure-skip-text-records-content-end"
+		);
 		const doc = parseHtml(src, undefined, { text: true });
 		/** @type {Record<string, string>} */
 		const bodies = {};
@@ -265,10 +285,34 @@ describe("parseHtml — skip options preserve element structure", () => {
 		// still leave the element tree (and offsets) identical.
 		/** @type {[string, string][]} */
 		const fragments = [
-			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element"), "table"],
-			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-2"), "ul"],
-			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-3"), "div"],
-			[fixture("html", "parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-4"), "svg"]
+			[
+				fixture(
+					"html",
+					"parse-html-skip-options-preserve-element-structure-skip-options-preserve-element"
+				),
+				"table"
+			],
+			[
+				fixture(
+					"html",
+					"parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-2"
+				),
+				"ul"
+			],
+			[
+				fixture(
+					"html",
+					"parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-3"
+				),
+				"div"
+			],
+			[
+				fixture(
+					"html",
+					"parse-html-skip-options-preserve-element-structure-skip-options-preserve-element-4"
+				),
+				"svg"
+			]
 		];
 		for (const [src, ctx] of fragments) {
 			const base = elementSignature(parseHtml(src, ctx));
@@ -280,9 +324,13 @@ describe("parseHtml — skip options preserve element structure", () => {
 });
 
 describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
-
 	it("grows the node and attribute columns past their initial capacity", () => {
-		const nodes = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute"));
+		const nodes = body(
+			fixture(
+				"html",
+				"parse-html-tree-construction-edge-cases-so-a-columns-grows-the-node-and-attribute"
+			)
+		);
 		expect(nodes).toHaveLength(5000);
 		expect(nodes[4999].attributes[0].value).toBe("4999");
 	});
@@ -291,10 +339,20 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 		// > 64 Ki nodes and attributes grow the columns past the shrink
 		// threshold; the release after the parse re-shrinks them and the next
 		// parse must work from the re-grown baseline
-		const nodes = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after"));
+		const nodes = body(
+			fixture(
+				"html",
+				"parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns-after"
+			)
+		);
 		expect(nodes).toHaveLength(70000);
 		expect(nodes[69999].attributes[0].value).toBe("69999");
-		const small = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns"));
+		const small = body(
+			fixture(
+				"html",
+				"parse-html-tree-construction-edge-cases-so-a-columns-re-shrinks-the-columns"
+			)
+		);
 		expect(small).toHaveLength(1);
 		expect(small[0].attributes[0].value).toBe("c");
 	});
@@ -302,37 +360,51 @@ describe("parseHtml — tree-construction edge cases (SoA columns)", () => {
 	it("handles a large structurally sparse document", () => {
 		// Exercise both byte-length estimate caps without needing enough nodes or
 		// attributes to fill the speculative columns.
-		const nodes = body(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally"));
+		const nodes = body(
+			fixture(
+				"html",
+				"parse-html-tree-construction-edge-cases-so-a-columns-handles-a-large-structurally"
+			)
+		);
 		expect(nodes).toHaveLength(1);
 		expect(nodes[0]).toEqual(
 			expect.objectContaining({ tagName: "p", children: [expect.any(Object)] })
 		);
-		expect(body(fixture("html", "source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its"))[0]).toEqual(
-			expect.objectContaining({ tagName: "b" })
-		);
+		expect(
+			body(
+				fixture(
+					"html",
+					"source-processor-the-streamed-walk-ends-a-walk-a-visitor-stopped-and-fires-its"
+				)
+			)[0]
+		).toEqual(expect.objectContaining({ tagName: "b" }));
 	});
 
-
 	it("adjusts SVG and MathML attribute names", () => {
-		const svg = find(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml"), "svg");
+		const svg = find(
+			fixture(
+				"html",
+				"parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml"
+			),
+			"svg"
+		);
 		const byName = new Map(svg.attributes.map((a) => [a.name, a]));
 		expect(byName.has("viewBox")).toBe(true);
 		const xlink = /** @type {HtmlAttribute} */ (byName.get("xlink:href"));
 		expect(xlink.serializedName).toBe("xlink href");
-		const math = find(fixture("html", "parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml-2"), "math");
+		const math = find(
+			fixture(
+				"html",
+				"parse-html-tree-construction-edge-cases-so-a-columns-adjusts-svg-and-math-ml-2"
+			),
+			"math"
+		);
 		expect(math.attributes[0].name).toBe("definitionURL");
 	});
-
-
 });
 
 describe("SourceProcessor — streamed walk recycling", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-
-
-
-
 
 	it("materializes a streamed implied tag as the walked one does", () => {
 		// The streamed path decides this where the node is known, the walked one on
@@ -346,23 +418,24 @@ describe("SourceProcessor — streamed walk recycling", () => {
 				mode: "minify",
 				removeImpliedTags: true
 			}).code;
-		const walked = minify(fixture("html", "source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as"));
-		const streamed = minify(fixture("html", "source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2"));
+		const walked = minify(
+			fixture(
+				"html",
+				"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as"
+			)
+		);
+		const streamed = minify(
+			fixture(
+				"html",
+				"source-processor-streamed-walk-recycling-materializes-a-streamed-implied-tag-as-2"
+			)
+		);
 		expect(streamed.slice(0, walked.length)).toBe(walked);
 	});
-
-
-
-
-
-
-
 });
 
 describe("SourceProcessor — streamed walk offsets", () => {
 	const { SourceProcessor } = require("../../../lib/html/syntax");
-
-
 
 	it("runs a walk a visitor starts on a tree of its own, and the outer walk goes on", () => {
 		/** @type {string[]} */
@@ -379,7 +452,8 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		const collect = (names, nested) => ({
 			[NodeType.Element]: (path) => {
 				names.push(path.name());
-				if (nested !== undefined && path.name() === "li" && names.length === 5) nested();
+				if (nested !== undefined && path.name() === "li" && names.length === 5)
+					nested();
 			}
 		});
 		new SourceProcessor()
@@ -392,12 +466,26 @@ describe("SourceProcessor — streamed walk offsets", () => {
 							new SourceProcessor()
 								.use(
 									collect(inner, () => {
-										new SourceProcessor().use(collect(innermost)).process(fixture("html", "source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"));
+										new SourceProcessor()
+											.use(collect(innermost))
+											.process(
+												fixture(
+													"html",
+													"source-processor-streamed-walk-offsets-refuses-a-nested-parse-rather-than-taking"
+												)
+											);
 									})
 								)
-								.process(fixture("html", "source-processor-a-run-inside-a-run-inner-list"));
+								.process(
+									fixture(
+										"html",
+										"source-processor-a-run-inside-a-run-inner-list"
+									)
+								);
 							// The outer tree is the one read again once the nested walk is done.
-							outer.push(`${path.source()} in ${A.name(/** @type {number} */ (path.parent))}`);
+							outer.push(
+								`${path.source()} in ${A.name(/** @type {number} */ (path.parent))}`
+							);
 						},
 						exit: (path) => {
 							if (path.name() === "em") outer.push(`/${path.source()}`);
@@ -405,7 +493,9 @@ describe("SourceProcessor — streamed walk offsets", () => {
 					}
 				})
 			)
-			.process(fixture("html", "source-processor-a-run-inside-a-run-outer-walk"));
+			.process(
+				fixture("html", "source-processor-a-run-inside-a-run-outer-walk")
+			);
 		expect(innermost).toEqual(["html", "head", "body", "b"]);
 		expect(inner).toEqual(["html", "head", "body", "ul", "li", "li"]);
 		expect(outer).toEqual([
@@ -433,12 +523,22 @@ describe("SourceProcessor — streamed walk offsets", () => {
 					if (path.name() !== "p") return;
 					path.stop();
 					const before = seen.length;
-					processor.process(fixture("html", "source-processor-a-run-inside-a-run-same-processor-inner"));
+					processor.process(
+						fixture(
+							"html",
+							"source-processor-a-run-inside-a-run-same-processor-inner"
+						)
+					);
 					inner = seen.slice(before);
 				}
 			})
 		);
-		processor.process(fixture("html", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		processor.process(
+			fixture(
+				"html",
+				"source-processor-a-run-inside-a-run-same-processor-stop-outer"
+			)
+		);
 		expect(inner).toEqual(["html", "head", "body", "ul", "li"]);
 		expect(seen).toEqual(["html", "head", "body", "p", ...inner]);
 	});
@@ -466,7 +566,12 @@ describe("SourceProcessor — streamed walk offsets", () => {
 				}
 			})
 		);
-		processor.process(fixture("html", "source-processor-a-run-inside-a-run-same-processor-stop-outer"));
+		processor.process(
+			fixture(
+				"html",
+				"source-processor-a-run-inside-a-run-same-processor-stop-outer"
+			)
+		);
 		expect(seen).toEqual([
 			"0:html",
 			"0:head",
@@ -502,15 +607,33 @@ describe("SourceProcessor — streamed walk offsets", () => {
 									}
 								})
 							)
-							.process(fixture("html", "source-processor-a-run-inside-a-run-document-enter-inner"));
+							.process(
+								fixture(
+									"html",
+									"source-processor-a-run-inside-a-run-document-enter-inner"
+								)
+							);
 					},
 					[NodeType.Element]: (path) => {
 						outer.push(`${path.name()}:${path.source()}`);
 					}
 				})
 			)
-			.process(fixture("html", "source-processor-a-run-inside-a-run-document-enter-outer"));
-		expect(inner).toEqual(["html", "head", "body", "table", "tbody", "tr", "td"]);
+			.process(
+				fixture(
+					"html",
+					"source-processor-a-run-inside-a-run-document-enter-outer"
+				)
+			);
+		expect(inner).toEqual([
+			"html",
+			"head",
+			"body",
+			"table",
+			"tbody",
+			"tr",
+			"td"
+		]);
 		expect(outer).toEqual(["html:", "head:", "body:", "p:<p>outer</p>"]);
 	});
 
@@ -531,16 +654,27 @@ describe("SourceProcessor — streamed walk offsets", () => {
 									}
 								})
 							)
-							.process(fixture("html", "source-processor-a-run-inside-a-run-textarea-fragment-inner"), {
-								fragmentContext: "textarea"
-							});
+							.process(
+								fixture(
+									"html",
+									"source-processor-a-run-inside-a-run-textarea-fragment-inner"
+								),
+								{
+									fragmentContext: "textarea"
+								}
+							);
 					},
 					[NodeType.Element]: (path) => {
 						outer.push(path.name());
 					}
 				})
 			)
-			.process(fixture("html", "source-processor-a-run-inside-a-run-document-enter-outer"));
+			.process(
+				fixture(
+					"html",
+					"source-processor-a-run-inside-a-run-document-enter-outer"
+				)
+			);
 		expect(inner).toEqual(["html"]);
 		expect(outer).toEqual(["html", "head", "body", "p"]);
 	});
@@ -576,24 +710,44 @@ describe("SourceProcessor — streamed walk offsets", () => {
 											}
 										})
 									)
-									.process(fixture("html", "source-processor-a-run-inside-a-run-streamed-inner"));
+									.process(
+										fixture(
+											"html",
+											"source-processor-a-run-inside-a-run-streamed-inner"
+										)
+									);
 								inner.push(
-									new SourceProcessor().process(fixture("html", "source-processor-a-run-inside-a-run-streamed-minify"), {
-										mode: "minify",
-										collapseWhitespace: true
-									}).code
+									new SourceProcessor().process(
+										fixture(
+											"html",
+											"source-processor-a-run-inside-a-run-streamed-minify"
+										),
+										{
+											mode: "minify",
+											collapseWhitespace: true
+										}
+									).code
 								);
 							}
 						}
 					})
 				)
-				.process(fixture("html", "source-processor-a-run-inside-a-run-streamed-outer"));
+				.process(
+					fixture("html", "source-processor-a-run-inside-a-run-streamed-outer")
+				);
 			seen.push(String(paragraphs));
 			return { seen, inner };
 		};
 		const alone = run(false);
 		const nested = run(true);
-		expect(nested.inner).toEqual(["html", "head", "body", "ul", "li", "<p> y "]);
+		expect(nested.inner).toEqual([
+			"html",
+			"head",
+			"body",
+			"ul",
+			"li",
+			"<p> y "
+		]);
 		expect(nested.seen).toEqual(alone.seen);
 		expect(alone.seen).toEqual([
 			"head:0",
@@ -623,7 +777,12 @@ describe("SourceProcessor — streamed walk offsets", () => {
 								seen.push(path.name());
 								if (!attempt || path.name() !== "p") return;
 								try {
-									parseHtmlRefs(fixture("html", "source-processor-a-run-inside-a-run-direct-parse-inner"));
+									parseHtmlRefs(
+										fixture(
+											"html",
+											"source-processor-a-run-inside-a-run-direct-parse-inner"
+										)
+									);
 								} catch (err) {
 									errors.push(/** @type {Error} */ (err).message);
 								}
@@ -634,7 +793,12 @@ describe("SourceProcessor — streamed walk offsets", () => {
 						}
 					})
 				)
-				.process(fixture("html", "source-processor-a-run-inside-a-run-direct-parse-outer"));
+				.process(
+					fixture(
+						"html",
+						"source-processor-a-run-inside-a-run-direct-parse-outer"
+					)
+				);
 			return { seen, errors };
 		};
 		const alone = run(false);
@@ -644,15 +808,19 @@ describe("SourceProcessor — streamed walk offsets", () => {
 		]);
 		expect(tried.seen).toEqual(alone.seen);
 		// Outside a run it parses as ever.
-		const document = parseHtmlRefs(fixture("html", "source-processor-a-run-inside-a-run-direct-parse-inner"));
+		const document = parseHtmlRefs(
+			fixture("html", "source-processor-a-run-inside-a-run-direct-parse-inner")
+		);
 		expect(A.name(A.child(0, A.child(1, A.child(0, document))))).toBe("i");
 	});
 });
 
 describe("parseHtml — path accessor completeness", () => {
-
 	it("exposes a doctype's identifier ranges through the accessors", () => {
-		const source = fixture("html", "parse-html-path-accessor-completeness-exposes-a-doctype-s-identifier-ranges");
+		const source = fixture(
+			"html",
+			"parse-html-path-accessor-completeness-exposes-a-doctype-s-identifier-ranges"
+		);
 		const doctype = A.child(0, parseHtmlRefs(source, 0));
 		expect(A.type(doctype)).toBe(NodeType.Doctype);
 		expect(A.rangeOf(Part.publicId, doctype)).toEqual([23, 24]);
@@ -660,14 +828,13 @@ describe("parseHtml — path accessor completeness", () => {
 		expect(A.rangeOf(Part.content, doctype)).toBeNull();
 	});
 
-
-
-
-
 	it("clears the foster-region marks a print left on reused node slots", () => {
 		const { FLAG_FOSTER_REGION } = require("../../../lib/html/syntax-parser");
 		// A run no re-nesting reproduces prints from source, marking its holder.
-		const source = fixture("html", "parse-html-path-accessor-completeness-clears-the-foster-region-marks-a-print");
+		const source = fixture(
+			"html",
+			"parse-html-path-accessor-completeness-clears-the-foster-region-marks-a-print"
+		);
 		/** @type {number[]} */
 		const marked = [];
 		/** @param {number} n node */
@@ -693,11 +860,21 @@ describe("parseHtml — path accessor completeness", () => {
 				}
 			}
 		});
-		processor.process(fixture("html", "parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current"));
+		processor.process(
+			fixture(
+				"html",
+				"parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current"
+			)
+		);
 		expect(log).toEqual(["html", "head", "body", "a", "b"]);
 		// the next run starts with every visitor in place again
 		log.length = 0;
-		processor.process(fixture("html", "parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-2"));
+		processor.process(
+			fixture(
+				"html",
+				"parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-2"
+			)
+		);
 		expect(log).toEqual(["html", "head", "body", "i"]);
 		// stopped from an `exit`: the enclosing elements exit no more
 		log.length = 0;
@@ -710,15 +887,15 @@ describe("parseHtml — path accessor completeness", () => {
 					}
 				}
 			})
-			.process(fixture("html", "parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-3"));
+			.process(
+				fixture(
+					"html",
+					"parse-html-path-accessor-completeness-path-stop-ends-the-walk-after-the-current-3"
+				)
+			);
 		expect(log).toEqual(["head", "a"]);
 	});
-
 });
-
-
-
-
 
 describe("JAVASCRIPT_SCRIPT_TYPES", () => {
 	const { JAVASCRIPT_SCRIPT_TYPES } = require("../../../lib/html/data");
@@ -752,11 +929,22 @@ describe("JAVASCRIPT_SCRIPT_TYPES", () => {
 
 describe("parseHtml — quirks and foreign-content arcs", () => {
 	// In quirks mode `<table>` does not close an open `<p>`.
-	/**
-	 * @param {string} doctype the doctype to test
-	 * @returns {boolean} whether the doctype selects quirks mode
-	 */
-
+	it("selects quirks mode only for the HTTP IBM system identifier", () => {
+		const prefix =
+			"parse-html-quirks-and-foreign-content-arcs-selects-quirks-mode-from-the-exact";
+		const http = fixture("html", `${prefix}-3`);
+		const https = fixture("html", `${prefix}-4`);
+		expect(
+			find(http, "p").children.some(
+				(node) => node.type === NodeType.Element && node.tagName === "table"
+			)
+		).toBe(true);
+		expect(
+			find(https, "p").children.some(
+				(node) => node.type === NodeType.Element && node.tagName === "table"
+			)
+		).toBe(false);
+	});
 
 	it("grows the node columns past the initial estimate", () => {
 		// `len / 12` under-estimates a document of nothing but short start tags,
@@ -796,17 +984,19 @@ const treeOf = (source, fragmentContext) => {
 
 /** @type {[string, string, (string | undefined)][]} */
 
-
 describe("parseHtml — arcs the conformance corpus leaves out", () => {
-
 	it("reads an empty system id as given", () => {
 		// HTML 4.01 Transitional with a system id is limited-quirks, where
 		// `<table>` closes the open `<p>`; only a missing one makes it quirks.
 		expect(
-			treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given"))
+			treeOf(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given"
+				)
+			)
 		).toContain(["|     <p>", '|       "a"', "|     <table>"].join("\n"));
 	});
-
 
 	it("keeps character references literal in a plaintext opened in a table mode", () => {
 		// The PLAINTEXT state outlives the table, cell or caption mode it opened in.
@@ -822,43 +1012,115 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 				expect.objectContaining({ type: NodeType.Text, data: "a&amp;b<p>" })
 			]);
 		}
-		expect(treeOf(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references"), "tbody")).toBe(
-			['| "x"', "| <plaintext>", '|   "&amp;"'].join("\n")
-		);
+		expect(
+			treeOf(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-keeps-character-references"
+				),
+				"tbody"
+			)
+		).toBe(['| "x"', "| <plaintext>", '|   "&amp;"'].join("\n"));
 	});
-
 
 	it("clears the whole name memo once a document filled every slot", () => {
 		// 512 unknown names, one per memo slot (`z` repeated 1…512 times).
-		expect(find(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3"), "z".repeat(512)).tagName).toBe("z".repeat(512));
+		expect(
+			find(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-3"
+				),
+				"z".repeat(512)
+			).tagName
+		).toBe("z".repeat(512));
 		// the next parse reads every name afresh
-		expect(body(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo")).map((n) => n.tagName)).toEqual(["zz"]);
-		expect(find(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-2"), "zzz").children[0]).toEqual(
-			expect.objectContaining({ tagName: "zzz" })
-		);
+		expect(
+			body(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo"
+				)
+			).map((n) => n.tagName)
+		).toEqual(["zz"]);
+		expect(
+			find(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-clears-the-whole-name-memo-2"
+				),
+				"zzz"
+			).children[0]
+		).toEqual(expect.objectContaining({ tagName: "zzz" }));
 	});
 
-
-
 	it("maps decoded text back to the raw offsets", () => {
-		expect(decodeEntities(fixture("html", "tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"), true, true)).toEqual({
+		expect(
+			decodeEntities(
+				fixture(
+					"html",
+					"tokenize-parse-error-callback-does-not-report-missing-semicolon-for-a-named"
+				),
+				true,
+				true
+			)
+		).toEqual({
 			text: "a&b",
 			map: [0, 1, 6, 7]
 		});
-		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the"), false, true)).toEqual({
+		expect(
+			decodeEntities(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the"
+				),
+				false,
+				true
+			)
+		).toEqual({
 			text: "x<>",
 			map: [0, 1, 5, 9]
 		});
-		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2"), true, true)).toEqual({
+		expect(
+			decodeEntities(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-maps-decoded-text-back-to-the-2"
+				),
+				true,
+				true
+			)
+		).toEqual({
 			text: "&zz;",
 			map: undefined
 		});
 	});
 
 	it("decodes a repeated named reference and a long one alike", () => {
-		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer"))).toBe("&&<&");
-		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3"))).toBe("\u2233\u2233&\u2233");
-		expect(decodeEntities(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2"))).toBe("&&=&");
+		expect(
+			decodeEntities(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer"
+				)
+			)
+		).toBe("&&<&");
+		expect(
+			decodeEntities(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3"
+				)
+			)
+		).toBe("\u2233\u2233&\u2233");
+		expect(
+			decodeEntities(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-2"
+				)
+			)
+		).toBe("&&=&");
 	});
 
 	it("re-sizes the attribute columns a walk released from the next estimate", () => {
@@ -868,9 +1130,19 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		let elements = 0;
 		new SourceProcessor()
 			.use({ [NodeType.Element]: () => elements++ })
-			.process(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2"));
+			.process(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns-2"
+				)
+			);
 		expect(elements).toBe(33003);
-		const nodes = body(fixture("html", "parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns"));
+		const nodes = body(
+			fixture(
+				"html",
+				"parse-html-arcs-the-conformance-corpus-leaves-out-re-sizes-the-attribute-columns"
+			)
+		);
 		expect(nodes[0].attributes[0].value).toBe("c");
 	});
 });

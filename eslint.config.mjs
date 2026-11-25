@@ -128,6 +128,31 @@ export default defineConfig([
 	getSharedConfig("webpack/schemas"),
 	getSharedConfig("webpack/comments"),
 	{
+		files: [
+			"lib/css/data.js",
+			"lib/javascript/data.js",
+			"lib/javascript/syntax-printer-data.js"
+		],
+		rules: {
+			// Keep the order emitted by the syntax data generators.
+			"import-x/order": "off"
+		}
+	},
+	{
+		files: ["declarations/WebpackOptions.ts"],
+		rules: {
+			// Union order is part of the schema round trip.
+			"unicorn/prefer-type-literal-last": "off"
+		}
+	},
+	{
+		files: [
+			"lib/devtool/SourceMapDevToolPlugin.js",
+			"lib/logging/ProgressPlugin.js"
+		],
+		settings: { jsdoc: { tagNamePreference: { instanceof: "instanceof" } } }
+	},
+	{
 		files: ["bin/**/*.js"],
 		// Allow to use `dynamic` import
 		languageOptions: {

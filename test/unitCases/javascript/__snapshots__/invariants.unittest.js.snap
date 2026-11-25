@@ -5116,6 +5116,42 @@ exports[`JavaScript syntax — invariants collect-esm-import-specifiers-malforme
 
 exports[`JavaScript syntax — invariants collect-esm-import-specifiers-malformed-unterminated-template-hiding-an-import tokenizes 1`] = `"\`[0,1] throws: Unterminated template (1:1)"`;
 
+exports[`JavaScript syntax — invariants conditional-shared-tail-alternate parses 1`] = `"Program[0,31](body=[ExpressionStatement[0,30](expression=ConditionalExpression[0,29](test=Identifier[0,1](name=\\"c\\") consequent=CallExpression[2,12](callee=Identifier[2,10](name=\\"longName\\") arguments=[] optional=false) alternate=SequenceExpression[14,28](expressions=[CallExpression[14,17](callee=Identifier[14,15](name=\\"g\\") arguments=[] optional=false),CallExpression[18,28](callee=Identifier[18,26](name=\\"longName\\") arguments=[] optional=false)])))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-alternate parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-alternate parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-alternate prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"c||g(),longName();"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-alternate prints {"mode":"minify"} 1`] = `"c?longName():(g(),longName());"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-alternate tokenizes 1`] = `"name[0,1] ?[1,2] name[2,10] ([10,11] )[11,12] :[12,13] ([13,14] name[14,15] ([15,16] )[16,17] ,[17,18] name[18,26] ([26,27] )[27,28] )[28,29] ;[29,30] eof[31,31]"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-consequent parses 1`] = `"Program[0,31](body=[ExpressionStatement[0,30](expression=ConditionalExpression[0,29](test=Identifier[0,1](name=\\"c\\") consequent=SequenceExpression[3,17](expressions=[CallExpression[3,6](callee=Identifier[3,4](name=\\"g\\") arguments=[] optional=false),CallExpression[7,17](callee=Identifier[7,15](name=\\"longName\\") arguments=[] optional=false)]) alternate=CallExpression[19,29](callee=Identifier[19,27](name=\\"longName\\") arguments=[] optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-consequent parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-consequent parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-consequent prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"c&&g(),longName();"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-consequent prints {"mode":"minify"} 1`] = `"c?(g(),longName()):longName();"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-consequent tokenizes 1`] = `"name[0,1] ?[1,2] ([2,3] name[3,4] ([4,5] )[5,6] ,[6,7] name[7,15] ([15,16] )[16,17] )[17,18] :[18,19] name[19,27] ([27,28] )[28,29] ;[29,30] eof[31,31]"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-logical-consequent parses 1`] = `"Program[0,30](body=[ExpressionStatement[0,29](expression=ConditionalExpression[0,28](test=Identifier[0,1](name=\\"c\\") consequent=LogicalExpression[2,17](left=CallExpression[2,5](callee=Identifier[2,3](name=\\"g\\") arguments=[] optional=false) operator=\\"||\\" right=CallExpression[7,17](callee=Identifier[7,15](name=\\"longName\\") arguments=[] optional=false)) alternate=CallExpression[18,28](callee=Identifier[18,26](name=\\"longName\\") arguments=[] optional=false)))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-logical-consequent parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-logical-consequent parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-logical-consequent prints {"mode":"minify","compress":{},"mangle":false} 1`] = `"c&&g()||longName();"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-logical-consequent prints {"mode":"minify"} 1`] = `"c?g()||longName():longName();"`;
+
+exports[`JavaScript syntax — invariants conditional-shared-tail-logical-consequent tokenizes 1`] = `"name[0,1] ?[1,2] name[2,3] ([3,4] )[4,5] ||[5,7] name[7,15] ([15,16] )[16,17] :[17,18] name[18,26] ([26,27] )[27,28] ;[28,29] eof[30,30]"`;
+
 exports[`JavaScript syntax — invariants e-conditions-1 parses 1`] = `"Program[0,63](body=[ExpressionStatement[0,18](expression=ConditionalExpression[0,17](test=Identifier[0,1](name=\\"a\\") consequent=Identifier[4,5](name=\\"d\\") alternate=SequenceExpression[9,16](expressions=[Identifier[9,10](name=\\"b\\"),Identifier[12,13](name=\\"c\\"),Identifier[15,16](name=\\"d\\")]))),ExpressionStatement[19,39](expression=ConditionalExpression[19,38](test=Identifier[19,20](name=\\"a\\") consequent=SequenceExpression[24,33](expressions=[Identifier[24,25](name=\\"b\\"),SequenceExpression[28,32](expressions=[Identifier[28,29](name=\\"c\\"),Identifier[31,32](name=\\"d\\")])]) alternate=Identifier[37,38](name=\\"d\\"))),ExpressionStatement[40,62](expression=AssignmentExpression[40,61](operator=\\"=\\" left=Identifier[40,41](name=\\"x\\") right=ConditionalExpression[44,61](test=Identifier[44,45](name=\\"a\\") consequent=Identifier[48,49](name=\\"c\\") alternate=SequenceExpression[53,60](expressions=[Identifier[53,54](name=\\"b\\"),Identifier[56,57](name=\\"e\\"),Identifier[59,60](name=\\"c\\")]))))] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants e-conditions-1 parses 2`] = `""`;
@@ -35990,6 +36026,16 @@ exports[`JavaScript syntax — invariants javascript-parser-should-parse-var-def
 exports[`JavaScript syntax — invariants javascript-parser-should-parse-var-definition prints {"mode":"minify"} 1`] = `"let abc,cde,fgh;abc(\\"test\\");cde.abc(\\"test\\");cde.ddd.abc(\\"test\\");fgh;fgh.sub;"`;
 
 exports[`JavaScript syntax — invariants javascript-parser-should-parse-var-definition tokenizes 1`] = `"line[0,35] name[40,43] name[44,47] ,[47,48] name[49,52] ,[52,53] name[54,57] ;[57,58] line[63,82] name[87,90] ([90,91] string[91,97]=\\"test\\" )[97,98] ;[98,99] line[104,123] name[128,131] .[131,132] name[132,135] ([135,136] string[136,142]=\\"test\\" )[142,143] ;[143,144] line[149,168] name[173,176] .[176,177] name[177,180] .[180,181] name[181,184] ([184,185] string[185,191]=\\"test\\" )[191,192] ;[192,193] name[198,201] ;[201,202] line[207,226] name[231,234] .[234,235] name[235,238] ;[238,239] eof[239,239]"`;
+
+exports[`JavaScript syntax — invariants javascript-parser-strict-equality-unknown parses 1`] = `"Program[0,52](body=[ExpressionStatement[0,25](expression=CallExpression[0,24](callee=Identifier[0,4](name=\\"test\\") arguments=[BinaryExpression[5,23](left=CallExpression[5,14](callee=Identifier[5,12](name=\\"unknown\\") arguments=[] optional=false) operator=\\"===\\" right=Literal[19,23](value=true raw=\\"true\\"))] optional=false)),ExpressionStatement[26,51](expression=CallExpression[26,50](callee=Identifier[26,30](name=\\"test\\") arguments=[BinaryExpression[31,49](left=Literal[31,35](value=null raw=\\"null\\") operator=\\"!==\\" right=CallExpression[40,49](callee=Identifier[40,47](name=\\"unknown\\") arguments=[] optional=false))] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants javascript-parser-strict-equality-unknown parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants javascript-parser-strict-equality-unknown parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants javascript-parser-strict-equality-unknown prints {"mode":"minify"} 1`] = `"test(unknown()===true);test(null!==unknown());"`;
+
+exports[`JavaScript syntax — invariants javascript-parser-strict-equality-unknown tokenizes 1`] = `"name[0,4] ([4,5] name[5,12] ([12,13] )[13,14] ==/!=/===/!==[15,18] true[19,23] )[23,24] ;[24,25] name[26,30] ([30,31] null[31,35] ==/!=/===/!==[36,39] name[40,47] ([47,48] )[48,49] )[49,50] ;[50,51] eof[52,52]"`;
 
 exports[`JavaScript syntax — invariants javascript-parser-write-hooks-lets-a-tap-that-rendered-the-whole-update-stop parses 1`] = `"Program[0,4](body=[ExpressionStatement[0,4](expression=UpdateExpression[0,3](operator=\\"++\\" prefix=false argument=Identifier[0,1](name=\\"x\\")))] sourceType=\\"module\\")"`;
 

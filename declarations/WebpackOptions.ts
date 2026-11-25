@@ -431,7 +431,6 @@ export interface CopyObjectPattern {
 	 * Modifies the content of a copied file.
 	 */
 	transform?:
-		| /** Modifies the content of a copied file. */ import("../lib/output/CopyPlugin").CopyTransform
 		| /** Modifies the content of a copied file, and says how the result is cached. */ {
 				/**
 				 * Whether the result of the transform is cached, and what it is cached under. Defaults to 'true'.
@@ -450,7 +449,8 @@ export interface CopyObjectPattern {
 				 * Modifies the content of a copied file.
 				 */
 				transformer: import("../lib/output/CopyPlugin").CopyTransform;
-		  };
+		  }
+		| /** Modifies the content of a copied file. */ import("../lib/output/CopyPlugin").CopyTransform;
 }
 
 /**
@@ -1545,10 +1545,10 @@ export interface ExternalItemObjectKnown {
 	 * Specify externals depending on the layer.
 	 */
 	byLayer?:
-		| import("../lib/externals/ExternalModuleFactoryPlugin").ExternalItemByLayerFn
 		| {
 				[key: string]: ExternalItem;
-		  };
+		  }
+		| import("../lib/externals/ExternalModuleFactoryPlugin").ExternalItemByLayerFn;
 }
 
 /**
@@ -2277,7 +2277,6 @@ export type HttpUriOptionsAllowedUris = HttpUriOptionsAllowedUrisItem[];
  */
 export type IgnoreWarnings = Array<
 	| /** Ignore specific warnings. */ /** A RegExp to select the warning message. */ RegExp
-	| /** A custom function to select warnings based on the raw warning instance. */ import("../lib/diagnostics/IgnoreWarningsPlugin").IgnoreFn
 	| {
 			/**
 			 * A RegExp or a glob to select the origin file for the warning.
@@ -2294,6 +2293,7 @@ export type IgnoreWarnings = Array<
 			 */
 			module?: RegExp;
 	  }
+	| /** A custom function to select warnings based on the raw warning instance. */ import("../lib/diagnostics/IgnoreWarningsPlugin").IgnoreFn
 >;
 
 /**
@@ -4522,18 +4522,18 @@ export interface OutputHtmlOptions {
 	favicon?:
 		| boolean
 		| NonEmptyString
-		| ((
-				name: string
-		  ) =>
-				| boolean
-				| string
-				| { [rel: string]: HtmlFaviconIcon | HtmlFaviconIcon[] })
 		| {
 				/**
 				 * Icon(s) for a single `<link rel>`: one icon or an array of icons.
 				 */
 				[key: string]: /** @minItems 1 */ HtmlFaviconIcon[] | HtmlFaviconIcon;
-		  };
+		  }
+		| ((
+				name: string
+		  ) =>
+				| boolean
+				| string
+				| { [rel: string]: HtmlFaviconIcon | HtmlFaviconIcon[] });
 	/**
 	 * Where to place injected chunk `<script>`/`<link>` tags. `"body"` (default; `"head"` with `output.module`) keeps them next to the entry tag — end of `<body>` on generated pages; `"head"` moves them into `<head>`; `false` suppresses sibling-chunk injection (entry tags and resource hints remain).
 	 * @since 5.109.0
@@ -5374,16 +5374,16 @@ export interface ResolveOptions {
  * Plugin instance.
  */
 export type ResolvePluginInstance =
-	| ((
-			this: import("enhanced-resolve").Resolver,
-			arg1: import("enhanced-resolve").Resolver
-	  ) => void)
 	| /** @additionalProperties */ {
 			/**
 			 * The run point of the plugin, required method.
 			 */
 			apply: (arg0: import("enhanced-resolve").Resolver) => void;
-	  };
+	  }
+	| ((
+			this: import("enhanced-resolve").Resolver,
+			arg1: import("enhanced-resolve").Resolver
+	  ) => void);
 
 /**
  * Resource-hint (`<link rel="prefetch">` / `<link rel="preload">` / `<link rel="modulepreload">` / `<link rel="preconnect">`) emission for extracted HTML entries and URL-referenced assets. Accepts the initial-graph shorthand (boolean / `"prefetch"` / `"preload"` / `"none"` / `HtmlResourceHint[]` / function — equivalent to `{ initial: <value> }`) or the full object form `{ initial, urlHints, preconnect, modulePreloadPolyfill, manifest }`. `initial` defaults on for ESM output (`output.module`), where native `import()` would otherwise waterfall; classic output stays opt-in.
@@ -5724,8 +5724,6 @@ export type RuleSetUseFunction =
  * A description of an applied loader.
  */
 export type RuleSetUseItem =
-	| RuleSetUseFunction
-	| RuleSetLoader
 	| {
 			/**
 			 * Unique loader options identifier.
@@ -5744,7 +5742,9 @@ export type RuleSetUseItem =
 			 * @since 5.113.0
 			 */
 			sourceTest?: RuleSetConditionOrConditions;
-	  };
+	  }
+	| RuleSetUseFunction
+	| RuleSetLoader;
 
 /**
  * This option enables loading async chunks via a custom script type, such as script type="module".

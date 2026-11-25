@@ -400,7 +400,9 @@ const run = async (code, isModule, functionText = "[function]") => {
 						await dependency.link(() => {
 							throw new Error("dep imports nothing");
 						});
-					} else if (dependency.status === "linked") {
+					}
+					// eslint-disable-next-line unicorn/prefer-else-if -- Linking can change the status.
+					if (/** @type {vm.Module} */ (dependency).status === "linked") {
 						await dependency.evaluate();
 					}
 					return dependency;
@@ -924,6 +926,12 @@ const requiredSpecifiers = (code) => {
 };
 
 describe("JavaScript fuzzer", () => {
+	it("evaluates a dependency imported only dynamically", async () => {
+		await expect(
+			run('console.log((await import("dep")).bump());', true)
+		).resolves.toBe("1\nexports ");
+	});
+
 	it("should write the same programs for the same seed", () => {
 		const first = createProgramGenerator(1);
 		const again = createProgramGenerator(1);

@@ -1,0 +1,8 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`StatsTestCases chunk-origins-with-commas should print correct stats for chunk-origins-with-commas 1`] = `
+"chunk (runtime: main) main.js (main) X bytes [entry] [rendered]
+  > b,c a
+  > c a,b
+  > ./index main"
+`;

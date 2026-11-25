@@ -496,6 +496,7 @@ const ARRAY_CONSTRAINTS = ["minItems", "uniqueItems"];
 // The keywords a source states as a tag of the same name. Adding one here is
 // all a new keyword needs: what the tag says is what the schema says.
 const KEYWORD_TAGS = [
+	"instanceof",
 	"title",
 	"deprecated",
 	"experimental",

@@ -22078,8 +22078,6 @@ declare abstract class MainTemplate {
 		path: TemplatePath,
 		options: PathData
 	) => InterpolatedPathAndAssetInfo;
-	get requireFn(): "__webpack_require__";
-	get outputOptions(): OutputNormalizedWithDefaults;
 }
 
 /**
@@ -22992,11 +22990,6 @@ declare class Module extends DependenciesBlock {
 		missingDependencies: LazySet<string>,
 		buildDependencies: LazySet<string>
 	): void;
-	get hasEqualsChunks(): void;
-	get isUsed(): void;
-	get errors(): any;
-	get warnings(): any;
-	used: void;
 
 	/**
 	 * Gets source basic types.
@@ -33923,13 +33916,13 @@ type ScopeType =
 	| "function"
 	| "module"
 	| "global"
-	| "catch"
-	| "for"
-	| "switch"
-	| "with"
-	| "class"
 	| "function-expression-name"
 	| "block"
+	| "switch"
+	| "catch"
+	| "with"
+	| "for"
+	| "class"
 	| "class-field-initializer"
 	| "class-static-block";
 
@@ -36510,16 +36503,16 @@ declare class SyntaxParser {
 	skipBlockComment(): void;
 	skipSpace(): void;
 	finishToken(type: TokenType, value?: any): void;
-	readToken_dot(): void;
-	readToken_slash(): void;
-	readToken_mult_modulo_exp(code: number): void;
-	readToken_pipe_amp(code: number): void;
-	readToken_caret(): void;
-	readToken_plus_min(code: number): void;
-	readToken_lt_gt(code: number): void;
-	readToken_eq_excl(code: number): void;
-	readToken_question(): void;
-	readToken_numberSign(): void;
+	readTokenDot(): void;
+	readTokenSlash(): void;
+	readTokenMultModuloExp(code: number): void;
+	readTokenPipeAmp(code: number): void;
+	readTokenCaret(): void;
+	readTokenPlusMin(code: number): void;
+	readTokenLtGt(code: number): void;
+	readTokenEqExcl(code: number): void;
+	readTokenQuestion(): void;
+	readTokenNumberSign(): void;
 	getTokenFromCode(code: number): void;
 	finishOp(type: TokenType, size: number): void;
 
@@ -40239,16 +40232,16 @@ declare namespace exports {
 		export let getWorkletBootstrap: "__webpack_require__.wb";
 		export let global: "__webpack_require__.g";
 		/** esm module decorator @deprecated use `esmModuleDecorator` - TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
-		export let hasCssModules: "has css modules";
-		export let hasServerRenderedStylesheets: "has server rendered stylesheets";
-		export let hasFetchPriority: "has fetch priority";
 		export let hasChunkPriority: "has chunk priority";
+		export let hasCssModules: "has css modules";
+		export let hasFetchPriority: "has fetch priority";
 		export let hasOwnProperty: "__webpack_require__.o";
 		export let hasSealedDeferredNamespace: "has sealed deferred namespace";
+		export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 		export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+		export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 		export let hmrChunkGroups: "__webpack_require__.hmrG";
 		export let hmrChunkVersions: "__webpack_require__.hmrV";
-		export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 		export let hmrDownloadManifest: "__webpack_require__.hmrM";
 		export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 		export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
@@ -40353,14 +40346,14 @@ declare namespace exports {
 	}
 	export namespace javascript {
 		export namespace ChunkHelpers {
+			export let createChunkHashHandler: (
+				name: string
+			) => (chunk: Chunk, hash: Hash, __2: ChunkHashContext) => void;
 			export let getAllChunks: (
 				entrypoint: Entrypoint,
 				excludedChunk1?: null | Chunk,
 				excludedChunk2?: null | Chunk
 			) => Set<Chunk>;
-			export let createChunkHashHandler: (
-				name: string
-			) => (chunk: Chunk, hash: Hash, __2: ChunkHashContext) => void;
 			export let getChunkInfo: (
 				chunk: Chunk,
 				chunkGraph: ChunkGraph
@@ -40396,6 +40389,7 @@ declare namespace exports {
 		}
 		export namespace syntax {
 			/** exposed as `webpack.javascript.syntax.parser`; unstable API @experimental */ export namespace parser {
+				export let A: JavascriptSyntaxPath;
 				export let Field: Readonly<{
 					object: 1;
 					property: 2;
@@ -40454,106 +40448,6 @@ declare namespace exports {
 					tail: 1024;
 					await: 2048;
 				}>;
-				export let codePointToString: (code: number) => string;
-				export namespace defaultOptions {
-					export let ecmaVersion: null;
-					export let sourceType: string;
-					export let strict: boolean;
-					export let onInsertedSemicolon: null;
-					export let onTrailingComma: null;
-					export let allowReserved: null;
-					export let allowReturnOutsideFunction: boolean;
-					export let allowImportExportEverywhere: boolean;
-					export let allowAwaitOutsideFunction: null;
-					export let allowSuperOutsideMethod: null;
-					export let allowHashBang: boolean;
-					export let checkPrivateFields: boolean;
-					export let locations: boolean;
-					export let onToken: null;
-					export let onTokenRead: null;
-					export let onComment: null;
-					export let ranges: boolean;
-					export let sourceFile: null;
-					export let preserveParens: boolean;
-				}
-				export let getLineInfo: (input: string, offset: number) => Position;
-				export let getOptions: (
-					opts?: null | Partial<OptionsSyntaxParser>
-				) => ResolvedOptionsSyntaxParser;
-				export let isIdentifierChar: (
-					code: number,
-					astral?: boolean
-				) => boolean;
-				export let isIdentifierStart: (
-					code: number,
-					astral?: boolean
-				) => boolean;
-				export let isNewLine: (code: number) => boolean;
-				export let keywordTypes: Record<string, TokenType>;
-				export let lineBreak: RegExp;
-				export let nextLineBreak: (
-					code: string,
-					from: number,
-					end?: number
-				) => number;
-				export let nonASCIIwhitespace: RegExp;
-				export namespace tokContexts {
-					export let b_stat: TokContext;
-					export let b_expr: TokContext;
-					export let b_tmpl: TokContext;
-					export let p_stat: TokContext;
-					export let p_expr: TokContext;
-					export let q_tmpl: TokContext;
-					export let f_stat: TokContext;
-					export let f_expr: TokContext;
-					export let f_expr_gen: TokContext;
-					export let f_gen: TokContext;
-				}
-				export namespace tokTypes {
-					export let num: TokenType;
-					export let regexp: TokenType;
-					export let string: TokenType;
-					export let name: TokenType;
-					export let privateId: TokenType;
-					export let eof: TokenType;
-					export let bracketL: TokenType;
-					export let bracketR: TokenType;
-					export let braceL: TokenType;
-					export let braceR: TokenType;
-					export let parenL: TokenType;
-					export let parenR: TokenType;
-					export let comma: TokenType;
-					export let semi: TokenType;
-					export let colon: TokenType;
-					export let dot: TokenType;
-					export let question: TokenType;
-					export let questionDot: TokenType;
-					export let arrow: TokenType;
-					export let template: TokenType;
-					export let invalidTemplate: TokenType;
-					export let ellipsis: TokenType;
-					export let backQuote: TokenType;
-					export let dollarBraceL: TokenType;
-					export let eq: TokenType;
-					export let assign: TokenType;
-					export let incDec: TokenType;
-					export let prefix: TokenType;
-					export let logicalOR: TokenType;
-					export let logicalAND: TokenType;
-					export let bitwiseOR: TokenType;
-					export let bitwiseXOR: TokenType;
-					export let bitwiseAND: TokenType;
-					export let equality: TokenType;
-					export let relational: TokenType;
-					export let bitShift: TokenType;
-					export let plusMin: TokenType;
-					export let modulo: TokenType;
-					export let star: TokenType;
-					export let slash: TokenType;
-					export let starstar: TokenType;
-					export let coalesce: TokenType;
-				}
-				export let wordsRegexp: (words: string) => RegExp;
 				export let NodeType: Readonly<{
 					Identifier: 1;
 					PrivateIdentifier: 2;
@@ -40637,11 +40531,60 @@ declare namespace exports {
 					sourceType: 5;
 					phase: 6;
 				}>;
+				export let STATEMENT_TYPES_WITHOUT_BINDINGS: Set<string>;
+				export let codePointToString: (code: number) => string;
 				export let collectCjsRequireSpecifiers: (source: string) => Set<string>;
 				export let collectEsmImportSpecifiers: (
 					source: string
 				) => Map<string, boolean>;
+				export namespace defaultOptions {
+					export let ecmaVersion: null;
+					export let sourceType: string;
+					export let strict: boolean;
+					export let onInsertedSemicolon: null;
+					export let onTrailingComma: null;
+					export let allowReserved: null;
+					export let allowReturnOutsideFunction: boolean;
+					export let allowImportExportEverywhere: boolean;
+					export let allowAwaitOutsideFunction: null;
+					export let allowSuperOutsideMethod: null;
+					export let allowHashBang: boolean;
+					export let checkPrivateFields: boolean;
+					export let locations: boolean;
+					export let onToken: null;
+					export let onTokenRead: null;
+					export let onComment: null;
+					export let ranges: boolean;
+					export let sourceFile: null;
+					export let preserveParens: boolean;
+				}
+				export let fromEstreeObject: (
+					program: Program,
+					input: string
+				) => number;
+				export let getLineInfo: (input: string, offset: number) => Position;
+				export let getOptions: (
+					opts?: null | Partial<OptionsSyntaxParser>
+				) => ResolvedOptionsSyntaxParser;
+				export let grammar: (
+					input: string,
+					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
+					writer: undefined | PrintContext<JavascriptSyntaxPath, number>,
+					options: JavascriptProcessOptions,
+					path?: JavascriptSyntaxPath
+				) => void;
 				export let hasOctalEscape: (raw: string) => boolean;
+				export let isIdentifierChar: (
+					code: number,
+					astral?: boolean
+				) => boolean;
+				export let isIdentifierStart: (
+					code: number,
+					astral?: boolean
+				) => boolean;
+				export let isNewLine: (code: number) => boolean;
+				export let isWalkingSyntaxTree: () => boolean;
+				export let keywordTypes: Record<string, TokenType>;
 				export let lazyObjectOfSource: (
 					source: LazySource,
 					node: number
@@ -40721,14 +40664,26 @@ declare namespace exports {
 					| AssignmentPattern
 					| SwitchCase
 					| TemplateElement;
+				export let lineBreak: RegExp;
+				export let nextLineBreak: (
+					code: string,
+					from: number,
+					end?: number
+				) => number;
+				export let nonASCIIwhitespace: RegExp;
 				export let parseProgram: _functionSyntaxParserFunction_1;
 				export let parsedTree: () => null | ColumnarSyntaxTree;
-				export let takeParsedTree: () => null | ColumnarSyntaxTree;
+				export let printEarlyIn: (early: Map<number, number>) => void;
 				export let readParsedTree: (
 					tree: ColumnarSyntaxTree,
 					input: string
 				) => void;
 				export let releaseParserCaches: () => void;
+				export let syntaxTreeOfEstree: (
+					program: NodeEstreeIndex,
+					input: string
+				) => { tree: ColumnarSyntaxTree; program: number };
+				export let takeParsedTree: () => null | ColumnarSyntaxTree;
 				export let toEstreeObject: (
 					node: number,
 					options?: EstreeObjectOptions
@@ -40808,24 +40763,62 @@ declare namespace exports {
 					| AssignmentPattern
 					| SwitchCase
 					| TemplateElement;
-				export let fromEstreeObject: (
-					program: Program,
-					input: string
-				) => number;
-				export let STATEMENT_TYPES_WITHOUT_BINDINGS: Set<string>;
-				export let syntaxTreeOfEstree: (
-					program: NodeEstreeIndex,
-					input: string
-				) => { tree: ColumnarSyntaxTree; program: number };
-				export let A: JavascriptSyntaxPath;
-				export let grammar: (
-					input: string,
-					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
-					writer: undefined | PrintContext<JavascriptSyntaxPath, number>,
-					options: JavascriptProcessOptions,
-					path?: JavascriptSyntaxPath
-				) => void;
-				export let isWalkingSyntaxTree: () => boolean;
+				export namespace tokContexts {
+					export let bStat: TokContext;
+					export let bExpr: TokContext;
+					export let bTmpl: TokContext;
+					export let pStat: TokContext;
+					export let pExpr: TokContext;
+					export let qTmpl: TokContext;
+					export let fStat: TokContext;
+					export let fExpr: TokContext;
+					export let fExprGen: TokContext;
+					export let fGen: TokContext;
+				}
+				export namespace tokTypes {
+					export let num: TokenType;
+					export let regexp: TokenType;
+					export let string: TokenType;
+					export let name: TokenType;
+					export let privateId: TokenType;
+					export let eof: TokenType;
+					export let bracketL: TokenType;
+					export let bracketR: TokenType;
+					export let braceL: TokenType;
+					export let braceR: TokenType;
+					export let parenL: TokenType;
+					export let parenR: TokenType;
+					export let comma: TokenType;
+					export let semi: TokenType;
+					export let colon: TokenType;
+					export let dot: TokenType;
+					export let question: TokenType;
+					export let questionDot: TokenType;
+					export let arrow: TokenType;
+					export let template: TokenType;
+					export let invalidTemplate: TokenType;
+					export let ellipsis: TokenType;
+					export let backQuote: TokenType;
+					export let dollarBraceL: TokenType;
+					export let eq: TokenType;
+					export let assign: TokenType;
+					export let incDec: TokenType;
+					export let prefix: TokenType;
+					export let logicalOR: TokenType;
+					export let logicalAND: TokenType;
+					export let bitwiseOR: TokenType;
+					export let bitwiseXOR: TokenType;
+					export let bitwiseAND: TokenType;
+					export let equality: TokenType;
+					export let relational: TokenType;
+					export let bitShift: TokenType;
+					export let plusMin: TokenType;
+					export let modulo: TokenType;
+					export let star: TokenType;
+					export let slash: TokenType;
+					export let starstar: TokenType;
+					export let coalesce: TokenType;
+				}
 				export let walkSyntaxTree: (
 					tree: ColumnarSyntaxTree,
 					program: number,
@@ -40835,43 +40828,21 @@ declare namespace exports {
 					inlined?: Uint8Array,
 					path?: JavascriptSyntaxPath
 				) => void;
-				export let printEarlyIn: (early: Map<number, number>) => void;
+				export let wordsRegexp: (words: string) => RegExp;
 				export {
+					LEGACY_ASSERT_ATTRIBUTES,
 					SyntaxParser as Parser,
-					Position,
+					ParserPosition,
 					ParserSourceLocation,
+					Position,
+					ScopeLog,
 					TokContext,
 					Token,
 					TokenType,
-					LEGACY_ASSERT_ATTRIBUTES,
-					ParserPosition,
-					WebpackParser,
-					ScopeLog
+					WebpackParser
 				};
 			}
 			/** exposed as `webpack.javascript.syntax.printer`; unstable API @experimental */ export namespace printer {
-				export let prepareMinify: (
-					text: string,
-					options: JavascriptProcessOptions
-				) => {
-					tree: ColumnarSyntaxTree;
-					program: number;
-					text: string;
-					options: NodePrintOptions;
-					inlined?: Uint8Array;
-					finish?: () => void;
-				};
-				export let readsMinifyOptions: (
-					options: JavascriptProcessOptions
-				) => boolean;
-				export let printer: (
-					path: JavascriptSyntaxPath,
-					writer: PrintContext<JavascriptSyntaxPath, number>
-				) => string;
-				export let getNodePrinter: () => (
-					path: JavascriptSyntaxPath,
-					writer: PrintContext<JavascriptSyntaxPath, number>
-				) => string;
 				export let IGNORED_FORMAT_OPTIONS: string[];
 				export let createUnicode: () => {
 					getFullChar: (str: string, pos: number) => string;
@@ -40887,6 +40858,28 @@ declare namespace exports {
 						allowSurrogates?: boolean
 					) => boolean;
 				};
+				export let getNodePrinter: () => (
+					path: JavascriptSyntaxPath,
+					writer: PrintContext<JavascriptSyntaxPath, number>
+				) => string;
+				export let prepareMinify: (
+					text: string,
+					options: JavascriptProcessOptions
+				) => {
+					tree: ColumnarSyntaxTree;
+					program: number;
+					text: string;
+					options: NodePrintOptions;
+					inlined?: Uint8Array;
+					finish?: () => void;
+				};
+				export let printer: (
+					path: JavascriptSyntaxPath,
+					writer: PrintContext<JavascriptSyntaxPath, number>
+				) => string;
+				export let readsMinifyOptions: (
+					options: JavascriptProcessOptions
+				) => boolean;
 			}
 			/** exposed as `webpack.javascript.syntax.toEstreeObject`; unstable API @experimental */ export const toEstreeObject: (
 				node: number,
@@ -41067,16 +41060,16 @@ declare namespace exports {
 			export let getWorkletBootstrap: "__webpack_require__.wb";
 			export let global: "__webpack_require__.g";
 			/** esm module decorator @deprecated use `esmModuleDecorator` - TODO in the next major release: remove */ export let harmonyModuleDecorator: "__webpack_require__.hmd";
-			export let hasCssModules: "has css modules";
-			export let hasServerRenderedStylesheets: "has server rendered stylesheets";
-			export let hasFetchPriority: "has fetch priority";
 			export let hasChunkPriority: "has chunk priority";
+			export let hasCssModules: "has css modules";
+			export let hasFetchPriority: "has fetch priority";
 			export let hasOwnProperty: "__webpack_require__.o";
 			export let hasSealedDeferredNamespace: "has sealed deferred namespace";
+			export let hasServerRenderedStylesheets: "has server rendered stylesheets";
 			export let hasSynthesizedDeferredNamespace: "has synthesized deferred namespace";
+			export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 			export let hmrChunkGroups: "__webpack_require__.hmrG";
 			export let hmrChunkVersions: "__webpack_require__.hmrV";
-			export let hmrCheckChunkVersions: "__webpack_require__.hmrK";
 			export let hmrDownloadManifest: "__webpack_require__.hmrM";
 			export let hmrDownloadUpdateHandlers: "__webpack_require__.hmrC";
 			export let hmrInvalidateModuleHandlers: "__webpack_require__.hmrI";
@@ -41253,8 +41246,6 @@ declare namespace exports {
 			/** exposed as `webpack.css.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let A: CssSyntaxPath;
 				export let DARK_PROPERTY: "--webpack-dark";
-				export let KEYFRAMES_AT_RULE_RE: RegExp;
-				export let LIGHT_PROPERTY: "--webpack-light";
 				export namespace Field {
 					export let prelude: 1;
 					export let value: 2;
@@ -41266,11 +41257,8 @@ declare namespace exports {
 					export let integer: 2;
 					export let id: 4;
 				}
-				export namespace Part {
-					export let name: 1;
-					export let value: 2;
-					export let block: 3;
-				}
+				export let KEYFRAMES_AT_RULE_RE: RegExp;
+				export let LIGHT_PROPERTY: "--webpack-light";
 				export namespace NodeType {
 					export let Ident: 1;
 					export let Function: 2;
@@ -41301,6 +41289,11 @@ declare namespace exports {
 					export let Comment: 27;
 					export let Raw: 28;
 				}
+				export namespace Part {
+					export let name: 1;
+					export let value: 2;
+					export let block: 3;
+				}
 				export namespace TokenType {
 					export let Comment: 1;
 					export let Whitespace: 2;
@@ -41330,12 +41323,10 @@ declare namespace exports {
 					export let EOF: 26;
 				}
 				export let VENDOR_PREFIX: RegExp;
-				export let containsSubstitutionFunction: (text: string) => boolean;
-				export let isDigit: (cc: number) => boolean;
-				export let isHexDigit: (cc: number) => boolean;
-				export let isIdentCodePoint: (cc: number) => boolean;
-				export let isIdentStartCodePoint: (cc: number) => boolean;
-				export let isLetter: (cc: number) => boolean;
+				export let asciiCaseInsensitiveMatch: (
+					s: string,
+					lit: string
+				) => boolean;
 				export let asciiLowercaseName: (s: string) => string;
 				export let buildSkipSet: (nodeTypes: number[]) => Uint8Array;
 				export let consumeExtraNewline: (
@@ -41343,10 +41334,7 @@ declare namespace exports {
 					input: string,
 					pos: number
 				) => number;
-				export let asciiCaseInsensitiveMatch: (
-					s: string,
-					lit: string
-				) => boolean;
+				export let containsSubstitutionFunction: (text: string) => boolean;
 				export let escapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
@@ -41359,9 +41347,14 @@ declare namespace exports {
 					options: CssProcessOptions,
 					path?: CssSyntaxPath
 				) => void;
-				export let isDashedIdentifier: (identifier: string) => boolean;
-				export let isSimpleIdentifier: (value: string) => boolean;
 				export let isAsciiWhitespace: (cc: number) => boolean;
+				export let isDashedIdentifier: (identifier: string) => boolean;
+				export let isDigit: (cc: number) => boolean;
+				export let isHexDigit: (cc: number) => boolean;
+				export let isIdentCodePoint: (cc: number) => boolean;
+				export let isIdentStartCodePoint: (cc: number) => boolean;
+				export let isLetter: (cc: number) => boolean;
+				export let isSimpleIdentifier: (value: string) => boolean;
 				export let normalizeUrl: (str: string, isString: boolean) => string;
 				export let parseABlocksContents: (
 					input: string | TokenStream,
@@ -41406,13 +41399,13 @@ declare namespace exports {
 				export let pickTransforms: (
 					options: CssTransformOptions
 				) => undefined | CssTransformOptions;
-				export let rangeEquals: (
+				export let rangeAsciiCaseInsensitiveMatch: (
 					input: string,
 					start: number,
 					end: number,
 					lit: string
 				) => boolean;
-				export let rangeAsciiCaseInsensitiveMatch: (
+				export let rangeEquals: (
 					input: string,
 					start: number,
 					end: number,
@@ -41511,30 +41504,16 @@ declare namespace exports {
 			/** exposed as `webpack.html.syntax.parser`; unstable API @experimental */ export namespace parser {
 				export let A: HtmlSyntaxPath;
 				export let EMBEDDED_STYLESHEET: "embedded-stylesheet";
-				export let FOREIGN_ELEMENT: "foreign-element";
 				export let FLAG_FOSTER_REGION: 128;
+				export let FOREIGN_ELEMENT: "foreign-element";
 				export namespace Field {
 					export let attributes: 1;
 					export let content: 2;
 				}
-				export let declaredCharset: (input: string) => undefined | string;
-				export let declaredEncoding: (
-					input: string
-				) => undefined | "utf8" | "other";
-				export let declaresUtf8: (input: string) => boolean;
 				export namespace Flag {
 					export let mathml: 1;
 					export let svg: 2;
 					export let selfClosing: 4;
-				}
-				export namespace Part {
-					export let name: 1;
-					export let value: 2;
-					export let content: 3;
-					export let startTag: 4;
-					export let endTag: 5;
-					export let publicId: 6;
-					export let systemId: 7;
 				}
 				export namespace Namespace {
 					export let HTML: 0;
@@ -41552,13 +41531,21 @@ declare namespace exports {
 					export let ProcessingInstruction: 7;
 					export let Attribute: 8;
 				}
+				export namespace Part {
+					export let name: 1;
+					export let value: 2;
+					export let content: 3;
+					export let startTag: 4;
+					export let endTag: 5;
+					export let publicId: 6;
+					export let systemId: 7;
+				}
 				export namespace Quote {
 					export let None: 0;
 					export let Double: 1;
 					export let Single: 2;
 				}
 				export let asciiLowercase: (value: string) => string;
-				export let stripAsciiWhitespace: (value: string) => string;
 				export let baseTag: (
 					base:
 						| string
@@ -41575,6 +41562,11 @@ declare namespace exports {
 				) => string;
 				export let buildHeadTags: (opts: OutputHtmlOptions) => string;
 				export let collapseWhitespaceRuns: (s: string) => string;
+				export let declaredCharset: (input: string) => undefined | string;
+				export let declaredEncoding: (
+					input: string
+				) => undefined | "utf8" | "other";
+				export let declaresUtf8: (input: string) => boolean;
 				export let decodeEntities: _functionSyntaxParserFunction_2;
 				export let decodeXmlAttribute: (value: string) => string;
 				export let decodeXmlEntities: (value: string) => string;
@@ -41614,6 +41606,7 @@ declare namespace exports {
 					options: HtmlTransformOptions
 				) => undefined | HtmlTransformOptions;
 				export let startsWithAsciiWhitespace: (s: string) => boolean;
+				export let stripAsciiWhitespace: (value: string) => string;
 				export let tokenize: (
 					input: string,
 					pos?: number,
@@ -42292,7 +42285,6 @@ declare namespace exports {
 		ParserState,
 		JavascriptParserTag,
 		ResolvePluginInstance,
-		Resolver,
 		RenderManifestEntry,
 		RenderManifestOptions,
 		TemplatePath,

@@ -1,0 +1,1 @@
+c?g()||longName():longName();

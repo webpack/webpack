@@ -1426,18 +1426,20 @@ const PARSER_TABLES = [
 		"SVG_EDITOR_NAMESPACES",
 		"set",
 		"Editor-specific SVG data namespaces, not described by webref. Generic RDF and licensing vocabularies are not editor data.",
+		/* eslint-disable unicorn/prefer-https -- These are literal namespace identifiers. */
 		[
-			"https://www.inkscape.org/namespaces/inkscape",
-			"https://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
-			"https://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
-			"https://krita.org/namespaces/svg/krita",
-			"https://ns.adobe.com/AdobeIllustrator/10.0/",
-			"https://ns.adobe.com/Extensibility/1.0/",
-			"https://ns.adobe.com/SaveForWeb/1.0/",
-			"https://schemas.microsoft.com/visio/2003/SVGExtensions/",
-			"https://www.bohemiancoding.com/sketch/ns",
-			"https://www.figma.com/figma/ns"
+			"http://www.inkscape.org/namespaces/inkscape",
+			"http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd",
+			"http://krita.org/namespaces/svg/krita",
+			"http://ns.adobe.com/AdobeIllustrator/10.0/",
+			"http://ns.adobe.com/Extensibility/1.0/",
+			"http://ns.adobe.com/SaveForWeb/1.0/",
+			"http://schemas.microsoft.com/visio/2003/SVGExtensions/",
+			"http://www.bohemiancoding.com/sketch/ns",
+			"http://www.figma.com/figma/ns"
 		]
+		/* eslint-enable unicorn/prefer-https */
 	],
 	[
 		"VOID",
@@ -2865,7 +2867,7 @@ const parserTable = ([name, kind, doc, items]) => {
 						: kind === "array"
 							? "string[]"
 							: "Record<string, string>";
-	return `/**\n * ${doc}\n * @type {${type}}\n */\nconst ${name} = ${value};\n`;
+	return `/**\n * ${doc}\n * @type {${type}}\n */\n${name === "SVG_EDITOR_NAMESPACES" ? "/* eslint-disable unicorn/prefer-https -- These are literal namespace identifiers. */\n" : ""}const ${name} = ${value};\n${name === "SVG_EDITOR_NAMESPACES" ? "/* eslint-enable unicorn/prefer-https */\n" : ""}`;
 };
 
 // WHY: The §13.1.2.4 optional-tag conditions and the value grammars below are prose
@@ -3106,7 +3108,10 @@ const REGION_REGEXP =
  */
 const entityLiteral = (map) =>
 	`{${Object.keys(map)
-		.map((name) => `${toJsStringLiteral(name)}:${toJsStringLiteral(map[name])}`)
+		.map(
+			(name) =>
+				`${toJsStringLiteral(name)}:${toJsStringLiteral(map[name]).replace(/\u00A0/g, "\\u{A0}")}`
+		)
 		.join(",")}}`;
 
 /**
