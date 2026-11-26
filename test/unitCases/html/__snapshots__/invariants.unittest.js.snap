@@ -72015,6 +72015,24 @@ exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an
 
 exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-drops-an-empty-attribute-like-the-written-one tokenizes 1`] = `"attr[6,11|-1,-1] open[0,13|1,5] open[13,22|14,21] open[22,28|23,27] end=28"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-script-a-reconstructed-element-holds-is-outside-the-table-range parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <b>
+|     <table>
+|     <b>
+|       \\"a\\"
+|       <script>
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-script-a-reconstructed-element-holds-is-outside-the-table-range parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,10]:unexpected-start-tag-implies-table-voodoo warning[10,17]:unexpected-start-tag-implies-end-tag warning[17,18]:unexpected-character-implies-table-voodoo warning[26,26]:expected-named-closing-tag-but-got-eof warning[26,26]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-script-a-reconstructed-element-holds-is-outside-the-table-range prints {"mode":"minify"} 1`] = `"<b></b><table></table><b>a<script></script></b><table></table>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-script-a-reconstructed-element-holds-is-outside-the-table-range tokenizes 1`] = `"open[0,7|1,6] open[7,10|8,9] open[10,17|11,16] text[17,18] open[18,26|19,25] end=26"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-style-inside-option-is-part-of-its-label parses 1`] = `
 "| <html>
 |   <head>

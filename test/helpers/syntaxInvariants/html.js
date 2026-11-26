@@ -555,8 +555,14 @@ const htmlSpans = (html) =>
 	});
 
 /**
- * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string }} NodeRun
+ * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string, rebuilt: boolean }} NodeRun
  */
+
+// §13.2.4.3's formatting elements: the ones the parser rebuilds, with no tag of
+// their own, from the list of active formatting elements.
+const FORMATTING_ELEMENTS = new Set(
+	"a b big code em font i nobr s small strike strong tt u".split(" ")
+);
 
 /**
  * The fragment context a node's children are read back in: its tag, prefixed
@@ -579,8 +585,9 @@ const SLICE_BUDGET_FACTOR = 4;
 /**
  * Every node in one document, in post-order with the size of its subtree —
  * which is what lets a subtree be read as a run rather than walked again. `lo`
- * and `hi` are how far that subtree reaches, and `context` the tag the node sat
- * in, which is what the fragment parsing algorithm needs to read it back.
+ * and `hi` are how far that subtree reaches, `context` the tag the node sat in,
+ * which is what the fragment parsing algorithm needs to read it back, and
+ * `rebuilt` whether it sits inside a formatting element the parser rebuilt.
  * @param {string} html a document
  * @param {string=} fragmentContext the element to parse it as the contents of
  * @returns {NodeRun[]} each node, children before parents
@@ -588,18 +595,27 @@ const SLICE_BUDGET_FACTOR = 4;
 const htmlNodeRuns = (html, fragmentContext) => {
 	/** @type {NodeRun[]} */
 	const runs = [];
-	/** @type {{ held: number, lo: number, hi: number, context: string }[]} */
-	const stack = [{ held: 0, lo: html.length, hi: 0, context: "" }];
+	/** @type {{ held: number, lo: number, hi: number, context: string, rebuilt: boolean }[]} */
+	const stack = [
+		{ held: 0, lo: html.length, hi: 0, context: "", rebuilt: false }
+	];
 	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {};
 	for (const type of Object.values(NodeType)) {
 		visitors[type] = {
 			enter: (nodePath) => {
+				const [start, end] = nodePath.range();
 				stack.push({
 					held: 0,
 					lo: html.length,
 					hi: 0,
-					context: fragmentContextOf(nodePath)
+					context: fragmentContextOf(nodePath),
+					rebuilt:
+						stack[stack.length - 1].rebuilt ||
+						(end <= start &&
+							nodePath.type() === NodeType.Element &&
+							_namespaceOf(nodePath.node) === Namespace.HTML &&
+							FORMATTING_ELEMENTS.has(nodePath.name()))
 				});
 			},
 			exit: (nodePath) => {
@@ -624,7 +640,8 @@ const htmlNodeRuns = (html, fragmentContext) => {
 					size,
 					lo,
 					hi,
-					context: parent.context
+					context: parent.context,
+					rebuilt: frame.rebuilt
 				});
 			}
 		};
@@ -669,6 +686,26 @@ const holdsQuirksTable = (runs, at) => {
 };
 
 /**
+ * Whether a node's range holds the source of a node outside its subtree that a
+ * rebuilt formatting element took in: the list of active formatting elements
+ * decided where that one went, and no fragment context carries that list.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {readonly number[]} rebuilt the index of every node inside a rebuilt element
+ * @param {number} at the node
+ * @returns {boolean} whether a node in its range went where the list put it
+ */
+const holdsRebuiltContent = (runs, rebuilt, at) => {
+	const node = runs[at];
+	const first = at - node.size + 1;
+	for (const index of rebuilt) {
+		if (index >= first && index <= at) continue;
+		const start = runs[index].start;
+		if (start >= node.start && start < node.end) return true;
+	}
+	return false;
+};
+
+/**
  * Hold each node's own source to the node it came from: the bytes between its
  * offsets, read back as the contents of the element they sat in, give that node
  * back.
@@ -679,15 +716,22 @@ const holdsQuirksTable = (runs, at) => {
  * to the fragment parsing algorithm is the spec's own answer to that, and it is
  * what the browser does for `innerHTML`.
  *
- * Two shapes are left out rather than normalized: an element the parser
- * inserted or cloned wrote no tag to slice, and an element whose end is its
+ * Three shapes are left out rather than normalized: an element the parser
+ * inserted or cloned wrote no tag to slice, an element whose end is its
  * start tag's — §13.2 leaves it there until an end tag is read — has a range
- * that does not hold its own children, so there is no slice to reparse.
+ * that does not hold its own children, so there is no slice to reparse, and a
+ * range holding what a rebuilt formatting element took in depends on a list
+ * no fragment context hands over.
  * @param {string} html a document
  * @returns {{ reports: import("./relations").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
  */
 const htmlSlices = (html) => {
 	const runs = htmlNodeRuns(html);
+	/** @type {number[]} */
+	const rebuilt = [];
+	for (let at = 0; at < runs.length; at++) {
+		if (runs[at].rebuilt && runs[at].end > runs[at].start) rebuilt.push(at);
+	}
 	/** @type {import("./relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = html.length * SLICE_BUDGET_FACTOR;
@@ -705,7 +749,8 @@ const htmlSlices = (html) => {
 			node.start > node.lo ||
 			node.end < node.hi ||
 			node.context === "" ||
-			holdsQuirksTable(runs, at)
+			holdsQuirksTable(runs, at) ||
+			holdsRebuiltContent(runs, rebuilt, at)
 		) {
 			skipped++;
 			continue;
