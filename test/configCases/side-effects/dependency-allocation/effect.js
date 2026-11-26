@@ -1,0 +1,1 @@
+global.DEPENDENCY_EFFECTS = (global.DEPENDENCY_EFFECTS || 0) + 1;
