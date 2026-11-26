@@ -8286,7 +8286,7 @@ declare class CssTokenizer {
 
 	/**
 	 * Point the stream at a new input, as a fresh one would start. The parse tree
-	 * is its own stream and starts each parse this way rather than allocating one.
+	 * is its own stream and starts each grammar run this way rather than allocating one.
 	 */
 	reset(
 		input: string,
