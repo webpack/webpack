@@ -2,7 +2,9 @@
 
 const LogTestPlugin = require("../../helpers/LogTestPlugin");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",

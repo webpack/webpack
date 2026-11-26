@@ -4,7 +4,9 @@ const assert = require("assert");
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = Array.from({ length: 4 }, (_, index) => ({
 	mode: "development",
 	devtool: false,

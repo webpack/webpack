@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `import.meta.main` reads the factory's module parameter, whose name depends on
 // the module itself and, once scope-hoisted, on the concatenation root.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "node",

@@ -5,9 +5,11 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler, OutputFileSystem } from "../../../../" */
+
 const PLUGIN_NAME = "OutsideRemoveFailurePlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		allowOutside: true,
@@ -15,14 +17,13 @@ module.exports = {
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			let failed = false;
-			const outputFileSystem =
-				/** @type {import("../../../../").OutputFileSystem} */ (
-					compiler.outputFileSystem
-				);
+			const outputFileSystem = /** @type {OutputFileSystem} */ (
+				compiler.outputFileSystem
+			);
 			/** @type {NonNullable<typeof outputFileSystem.unlink>} */
 			const unlink = (file, callback) => {
 				if (

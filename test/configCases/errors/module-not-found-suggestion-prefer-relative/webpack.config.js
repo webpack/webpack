@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.js",
 	// A module request resolves next to its origin too, so the hint has to look

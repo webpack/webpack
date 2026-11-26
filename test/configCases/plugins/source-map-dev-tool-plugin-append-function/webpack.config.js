@@ -4,7 +4,9 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,

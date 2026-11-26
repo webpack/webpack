@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 /**
  * @param {number} index configuration index
  * @param {true | "global"} usedExports scope of the export usage analysis
  * @param {boolean} concatenateModules whether to concatenate modules
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (index, usedExports, concatenateModules) => ({
 	mode: "production",
@@ -29,7 +31,7 @@ const config = (index, usedExports, concatenateModules) => ({
 	plugins: [
 		{
 			/**
-			 * @param {import("../../../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {

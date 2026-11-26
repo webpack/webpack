@@ -35,7 +35,7 @@ const {
 	thrownText
 } = require("../test/helpers/syntaxInvariants/relations");
 
-/** @import { Report } from "../test/helpers/syntaxInvariants/relations" */
+/** @import { Report } from "../test/helpers/syntaxInvariants/relations.js" */
 
 const ROOT = path.resolve(__dirname, "..");
 

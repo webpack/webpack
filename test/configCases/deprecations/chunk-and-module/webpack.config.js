@@ -2,7 +2,9 @@
 
 const { ChunkGraph, ExternalModule } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		(compiler) => {

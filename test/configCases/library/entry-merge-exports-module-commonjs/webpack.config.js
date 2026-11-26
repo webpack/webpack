@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compilation, Compiler } from "../../../../" */
+/** @import { Compilation, Compiler, Configuration } from "../../../../" */
 
 // A CommonJS entry module adds `export default __webpack_exports__` so that the
 // library stays importable, which only holds while no merged module exports a
@@ -36,7 +36,7 @@ const expectOneDefaultExport = (synthetic) =>
 /**
  * @param {string[]} entry entry modules, the last one CommonJS
  * @param {boolean} synthetic whether the synthetic default export is expected
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const config = (entry, synthetic) => ({
 	entry: { main: entry },
@@ -50,7 +50,7 @@ const config = (entry, synthetic) => ({
 	plugins: [expectOneDefaultExport(synthetic)]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config(["./a.js", "./b.js"], false),
 	config(["./c.js", "./b.js"], true)

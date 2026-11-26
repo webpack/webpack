@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 const base = {
 	output: {
 		module: true
@@ -11,7 +13,7 @@ const base = {
 	target: "es2020"
 };
 
-/** @type {import("../../../../types").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

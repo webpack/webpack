@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
- * @param {import("../../../../").Configuration} config the configuration
+ * @param {Configuration} config the configuration
  * @returns {(RegExp[])[]} what the build is expected to report
  */
 module.exports = (config) =>

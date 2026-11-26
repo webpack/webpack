@@ -94,7 +94,7 @@ const forEngine = (filed) =>
 
 // What neither a width nor a frame's color scheme reaches, set by media
 // emulation where the engine offers it; each runs only over the pairs naming it.
-/** @type {{ label: string, named: RegExp, apply: (page: import("playwright-core").Page, on: boolean) => Promise<void> }[]} */
+/** @type {{ label: string, named: RegExp, apply: (page: Page, on: boolean) => Promise<void> }[]} */
 const EMULATIONS = EMULATES_MEDIA
 	? [
 			{
@@ -134,12 +134,14 @@ const {
 	readDocument
 } = require("../helpers/wptCorpus");
 
-/** @import { Fixture, PageHelpers, Relaxation, StylePair } from "../helpers/syntaxEquivalence" */
+/** @import { Fixture, PageHelpers, Relaxation, StylePair, RenderPair, RenderReport } from "../helpers/syntaxEquivalence.js" */
+/** @import { Page, Browser } from "playwright-core" */
+/** @import { MutableToken } from "../../lib/css/syntax-parser.js" */
 
 /**
  * Every pair whose stylesheets style some element differently, on a page with
  * the helpers installed — at the default media, then under each emulation.
- * @param {import("playwright-core").Page} page the page
+ * @param {Page} page the page
  * @param {StylePair[]} pairs the pairs
  * @param {string[]=} types element types every pair nests in each other
  * @returns {Promise<{ name: string, why: string }[]>} what moved, per pair
@@ -839,7 +841,7 @@ const STYLE_CONTROLS = new Map([
  * Run `evaluate` over `items` in batches the page can hold.
  * @template TIn
  * @template TOut
- * @param {import("playwright-core").Page} page the page
+ * @param {Page} page the page
  * @param {TIn[]} items everything to send
  * @param {(batch: TIn[]) => Promise<TOut[]>} evaluate what to run per batch
  * @returns {Promise<TOut[]>} every batch's results, in order
@@ -864,17 +866,17 @@ const NO_BENCHMARK_CORPUS =
 expectNoDeprecations();
 
 describe(`printer output in real ${ENGINE}`, () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
-	/** @type {import("playwright-core").Page | undefined} the corpus tiers' page */
+	/** @type {Page | undefined} the corpus tiers' page */
 	let page;
 	/** @type {number} documents the current page has been asked to parse */
 	let parsed = 0;
 
-	/** @type {import("playwright-core").Page} the page the probing tiers share */
+	/** @type {Page} the page the probing tiers share */
 	let probePage;
 
-	/** @returns {Promise<import("playwright-core").Page>} a page with the helpers */
+	/** @returns {Promise<Page>} a page with the helpers */
 	const freshPage = async () => {
 		const opened = await browser.newPage();
 		await opened.setContent(POLICED_PAGE);
@@ -888,7 +890,7 @@ describe(`printer output in real ${ENGINE}`, () => {
 	 * than the tests do: opening one takes 58ms, comparing one document takes far
 	 * less.
 	 * @param {number} documents how many it is about to parse
-	 * @returns {Promise<import("playwright-core").Page>} the page to compare on
+	 * @returns {Promise<Page>} the page to compare on
 	 */
 	const pageFor = async (documents) => {
 		if (page === undefined || parsed + documents > PAGE_DOCUMENTS) {
@@ -1716,11 +1718,7 @@ describe("wpt css token adjacency", () => {
 		/** @type {string[]} */
 		const out = [];
 		for (let pos = 0; ;) {
-			const token = readToken(
-				css,
-				pos,
-				/** @type {import("../../lib/css/syntax-parser").MutableToken} */ ({})
-			);
+			const token = readToken(css, pos, /** @type {MutableToken} */ ({}));
 			if (token === undefined) break;
 			pos = token.end;
 			const text = css.slice(token.start, token.end);
@@ -2317,7 +2315,7 @@ const LOWERING_FIXTURES = [
 ];
 
 describe("a lowering computes as the spelling it replaces", () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
 
 	beforeAll(async () => {
@@ -2330,7 +2328,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 
 	/**
 	 * Every probe's computed value under one stylesheet.
-	 * @param {import("playwright-core").Page} page the page to read from
+	 * @param {Page} page the page to read from
 	 * @param {string} css the stylesheet
 	 * @param {string} html the document
 	 * @param {[string, string][]} probes selector and property
@@ -2368,7 +2366,7 @@ describe("a lowering computes as the spelling it replaces", () => {
 	 * stylesheet — the whole of what the CSSOM reports rather than the handful of
 	 * properties the fixture names, so a rewrite reaching a property nobody
 	 * thought to probe is one this still sees.
-	 * @param {import("playwright-core").Page} page the page to read from
+	 * @param {Page} page the page to read from
 	 * @param {string} css the stylesheet
 	 * @param {string} html the document
 	 * @param {string[]} selectors the elements to read
@@ -2533,7 +2531,7 @@ const RELATIVE_CHANNELS = {
 const COLOR_SAMPLES = 20000;
 
 describe("a color rewrite paints as the color it replaced", () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
 
 	beforeAll(async () => {
@@ -2999,9 +2997,9 @@ const mergePair = (name, source) => {
 };
 
 describe("a distant merge keeps every element's cascade", () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
-	/** @type {import("playwright-core").Page} */
+	/** @type {Page} */
 	let page;
 
 	beforeAll(async () => {
@@ -3053,7 +3051,7 @@ const ADOPTED_IFRAME_PAGES = new Set([
 
 /**
  * Whether the engine lays out no box for an iframe the adoption agency moved.
- * @param {import("playwright-core").Page} page a page to probe in
+ * @param {Page} page a page to probe in
  * @returns {Promise<boolean>} true when the moved iframe has no width
  */
 const dropsAdoptedIframeBox = (page) =>
@@ -3077,7 +3075,7 @@ const dropsAdoptedIframeBox = (page) =>
 // Engine behaviors a workaround in this suite exists for, each probed in the
 // engines it was measured in: once one is fixed its test fails, naming the
 // workaround to take back out.
-/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: import("playwright-core").Page) => Promise<boolean> }[]} */
+/** @type {{ engines: string[], quirk: string, workaround: string, holds: (page: Page) => Promise<boolean> }[]} */
 const ENGINE_QUIRKS = [
 	{
 		engines: ["chrome"],
@@ -3135,9 +3133,9 @@ const ENGINE_QUIRKS = [
 ];
 
 describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
-	/** @type {import("playwright-core").Page} */
+	/** @type {Page} */
 	let page;
 
 	beforeAll(async () => {
@@ -3167,9 +3165,9 @@ describe(`engine quirks a workaround depends on in real ${ENGINE}`, () => {
 });
 
 describe(`declaration order in real ${ENGINE}`, () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
-	/** @type {import("playwright-core").Page} */
+	/** @type {Page} */
 	let page;
 
 	beforeAll(async () => {
@@ -3228,9 +3226,9 @@ describe(`declaration order in real ${ENGINE}`, () => {
 });
 
 describe("a minified page renders as the page it came from", () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
-	/** @type {import("playwright-core").Page} */
+	/** @type {Page} */
 	let page;
 	/** @type {Error | undefined} */
 	let unrecovered;
@@ -3255,7 +3253,7 @@ describe("a minified page renders as the page it came from", () => {
 		testStart = Date.now();
 	});
 
-	/** @returns {Promise<import("playwright-core").Page>} a page ready to render in */
+	/** @returns {Promise<Page>} a page ready to render in */
 	const openPage = async () => {
 		const opened = await browser.newPage();
 		await opened.setContent(POLICED_PAGE);
@@ -3295,10 +3293,10 @@ describe("a minified page renders as the page it came from", () => {
 	};
 
 	/**
-	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} batch the pairs
+	 * @param {RenderPair[]} batch the pairs
 	 * @param {number} width the frame's width
 	 * @param {number} deadline how long the batch may take, in milliseconds
-	 * @returns {Promise<import("../helpers/syntaxEquivalence").RenderReport[] | undefined>} the reports, or undefined when it ran past the deadline
+	 * @returns {Promise<RenderReport[] | undefined>} the reports, or undefined when it ran past the deadline
 	 */
 	const renderWithin = async (batch, width, deadline) => {
 		if (unrecovered !== undefined) throw unrecovered;
@@ -3337,7 +3335,7 @@ describe("a minified page renders as the page it came from", () => {
 	};
 
 	/**
-	 * @param {import("../helpers/syntaxEquivalence").RenderPair[]} pairs the pairs
+	 * @param {RenderPair[]} pairs the pairs
 	 * @returns {Promise<string[]>} one line per difference, at every width
 	 */
 	const differing = async (pairs) => {
@@ -3352,7 +3350,7 @@ describe("a minified page renders as the page it came from", () => {
 		for (const width of RENDER_WIDTHS) {
 			for (let at = 0; at < pairs.length; at += 20) {
 				const batch = pairs.slice(at, at + 20);
-				/** @type {import("../helpers/syntaxEquivalence").RenderReport[] | undefined} */
+				/** @type {RenderReport[] | undefined} */
 				let reports;
 				for (let attempt = 0; attempt < 2 && reports === undefined; attempt++) {
 					const deadline = fitting(BATCH_DEADLINE);
@@ -3388,9 +3386,9 @@ describe("a minified page renders as the page it came from", () => {
 	};
 
 	/**
-	 * @param {import("../helpers/syntaxEquivalence").Fixture[]} fixtures the documents
+	 * @param {Fixture[]} fixtures the documents
 	 * @param {{ removeImpliedTags?: boolean | "smart" }} options print options
-	 * @returns {import("../helpers/syntaxEquivalence").RenderPair[]} each document and its print, where they differ
+	 * @returns {RenderPair[]} each document and its print, where they differ
 	 */
 	const renderPairs = (fixtures, options) =>
 		fixtures.flatMap((fixture) => {
@@ -3405,7 +3403,7 @@ describe("a minified page renders as the page it came from", () => {
 
 	const configPages = buildCorpus(CONFIG_CASES, ".html", (source) => source);
 	const benchmarkPages = benchmarkDocuments((source) => source);
-	/** @type {Map<string, import("../helpers/syntaxEquivalence").Fixture[]>} */
+	/** @type {Map<string, Fixture[]>} */
 	const wptPages = new Map();
 	for (const file of hasCorpus() ? browserCorpus() : []) {
 		const name = nameOf(file);

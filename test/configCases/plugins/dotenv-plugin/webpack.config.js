@@ -3,7 +3,9 @@
 const path = require("path");
 const { DotenvPlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	// Test 1: Basic - default behavior with WEBPACK_ prefix
 	{

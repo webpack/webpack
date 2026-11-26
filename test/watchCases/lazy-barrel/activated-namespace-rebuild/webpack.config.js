@@ -3,7 +3,9 @@
 const assert = require("assert");
 const path = require("path");
 
-/** @type {import("../../../../types").Configuration[]} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((unsafeCache) => ({
 	module: { unsafeCache, rules: [{ test: /\.js$/, sideEffects: false }] },
 	optimization: { providedExports: true },

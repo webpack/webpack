@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Every bundle here reaches the global object through `__webpack_require__.g`,
 // so none of them needs a `globalThis` binding to run.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "node",

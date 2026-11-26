@@ -2,7 +2,10 @@
 
 const { RawSource } = require("webpack-sources");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+/** @import { Compiler } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	module: {
@@ -11,7 +14,7 @@ module.exports = {
 	plugins: [
 		{
 			/**
-			 * @param {import("../../../../types").Compiler} compiler the compiler
+			 * @param {Compiler} compiler the compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {

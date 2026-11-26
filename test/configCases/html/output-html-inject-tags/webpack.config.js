@@ -8,10 +8,11 @@ const HtmlModulesPlugin = require("../../../../lib/html/HtmlModulesPlugin");
 /**
  * @import {
  * 	HtmlTagDescriptor
- * } from "../../../../lib/html/HtmlModulesPlugin"
+ * } from "../../../../lib/html/HtmlModulesPlugin.js"
  */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -37,7 +38,7 @@ const copyTest = {
  * A plugin that pushes the given descriptors via `injectTags`. An array of
  * arrays registers several taps (to check the waterfall accumulates).
  * @param {HtmlTagDescriptor[] | HtmlTagDescriptor[][]} groups tags per tap
- * @returns {import("../../../../").WebpackPluginInstance} the plugin
+ * @returns {WebpackPluginInstance} the plugin
  */
 const tagPlugin = (groups) => ({
 	apply(compiler) {
@@ -55,7 +56,7 @@ const tagPlugin = (groups) => ({
 	}
 });
 
-/** @type {(name: string, plugin: import("../../../../").WebpackPluginInstance, entry?: string, html?: { csp?: boolean | { nonce: string } }) => import("../../../../").Configuration} */
+/** @type {(name: string, plugin: WebpackPluginInstance, entry?: string, html?: { csp?: boolean | { nonce: string } }) => Configuration} */
 const config = (name, plugin, entry = "./src/main.js", html = {}) => ({
 	name,
 	target: "web",
@@ -66,7 +67,7 @@ const config = (name, plugin, entry = "./src/main.js", html = {}) => ({
 	plugins: [copyTest, plugin]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// no tap — HTML is unchanged
 	config("default", { apply() {} }),

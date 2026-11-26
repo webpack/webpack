@@ -1,6 +1,7 @@
 "use strict";
 
-/** @import { CollectedComment, JavascriptParseOptions, Token, ParserSourceLocation as Location } from "../../lib/javascript/syntax-parser" */
+/** @import { CollectedComment, JavascriptParseOptions, Token, ParserSourceLocation as Location } from "../../lib/javascript/syntax-parser.js" */
+/** @import { Program } from "estree" */
 /** @typedef {{ type: "Block" | "Line", value: string, start: number, end: number, loc?: Location, range?: [number, number] }} AcornComment */
 /** @typedef {(end: number, loc?: Position) => void} AcornOnPunctuation */
 /** @typedef {(block: boolean, text: string, start: number, end: number, startLoc?: Position, endLoc?: Position) => void} AcornOnComment */
@@ -9,7 +10,7 @@
  * beside ESTree's fields, and comments and tokens reported as acorn reports them.
  * @typedef {Omit<JavascriptParseOptions, "onComment" | "onToken" | "comments" | "onInsertedSemicolon" | "onTrailingComma"> & { ranges?: boolean, locations?: boolean, sourceFile?: string, comments?: boolean, onComment?: AcornComment[] | AcornOnComment, onToken?: Token[] | ((token: Token) => void), onInsertedSemicolon?: AcornOnPunctuation, onTrailingComma?: AcornOnPunctuation }} EstreeParseOptions
  */
-/** @typedef {{ ast: import("estree").Program, comments: CollectedComment[] }} ParseResult */
+/** @typedef {{ ast: Program, comments: CollectedComment[] }} ParseResult */
 
 const {
 	ParserSourceLocation,
@@ -68,7 +69,7 @@ const locationOf = (positionOf, start, end, sourceFile) =>
  * builds them with the same options: the program, its comments and tokens.
  * @param {string} code the source
  * @param {EstreeParseOptions=} options what to read it as, and what the objects hold
- * @returns {{ ast: import("estree").Program, comments: CollectedComment[] }} the program and the comments `comments: true` collected
+ * @returns {{ ast: Program, comments: CollectedComment[] }} the program and the comments `comments: true` collected
  */
 const parseEstree = (code, options = {}) => {
 	const {
@@ -167,7 +168,7 @@ const parseEstree = (code, options = {}) => {
 		}
 		throw err;
 	}
-	const ast = /** @type {import("estree").Program} */ (
+	const ast = /** @type {Program} */ (
 		toEstreeObject(program, { ecmaVersion, ranges, locations, sourceFile })
 	);
 	return { ast, comments };
@@ -195,7 +196,7 @@ const parse = (code, options) => {
 /**
  * @param {string} code source
  * @param {EstreeParseOptions=} options what acorn's `parse` would be given
- * @returns {import("estree").Program} the program, as acorn builds it
+ * @returns {Program} the program, as acorn builds it
  */
 const estree = (code, options) => parseEstree(code, options).ast;
 

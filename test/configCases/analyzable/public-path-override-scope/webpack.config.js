@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `__webpack_require__.p` belongs to a runtime, so an entry that reassigns it says
 // nothing about an entry that does not.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

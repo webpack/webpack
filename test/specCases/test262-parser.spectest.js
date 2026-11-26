@@ -16,9 +16,10 @@ const { isInPart } = require("../helpers/testParts");
 /** @typedef {{ file: string, webpack: string, acorn: string }} VerdictDifference */
 /** @typedef {{ ranges?: boolean, locations?: boolean, comments?: boolean }} Mode */
 /** @import { Program, Comment } from "acorn" */
-/** @import { AcornComment } from "../helpers/javascriptParse" */
-/** @typedef {{ ast: import("estree").Program, comments: AcornComment[] }} ParseResult */
-/** @import { EcmaVersion } from "../../lib/javascript/syntax-parser" */
+/** @import { AcornComment } from "../helpers/javascriptParse.js" */
+/** @typedef {{ ast: EstreeProgram, comments: AcornComment[] }} ParseResult */
+/** @import { EcmaVersion } from "../../lib/javascript/syntax-parser.js" */
+/** @import { Program as EstreeProgram } from "estree" */
 /** @typedef {string | number | boolean | bigint | RegExp | null | undefined | EstreeValue[] | { [key: string]: EstreeValue }} EstreeValue */
 
 const corpusDir = path.resolve(__dirname, "../external/test262-cases/test");

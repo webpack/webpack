@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(analyse: boolean, sideEffects: boolean | "flag") => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(analyse: boolean, sideEffects: boolean | "flag") => Configuration} */
 const config = (analyse, sideEffects) => ({
 	mode: "production",
 	module: {

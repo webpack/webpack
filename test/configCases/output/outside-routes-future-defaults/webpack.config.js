@@ -2,6 +2,8 @@
 
 const outsideRoutes = require("../../../helpers/outsideRoutes");
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) =>
 	outsideRoutes(testPath, "futureDefaults");

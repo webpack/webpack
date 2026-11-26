@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One runtime chunk for both entries, so a shared runtime name says nothing
 // about which initial chunks `b` actually loads.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {

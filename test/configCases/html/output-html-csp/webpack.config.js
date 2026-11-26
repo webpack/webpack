@@ -5,10 +5,12 @@ const path = require("path");
 const webpack = require("../../../../");
 const HtmlModulesPlugin = require("../../../../lib/html/HtmlModulesPlugin");
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 // Removes the 2nd inline `<style>` and adds an attribute to the 1st via
 // `transformTags`, to prove the single-pass CSP hashes the tags as
 // `transformTags` left them (removed style dropped, kept style still hashed).
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const dropRedStyle = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("DropRedStyle", (compilation) => {
@@ -23,7 +25,7 @@ const dropRedStyle = {
 	}
 };
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -47,7 +49,7 @@ const copyTest = {
 
 /** @typedef {boolean | { policy?: Record<string, string | string[]>, hashFunction?: "sha256" | "sha384" | "sha512", nonce?: string }} Csp */
 
-/** @type {(name: string, csp: Csp, entry?: string, extra?: { inline?: "script" | "style" | boolean }) => import("../../../../").Configuration} */
+/** @type {(name: string, csp: Csp, entry?: string, extra?: { inline?: "script" | "style" | boolean }) => Configuration} */
 const config = (name, csp, entry = "./src/page.html", extra = {}) => ({
 	name,
 	target: "web",
@@ -62,7 +64,7 @@ const config = (name, csp, entry = "./src/page.html", extra = {}) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// no csp — nothing injected
 	config("default", false),

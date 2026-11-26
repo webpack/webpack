@@ -4,9 +4,10 @@ const meriyah = require("meriyah");
 
 let counter = 0;
 
-/** @import { SourceLocation } from "estree" */
-/** @typedef {import("estree").Program & { start: number, end: number, loc: SourceLocation }} Program */
-/** @typedef {import("estree").Comment & { start: number, end: number, loc: SourceLocation }} Comment */
+/** @import { SourceLocation, Program as GenericProgram, Comment as GenericComment } from "estree" */
+/** @import { Configuration } from "../../../../types.d.ts" */
+/** @typedef {GenericProgram & { start: number, end: number, loc: SourceLocation }} Program */
+/** @typedef {GenericComment & { start: number, end: number, loc: SourceLocation }} Comment */
 
 /**
  * @param {string} sourceCode source code
@@ -31,7 +32,7 @@ const parse = (sourceCode, options) => {
 	return { ast, comments };
 };
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["es2020", "node"],
 	output: {

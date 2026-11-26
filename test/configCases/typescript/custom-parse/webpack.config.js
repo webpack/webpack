@@ -6,10 +6,11 @@ const acorn = require("acorn");
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../../lib/javascript/JavascriptParser"
+ * } from "../../../../lib/javascript/JavascriptParser.js"
  */
+/** @import { Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.ts",
 	experiments: {

@@ -2,7 +2,9 @@
 
 const { RawSource } = require("webpack-sources");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "async-node",
 	output: {

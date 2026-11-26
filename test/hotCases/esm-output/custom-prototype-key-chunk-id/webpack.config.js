@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 // A custom chunk id plugin may give a chunk an `Object.prototype` key as its id.
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {

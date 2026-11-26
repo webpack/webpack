@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {EXPECTED_ANY[]} useArray use array
  * @returns {EXPECTED_FUNCTION[]} functions
@@ -29,7 +31,7 @@ const useArray = createFunctionArrayFromUseArray([
 	}
 ]);
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

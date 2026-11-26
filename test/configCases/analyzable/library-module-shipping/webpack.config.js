@@ -5,17 +5,19 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position in this array, and so the entry's emitted name
  * @param {object} options the shipping config under test
  * @param {"module" | "modern-module"} options.libraryType library type
- * @param {import("../../../../").Configuration["mode"]} options.mode mode
+ * @param {Configuration["mode"]} options.mode mode
  * @param {string} options.chunkFilename chunk filename template
  * @param {string=} options.publicPath public path, when it is not `auto`
- * @param {import("../../../../").Configuration["devtool"]=} options.devtool the
+ * @param {Configuration["devtool"]=} options.devtool the
  * devtool, left out to take whatever the mode defaults to
  * @param {boolean=} options.urlFormsBake whether the `import.meta.url` forms bake
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (
 	index,
@@ -51,7 +53,7 @@ const base = (
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, {
 		libraryType: "module",

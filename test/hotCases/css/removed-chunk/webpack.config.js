@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: { main: "./index.js", other: "./other.js" },
 	experiments: { css: true },

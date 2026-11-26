@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// the bundle runs to check the requests whose loader cannot be resolved throw
 	optimization: {

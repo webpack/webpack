@@ -5,7 +5,7 @@ const webpack = require("../../../../");
 const DelegatedModule = require("../../../../lib/dll/DelegatedModule");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @import { Compiler, Compilation } from "../../../../" */
+/** @import { Compiler, Compilation, Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "RestoredDelegatedModuleTest";
 
@@ -76,7 +76,7 @@ const restoreDelegatedModule = (compilation) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	cache: { type: "filesystem" },

@@ -3,7 +3,9 @@
 const path = require("path");
 const ReadRecordsPlugin = require("./ReadRecordsPlugin");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index",
 	recordsInputPath: path.resolve(__dirname, "records.json"),

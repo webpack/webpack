@@ -7,11 +7,13 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} name output sub-directory keeping the two configs apart
  * @param {boolean} awaited whether the entry runs behind another initial chunk
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name, awaited) => ({
 	mode: "development",
@@ -48,7 +50,7 @@ const base = (index, name, awaited) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Nothing to wait for: the entry module is called straight.
 	base(0, "straight", false),

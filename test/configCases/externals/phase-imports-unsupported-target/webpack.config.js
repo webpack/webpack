@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The phases are syntax the target has to parse, and nothing here says it can,
 // so the build reports it rather than emitting what the target cannot read.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "es2020"],
 	entry: "./index.js",

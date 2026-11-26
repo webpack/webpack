@@ -3,7 +3,9 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Compiler } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{ concatenateModules: false, minimize: false },
 	{ concatenateModules: true, minimize: false },
@@ -37,7 +39,7 @@ module.exports = [
 		}),
 		/**
 		 * Fails the build when a module whose bindings are live reports them as copies.
-		 * @this {import("../../../../").Compiler} the compiler
+		 * @this {Compiler} the compiler
 		 */
 		function noCopyBailouts() {
 			this.hooks.compilation.tap("test", (compilation) => {

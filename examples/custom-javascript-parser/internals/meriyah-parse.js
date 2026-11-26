@@ -7,7 +7,7 @@ const meriyah = require("meriyah");
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../lib/javascript/JavascriptParser"
+ * } from "../../../lib/javascript/JavascriptParser.js"
  */
 
 /**
@@ -20,7 +20,7 @@ const meriyahParse = (sourceCode, options) => {
 	const comments = [];
 
 	const ast =
-		/** @type {import("estree").Program} */
+		/** @type {Program} */
 		(
 			meriyah.parse(sourceCode, {
 				...options,

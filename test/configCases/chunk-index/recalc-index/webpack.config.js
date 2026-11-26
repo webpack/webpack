@@ -1,7 +1,7 @@
 "use strict";
 
-/** @import { Compilation, Module } from "../../../../types" */
-/** @type {import("../../../../types").Configuration} */
+/** @import { Compilation, Module, Configuration } from "../../../../types.d.ts" */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: "./index.js"

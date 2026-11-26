@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // No `output.module` — emitted chunks are
 // classic IIFE-wrapped scripts. The parser must NOT auto-upgrade
 // `<script src>` to `<script type="module" src>` in this mode.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	node: {

@@ -2,7 +2,9 @@
 
 const EntryPlugin = require("../../../../").EntryPlugin;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: () => ({}),
 	optimization: {

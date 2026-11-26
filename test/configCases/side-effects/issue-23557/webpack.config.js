@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const lateParent = require.resolve("./node_modules/lib/es/late-parent");
 const lateLeaf = require.resolve("./node_modules/lib/es/late-leaf");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{ mode: "development" },
 	{ mode: "development", optimization: { sideEffects: true } },

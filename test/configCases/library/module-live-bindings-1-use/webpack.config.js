@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = () => ({
 	target: "node14",
 	output: { filename: "bundle.mjs", module: true },

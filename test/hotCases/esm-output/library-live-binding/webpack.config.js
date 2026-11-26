@@ -2,7 +2,10 @@
 
 const { WebpackError } = require("../../../../");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+/** @import { Compiler } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {
@@ -18,7 +21,7 @@ module.exports = {
 	plugins: [
 		/**
 		 * Fails the build when a module reports its live exports as copies.
-		 * @this {import("../../../../").Compiler} the compiler
+		 * @this {Compiler} the compiler
 		 */
 		function noCopyBailouts() {
 			this.hooks.compilation.tap("test", (compilation) => {

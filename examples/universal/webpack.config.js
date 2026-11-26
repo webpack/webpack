@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../").Configuration} */
+/** @import { Configuration } from "../../" */
+
+/** @type {Configuration} */
 const config = {
 	// The universal target: one compiler emits a single bundle that runs in the
 	// browser, web workers, Node.js, Electron and NW.js. Output is always ESM, so

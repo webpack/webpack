@@ -1,14 +1,16 @@
 "use strict";
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Identifier, Literal } from "estree" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "synthetic-nodes";
 
 /**
  * @param {string} name the name
  * @param {[number, number]} range where the node stands in its module
- * @returns {import("estree").Identifier} an identifier no parser made
+ * @returns {Identifier} an identifier no parser made
  */
 const identifier = (name, range) => ({
 	type: "Identifier",
@@ -19,7 +21,7 @@ const identifier = (name, range) => ({
 /**
  * @param {string | number} value the value
  * @param {[number, number]} range where the node stands in its module
- * @returns {import("estree").Literal} a literal no parser made
+ * @returns {Literal} a literal no parser made
  */
 const literal = (value, range) => ({
 	type: "Literal",
@@ -48,7 +50,7 @@ const syntheticNodes = (compiler) => {
 						.for("syntheticName")
 						.tap(PLUGIN_NAME, (expression) => {
 							/** @type {string[]} */ (seen.walked).push(
-								/** @type {import("estree").Identifier} */ (expression).name
+								/** @type {Identifier} */ (expression).name
 							);
 							return true;
 						});
@@ -111,7 +113,7 @@ const syntheticNodes = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [syntheticNodes]
 };

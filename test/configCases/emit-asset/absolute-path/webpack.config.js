@@ -5,7 +5,7 @@ const path = require("path");
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
-/** @import { Compiler } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../../../" */
 
 const CONTENT = "emitted to an absolute path\n";
 
@@ -51,7 +51,7 @@ class EmitAbsolutePlugin {
 
 // `testPath` is absolute (a drive path on Windows), so the emitted asset name is
 // itself absolute and lands inside the output dir, which the test harness cleans.
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = (env, { testPath }) => ({
 	entry: "./index.js",
 	plugins: [

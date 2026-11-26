@@ -2,10 +2,12 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // CSS `url()` references are `url` dependencies, so — like the HTML `<img src>`
 // case — a loader can be attached to them through the `dependency` rule
 // condition, here scoped to `.css` issuers.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]"

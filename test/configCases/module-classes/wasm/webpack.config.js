@@ -3,13 +3,15 @@
 const AsyncWasmModule = require("../../../../lib/wasm/AsyncWasmModule");
 const SyncWasmModule = require("../../../../lib/wasm-sync/SyncWasmModule");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */
 const expectedClasses = new Map([
 	["webassembly/async", AsyncWasmModule],
 	["webassembly/sync", SyncWasmModule]
 ]);
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

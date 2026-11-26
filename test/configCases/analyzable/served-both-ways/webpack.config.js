@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One module fetched by the host and by the loader — separate entries, since a chunk
 // never duplicates what a parent carries. A public path of no depth serves both alike.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

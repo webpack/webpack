@@ -1,11 +1,13 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 
 /**
  * @param {object} options Configuration options
  * @param {boolean=} options.concatenateModules Whether to concatenate modules
- * @returns {import("../../../../").Configuration} Webpack configuration
+ * @returns {Configuration} Webpack configuration
  */
 const getConfig = ({ concatenateModules } = { concatenateModules: false }) => ({
 	devtool: false,

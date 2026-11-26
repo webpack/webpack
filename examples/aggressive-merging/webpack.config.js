@@ -3,7 +3,9 @@
 const path = require("path");
 const { AggressiveMergingPlugin } = require("../..").optimize;
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	// mode: "development" || "production",
 	entry: {

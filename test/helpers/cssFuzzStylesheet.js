@@ -23,7 +23,7 @@ const {
 	walkValueSyntax
 } = require("../../tooling/generate-css-data");
 
-/** @import { SyntaxNode } from "../../tooling/generate-css-data" */
+/** @import { SyntaxNode, TypeNode } from "../../tooling/generate-css-data.js" */
 
 /**
  * Where a value is written, which decides what a block's contents are and
@@ -536,7 +536,7 @@ const createStylesheetGenerator = (seed, createRandom) => {
 	};
 
 	/**
-	 * @param {import("../../tooling/generate-css-data").TypeNode} node a `<type>`
+	 * @param {TypeNode} node a `<type>`
 	 * @param {Context} context where the value is written
 	 * @returns {string} a value of that type
 	 */

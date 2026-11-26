@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const devtool = "eval-source-map";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		devtool

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The shared chunk's runtime spans entries that disagree about the base, so both
 // answers must reach the module hash or one code-generation job serves both.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

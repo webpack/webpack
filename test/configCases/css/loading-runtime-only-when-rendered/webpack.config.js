@@ -1,13 +1,15 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The css loading runtime module renders nothing without chunk loading or hmr, and its
 // loading branch needs a chunk emitted as css -- which a node target has none of.
 
 /**
  * @param {string} name output sub-directory
  * @param {string} entry entry module
- * @param {import("../../../../").Configuration["target"]} target build target
- * @returns {import("../../../../").Configuration} configuration
+ * @param {Configuration["target"]} target build target
+ * @returns {Configuration} configuration
  */
 const variant = (name, entry, target = ["web", "node"]) => ({
 	name,
@@ -27,7 +29,7 @@ const variant = (name, entry, target = ["web", "node"]) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	variant("no-loading", "./static-entry.js"),
 	variant("loading", "./loading-entry.js"),

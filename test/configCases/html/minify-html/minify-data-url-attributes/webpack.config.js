@@ -4,9 +4,11 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../../");
 
+/** @import { Configuration } from "../../../../../" */
+
 // Webpack's own minimizer, as a production build runs it: the HTML one offers
 // each URL attribute's `data:` payload to the minifier for its media type.
-/** @type {import("../../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

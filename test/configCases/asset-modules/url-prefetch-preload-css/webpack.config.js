@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const rules = [
 	{ test: /\.(png|webp|jpg)$/, prefetch: true, fetchPriority: "low" },
 	{ test: /\.woff2$/, preload: true, fetchPriority: "high" }
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "web",

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A deferred public path opening with the hash reads as a scheme once filled, so
 // the base has to be applied after the fill, exactly as the runtime applies it.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

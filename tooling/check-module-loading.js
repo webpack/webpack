@@ -18,6 +18,9 @@ const os = require("os");
 const path = require("path");
 const { fileURLToPath, pathToFileURL } = require("url");
 
+/** @import lib from "../lib/index.js" */
+/** @import Stats from "../lib/stats/Stats.js" */
+
 /** @typedef {{ requester: string, file: string, reached: number, reachesIndex: boolean }} OutsideLoad */
 /** @typedef {{ webpack: string[], packages: string[], outsideLoads: OutsideLoad[] }} ScenarioResult */
 
@@ -66,7 +69,7 @@ const build = (mode, watch) => async () => {
 	const context = fs.mkdtempSync(path.join(os.tmpdir(), "webpack-loading-"));
 	writeProject(context);
 
-	/** @type {typeof import("../lib/index")} */
+	/** @type {typeof lib} */
 	const webpack = require(INDEX);
 
 	const compiler = webpack({
@@ -83,7 +86,7 @@ const build = (mode, watch) => async () => {
 			let builds = 0;
 			/**
 			 * @param {Error | null} err a fatal error
-			 * @param {import("../lib/stats/Stats") | undefined} stats the build's stats
+			 * @param {Stats | undefined} stats the build's stats
 			 * @returns {void}
 			 */
 			const done = (err, stats) => {
@@ -110,7 +113,7 @@ const build = (mode, watch) => async () => {
 };
 
 /**
- * @returns {typeof import("../lib/index")} webpack, loaded through its public entry
+ * @returns {typeof lib} webpack, loaded through its public entry
  */
 const webpack = () => require(INDEX);
 

@@ -2,7 +2,9 @@
 
 const { SSRManifestPlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// universal target: the same bundle renders on the server and hydrates on the client
 	target: ["web", "node"],

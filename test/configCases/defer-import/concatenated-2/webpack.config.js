@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: [`async-node${process.versions.node.split(".").map(Number)[0]}`],
 	optimization: {

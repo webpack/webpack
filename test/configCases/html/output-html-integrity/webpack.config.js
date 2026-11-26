@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -28,7 +30,7 @@ const copyTest = {
 
 /** @typedef {boolean | string[] | ((asset: { filename: string }) => string[] | false)} Integrity */
 
-/** @type {(name: string, integrity: Integrity) => import("../../../../").Configuration} */
+/** @type {(name: string, integrity: Integrity) => Configuration} */
 const config = (name, integrity) => ({
 	name,
 	target: "web",
@@ -45,7 +47,7 @@ const config = (name, integrity) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("bool", true),
 	config("array", ["sha256", "sha512"]),

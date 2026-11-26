@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // An HTML asset webpack emits without parsing it: the only shape whose
 // `<script>` bodies stay inline, since one it parses has each extracted.
 const PAGE = `<!doctype html>
@@ -39,7 +41,7 @@ const PAGE = `<!doctype html>
 </html>
 `;
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

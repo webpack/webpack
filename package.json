@@ -191,7 +191,7 @@
     "es5-ext": "^0.10.53",
     "es6-promise-polyfill": "^1.2.0",
     "eslint": "^10.15.0",
-    "eslint-config-webpack": "^5.0.2",
+    "eslint-config-webpack": "^5.1.1",
     "eslint-scope": "^9.1.2",
     "eta": "^4.6.0",
     "fast-check": "^4.11.0",

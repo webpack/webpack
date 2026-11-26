@@ -2,9 +2,11 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {boolean} url whether CSS url() handling is enabled
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (url) => ({
 	target: "web",
@@ -34,5 +36,5 @@ const config = (url) => ({
 	plugins: [new webpack.DefinePlugin({ URL_ENABLED: JSON.stringify(url) })]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config(true), config(false)];

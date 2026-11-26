@@ -1,7 +1,7 @@
 "use strict";
 
 /** @import { Compilation, Compiler } from "../../../../" */
-/** @import { Configuration } from "../../../../types" */
+/** @import { Configuration } from "../../../../types.d.ts" */
 
 /**
  * @param {string} name emitted library bundle

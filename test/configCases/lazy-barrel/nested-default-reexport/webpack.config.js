@@ -3,9 +3,9 @@
 const path = require("path");
 const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
-/** @import { NormalModule } from "../../../../" */
+/** @import { NormalModule, Configuration } from "../../../../" */
 
-/** @type {(concatenateModules: boolean) => import("../../../../").Configuration} */
+/** @type {(concatenateModules: boolean) => Configuration} */
 const config = (concatenateModules) => ({
 	mode: "production",
 	optimization: {

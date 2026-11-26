@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `runtimeChunk` puts one loader in front of both entrypoints, so the chunk `splitChunks`
 // lifts out is one the first entry has at startup and the second asks the loader for.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

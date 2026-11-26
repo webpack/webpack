@@ -2,11 +2,14 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
+
 // `beforeParse` is an AsyncSeriesHook, so a tap can fail synchronously or by
 // rejecting. Either way the module carries the error and the build goes on.
 class FailBeforeParse {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("FailBeforeParse", (compilation) => {
@@ -25,7 +28,7 @@ class FailBeforeParse {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	optimization: { emitOnErrors: true },

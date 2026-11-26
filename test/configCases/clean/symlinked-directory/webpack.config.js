@@ -5,6 +5,8 @@ const path = require("path");
 const rimraf = require("rimraf");
 const { RawSource } = require("webpack-sources");
 
+/** @import { Configuration, Compiler, OutputFileSystem } from "../../../../" */
+
 const PLUGIN_NAME = "CleanSymlinkedDirectoryPlugin";
 
 /**
@@ -22,7 +24,7 @@ const VARIANTS = [
 	{ name: "none", without: ["lstat", "readlink"] }
 ];
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration[]} */
 module.exports = (env, { testPath }) =>
 	VARIANTS.map(({ name, without }) => {
 		const outputPath = path.join(testPath, name, "dist");
@@ -42,7 +44,7 @@ module.exports = (env, { testPath }) =>
 			},
 			plugins: [
 				/**
-				 * @param {import("../../../../").Compiler} compiler compiler
+				 * @param {Compiler} compiler compiler
 				 */
 				(compiler) => {
 					let firstBuild = true;
@@ -55,7 +57,7 @@ module.exports = (env, { testPath }) =>
 						if (!without.includes(key)) outputFileSystem[key] = base[key];
 					}
 					compiler.outputFileSystem =
-						/** @type {import("../../../../").OutputFileSystem} */
+						/** @type {OutputFileSystem} */
 						(/** @type {unknown} */ (outputFileSystem));
 					compiler.hooks.environment.tap(PLUGIN_NAME, () => {
 						rimraf.sync(path.join(testPath, name));

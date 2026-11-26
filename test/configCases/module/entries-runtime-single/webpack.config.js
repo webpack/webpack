@@ -2,7 +2,9 @@
 
 const EntryPlugin = require("../../../../").EntryPlugin;
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = () => ({
 	devtool: false,
 	mode: "development",

@@ -26,7 +26,9 @@ const {
 const { isInPart } = require("../helpers/testParts");
 
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code: string, map: string | undefined }>} Minify */
-/** @import { Program } from "../helpers/jsFuzzProgram" */
+/** @import { Program } from "../helpers/jsFuzzProgram.js" */
+/** @import { Program as AcornProgram, Comment as AcornComment, Options } from "acorn" */
+/** @import { Program as EstreeProgram } from "estree" */
 /** @typedef {Record<string, EXPECTED_ANY>} MinifyOptions */
 
 const SEEDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
@@ -235,7 +237,7 @@ const compileError = (code, isModule) => {
  * @param {string} code the source
  * @param {boolean} isModule whether it is a module
  * @param {boolean} ranges whether nodes carry `range`
- * @returns {import("acorn").Program | undefined} the program
+ * @returns {AcornProgram | undefined} the program
  */
 const parseAcornUnlessDefect = (code, isModule, ranges) => {
 	try {
@@ -447,7 +449,7 @@ const run = async (code, isModule, functionText = "[function]") => {
  * webpack's parser given what a build gives it, its tree's objects with ranges.
  * @param {string} code the source
  * @param {boolean} isModule whether it is a module
- * @returns {import("estree").Program} the program
+ * @returns {EstreeProgram} the program
  */
 const parseOurs = (code, isModule) =>
 	estree(code, {
@@ -461,7 +463,7 @@ const parseOurs = (code, isModule) =>
  * @param {string} code the source
  * @param {boolean} isModule whether it is a module
  * @param {boolean} ranges whether nodes carry `range`
- * @returns {import("acorn").Program} the program
+ * @returns {AcornProgram} the program
  */
 const parseAcorn = (code, isModule, ranges) =>
 	acorn.parse(code, {
@@ -670,7 +672,7 @@ const eagerParserDifference = (code, isModule) => {
 	};
 	/** @type {unknown[]} */
 	const ourComments = [];
-	/** @type {import("acorn").Comment[]} */
+	/** @type {AcornComment[]} */
 	const theirComments = [];
 	let ours;
 	try {
@@ -682,7 +684,7 @@ const eagerParserDifference = (code, isModule) => {
 		return `rejects it with locations: ${/** @type {Error} */ (err).message}`;
 	}
 	const theirs = acorn.parse(code, {
-		.../** @type {import("acorn").Options} */ (options),
+		.../** @type {Options} */ (options),
 		onComment: theirComments
 	});
 	const difference =

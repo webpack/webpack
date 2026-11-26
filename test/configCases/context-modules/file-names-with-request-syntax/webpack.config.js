@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "WriteContextFilesPlugin";
 const WRITTEN_AT = new Date("2020-01-01T00:00:00Z");
 
@@ -15,7 +17,7 @@ const FILE_NAMES = [
 	"h\\i.json"
 ];
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => {
 	const directory = path.join(testPath, "files");
 	return {
@@ -24,7 +26,7 @@ module.exports = (env, { testPath }) => {
 		},
 		plugins: [
 			/**
-			 * @param {import("../../../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 */
 			(compiler) => {
 				compiler.hooks.beforeRun.tap(PLUGIN_NAME, () => {

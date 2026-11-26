@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.urlHints` (top-level shorthand) is fanned out as the base `urlHints`
 // of every parser, so one list covers both JS `new URL(...)` and CSS `url(...)`.
 // A `parser.css.urlHints` rule, matched later, still overrides it.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "web",

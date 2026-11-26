@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	// The dynamic import brings chunk-loading runtime modules, which are

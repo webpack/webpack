@@ -5,6 +5,8 @@ const path = require("path");
 const createWatchMutation = require("../../../helpers/createWatchMutation");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration } from "webpack" */
+
 /** @typedef {{ testPath: string }} TestOptions */
 
 /**
@@ -13,7 +15,7 @@ const currentWatchStep = require("../../../helpers/currentWatchStep");
  * it always ends while that comparison is pending.
  * @param {unknown} env environment
  * @param {TestOptions} options test paths
- * @returns {import("webpack").Configuration} watch configuration
+ * @returns {Configuration} watch configuration
  */
 module.exports = (env, { testPath }) => {
 	// each compiler loads this file anew, so the two meet through a file

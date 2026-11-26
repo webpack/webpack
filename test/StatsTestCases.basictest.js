@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration, Stats, Compiler, Compilation } from "../" */
+
 require("./helpers/warmup-webpack");
 
 const path = require("path");
@@ -67,7 +69,7 @@ describe("StatsTestCases", () => {
 				const outputDirectory = path.join(outputBase, testName);
 				rimraf.sync(outputDirectory);
 				fs.mkdirSync(outputDirectory, { recursive: true });
-				/** @type {import("../").Configuration} */
+				/** @type {Configuration} */
 				let options = {
 					mode: "development",
 					entry: "./index",
@@ -78,7 +80,7 @@ describe("StatsTestCases", () => {
 				if (fs.existsSync(path.join(testDirectory, "webpack.config.js"))) {
 					options = require(path.join(testDirectory, "webpack.config.js"));
 				}
-				/** @type {{ validate?: (stats: import("../").Stats, stderr: string) => void }} */
+				/** @type {{ validate?: (stats: Stats, stderr: string) => void }} */
 				let testConfig = {};
 				try {
 					// try to load a test file
@@ -114,7 +116,7 @@ describe("StatsTestCases", () => {
 				}
 				const c = webpack(options);
 				const cAny = /** @type {EXPECTED_ANY} */ (c);
-				const compilers = /** @type {import("../").Compiler[]} */ (
+				const compilers = /** @type {Compiler[]} */ (
 					cAny.compilers ? cAny.compilers : [c]
 				);
 				for (const c of compilers) {
@@ -152,7 +154,7 @@ describe("StatsTestCases", () => {
 					};
 					c.hooks.compilation.tap(
 						"StatsTestCasesTest",
-						(/** @type {import("../").Compilation} */ compilation) => {
+						(/** @type {Compilation} */ compilation) => {
 							for (const hook of [
 								"optimize",
 								"optimizeModules",
@@ -170,9 +172,9 @@ describe("StatsTestCases", () => {
 				}
 				c.run((err, _stats) => {
 					if (err) return done(err);
-					const stats = /** @type {import("../").Stats} */ (_stats);
+					const stats = /** @type {Stats} */ (_stats);
 					const statsAny = /** @type {EXPECTED_ANY} */ (stats);
-					/** @type {import("../").Compilation[]} */
+					/** @type {Compilation[]} */
 					const compilations = [
 						...(statsAny.stats ? statsAny.stats : [stats])
 					].map((/** @type {EXPECTED_ANY} */ s) => s.compilation);

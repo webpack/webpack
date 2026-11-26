@@ -3,7 +3,9 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const jsMinify = require("../../../../../lib/javascript/jsMinify");
 
-/** @type {import("../../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((mangle) => ({
 	mode: "production",
 	target: ["web", "es2018"],

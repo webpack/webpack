@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// es5 has no arrow functions, so the bootstrap IIFE is a plain function
 	target: ["web", "es5"],

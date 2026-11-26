@@ -3,8 +3,8 @@
 const { RawSource } = require("webpack-sources");
 const { Generator, Parser } = require("../../../../");
 
-/** @import { ParserState } from "../../../../" */
-/** @import { PreparsedAst } from "../../../../lib/module/Parser" */
+/** @import { ParserState, Configuration, Compiler } from "../../../../" */
+/** @import { PreparsedAst } from "../../../../lib/module/Parser.js" */
 
 class PlainParser extends Parser {
 	/**
@@ -37,7 +37,7 @@ class PlainGenerator extends Generator {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {
@@ -52,7 +52,7 @@ module.exports = {
 	optimization: { emitOnErrors: true },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.thisCompilation.tap(

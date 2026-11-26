@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Verifies that experiments.typescript and ts-loader can coexist. ts-loader
 // transpiles TS → JS; the JavaScript parser then reads that JS with its
 // `typescript` option on, which skips nothing there. The combined pipeline
 // must still produce a working bundle.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.ts",
 	experiments: {

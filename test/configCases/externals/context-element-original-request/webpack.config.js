@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // elements of the `#configs` and `./configs?query#hash` context modules, whose
 // `request` is relative to the resolved directory while `originalRequest` is
 // what the user wrote
 const CONTEXT_ELEMENT = /^\.\/(?:[a-d]|q|nested\/f)\.js(\?query#hash)?$/;
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	externalsType: "commonjs",
 	externals: [

@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{ concatenateModules: false, minimize: false },
 	{ concatenateModules: true, minimize: false },

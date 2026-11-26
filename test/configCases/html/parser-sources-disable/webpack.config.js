@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `"..."` keeps every built-in source, and `type: false` disables one of them —
 // here the built-in `<img src>` — while a custom `data-src` is added. So the
 // default `src` is left untouched and only `data-src` is rewritten.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]"

@@ -2,7 +2,7 @@
 
 const { optimize } = require("../../../../");
 
-/** @import { Compiler, Configuration } from "../../../../types" */
+/** @import { Compiler, Configuration } from "../../../../types.d.ts" */
 
 /**
  * Checks that every name in `compilation.namedChunks` refers to a chunk of the compilation.

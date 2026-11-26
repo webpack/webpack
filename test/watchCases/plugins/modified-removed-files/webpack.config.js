@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {{ modified?: string[], removed?: string[] }} */
 let changes = {};
 
@@ -15,7 +17,7 @@ let changes = {};
 const relative = (files, context) =>
 	files && [...files].map((file) => path.relative(context, file)).sort();
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	plugins: [

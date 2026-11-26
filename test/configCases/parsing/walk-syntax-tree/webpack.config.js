@@ -1,7 +1,9 @@
 "use strict";
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { CallExpression, Expression, Node as EstreeNode } from "estree" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "walk-syntax-tree";
 
@@ -20,11 +22,11 @@ const walkSyntaxTree = (compiler) => {
 				.tap(PLUGIN_NAME, (moduleParser) => {
 					const parser = /** @type {JavascriptParser} */ (moduleParser);
 					/**
-					 * @param {import("estree").CallExpression} expression the call
+					 * @param {CallExpression} expression the call
 					 * @returns {boolean} whether its first argument is pure
 					 */
 					const firstArgumentIsPure = (expression) => {
-						const argument = /** @type {import("estree").Expression} */ (
+						const argument = /** @type {Expression} */ (
 							expression.arguments[0]
 						);
 						return parser.isPure(
@@ -41,16 +43,14 @@ const walkSyntaxTree = (compiler) => {
 						.tap(PLUGIN_NAME, (expression) => {
 							expect(firstArgumentIsPure(expression)).toBe(true);
 							const evaluated = parser.evaluateExpression(
-								/** @type {import("estree").Expression} */
+								/** @type {Expression} */
 								(expression.arguments[0])
 							);
 							// the nested parse reads purity in its own tree, released after
 							parser.parse("innerPure(/*#__PURE__*/ other());", parser.state);
 							expect(firstArgumentIsPure(expression)).toBe(true);
 							// the evaluated node is still readable from its pinned source
-							const node = /** @type {import("estree").Node} */ (
-								evaluated.expression
-							);
+							const node = /** @type {EstreeNode} */ (evaluated.expression);
 							expect(node.type).toBe("CallExpression");
 							expect(evaluated.expression).toBe(node);
 							// still a writable field, as before it was read lazily
@@ -117,7 +117,7 @@ const walkSyntaxTree = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [walkSyntaxTree]
 };

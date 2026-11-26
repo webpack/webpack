@@ -2,8 +2,8 @@
 
 const { Compilation } = require("../../../../");
 
-/** @typedef {NonNullable<import("../../../../").Compiler["inputFileSystem"]>} InputFileSystem */
-/** @import { Configuration } from "../../../../" */
+/** @typedef {NonNullable<Compiler["inputFileSystem"]>} InputFileSystem */
+/** @import { Configuration, Compiler } from "../../../../" */
 
 const PLUGIN_NAME = "ReplaceLstatPlugin";
 
@@ -20,7 +20,7 @@ class ReplaceLstatPlugin {
 	}
 
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {

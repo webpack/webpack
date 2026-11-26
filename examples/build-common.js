@@ -9,6 +9,9 @@ const fs = require("fs");
 const path = require("path");
 const tc = require("./template-common");
 
+/** @import { ChildProcess } from "child_process" */
+/** @import { Writable, Readable } from "stream" */
+
 const extraArgs = "";
 
 /**
@@ -83,19 +86,19 @@ const doCompileAndReplace = (args, prefix, callback) => {
 	}
 
 	/**
-	 * @param {import("child_process").ChildProcess} subprocess a subprocess
+	 * @param {ChildProcess} subprocess a subprocess
 	 */
 	const connectIO = (subprocess) => {
 		const { stdin, stdout, stderr } = process;
 		const { stdin: _stdin, stdout: _stdout, stderr: _stderr } = subprocess;
-		/** @type {[NodeJS.ReadStream, import("stream").Writable][]} */
+		/** @type {[NodeJS.ReadStream, Writable][]} */
 		const inputPair = [
-			[stdin, /** @type {import("stream").Writable} */ (_stdin)]
+			[stdin, /** @type {Writable} */ (_stdin)]
 		];
-		/** @type {[NodeJS.WritableStream, import("stream").Readable][]} */
+		/** @type {[NodeJS.WritableStream, Readable][]} */
 		const outputPair = [
-			[stdout, /** @type {import("stream").Readable} */ (_stdout)],
-			[stderr, /** @type {import("stream").Readable} */ (_stderr)]
+			[stdout, /** @type {Readable} */ (_stdout)],
+			[stderr, /** @type {Readable} */ (_stderr)]
 		];
 		for (const pair of inputPair) {
 			pair[0].pipe(pair[1]);

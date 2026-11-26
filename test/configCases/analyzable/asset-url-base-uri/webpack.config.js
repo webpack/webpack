@@ -6,16 +6,18 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const BASE = "https://example.com/base/";
 const OTHER = "https://other.example.com/";
 
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} prefix keeping the emitted files of each config apart
- * @param {import("../../../../").Configuration["entry"]} entry the entries under test
+ * @param {Configuration["entry"]} entry the entries under test
  * @param {Record<string, string | null>} bases the base each entry must bake, `null`
  * for one that resolves against the output root instead
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, prefix, entry, bases) => ({
 	target: "node",
@@ -42,7 +44,7 @@ const base = (index, prefix, entry, bases) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(
 		0,

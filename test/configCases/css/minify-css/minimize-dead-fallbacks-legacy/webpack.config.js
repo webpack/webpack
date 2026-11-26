@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// A selection that reads none of the color functions below, so each fallback
 	// before one is still the only color those engines get.

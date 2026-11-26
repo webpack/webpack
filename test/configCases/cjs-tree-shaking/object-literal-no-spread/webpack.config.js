@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /**
  * @param {string} assetName emitted asset to assert on
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const assertNoObjectSpread = (assetName) =>
 	function apply() {
@@ -15,7 +17,7 @@ const assertNoObjectSpread = (assetName) =>
 		});
 	};
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index.js",

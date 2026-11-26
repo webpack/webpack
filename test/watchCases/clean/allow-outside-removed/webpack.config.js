@@ -5,16 +5,18 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "AllowOutsideCleanPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: { keep: /kept\.txt$/ }
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			/** @type {string} */

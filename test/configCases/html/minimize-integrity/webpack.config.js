@@ -6,7 +6,9 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 const htmlMinify = require("../../../../lib/html/htmlMinify");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -28,7 +30,7 @@ const copyTest = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

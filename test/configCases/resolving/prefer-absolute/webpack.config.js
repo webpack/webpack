@@ -7,13 +7,10 @@
  * 	ResolveContext
  * } from "enhanced-resolve"
  */
+/** @import { SyncBailHook } from "tapable" */
+/** @import { Configuration } from "../../../../" */
 
-/**
- * @template T, R
- * @typedef {import("tapable").SyncBailHook<T, R>} SyncBailHook
- */
-
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 
 module.exports = {
 	resolve: {

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Events } from "./webpack.config" */
+/** @import { Events } from "./webpack.config.js" */
 
 module.exports = {
 	/**

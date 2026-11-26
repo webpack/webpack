@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {(env: unknown, options: { testPath: string, srcPath: string }) => import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: unknown, options: { testPath: string, srcPath: string }) => Configuration[]} */
 module.exports = (env, { testPath, srcPath }) => {
 	const entries = path.join(srcPath, "entries.json");
 	return [

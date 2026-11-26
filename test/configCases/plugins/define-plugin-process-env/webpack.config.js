@@ -2,7 +2,9 @@
 
 const DefinePlugin = require("../../../../").DefinePlugin;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "production",

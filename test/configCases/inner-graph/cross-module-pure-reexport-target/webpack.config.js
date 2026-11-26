@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "cross-module-pure-reexport-target without module concatenation",

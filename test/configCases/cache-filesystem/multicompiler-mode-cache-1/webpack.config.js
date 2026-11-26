@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // default settings. should just work
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		mode: "production",

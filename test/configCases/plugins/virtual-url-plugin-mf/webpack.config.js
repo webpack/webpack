@@ -2,7 +2,9 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	plugins: [
 		new webpack.container.ModuleFederationPlugin({

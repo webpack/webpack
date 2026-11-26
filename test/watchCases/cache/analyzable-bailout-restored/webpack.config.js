@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `shared.js` is generated once per runtime, since each entry uses another export.
 // The next step drops it from `bundle`, so only the result `b` generated second is
 // restored, and the reason must have been stored with that one too.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "node",

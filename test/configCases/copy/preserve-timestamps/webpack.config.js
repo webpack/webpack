@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const MTIME = require("./mtime");
 
+/** @import { Configuration } from "../../../../" */
+
 const source = path.resolve(__dirname, "static/note.txt");
 
 // a checkout stamps the fixture with the time it was written, so it is pinned
@@ -12,7 +14,7 @@ if (fs.statSync(source).mtimeMs !== MTIME) {
 	fs.utimesSync(source, new Date(MTIME), new Date(MTIME));
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		copy: [

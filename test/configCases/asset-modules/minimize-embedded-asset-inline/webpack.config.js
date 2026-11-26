@@ -5,7 +5,9 @@ const cssMinify = require("../../../../lib/css/cssMinify");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 const svgMinify = require("../../../helpers/svgMinify");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "production",

@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 /**
  * @param {string} file fixture file name
  * @returns {string} its content as written
@@ -36,8 +38,8 @@ class JavascriptOnlyMinimizer {
 /**
  * @param {string} name asset name prefix
  * @param {Expected} expected what the emitted JSON asset should hold
- * @param {import("../../../../").Configuration} options config overrides
- * @returns {import("../../../../").Configuration} config
+ * @param {Configuration} options config overrides
+ * @returns {Configuration} config
  */
 const config = (name, expected, options) => ({
 	target: "node",
@@ -59,7 +61,7 @@ const config = (name, expected, options) => ({
 	plugins: [
 		...(options.plugins || []),
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			// Checked here rather than in the bundle: futureDefaults emits ESM,
@@ -100,7 +102,7 @@ const config = (name, expected, options) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("future-defaults", "minified", {
 		experiments: { futureDefaults: true }

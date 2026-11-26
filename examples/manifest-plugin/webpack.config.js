@@ -3,7 +3,9 @@
 const YAML = require("yamljs");
 const webpack = require("../../");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	devtool: "source-map",
 	output: {

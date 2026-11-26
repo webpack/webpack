@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A chain of `dependOn` diamonds: root -> [left, right] -> join -> [left, right]
 // -> join ... Every join is reachable by two paths, so a traversal that does not
 // remember visited entrypoints costs 2 ** DEPTH visits of the last one. `node`
@@ -23,7 +25,7 @@ for (let i = 0; i < DEPTH; i++) {
 	current = `join${i}`;
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

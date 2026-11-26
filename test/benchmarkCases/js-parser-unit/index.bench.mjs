@@ -3,9 +3,11 @@ import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
 
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
-/** @type {typeof import("../../../lib/javascript/JavascriptParser")} */
+/** @type {typeof JavascriptParser} */
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser.js");
 const { WebpackParser } = require("../../../lib/javascript/syntax-parser.js");
 
@@ -61,7 +63,7 @@ const tokenizeJs = (code, sourceType) => {
 };
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

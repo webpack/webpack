@@ -2,11 +2,13 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // The `.js` -> `.ts` extensionAlias that `experiments.typescript` installs must
 // not make a package directory named `pkg.js` unresolvable. Pinned here instead
 // of via `experiments.typescript` so the case also runs below Node.js 22.6.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.js",
 	resolve: {

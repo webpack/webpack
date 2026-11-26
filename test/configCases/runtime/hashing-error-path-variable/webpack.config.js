@@ -6,6 +6,8 @@ const {
 } = require("../../../../");
 const { getUndoPath } = require("../../../../lib/util/identifier");
 
+/** @import { Compilation, Chunk, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "RootDirRuntimeModulePlugin";
 
 class RootDirRuntimeModule extends RuntimeModule {
@@ -19,9 +21,9 @@ class RootDirRuntimeModule extends RuntimeModule {
 	 */
 	generate() {
 		const compilation =
-			/** @type {import("../../../../").Compilation} */
+			/** @type {Compilation} */
 			(this.compilation);
-		const chunk = /** @type {import("../../../../").Chunk} */ (this.chunk);
+		const chunk = /** @type {Chunk} */ (this.chunk);
 		// Resolving the chunk's own filename asks for a hash that the hashing pass
 		// has not computed yet, which is the failure this case covers.
 		const dir = getUndoPath(
@@ -39,7 +41,7 @@ class RootDirRuntimeModule extends RuntimeModule {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		filename: "inner/[name].[contenthash].js"

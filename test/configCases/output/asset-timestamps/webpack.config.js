@@ -3,7 +3,9 @@
 const { Compilation, sources } = require("../../../../");
 const TIMESTAMPS = require("./timestamps");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	node: {
 		__dirname: false

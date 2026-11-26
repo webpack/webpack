@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Module, Compiler, Chunk } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((includeJavaScript) => {
 	const name = includeJavaScript ? "mixed" : "virtual";
 	return {
@@ -26,7 +28,7 @@ module.exports = [false, true].map((includeJavaScript) => {
 				cacheGroups: {
 					shared: {
 						/**
-						 * @param {import("../../../../").Module} module module
+						 * @param {Module} module module
 						 * @returns {boolean} whether the module belongs to the shared chunk
 						 */
 						test: (module) =>
@@ -51,12 +53,12 @@ module.exports = [false, true].map((includeJavaScript) => {
 			}),
 			{
 				/**
-				 * @param {import("../../../../").Compiler} compiler compiler
+				 * @param {Compiler} compiler compiler
 				 * @returns {void}
 				 */
 				apply(compiler) {
 					compiler.hooks.afterEmit.tap("CheckSharedChunks", (compilation) => {
-						const chunk = /** @type {import("../../../../").Chunk} */ (
+						const chunk = /** @type {Chunk} */ (
 							compilation.namedChunks.get(`${name}-shared`)
 						);
 						expect(chunk).toBeDefined();

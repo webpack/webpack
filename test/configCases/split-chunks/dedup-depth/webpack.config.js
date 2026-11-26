@@ -11,6 +11,8 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 const sharedSize = [0, 1, 2, 3, 4].reduce(
 	(size, index) =>
 		size + fs.statSync(path.join(__dirname, `m${index}.js`)).size,
@@ -38,7 +40,7 @@ const makeEntry = () => {
 	return entry;
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = variants.map(({ usedExports, dedupDepth }, index) => ({
 	name: `dedup-depth-${index}`,
 	mode: "production",

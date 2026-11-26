@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One flag off per variant, against an otherwise current target: a version
 // groups flags together, so a guard forgotten for one hides behind the rest.
 const FLAGS = [
@@ -24,7 +26,7 @@ const FLAGS = [
 
 /**
  * @param {string} flag the one flag this variant takes away
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const variant = (flag) => ({
 	name: flag,
@@ -40,5 +42,5 @@ const variant = (flag) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = FLAGS.map(variant);

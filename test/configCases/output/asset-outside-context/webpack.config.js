@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// a module above the context gets a [path] that climbs out of it
 	context: path.join(__dirname, "app"),

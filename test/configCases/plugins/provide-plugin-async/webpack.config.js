@@ -2,7 +2,9 @@
 
 const { ProvidePlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{ target: "node", output: { module: false } },
 	{ target: "web", output: { module: false } },

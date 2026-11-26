@@ -6,7 +6,9 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -28,7 +30,7 @@ const copyTest = {
 	}
 };
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const forgetBanner = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -57,7 +59,7 @@ const forgetBanner = {
 
 /**
  * @param {string | ((licenseFile: string) => string)} banner the banner's text, or a function of the license file's name returning it
- * @returns {import("../../../../").WebpackPluginInstance[]} JS and CSS minimizers writing it
+ * @returns {WebpackPluginInstance[]} JS and CSS minimizers writing it
  */
 const minimizersWithBanner = (banner) => [
 	new MinimizerPlugin({
@@ -72,7 +74,7 @@ const minimizersWithBanner = (banner) => [
 	})
 ];
 
-/** @type {(output: import("../../../../").Configuration["output"], minimizer?: import("../../../../").WebpackPluginInstance[], plugins?: import("../../../../").WebpackPluginInstance[]) => import("../../../../").Configuration} */
+/** @type {(output: Configuration["output"], minimizer?: WebpackPluginInstance[], plugins?: WebpackPluginInstance[]) => Configuration} */
 const config = (output, minimizer, plugins = []) => ({
 	target: ["web", "es2020"],
 	mode: "production",
@@ -86,7 +88,7 @@ const config = (output, minimizer, plugins = []) => ({
 	plugins: [copyTest, ...plugins]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// The page sits beside its chunks and their license files.
 	config({

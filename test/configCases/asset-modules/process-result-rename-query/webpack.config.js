@@ -3,11 +3,15 @@
 const NormalModule = require("../../../../lib/module/NormalModule");
 const { parseResource } = require("../../../../lib/util/identifier");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { AssetModuleBuildInfo } from "../../../../lib/asset/AssetModule.js" */
+/** @import { Configuration } from "../../../../" */
+
 // A request carries its query and fragment into the asset's name, so a rename
 // has to keep them: only the extension is the encoder's to change.
 class RenameKeepingQuery {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("RenameKeepingQuery", (compilation) => {
@@ -22,7 +26,7 @@ class RenameKeepingQuery {
 						fragment
 					} = parseResource(module.resource);
 
-					/** @type {import("../../../../lib/asset/AssetModule").AssetModuleBuildInfo} */
+					/** @type {AssetModuleBuildInfo} */
 					(module.buildInfo).assetResource = `${file.replace(
 						/\.png$/,
 						".webp"
@@ -35,7 +39,7 @@ class RenameKeepingQuery {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {

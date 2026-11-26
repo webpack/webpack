@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A page imported from JavaScript has no entry name either, so the script it
 // carries is named after the page's file.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: { app: "./index.js" },
 	output: {

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compiler, EntryOptions } from "../../../../" */
+/** @import { Compiler, EntryOptions, Configuration } from "../../../../" */
 
 class AssertMergedEntryOptionsPlugin {
 	/**
@@ -58,7 +58,7 @@ class AssertMergedEntryOptionsPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		chunkFilename: "chunk-[name].js"

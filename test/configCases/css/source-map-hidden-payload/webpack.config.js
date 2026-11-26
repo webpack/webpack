@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name config name
- * @param {import("../../../../").Configuration["devtool"]} devtool devtool under test
- * @returns {import("../../../../").Configuration} webpack configuration
+ * @param {Configuration["devtool"]} devtool devtool under test
+ * @returns {Configuration} webpack configuration
  */
 const makeConfig = (name, devtool) => ({
 	name,

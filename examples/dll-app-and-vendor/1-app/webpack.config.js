@@ -3,9 +3,11 @@
 const path = require("path");
 const webpack = require("../../../");
 
+/** @import { Configuration } from "webpack" */
+
 const manifest = "../0-vendor/dist/vendor-manifest.json";
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	// mode: "development" || "production",
 	context: __dirname,

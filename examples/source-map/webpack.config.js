@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "webpack" */
+
 const devtools = [
 	"eval",
 	"eval-cheap-source-map",
@@ -17,7 +19,7 @@ const devtools = [
 	"nosources-source-map"
 ];
 
-/** @type {import("webpack").Configuration[]} */
+/** @type {Configuration[]} */
 const config = devtools.map((devtool) => ({
 	mode: "development",
 	entry: {

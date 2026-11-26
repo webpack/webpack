@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// universal bundle (node + web, ESM): may run on deno/bun, which require the
 	// `node:` specifier to resolve a core module

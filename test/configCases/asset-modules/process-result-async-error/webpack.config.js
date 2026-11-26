@@ -2,11 +2,14 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
+
 // What a failing minimizer looks like: the rejection has to surface as this
 // module's build error, not as an unhandled one.
 class FailingTap {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("FailingTap", (compilation) => {
@@ -21,7 +24,7 @@ class FailingTap {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

@@ -2,11 +2,11 @@
 
 const PLUGIN_NAME = "DependencyWithoutKindsPlugin";
 
-/** @import { Compiler } from "../../../../" */
-/** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
+/** @import { Compiler, javascript, Dependency as WebpackDependency, template as webpackTemplate, Configuration } from "../../../../" */
+/** @typedef {javascript.JavascriptParser} JavascriptParser */
 /** @typedef {Compiler["webpack"]} WebpackApi */
-/** @typedef {typeof import("../../../../").Dependency} DependencyClass */
-/** @typedef {typeof import("../../../../").template.DependencyTemplate} DependencyTemplateClass */
+/** @typedef {typeof WebpackDependency} DependencyClass */
+/** @typedef {typeof webpackTemplate.DependencyTemplate} DependencyTemplateClass */
 /** @typedef {{ ForeignDependency: DependencyClass, ForeignDependencyTemplate: DependencyTemplateClass }} Foreign */
 
 /** @type {Foreign | undefined} */
@@ -99,7 +99,7 @@ class DependencyWithoutKindsPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	experiments: { deferImport: true },

@@ -100,7 +100,7 @@ const OPAQUE_CALLS = new Set([
 	"readFileSync"
 ]);
 
-/** @import { Node, Expression, Pattern, Function as FunctionNode } from "estree" */
+/** @import { Node, Expression, Pattern, Function as FunctionNode, Literal, Identifier, CallExpression, SourceLocation } from "estree" */
 
 /**
  * What a name is bound to.
@@ -185,9 +185,7 @@ const bindPattern = (pattern, bind, binding) => {
 				const key =
 					property.key.type === "Identifier"
 						? property.key.name
-						: String(
-								/** @type {import("estree").Literal} */ (property.key).value
-							);
+						: String(/** @type {Literal} */ (property.key).value);
 				column(property.value, key);
 			}
 			return;
@@ -363,7 +361,7 @@ const inlineInputs = (code) => {
 	collect(ast, { names: new Map(), parent: null });
 
 	/**
-	 * @param {import("estree").Identifier} node a reference
+	 * @param {Identifier} node a reference
 	 * @returns {Binding | undefined} what it is bound to
 	 */
 	const resolve = (node) => {
@@ -755,8 +753,7 @@ const inlineInputs = (code) => {
 		changed = false;
 		found.clear();
 		for (const call of calls) {
-			const { callee, arguments: args } =
-				/** @type {import("estree").CallExpression} */ (call);
+			const { callee, arguments: args } = /** @type {CallExpression} */ (call);
 			for (const { index, values } of sourceArguments(call)) {
 				const argument = args[index];
 				// An object written where a source goes is a preparsed tree, not text.
@@ -784,7 +781,7 @@ const inlineInputs = (code) => {
 				}
 			}
 			// `it.each(table)(title, fn)`: a row's cell the callback hands on.
-			const each = /** @type {import("estree").CallExpression} */ (call);
+			const each = /** @type {CallExpression} */ (call);
 			if (
 				each.type === "CallExpression" &&
 				callee.type === "CallExpression" &&
@@ -833,8 +830,7 @@ const inlineInputs = (code) => {
 	}
 	return [...found]
 		.map(([node, callee]) => ({
-			line: /** @type {import("estree").SourceLocation} */ (node.loc).start
-				.line,
+			line: /** @type {SourceLocation} */ (node.loc).start.line,
 			callee
 		}))
 		.sort((a, b) => a.line - b.line);

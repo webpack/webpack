@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The css loading runtime module — a `<link>` loader with its own es5 obligation.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "es5"],
 	experiments: {

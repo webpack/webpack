@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { MultiStats } from "../../../" */
+
 module.exports = {
 	/**
-	 * @param {import("../../../").MultiStats} stats stats
+	 * @param {MultiStats} stats stats
 	 */
 	validate(stats) {
 		for (let i = 0; i < stats.stats.length; i += 2) {

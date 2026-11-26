@@ -6,9 +6,9 @@ const {
 	}
 } = require("../../../../");
 
-/** @import { Chunk } from "../../../../" */
+/** @import { Chunk, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "web",

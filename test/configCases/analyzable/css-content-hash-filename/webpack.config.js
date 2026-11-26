@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration, Chunk } from "../../../../" */
+
 // A function `chunkFilename` may read any content hash the chunk carries, not only the
 // javascript one — so the name is hash-dependent here and is left to the deferred pass.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",
@@ -14,8 +16,7 @@ module.exports = {
 		chunkFilename: (pathData) =>
 			`[name].${
 				/** @type {Record<string, string>} */ (
-					/** @type {import("../../../../").Chunk} */ (pathData.chunk)
-						.contentHash
+					/** @type {Chunk} */ (pathData.chunk).contentHash
 				).css
 			}.mjs`,
 		cssChunkFilename: "[name].css",

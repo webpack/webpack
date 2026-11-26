@@ -4,16 +4,18 @@ const fs = require("fs");
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "CleanLeadingSlashAssetsPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			// the emit skips a file whose source it wrote already

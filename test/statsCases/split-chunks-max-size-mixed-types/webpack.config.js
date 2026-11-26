@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../" */
+
 // Regression for the deterministicGrouping merge-target bug: when maxSize
 // splitting hits the undersized edge case, problematic modules must merge into
 // the result group sharing the most size types. The async "grp" chunk mixes
 // asset, javascript and css size types so all three participate in grouping.
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index.js",

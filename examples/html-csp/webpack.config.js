@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../" */
+
 // `output.html.csp` emits a `<meta http-equiv="Content-Security-Policy">` into
 // every webpack-generated HTML page. Combined with `output.html.inline`, the
 // build's scripts/styles end up inline in the page and CSP hashes each one
 // (after inlining, so the sha256 matches the exact bytes the browser runs) on
 // top of a strict baseline — no separate CSP plugin needed.
-/** @type {import("../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: { index: "./src/index.html" },
 	output: {

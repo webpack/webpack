@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").ExternalItem[]} */
+/** @import { ExternalItem, Configuration } from "../../../../" */
+
+/** @type {ExternalItem[]} */
 const externals = [
 	"path",
 	"util",
@@ -31,7 +33,7 @@ const externals = [
 	})("^$")
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	externalsType: "commonjs",

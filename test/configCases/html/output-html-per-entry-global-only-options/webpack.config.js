@@ -8,7 +8,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -30,7 +32,7 @@ const copyTest = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		a: { import: "./src/a.js", html: { inline: true } }

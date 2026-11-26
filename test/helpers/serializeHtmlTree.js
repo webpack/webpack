@@ -11,7 +11,7 @@ const {
 	decodeEntities
 } = require("../../lib/html/syntax-parser");
 
-/** @import { HtmlNodeRef } from "../../lib/html/syntax-parser" */
+/** @import { HtmlNodeRef } from "../../lib/html/syntax-parser.js" */
 
 const NS_PREFIX = {
 	[Namespace.SVG]: "svg ",

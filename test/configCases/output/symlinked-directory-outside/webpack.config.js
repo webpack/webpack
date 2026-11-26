@@ -5,6 +5,8 @@ const path = require("path");
 const rimraf = require("rimraf");
 const { RawSource } = require("webpack-sources");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "SymlinkedDirectoryOutsidePlugin";
 
 /** @typedef {"unset" | "allowed" | "denied" | "allowed-link" | "future-defaults" | "emitted-link" | "nested-link"} Mode */
@@ -22,7 +24,7 @@ const MODES = [
 	"nested-link"
 ];
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration[]} */
 module.exports = (env, { testPath }) =>
 	MODES.map((mode) => {
 		const outputPath = path.join(testPath, mode, "dist");
@@ -48,7 +50,7 @@ module.exports = (env, { testPath }) =>
 			},
 			plugins: [
 				/**
-				 * @param {import("../../../../").Compiler} compiler compiler
+				 * @param {Compiler} compiler compiler
 				 */
 				(compiler) => {
 					compiler.hooks.environment.tap(PLUGIN_NAME, () => {

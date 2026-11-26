@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const base = {
 	mode: "production",
 	module: {
@@ -14,7 +16,7 @@ const base = {
 	}
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

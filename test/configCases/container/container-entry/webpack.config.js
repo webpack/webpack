@@ -2,7 +2,9 @@
 
 const { ContainerPlugin } = require("../../../../").container;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		pathinfo: true

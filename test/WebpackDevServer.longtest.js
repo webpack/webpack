@@ -1,5 +1,10 @@
 "use strict";
 
+/** @import webpackDevServer from "webpack-dev-server" */
+/** @import { Page, Browser } from "playwright-core" */
+/** @import { RequestHandler } from "express" */
+/** @import { Watching } from ".." */
+
 // `depd` reads V8 structured stack traces to locate deprecation call sites, but
 // Bun does not provide them under jest (`prepareStackTrace` yields a string), so
 // loading express/serve-index throws there. It only emits deprecation warnings, so
@@ -24,7 +29,7 @@ const launchBrowser = require("./helpers/launchBrowser");
 const [nodeMajor, nodeMinor] = process.versions.node.split(".").map(Number);
 const nodeSupported = nodeMajor > 22 || (nodeMajor === 22 && nodeMinor >= 15);
 
-/** @type {typeof import("webpack-dev-server") | undefined} */
+/** @type {typeof webpackDevServer | undefined} */
 let WebpackDevServer;
 if (nodeSupported) WebpackDevServer = require("webpack-dev-server");
 
@@ -58,7 +63,7 @@ const sleep = (ms) =>
 /**
  * Stop the dev server, bounded by a timeout. Under jest-on-Bun `server.stop()`
  * can hang on a lingering client socket; the run force-exits regardless.
- * @param {import("webpack-dev-server")} server server
+ * @param {webpackDevServer} server server
  * @returns {Promise<unknown>} promise
  */
 const stopServer = (server) =>
@@ -107,7 +112,7 @@ const waitForPort = (port) =>
 /**
  * Poll `#app`'s text until it matches. Uses `page.evaluate` rather than
  * `page.waitForFunction`, which does not resolve under jest-on-Bun.
- * @param {import("playwright-core").Page} page page
+ * @param {Page} page page
  * @param {string} text expected text content
  * @param {number} timeout ms
  * @returns {Promise<void>} promise
@@ -135,7 +140,7 @@ const waitForAppText = async (page, text, timeout) => {
 };
 
 /**
- * @param {import("playwright-core").Page} page page
+ * @param {Page} page page
  * @returns {Promise<boolean>} whether the dev-server error overlay is present
  */
 const hasOverlay = (page) =>
@@ -150,7 +155,7 @@ const hasOverlay = (page) =>
 
 /**
  * Poll until the error overlay reaches the expected presence.
- * @param {import("playwright-core").Page} page page
+ * @param {Page} page page
  * @param {boolean} present expected presence
  * @param {number} timeout ms
  * @returns {Promise<void>} promise
@@ -170,7 +175,7 @@ const INDEX_HTML = `<!doctype html>
 <html><head><meta charset="utf-8"><title>wds</title></head>
 <body><div id="app"></div><script src="/main.js"></script></body></html>`;
 
-/** @typedef {{ name?: string, path?: string, middleware: import("express").RequestHandler }} MiddlewareEntry */
+/** @typedef {{ name?: string, path?: string, middleware: RequestHandler }} MiddlewareEntry */
 
 // Serve index.html ourselves; dev-server's `static` handler pulls in serve-index
 // and chokidar, whose dynamic imports fail under jest-on-Bun.
@@ -231,13 +236,11 @@ const writeFixture = () => {
  * first compilation is done.
  * @param {string} dir fixture root
  * @param {number} port port to listen on
- * @param {NonNullable<ConstructorParameters<typeof import("webpack-dev-server")>[0]>} devServerOptions extra options
- * @returns {Promise<{ server: import("webpack-dev-server"), watching: import("..").Watching }>} handles to stop
+ * @param {NonNullable<ConstructorParameters<typeof webpackDevServer>[0]>} devServerOptions extra options
+ * @returns {Promise<{ server: webpackDevServer, watching: Watching }>} handles to stop
  */
 const startServer = (dir, port, devServerOptions) => {
-	const Server = /** @type {typeof import("webpack-dev-server")} */ (
-		WebpackDevServer
-	);
+	const Server = /** @type {typeof webpackDevServer} */ (WebpackDevServer);
 	// Used as a plugin: added to `plugins`, `apply()` taps the compiler and starts
 	// listening after the first watch build — no explicit `server.start()`.
 	const server = new Server({
@@ -265,7 +268,7 @@ const startServer = (dir, port, devServerOptions) => {
 
 	return new Promise((resolve, reject) => {
 		let started = false;
-		/** @type {import("..").Watching} */
+		/** @type {Watching} */
 		let watching;
 		compiler.hooks.done.tap("WebpackDevServerLongtest", () => {
 			if (started) return;
@@ -277,7 +280,7 @@ const startServer = (dir, port, devServerOptions) => {
 		// Poll instead of native file watching: libuv's Windows fs.watch aborts the
 		// process on temp-dir paths ("Assertion failed ... fs-event.c"), and it keeps
 		// edit detection reliable under Bun/Deno too.
-		watching = /** @type {import("..").Watching} */ (
+		watching = /** @type {Watching} */ (
 			compiler.watch({ poll: 200 }, (err) => {
 				if (err) reject(err);
 			})
@@ -286,7 +289,7 @@ const startServer = (dir, port, devServerOptions) => {
 };
 
 describe("WebpackDevServer integration in real Chrome", () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
 
 	const itChrome = nodeSupported ? it : it.skip;

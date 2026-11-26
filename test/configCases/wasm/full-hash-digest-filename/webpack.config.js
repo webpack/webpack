@@ -6,6 +6,8 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} name prefix keeping the emitted files of each config apart
@@ -13,7 +15,7 @@ const webpack = require("../../../../");
  * @param {boolean} inlined whether the compilation hash is inlined into the loader
  * @param {boolean=} overridePublicPath whether the entry reassigns the public path,
  * which keeps the name off the analyzable path and on the runtime one
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name, hashPart, inlined, overridePublicPath = true) => ({
 	target: "node",
@@ -44,7 +46,7 @@ const base = (index, name, hashPart, inlined, overridePublicPath = true) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Left on the analyzable path, where the whole name is a literal in the chunk.
 	base(0, "baked", "[fullhash:base64safe]", true, false),

@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Verifies `output.htmlFilename` overrides the default derived from
 // `output.filename`. Files are emitted under a `pages/` subdirectory with a
 // hash and the source basename, mirroring how users typically customise the
 // CSS pipeline's `output.cssFilename`.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		filename: "[name].js",

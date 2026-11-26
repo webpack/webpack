@@ -2,7 +2,9 @@
 
 const createWatchMutation = require("../../../helpers/createWatchMutation");
 
-/** @returns {import("webpack").Configuration} watch configuration */
+/** @import { Configuration } from "webpack" */
+
+/** @returns {Configuration} watch configuration */
 module.exports = () => ({
 	mode: "development",
 	devtool: false,

@@ -3,7 +3,9 @@
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {NonNullable<import("../../../../").Configuration["module"]>["rules"]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {NonNullable<Configuration["module"]>["rules"]} */
 const baseRules = [
 	{
 		test: /\.my-css$/i,
@@ -15,7 +17,7 @@ const baseRules = [
 	}
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 const base = {
 	experiments: {
 		css: true
@@ -28,7 +30,7 @@ const base = {
 // target: ["web", "node"]
 // output module
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+/** @type {(env: Env, options: TestOptions) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
 		...base,

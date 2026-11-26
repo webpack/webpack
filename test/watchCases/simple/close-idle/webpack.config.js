@@ -2,10 +2,12 @@
 
 const path = require("path");
 
+/** @import { Configuration, Compiler, Watching } from "../../../.." */
+
 /**
  * @param {Record<string, unknown> | undefined} _env environment
  * @param {{ srcPath: string }} paths fixture paths
- * @returns {import("../../../..").Configuration[]} watch configurations
+ * @returns {Configuration[]} watch configurations
  */
 module.exports = (_env, { srcPath }) =>
 	["first", "second"].map((name, index) => {
@@ -14,7 +16,7 @@ module.exports = (_env, { srcPath }) =>
 			/** @type {(() => Promise<void>) | undefined} */
 			run: undefined,
 			/**
-			 * @param {import("../../../..").Compiler} compiler watched compiler
+			 * @param {Compiler} compiler watched compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {
@@ -27,7 +29,7 @@ module.exports = (_env, { srcPath }) =>
 						expect(watching).toBeDefined();
 						expect(closed).toBe(0);
 						await new Promise((resolve, reject) => {
-							/** @type {import("../../../..").Watching} */
+							/** @type {Watching} */
 							(watching).close((error) => {
 								// The hook has run by the time the callback does.
 								expect(closed).toBe(1);

@@ -11,13 +11,13 @@ const fs = require("fs");
 const path = require("path");
 const acorn = require("acorn");
 
-/** @import { SupportStatement as BcdSupport, CompatStatement as BcdCompat } from "@mdn/browser-compat-data" */
+/** @import { SupportStatement as BcdSupport, CompatStatement as BcdCompat, MetaBlock } from "@mdn/browser-compat-data" */
 /** @typedef {{ [name: string]: { __compat: BcdCompat } }} BcdMembers */
 
 // `require()` returns the package's `data.json` itself, while its `require.d.ts`
 // declares that table as a default export, so it is read as the JSON it is —
 // the parts read here, where every built-in and member carries its own row.
-/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, api: { Window: BcdMembers }, __meta: import("@mdn/browser-compat-data").MetaBlock }} */
+/** @type {{ javascript: { builtins: { [name: string]: { __compat: BcdCompat } & BcdMembers } }, api: { Window: BcdMembers }, __meta: MetaBlock }} */
 const bcd = JSON.parse(
 	fs.readFileSync(require.resolve("@mdn/browser-compat-data"), "utf8")
 );

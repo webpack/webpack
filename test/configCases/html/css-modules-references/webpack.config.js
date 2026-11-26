@@ -4,11 +4,13 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * What a page's CSS modules rewrite besides `class` and `id`: named modules
  * (`card.btn`), id references, `url(#id)`, SMIL timings, attributes an option
  * adds, and a page that finds its names again when generating.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	mode: "development",

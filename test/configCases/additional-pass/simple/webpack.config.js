@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").WebpackPluginFunction} */
+/** @import { WebpackPluginFunction, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginFunction} */
 function testPlugin() {
 	let counter = 1;
 	this.hooks.compilation.tap("TestPlugin", (compilation) => {
@@ -11,7 +13,7 @@ function testPlugin() {
 	});
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [testPlugin]
 };

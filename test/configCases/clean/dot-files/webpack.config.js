@@ -5,6 +5,8 @@ const path = require("path");
 const { RawSource } = require("webpack-sources");
 const readDir = require("../enabled/readdir");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "CleanDotFilesPlugin";
 
 // no dot-file is removed, wherever it is
@@ -17,14 +19,14 @@ const PLANTED = [
 	"stale/file.txt"
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			let planted = false;

@@ -2,7 +2,9 @@
 
 const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinifyPlugin");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	// Universal, so the inject runtime collects the styles instead of reaching

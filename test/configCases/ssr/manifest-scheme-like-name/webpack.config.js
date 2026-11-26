@@ -2,12 +2,14 @@
 
 const { DefinePlugin, SSRManifestPlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string | (() => string)} chunkFilename the chunk filename template
  * @param {Record<string, string>} expected the url each chunk gets
  * @param {number} index the configuration's index
  * @param {string=} publicPath the public path
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (chunkFilename, expected, index, publicPath = "") => ({
 	mode: "development",
@@ -28,7 +30,7 @@ const config = (chunkFilename, expected, index, publicPath = "") => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config(
 		"[name].js",

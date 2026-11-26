@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The module holding `new Worker(new URL(...))` sits at two depths, so each emitted
 // asset gets its own relative literal once the names exist.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node14",
 	mode: "development",

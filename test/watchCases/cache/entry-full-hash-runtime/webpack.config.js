@@ -2,9 +2,11 @@
 
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // The runtime of `main` bakes the compilation hash into its public path, so
 // changing `other` renames that runtime chunk while `main` itself stays put.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{ module: true, realContentHash: true },
 	{ module: true, realContentHash: false },

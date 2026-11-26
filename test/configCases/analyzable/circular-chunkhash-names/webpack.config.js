@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `[chunkhash]` reads a chunk's own modules, which the fill never touches. Only the
 // loader names a chunk, so a pair importing each other needs no repair either.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "production",

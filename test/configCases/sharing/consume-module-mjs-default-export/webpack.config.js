@@ -3,7 +3,9 @@
 const { ConsumeSharedPlugin, ProvideSharedPlugin } =
 	require("../../../../").sharing;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	plugins: [

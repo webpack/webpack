@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} prefix file name prefix
- * @param {import("../../../../").Configuration["optimization"]} optimization optimization
- * @returns {import("../../../../").Configuration} config
+ * @param {Configuration["optimization"]} optimization optimization
+ * @returns {Configuration} config
  */
 const config = (prefix, optimization) => ({
 	target: "web",

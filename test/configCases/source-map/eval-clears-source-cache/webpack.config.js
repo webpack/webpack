@@ -1,19 +1,22 @@
 "use strict";
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+/** @import { Source } from "webpack-sources" */
+
 /**
  * Asserts the contract `EvalDevToolModulePlugin` relies on: it drops each
  * rendered source's cached copy, and reading that source afterwards still
  * returns the same text.
- * @type {import("../../../../").WebpackPluginInstance}
+ * @type {WebpackPluginInstance}
  */
 const observeSourceCacheClearing = {
 	apply(compiler) {
 		const { ExternalModule } = compiler.webpack;
 		const { JavascriptModulesPlugin } = compiler.webpack.javascript;
 		compiler.hooks.compilation.tap("Observe", (compilation) => {
-			/** @type {Map<import("webpack-sources").Source, string>} */
+			/** @type {Map<Source, string>} */
 			const textBefore = new Map();
-			/** @type {Set<import("webpack-sources").Source>} */
+			/** @type {Set<Source>} */
 			const cleared = new Set();
 
 			// Registered before EvalDevToolModulePlugin taps, so this sees each
@@ -60,7 +63,7 @@ const observeSourceCacheClearing = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	devtool: "eval",
 	plugins: [observeSourceCacheClearing]

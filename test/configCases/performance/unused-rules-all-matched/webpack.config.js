@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Every rule matches, so the plugin must stay silent.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

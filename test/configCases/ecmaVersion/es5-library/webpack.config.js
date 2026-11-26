@@ -1,8 +1,11 @@
 "use strict";
 
+/** @import { LibraryType } from "../../../../declarations/WebpackOptions.js" */
+/** @import { Configuration } from "../../../../" */
+
 /**
- * @param {import("../../../../declarations/WebpackOptions").LibraryType} type library type
- * @returns {import("../../../../").Configuration} configuration
+ * @param {LibraryType} type library type
+ * @returns {Configuration} configuration
  */
 const variant = (type) => ({
 	name: type,
@@ -17,7 +20,7 @@ const variant = (type) => ({
 // Every library wrapper is code webpack writes around the bundle, so each one
 // carries the same es5 obligation as the runtime inside it. The types that need
 // a loader in scope are in `es5-library-registered`, which cannot run them.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	variant("var"),
 	variant("assign"),

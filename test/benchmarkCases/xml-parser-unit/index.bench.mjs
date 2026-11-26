@@ -4,11 +4,14 @@
 
 import { createRequire } from "module";
 
+/** @import syntax from "../../../lib/html/syntax.js" */
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
-/** @type {typeof import("../../../lib/html/syntax-parser")} */
+/** @type {typeof htmlParser} */
 const htmlParser = require("../../../lib/html/syntax-parser.js");
-/** @type {typeof import("../../../lib/html/syntax")} */
+/** @type {typeof syntax} */
 const { SourceProcessor } = require("../../../lib/html/syntax.js");
 
 const { NodeType, parseHtml, tokenizeXml } = htmlParser;
@@ -53,7 +56,7 @@ const RET_END = (
 ) => end;
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

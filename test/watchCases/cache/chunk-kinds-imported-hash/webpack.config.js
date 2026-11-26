@@ -2,9 +2,11 @@
 
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // An HTML page, a CSS chunk and a worker each name hashed files of other
 // chunks; changing those chunks must reach every asset naming them.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{ page: "./page.html" },
 	{ main: "./main.js" },

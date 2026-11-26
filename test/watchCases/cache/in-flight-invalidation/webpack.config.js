@@ -2,13 +2,15 @@
 
 const path = require("path");
 
+/** @import { LoaderContext, Configuration, Compiler } from "../../../.." */
+
 /** @typedef {{ builds: number, completed: number, callbacks: number, interrupted: Set<string> }} Events */
-/** @typedef {import("../../../..").LoaderContext<Record<string, never>> & { watchEvents?: Events }} WatchLoaderContext */
+/** @typedef {LoaderContext<Record<string, never>> & { watchEvents?: Events }} WatchLoaderContext */
 
 /**
  * @param {Record<string, unknown> | undefined} _env environment
  * @param {{ srcPath: string }} paths fixture paths
- * @returns {import("../../../..").Configuration[]} watch configurations
+ * @returns {Configuration[]} watch configurations
  */
 module.exports = (_env, { srcPath }) =>
 	["development", "production"].map((mode, index) => {
@@ -33,7 +35,7 @@ module.exports = (_env, { srcPath }) =>
 				{
 					events,
 					/**
-					 * @param {import("../../../..").Compiler} compiler watched compiler
+					 * @param {Compiler} compiler watched compiler
 					 * @returns {void}
 					 */
 					apply(compiler) {

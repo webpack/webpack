@@ -1,5 +1,8 @@
 "use strict";
 
+/** @import http, { ClientRequest, IncomingMessage } from "http" */
+/** @import https from "https" */
+
 /* global __resourceQuery */
 
 var urlBase = decodeURIComponent(__resourceQuery.slice(1));
@@ -20,12 +23,12 @@ exports.keepAlive = function (options) {
 		options.onError(err);
 	}
 
-	/** @type {Promise<import("http") | import("https")>} */
+	/** @type {Promise<http | https>} */
 	var mod = require("./load-http")(urlBase.startsWith("https"));
 
-	/** @type {import("http").ClientRequest} */
+	/** @type {ClientRequest} */
 	var request;
-	/** @type {import("http").IncomingMessage} */
+	/** @type {IncomingMessage} */
 	var response;
 
 	mod.then(function (client) {

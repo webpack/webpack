@@ -1,4 +1,6 @@
-/** @type {import("../../..").Configuration} */
+/** @import { Configuration } from "../../.." */
+
+/** @type {Configuration} */
 export default {
 	entry: "./generated/module.js",
 	target: "node",

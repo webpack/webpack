@@ -13,8 +13,10 @@ const {
 	toConstantDependency
 } = require("../../../../lib/javascript/JavascriptParserHelpers");
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { CallExpression } from "estree" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "object-tap-helpers";
 
@@ -79,10 +81,7 @@ const tapParser = (parser) => {
 	parser.hooks.call.for("String").tap(PLUGIN_NAME, (expression) => {
 		const dep = new ConstDependency(
 			"42",
-			getArgumentsRange(
-				parser,
-				/** @type {import("estree").CallExpression} */ (expression)
-			)
+			getArgumentsRange(parser, /** @type {CallExpression} */ (expression))
 		);
 		dep.loc = parser.getLocation(expression);
 		parser.state.module.addPresentationalDependency(dep);
@@ -108,7 +107,7 @@ const plugin = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [plugin]
 };

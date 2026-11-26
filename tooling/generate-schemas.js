@@ -668,15 +668,138 @@ const readLeadingComment = (node, at = 0, from = node.pos) => {
 };
 
 /**
+ * @typedef {object} ImportedName
+ * @property {string} specifier the module an `@import` tag names
+ * @property {string=} member the export it binds, or none for the module itself
+ */
+
+/** @type {WeakMap<ts.SourceFile, Map<string, ImportedName>>} */
+const importedNamesBySource = new WeakMap();
+
+/**
+ * Every local name the `@import` tags of a module bind, and what each one means.
+ * @param {ts.SourceFile} source the module
+ * @returns {Map<string, ImportedName>} what each bound name stands for
+ */
+const importedNamesOf = (source) => {
+	const cached = importedNamesBySource.get(source);
+	if (cached) return cached;
+	/** @type {Map<string, ImportedName>} */
+	const imported = new Map();
+	/**
+	 * @param {ts.Node} node the node to walk
+	 * @returns {void}
+	 */
+	const visit = (node) => {
+		for (const block of /** @type {DocumentedNode} */ (node).jsDoc || []) {
+			for (const tag of block.tags || []) {
+				if (!ts.isJSDocImportTag(tag) || !tag.importClause) continue;
+				const specifier = /** @type {ts.StringLiteral} */ (tag.moduleSpecifier)
+					.text;
+				const { name, namedBindings } = tag.importClause;
+				if (name) imported.set(name.text, { specifier });
+				if (namedBindings && ts.isNamespaceImport(namedBindings)) {
+					imported.set(namedBindings.name.text, { specifier });
+				} else if (namedBindings) {
+					for (const element of namedBindings.elements) {
+						imported.set(element.name.text, {
+							specifier,
+							member: (element.propertyName || element.name).text
+						});
+					}
+				}
+			}
+		}
+		ts.forEachChild(node, visit);
+	};
+	visit(source);
+	importedNamesBySource.set(source, imported);
+	return imported;
+};
+
+/**
+ * Schemas name a module without its extension, which an `@import` path writes.
+ * @param {string} specifier the module as the `@import` names it
+ * @returns {string} the module as a schema's `tsType` names it
+ */
+const schemaSpecifier = (specifier) =>
+	specifier.startsWith(".") ? specifier.replace(/\.js$/, "") : specifier;
+
+/**
+ * What a name written in a type refers to outside the schema: an `@import`
+ * binding, or a type its own module declares that the schema does not define.
+ * @param {ts.EntityName} name the name as written
+ * @param {Map<string, string>} known what each name declared in the same file says
+ * @returns {ImportedName | undefined} the module and export it means, if any
+ */
+const resolveWrittenName = (name, known) => {
+	/** @type {ts.EntityName} */
+	let head = name;
+	while (ts.isQualifiedName(head)) head = head.left;
+	const source = head.getSourceFile();
+	const imported = importedNamesOf(source).get(head.text);
+	if (imported) return imported;
+	if (head !== name || known.has(head.text)) return;
+	if (!declaredTypeIn(source, head.text)) return;
+	const own = path.basename(source.fileName).replace(/\.(?:d\.)?[jt]s$/, "");
+	return { specifier: `./${own}`, member: head.text };
+};
+
+/**
+ * The text of a type with every name it borrows written as the `import()` it
+ * stands for, since a schema's `tsType` is read where no `@import` binds it.
+ * @param {ts.TypeNode} node the type to write out
+ * @param {Map<string, string>} known what each name declared in the same file says
+ * @returns {string} its text
+ */
+const expandImportedNames = (node, known) => {
+	const start = node.getStart();
+	/** @type {[number, number, string][]} */
+	const edits = [];
+	/**
+	 * @param {ts.Node} child the node to walk
+	 * @returns {void}
+	 */
+	const visit = (child) => {
+		const name = ts.isTypeReferenceNode(child)
+			? child.typeName
+			: ts.isTypeQueryNode(child)
+				? child.exprName
+				: undefined;
+		if (name) {
+			/** @type {ts.EntityName} */
+			let head = name;
+			while (ts.isQualifiedName(head)) head = head.left;
+			const imported = resolveWrittenName(name, known);
+			if (imported) {
+				edits.push([
+					head.getStart() - start,
+					head.getEnd() - start,
+					`import("${schemaSpecifier(imported.specifier)}")${imported.member ? `.${imported.member}` : ""}`
+				]);
+			}
+		}
+		ts.forEachChild(child, visit);
+	};
+	visit(node);
+	let text = node.getText();
+	edits.sort((left, right) => right[0] - left[0]);
+	for (const [from, to, replacement] of edits) {
+		text = text.slice(0, from) + replacement + text.slice(to);
+	}
+	return text;
+};
+
+/**
  * A type's own source text, as a schema states it: prettier is free to wrap a
  * long one across lines, and the keyword is a single-line string.
  * @param {ts.TypeNode} node the type to write out
+ * @param {Map<string, string>=} known what each name declared in the same file says
  * @returns {string} its text
  */
-const toTsType = (node) =>
+const toTsType = (node, known = new Map()) =>
 	quoteImports(
-		node
-			.getText()
+		expandImportedNames(node, known)
 			.replace(/\s+/g, " ")
 			.replace(/([<(])\s+/g, "$1")
 			.replace(/\s+([>)])/g, "$1")
@@ -730,12 +853,15 @@ const resolveSpecifier = (specifier, from) => {
 	if (!specifier.startsWith(".")) return undefined;
 	const base = path.resolve(path.dirname(from), specifier);
 	for (const candidate of [
+		base,
 		`${base}.js`,
 		`${base}.ts`,
 		`${base}.d.ts`,
 		path.join(base, "index.js")
 	]) {
-		if (fs.existsSync(candidate)) return candidate;
+		if (fs.existsSync(candidate) && fs.statSync(candidate).isFile()) {
+			return candidate;
+		}
 	}
 	return undefined;
 };
@@ -853,6 +979,24 @@ const exportsSomethingCallable = (source) => {
 };
 
 /**
+ * @param {string} specifier the module a type names
+ * @param {string | undefined} member the export it names, or none for the module
+ * @param {boolean} isTypeOf whether it is the value, as `typeof` reads it
+ * @param {string} from the file naming it
+ * @returns {boolean} whether the schema should call it a function
+ */
+const namesCallableExport = (specifier, member, isTypeOf, from) => {
+	const file = resolveSpecifier(specifier, from);
+	if (!file) return false;
+	const source = parseFile(file);
+	if (!source) return false;
+	// `typeof import(…)` is the module itself, which is callable when what it
+	// exports is a class or a function.
+	if (!member) return isTypeOf ? exportsSomethingCallable(source) : false;
+	return isWrittenCallable(declaredTypeIn(source, member), source);
+};
+
+/**
  * @param {ts.TypeNode} node a type naming something in another file
  * @returns {boolean} whether the schema should call it a function
  */
@@ -862,21 +1006,11 @@ const namesCallable = (node) => {
 	if (!ts.isLiteralTypeNode(literal) || !ts.isStringLiteral(literal.literal)) {
 		return false;
 	}
-	const file = resolveSpecifier(
+	return namesCallableExport(
 		literal.literal.text,
+		node.qualifier ? node.qualifier.getText() : undefined,
+		Boolean(node.isTypeOf),
 		node.getSourceFile().fileName
-	);
-	if (!file) return false;
-	const source = parseFile(file);
-	if (!source) return false;
-	// `typeof import(…)` is the module itself, which is callable when what it
-	// exports is a class or a function.
-	if (!node.qualifier) {
-		return node.isTypeOf ? exportsSomethingCallable(source) : false;
-	}
-	return isWrittenCallable(
-		declaredTypeIn(source, node.qualifier.getText()),
-		source
 	);
 };
 
@@ -892,7 +1026,7 @@ const fromTypeNode = (node, known, spoken = 0) => {
 	// parentheses around it are part of what the schema states.
 	const callable = ts.isParenthesizedTypeNode(node) ? node.type : node;
 	if (ts.isFunctionTypeNode(callable) || ts.isConstructorTypeNode(callable)) {
-		return { instanceof: "Function", tsType: toTsType(node) };
+		return { instanceof: "Function", tsType: toTsType(node, known) };
 	}
 	if (ts.isParenthesizedTypeNode(node)) {
 		return fromTypeNode(node.type, known);
@@ -952,7 +1086,7 @@ const fromTypeNode = (node, known, spoken = 0) => {
 				}
 			: { anyOf: named };
 		return absent
-			? { ...union, undefinedAsNull: true, tsType: toTsType(node) }
+			? { ...union, undefinedAsNull: true, tsType: toTsType(node, known) }
 			: union;
 	}
 	if (ts.isArrayTypeNode(node)) {
@@ -998,13 +1132,13 @@ const fromTypeNode = (node, known, spoken = 0) => {
 			]);
 			return fromMembers(members, known, {});
 		}
-		return { type: "object", tsType: toTsType(node) };
+		return { type: "object", tsType: toTsType(node, known) };
 	}
 	if (ts.isTypeLiteralNode(node)) {
 		return fromMembers(node.members, known, {});
 	}
 	if (ts.isImportTypeNode(node)) {
-		const tsType = toTsType(node);
+		const tsType = toTsType(node, known);
 		return namesCallable(node)
 			? { instanceof: "Function", tsType }
 			: { type: "object", tsType };
@@ -1023,10 +1157,35 @@ const fromTypeNode = (node, known, spoken = 0) => {
 		if (name === "RegExp") return { instanceof: "RegExp", tsType: "RegExp" };
 		if (known.has(name)) return { $ref: `#/definitions/${name}` };
 		if (name === "Record") {
-			return { type: "object", tsType: toTsType(node) };
+			return { type: "object", tsType: toTsType(node, known) };
 		}
+		const imported = resolveWrittenName(node.typeName, known);
+		const tsType = toTsType(node, known);
 		// A name from outside the file, which the schema can only carry as text.
-		return { type: "object", tsType: toTsType(node) };
+		return imported &&
+			ts.isIdentifier(node.typeName) &&
+			namesCallableExport(
+				imported.specifier,
+				imported.member,
+				false,
+				node.getSourceFile().fileName
+			)
+			? { instanceof: "Function", tsType }
+			: { type: "object", tsType };
+	}
+	if (ts.isTypeQueryNode(node) && ts.isIdentifier(node.exprName)) {
+		const imported = resolveWrittenName(node.exprName, known);
+		if (imported) {
+			const tsType = toTsType(node, known);
+			return namesCallableExport(
+				imported.specifier,
+				imported.member,
+				true,
+				node.getSourceFile().fileName
+			)
+				? { instanceof: "Function", tsType }
+				: { type: "object", tsType };
+		}
 	}
 	switch (node.kind) {
 		case ts.SyntaxKind.StringKeyword:

@@ -3,7 +3,9 @@
 const fs = require("fs");
 const memfs = require("memfs");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		(compiler) => {

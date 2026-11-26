@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { Compilation, Module } from "../../../../" */
+/** @import { Compilation, Module, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		entry1: "./entry1",

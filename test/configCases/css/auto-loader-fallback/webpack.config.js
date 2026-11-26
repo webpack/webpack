@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "InjectLoaderPlugin";
 
 /**
@@ -9,7 +11,7 @@ const PLUGIN_NAME = "InjectLoaderPlugin";
  * `module.rules`, yet loaders still reach `.css` modules through an inline
  * request or a plugin hook. Those modules must fall back to javascript, so the
  * loader result is not misparsed by the built-in CSS type.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	target: "web",

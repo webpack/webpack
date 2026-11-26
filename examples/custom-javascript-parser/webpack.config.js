@@ -5,7 +5,9 @@ const meriyahParse = require("./internals/meriyah-parse");
 const oxcParse = require("./internals/oxc-parse");
 const swcNextParse = require("./internals/swc-next-parse.mjs").default;
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 const config = [
 	// oxc
 	{

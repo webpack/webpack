@@ -2,6 +2,8 @@
 
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // one instance, thrown again for every module the value reaches
 const sharedError = new Error("boom-shared");
 
@@ -12,7 +14,7 @@ async function namedGenerator() {
 	throw new Error("boom-named");
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: "./index.js",

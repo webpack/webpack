@@ -2,7 +2,9 @@
 
 const configuration = require("../mutation-recovery/webpack.config");
 
-/** @returns {import("webpack").Configuration} watch configuration */
+/** @import { Configuration } from "webpack" */
+
+/** @returns {Configuration} watch configuration */
 module.exports = () => ({
 	...configuration(),
 	mode: "production",

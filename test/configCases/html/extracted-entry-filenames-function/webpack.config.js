@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A function `output.filename` is called for an extracted entry too, so the
 // directory it returns is kept and only the file's stem is renamed.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "es2022"],
 	node: {

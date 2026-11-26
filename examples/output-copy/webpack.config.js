@@ -3,7 +3,7 @@
 // eslint-disable-next-line import-x/no-extraneous-dependencies
 const { Compilation, CopyPlugin, sources } = require("webpack");
 
-/** @import { Compiler } from "webpack" */
+/** @import { Compiler, Configuration } from "webpack" */
 
 const PLUGIN_NAME = "MergeCopiedAssetsPlugin";
 
@@ -84,7 +84,7 @@ class MergeCopiedAssetsPlugin {
 	}
 }
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	output: {
 		copy: [

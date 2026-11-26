@@ -9,7 +9,9 @@ const {
 } = require("../../../..");
 const assertModuleGraph = require("../../../helpers/assertModuleGraph");
 
-/** @type {import("../../../..").Configuration} */
+/** @import { Configuration } from "../../../.." */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		(compiler) => {

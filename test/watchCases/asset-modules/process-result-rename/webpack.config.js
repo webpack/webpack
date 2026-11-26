@@ -2,6 +2,10 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { AssetModuleBuildInfo } from "../../../../lib/asset/AssetModule.js" */
+/** @import { Configuration } from "../../../../" */
+
 /**
  * A minimal WebP container, so the emitted bytes are what the new extension
  * claims they are.
@@ -22,7 +26,7 @@ function toWebp(payload) {
 // asset with it so the bundle points at what was actually emitted.
 class RenameToWebp {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("RenameToWebp", (compilation) => {
@@ -33,7 +37,7 @@ class RenameToWebp {
 
 					await Promise.resolve();
 
-					/** @type {import("../../../../lib/asset/AssetModule").AssetModuleBuildInfo} */
+					/** @type {AssetModuleBuildInfo} */
 					(module.buildInfo).assetResource = module.resource.replace(
 						/\.jpg$/,
 						".webp"
@@ -46,7 +50,7 @@ class RenameToWebp {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	node: {

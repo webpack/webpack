@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Circus } from "@jest/types" */
+
 /** @typedef {(...args: unknown[]) => unknown} AnyFn */
 
 module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 	const state = global.JEST_STATE_SYMBOL;
-	/** @type {import("@jest/types").Circus.DescribeBlock} */
+	/** @type {Circus.DescribeBlock} */
 	let currentDescribeBlock;
-	/** @type {import("@jest/types").Circus.TestEntry | null | undefined} */
+	/** @type {Circus.TestEntry | null | undefined} */
 	let currentlyRunningTest;
 	let runTests = -1;
 	/** @type {(() => void)[]} */
@@ -89,7 +91,7 @@ module.exports = (globalTimeout = 2000, nameSuffix = "") => {
 		state.hasStarted = oldHasStarted;
 	};
 	/**
-	 * @param {import("@jest/types").Circus.TestEntry | import("@jest/types").Circus.Hook} block test or hook entry
+	 * @param {Circus.TestEntry | Circus.Hook} block test or hook entry
 	 * @returns {void}
 	 */
 	const fixAsyncError = (block) => {

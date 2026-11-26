@@ -2,10 +2,12 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 /** @type {string[]} */
 const stages = [];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "none",
 	devtool: false,
@@ -28,7 +30,7 @@ module.exports = {
 					}
 				})
 		),
-		/** @param {import("../../../../").Compiler} compiler compiler */
+		/** @param {Compiler} compiler compiler */
 		(compiler) => {
 			compiler.hooks.thisCompilation.tap(
 				"BannerStageOrderPlugin",

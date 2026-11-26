@@ -22,7 +22,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	entry: {

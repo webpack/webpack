@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The rule below is inactive in this compiler by design, so the plugin must
 // stay silent — any warning fails the case.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	name: "main-compiler",
 	mode: "development",

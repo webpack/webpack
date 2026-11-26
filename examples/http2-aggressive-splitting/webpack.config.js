@@ -3,7 +3,9 @@
 const path = require("path");
 const webpack = require("../../");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	// mode: "development" || "production",
 	entry: "./example",

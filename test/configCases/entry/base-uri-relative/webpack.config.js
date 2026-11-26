@@ -5,6 +5,8 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {object} options the case this config covers
  * @param {number} options.index position of this config, so `index.js` finds its own stats
@@ -15,7 +17,7 @@ const webpack = require("../../../../");
  * @param {boolean=} options.chunkLoading whether chunk loading stays on
  * @param {string=} options.publicPath public path, when it must not be the default
  * @param {string=} options.entryFile module to build, when the asset url is not the subject
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = ({
 	index,
@@ -51,7 +53,7 @@ const base = ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base({
 		index: 0,

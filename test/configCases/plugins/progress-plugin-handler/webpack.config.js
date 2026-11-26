@@ -4,7 +4,9 @@ const path = require("path");
 const webpack = require("../../../../");
 const data = require("./data");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	externals: {
 		data: `commonjs ${path.resolve(__dirname, "data.js")}`

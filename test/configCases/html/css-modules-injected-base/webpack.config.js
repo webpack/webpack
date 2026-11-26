@@ -4,10 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * An injected `output.html.base` makes a link to the page's own file a link
  * elsewhere, so its fragment keeps its authored name.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	mode: "development",

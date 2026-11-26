@@ -2,9 +2,10 @@
 
 const MCEP = require("mini-css-extract-plugin");
 
-/** @import { StatsCompilation } from "../../../../" */
+/** @import { StatsCompilation, Configuration } from "../../../../" */
+/** @import { PluginOptions } from "mini-css-extract-plugin" */
 
-/** @type {(i: number, options?: import("mini-css-extract-plugin").PluginOptions) => import("../../../../").Configuration} */
+/** @type {(i: number, options?: PluginOptions) => Configuration} */
 const config = (i, options) => ({
 	entry: {
 		a: "./a",

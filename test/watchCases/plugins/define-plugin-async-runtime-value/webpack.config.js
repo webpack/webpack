@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} file the file to read
  * @returns {Promise<string>} its trimmed content
@@ -16,7 +18,7 @@ const readFile = (file) =>
 		});
 	});
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = (env, { srcPath }) => {
 	const valueFile = path.resolve(srcPath, "value.txt");
 	return {

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { StatsOptions } from "../../../" */
+/** @import { StatsOptions, MultiStats } from "../../../" */
 
 const counts = /** @type {StatsOptions} */ ({
 	all: false,
@@ -14,7 +14,7 @@ const totals = { errorsCount: 0, warningsCount: 2 };
 
 module.exports = {
 	/**
-	 * @param {import("../../../").MultiStats} stats stats
+	 * @param {MultiStats} stats stats
 	 */
 	validate(stats) {
 		const json = stats.toJson();

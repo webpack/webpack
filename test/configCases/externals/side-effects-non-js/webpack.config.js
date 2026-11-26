@@ -2,9 +2,11 @@
 
 const { ExternalModule } = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "AssertKeptExternalsPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	experiments: {
@@ -37,7 +39,7 @@ module.exports = {
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

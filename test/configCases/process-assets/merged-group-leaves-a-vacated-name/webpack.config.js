@@ -2,6 +2,8 @@
 
 const { Compilation, optimize, sources } = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "VacatedNamePlugin";
 /** @type {Record<string, string>} */
 const NEW_HASHES = {
@@ -16,7 +18,7 @@ const NEW_HASHES = {
 };
 
 /**
- * @param {import("../../../../").Compilation} compilation compilation
+ * @param {Compilation} compilation compilation
  * @param {string} name the asset's name
  * @param {string} content its content
  * @param {string} hash its hash
@@ -29,12 +31,12 @@ const emit = (compilation, name, content, hash, map) => {
 	});
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: { realContentHash: true },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

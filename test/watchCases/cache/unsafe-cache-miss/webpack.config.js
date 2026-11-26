@@ -3,11 +3,11 @@
 const { WebpackError } = require("../../../../");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @import { Compiler, Module } from "../../../../" */
+/** @import { Compiler, Module, Compilation, Configuration } from "../../../../" */
 
-/** @typedef {NonNullable<import("../../../../").Compilation["moduleMemCaches"]>} MemCaches */
+/** @typedef {NonNullable<Compilation["moduleMemCaches"]>} MemCaches */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	experiments: {

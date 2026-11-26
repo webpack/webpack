@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = ["assignment", "define-property"].map((name, index) => ({
 	mode: "production",
 	target: "node",

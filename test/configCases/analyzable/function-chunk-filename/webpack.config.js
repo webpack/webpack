@@ -6,12 +6,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position in this array, and so the entry's emitted name
- * @param {NonNullable<import("../../../../").Configuration["output"]>["chunkFilename"]} chunkFilename filename
+ * @param {NonNullable<Configuration["output"]>["chunkFilename"]} chunkFilename filename
  * @param {boolean} analyzable whether the import is expected to bake
  * @param {boolean=} realContentHash whether a stale name gets corrected
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, chunkFilename, analyzable, realContentHash = false) => ({
 	target: "node",
@@ -27,7 +29,7 @@ const base = (index, chunkFilename, analyzable, realContentHash = false) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Returns a plain template — the same answer whatever the hashes are.
 	base(0, (pathData) => `a-${pathData.chunk.name}/[name].mjs`, true),

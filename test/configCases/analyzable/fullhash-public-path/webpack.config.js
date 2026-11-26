@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.publicPath` names a hash that does not exist while this chunk is hashed, and
 // `[chunkhash]` is not repaired after — so the chunk settles in the round that follows.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "production",

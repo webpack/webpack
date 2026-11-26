@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 
-/** @import { Compiler } from "webpack" */
+/** @import { Compiler, NormalModule, Configuration } from "webpack" */
 
 /**
  * Renders a CSS module's export map into a `.d.ts`, using the object form that
@@ -59,8 +59,7 @@ class CssModuleTypesPlugin {
 							if (!cssData || !cssData.exports || cssData.exports.size === 0) {
 								continue;
 							}
-							const { resource } =
-								/** @type {import("webpack").NormalModule} */ (module);
+							const { resource } = /** @type {NormalModule} */ (module);
 							fs.writeFileSync(`${resource}.d.ts`, toDts(cssData.exports));
 						}
 					}
@@ -70,7 +69,7 @@ class CssModuleTypesPlugin {
 	}
 }
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	output: {
 		uniqueName: "app"

@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 const common = {
 	target: "web",
 	mode: "development",
@@ -10,7 +12,7 @@ const common = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		...common,

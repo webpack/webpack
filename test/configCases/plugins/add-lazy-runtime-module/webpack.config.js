@@ -2,9 +2,11 @@
 
 const RuntimeGlobals = require("../../../../lib/runtime/RuntimeGlobals");
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 const PLUGIN_NAME = "AddLazyRuntimeModuleTestPlugin";
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		{

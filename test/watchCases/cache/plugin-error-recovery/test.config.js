@@ -2,13 +2,15 @@
 
 const assert = require("assert");
 
+/** @import { Compiler, MultiCompiler } from "webpack" */
+
 /** @type {WeakSet<Error>} */
 const reportedErrors = new WeakSet();
 
 module.exports = {
 	/**
 	 * @param {Error} error fatal watch error
-	 * @param {import("webpack").Compiler | import("webpack").MultiCompiler} compiler watched compiler
+	 * @param {Compiler | MultiCompiler} compiler watched compiler
 	 * @returns {Promise<void>} recovery without another edit
 	 */
 	watchError(error, compiler) {

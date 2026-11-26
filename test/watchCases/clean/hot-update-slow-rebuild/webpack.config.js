@@ -2,7 +2,9 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [new webpack.HotModuleReplacementPlugin()]
 };

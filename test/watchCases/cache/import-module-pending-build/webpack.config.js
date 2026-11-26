@@ -3,12 +3,13 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @import { BarrierLoaderContext } from "./loader" */
+/** @import { BarrierLoaderContext } from "./loader.js" */
+/** @import { Compiler, Configuration } from "webpack" */
 
-/** @type {WeakSet<import("webpack").Compiler>} */
+/** @type {WeakSet<Compiler>} */
 const completedCompilers = new WeakSet();
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	cache: { type: "memory" },
@@ -20,7 +21,7 @@ module.exports = {
 		{
 			completedCompilers,
 			/**
-			 * @param {import("webpack").Compiler} compiler watched compiler
+			 * @param {Compiler} compiler watched compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {

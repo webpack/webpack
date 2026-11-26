@@ -1,8 +1,10 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 const configurations = [];
-/** @type {import("../../../../").Configuration["optimization"][]} */
+/** @type {Configuration["optimization"][]} */
 const optimizations = [
 	{ concatenateModules: false },
 	{ concatenateModules: true },

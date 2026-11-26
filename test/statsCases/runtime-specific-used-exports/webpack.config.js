@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../" */
+
 const entry = {
 	a: "./a",
 	b: "./b",
@@ -16,7 +18,7 @@ const stats = {
 	nestedModules: true
 };
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "production",

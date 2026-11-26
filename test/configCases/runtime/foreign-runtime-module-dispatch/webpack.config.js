@@ -3,6 +3,8 @@
 const RuntimeGlobals = require("../../../../").RuntimeGlobals;
 const RuntimeModule = require("../../../../").RuntimeModule;
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "ForeignRuntimeModuleTestPlugin";
 
 class ForeignChunkHandlerRuntimeModule extends RuntimeModule {
@@ -19,7 +21,7 @@ class ForeignChunkHandlerRuntimeModule extends RuntimeModule {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	output: { filename: "[name].js" },

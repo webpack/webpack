@@ -3,12 +3,14 @@ import fs from "fs";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
 
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
-/** @type {typeof import("../../../lib/css/syntax")} */
+/** @type {typeof cssSyntax} */
 const cssParser = require("../../../lib/css/syntax-parser.js");
 const cssSyntax = require("../../../lib/css/syntax.js");
-/** @type {typeof import("../../../lib/css/syntax-parser")} */
+/** @type {typeof cssParser} */
 
 const { SourceProcessor } = cssSyntax;
 const {
@@ -113,7 +115,7 @@ const tokenizeCss = (css) => {
 };
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

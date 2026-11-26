@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// A selection with no Trident, EdgeHTML or Presto in it, so a rule only one
 	// of those engines could ever have read paints nothing and goes.

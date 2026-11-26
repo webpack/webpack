@@ -3,13 +3,16 @@
 const acorn = require("acorn");
 const webpack = require("../../../../");
 
+/** @import { Options, Program, Comment as AcornComment } from "acorn" */
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Parses with acorn, then drops what a parser of the caller's own may not report.
  * @param {boolean} dropRaw whether string literals lose their raw text too
- * @returns {(code: string, options: import("acorn").Options) => { ast: import("acorn").Program, comments: import("acorn").Comment[] }} a `parse` option
+ * @returns {(code: string, options: Options) => { ast: Program, comments: AcornComment[] }} a `parse` option
  */
 const parseWithoutDirectives = (dropRaw) => (code, options) => {
-	/** @type {import("acorn").Comment[]} */
+	/** @type {AcornComment[]} */
 	const comments = [];
 	const ast = acorn.parse(code, { ...options, onComment: comments });
 	/**
@@ -36,7 +39,7 @@ const parseWithoutDirectives = (dropRaw) => (code, options) => {
 	return { ast, comments };
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

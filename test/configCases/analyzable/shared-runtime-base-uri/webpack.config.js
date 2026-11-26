@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Two entries name different `baseUri` values but share one runtime chunk, so webpack
 // writes a single `__webpack_require__.b` — the one a literal may spell.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

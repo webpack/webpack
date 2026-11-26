@@ -4,7 +4,9 @@ const currentWatchStep = /** @type {{ step: string | undefined }} */ (
 	require("../../../helpers/currentWatchStep")
 );
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: () => ({

@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `import source` is Node >= 24.5, so 24.4 must be reported rather than emitted.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node24.4",
 	entry: "./index.js",

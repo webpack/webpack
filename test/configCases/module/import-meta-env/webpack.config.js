@@ -2,7 +2,9 @@
 
 const EnvironmentPlugin = require("../../../../").EnvironmentPlugin;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "node12.18",
 	dotenv: true,

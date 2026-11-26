@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	output: { module: false, filename: "bundle0.js" },

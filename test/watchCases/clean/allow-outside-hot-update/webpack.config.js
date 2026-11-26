@@ -5,6 +5,8 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "AllowOutsideHotUpdatePlugin";
 
 // the hot update each step writes outside of output.path, steps 1 and 3 write none
@@ -19,14 +21,14 @@ const EXPECTED = [
 	["2.hot-update.json"]
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			/** @type {string} */

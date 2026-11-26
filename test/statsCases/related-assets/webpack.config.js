@@ -85,7 +85,7 @@ const baseStats = {
 	warningsCount: false
 };
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		...base("default"),

@@ -3,9 +3,11 @@
 const assert = require("assert");
 const path = require("path");
 
+/** @import { Configuration, Chunk } from "../../../../" */
+
 const sizeLoader = path.resolve(__dirname, "size-loader.js");
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "node",
@@ -49,7 +51,7 @@ module.exports = {
 					(stats) => {
 						const { chunkGraph, chunks, namedChunks } = stats.compilation;
 						/**
-						 * @param {import("../../../../").Chunk} chunk the chunk
+						 * @param {Chunk} chunk the chunk
 						 * @returns {string[]} the file names of its modules
 						 */
 						const files = (chunk) =>

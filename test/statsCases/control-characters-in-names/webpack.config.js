@@ -2,7 +2,9 @@
 
 const { Volume, createFsFromVolume } = require("memfs");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {

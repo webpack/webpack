@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Every version at which the `esX` preset changes its answer. es2016 and
 // es2019 are not rungs: they read exactly as es2015 and es2018.
 const VERSIONS = [
@@ -14,7 +16,7 @@ const VERSIONS = [
 
 /**
  * @param {string} version an `esX` target
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const variant = (version) => ({
 	name: version,
@@ -31,5 +33,5 @@ const variant = (version) => ({
 
 // Every rung of the `esX` ladder, so the middle ones are read too: a target with
 // arrow functions but no optional chaining has to get one and not the other.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = VERSIONS.map(variant);

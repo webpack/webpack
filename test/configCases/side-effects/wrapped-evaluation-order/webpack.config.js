@@ -1,9 +1,11 @@
 "use strict";
 
-/** @type {import("../../../../").RuleSetRule[]} */
+/** @import { RuleSetRule, Configuration } from "../../../../" */
+
+/** @type {RuleSetRule[]} */
 const rules = [{ test: /pure-/, sideEffects: false }];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		mode: "production",

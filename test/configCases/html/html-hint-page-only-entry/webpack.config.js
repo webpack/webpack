@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A resource hint naming an HTML entry that emits nothing but its markup: the
 // page has no JavaScript file, so no `<link>` is rendered for it.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	node: {
 		__dirname: false

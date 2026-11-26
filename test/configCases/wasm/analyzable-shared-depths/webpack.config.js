@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The binary is referenced from chunks at two depths, so no one relative literal
 // addresses it from both — each emitted asset gets its own `../` path instead.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * A checkout is not guaranteed to carry the executable bit, and the copy is
  * asserted against a known mode. Set only when it differs, so a rebuild of the
@@ -20,7 +22,7 @@ const setMode = (name, mode) => {
 setMode("files/run.sh", 0o755);
 setMode("files/plain.txt", 0o644);
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		copy: [

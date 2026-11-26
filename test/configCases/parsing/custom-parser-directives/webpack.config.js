@@ -7,8 +7,9 @@ const webpack = require("../../../../");
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../../lib/javascript/JavascriptParser"
+ * } from "../../../../lib/javascript/JavascriptParser.js"
  */
+/** @import { Configuration } from "../../../../" */
 
 /**
  * Drops the optional directive metadata, as a parser that reports a directive
@@ -26,7 +27,7 @@ const stripDirectives = (node) => {
 	for (const key of Object.keys(node)) stripDirectives(node[key]);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		new webpack.ProvidePlugin({

@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "BreakModuleHashingPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: {
 		// the module still generates code, so the asset is worth looking at

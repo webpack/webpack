@@ -2,9 +2,11 @@
 
 const ModuleDependencyError = require("../../../../lib/errors/ModuleDependencyError");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "AssertModuleDependencyErrorPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		strictExportPresence: true
@@ -13,7 +15,7 @@ module.exports = {
 		/**
 		 * A dependency error is wrapped so it carries the module and the location
 		 * it came from; the message stays the nested error's own.
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

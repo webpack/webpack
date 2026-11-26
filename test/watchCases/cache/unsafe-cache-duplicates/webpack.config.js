@@ -2,9 +2,9 @@
 
 const path = require("path");
 
-/** @import { NormalModule } from "../../../../" */
+/** @import { NormalModule, Configuration } from "../../../../" */
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = (env, { srcPath }) => ({
 	mode: "development",
 	cache: {

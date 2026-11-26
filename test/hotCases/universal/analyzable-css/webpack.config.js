@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The hot path re-loads by whatever chunk id an update names, which a map written at
 // build time cannot answer for, so a runtime carrying it keeps the runtime url form.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

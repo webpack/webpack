@@ -1,4 +1,6 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [{ mode: "development" }, { mode: "production" }];

@@ -3,13 +3,15 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} file a path
  * @returns {string} its trimmed text
  */
 const read = (file) => fs.readFileSync(file, "utf8").trim();
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "web",

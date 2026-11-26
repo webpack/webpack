@@ -5,10 +5,12 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} hashPart the `[fullhash]` form under test
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, hashPart) => ({
 	target: "node",
@@ -33,7 +35,7 @@ const base = (index, hashPart) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, "[fullhash]"),
 	base(1, "[fullhash:8]"),

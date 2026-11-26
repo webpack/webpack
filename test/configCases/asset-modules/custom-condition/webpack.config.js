@@ -3,9 +3,9 @@
 const path = require("path");
 const NormalModule = require("../../../../").NormalModule;
 
-/** @import { ParserOptionsByModuleTypeKnown } from "../../../../" */
+/** @import { ParserOptionsByModuleTypeKnown, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

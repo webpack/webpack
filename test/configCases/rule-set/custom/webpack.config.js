@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { RuleSetUseFunction, RuleSetUseItem } from "../../../../" */
+/** @import { RuleSetUseFunction, RuleSetUseItem, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

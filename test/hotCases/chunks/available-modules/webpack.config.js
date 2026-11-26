@@ -2,7 +2,9 @@
 
 const { WebpackError } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, ChunkGroup } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	cache: true,
@@ -20,7 +22,7 @@ module.exports = {
 					const expected = build++ === 1 ? 1 : 0;
 					compilation.hooks.afterChunks.tap("Test", () => {
 						const child =
-							/** @type {import("../../../../").ChunkGroup} */
+							/** @type {ChunkGroup} */
 							(compilation.namedChunkGroups.get("child"));
 						let count = 0;
 						for (const chunk of child.chunks) {

@@ -9,6 +9,8 @@
 const acorn = require("acorn");
 const { getTargetProperties } = require("../../lib/config/target");
 
+/** @import { ecmaVersion as acornEcmaVersion } from "acorn" */
+
 /** @typedef {Record<string, boolean | undefined>} Environment */
 /**
  * @typedef {object} Subject
@@ -223,7 +225,7 @@ const FragmentParser = acorn.Parser.extend(
  */
 const parse = (code, sourceType, ecmaVersion) =>
 	FragmentParser.parse(code, {
-		ecmaVersion: /** @type {import("acorn").ecmaVersion} */ (ecmaVersion),
+		ecmaVersion: /** @type {acornEcmaVersion} */ (ecmaVersion),
 		sourceType,
 		locations: true,
 		allowReturnOutsideFunction: true,

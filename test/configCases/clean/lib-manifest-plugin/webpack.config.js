@@ -4,7 +4,9 @@ const path = require("path");
 const webpack = require("../../../../");
 const readDir = require("./readdir");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true

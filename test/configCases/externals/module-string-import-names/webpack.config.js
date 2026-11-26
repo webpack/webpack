@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Compiler } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((minimize, index) => ({
 	mode: "production",
 	output: { module: true, filename: `main${index}.mjs` },
@@ -9,7 +11,7 @@ module.exports = [false, true].map((minimize, index) => ({
 	optimization: { minimize },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap("Test", (compilation) => {

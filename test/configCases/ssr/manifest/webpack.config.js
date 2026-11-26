@@ -3,7 +3,9 @@
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const { SSRManifestPlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "node",

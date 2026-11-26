@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 /**
  * Returns a cache group holding one directory's modules in a chunk of their own.
  * @param {string} name the directory and chunk name
@@ -20,7 +22,7 @@ const group = (name) => ({
  * @param {true | "always"} crossChunkImports the option value
  * @param {string=} entry the entry, when not the shared one
  * @param {boolean=} strictModuleErrorHandling whether a failed module rethrows its error
- * @returns {import("../../../../types").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (
 	index,

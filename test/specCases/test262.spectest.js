@@ -13,7 +13,7 @@ const jsMinify = require("../../lib/javascript/jsMinify");
 const expectNoDeprecations = require("../helpers/expectNoDeprecations");
 const { isInPart } = require("../helpers/testParts");
 
-/** @import NormalModule from "../../lib/module/NormalModule" */
+/** @import NormalModule from "../../lib/module/NormalModule.js" */
 
 const needDebug = typeof process.env.DEBUG !== "undefined";
 

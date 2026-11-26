@@ -3,6 +3,9 @@ import { createRequire } from "module";
 import path from "path";
 import { fileURLToPath } from "url";
 
+/** @import { SyntaxTree } from "../../../lib/javascript/syntax-parser.js" */
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
 const JavascriptParser = require("../../../lib/javascript/JavascriptParser.js");
@@ -10,7 +13,7 @@ const analyzeScope = require("../../../lib/javascript/ScopeAnalyzer.js");
 const { ScopeLog, parseProgram, readParsedTree, takeParsedTree } =
 	require("../../../lib/javascript/syntax.js").parser;
 
-/** @type {typeof import("../../../lib/javascript/JavascriptParser")} */
+/** @type {typeof JavascriptParser} */
 
 // Read a file that ships inside a package, resolved via the package's
 // package.json so an `exports` map can't block a deep path (fs bypasses it).
@@ -59,10 +62,7 @@ const parseOnce = (code, sourceType) => {
 	const program = /** @type {number} */ (
 		parseProgram(code, 0, { sourceType, scopes: new ScopeLog() })
 	);
-	const tree =
-		/** @type {import("../../../lib/javascript/syntax-parser").SyntaxTree} */ (
-			takeParsedTree()
-		);
+	const tree = /** @type {SyntaxTree} */ (takeParsedTree());
 	// an analysis takes the log off the tree, so each run puts it back
 	const log = tree._scopeLog;
 	return () => {
@@ -77,7 +77,7 @@ const analyzeThreeEsm = parseOnce(threeEsmSource, "module");
 const analyzeLodash = parseOnce(lodashSource, "auto");
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

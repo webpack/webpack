@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration, NormalModule } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		// A module a plugin returns from `resolve` never passes the factory's
@@ -11,9 +13,7 @@ module.exports = {
 					factory.hooks.module.tap(
 						{ name: "UnmarkModules", stage: 100 },
 						(module) => {
-							/** @type {import("../../../../types").NormalModule} */ (
-								module
-							).hot = false;
+							/** @type {NormalModule} */ (module).hot = false;
 							return module;
 						}
 					);

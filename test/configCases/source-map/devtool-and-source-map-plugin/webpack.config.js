@@ -2,7 +2,9 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	// 1. `devtool: 'hidden-source-map'` (no sourceMappingURL appended) +
 	// a `SourceMapDevToolPlugin` that emits a second nosources map and appends

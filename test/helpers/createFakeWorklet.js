@@ -7,6 +7,8 @@ const { fileURLToPath } = require("url");
 const vm = require("vm");
 const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
+/** @import { Blob as BufferBlob } from "buffer" */
+
 // Simulates a worklet: `addModule(url)` evaluates the referenced chunk in one
 // persistent global scope, so the bootstrap blob, split chunks and entry chunk
 // share state. Each is an ES module, evaluated via `vm.SourceTextModule`.
@@ -47,9 +49,7 @@ module.exports = (
 
 		const readCode = async (/** @type {string} */ url) =>
 			url.startsWith("blob:")
-				? await /** @type {import("buffer").Blob} */ (
-						resolveObjectURL(url)
-					).text()
+				? await /** @type {BufferBlob} */ (resolveObjectURL(url)).text()
 				: fs.readFileSync(urlToPath(url), "utf8");
 
 		/** @type {Map<string, vm.SourceTextModule>} */

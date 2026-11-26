@@ -1,9 +1,11 @@
 "use strict";
 
-/** @typedef {import("../../../../").Chunk & { name: string }} Chunk */
-/** @typedef {import("../../../../").PathData & { chunk: Chunk }} PathData */
+/** @import { Chunk as GenericChunk, PathData as GenericPathData, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @typedef {GenericChunk & { name: string }} Chunk */
+/** @typedef {GenericPathData & { chunk: Chunk }} PathData */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {

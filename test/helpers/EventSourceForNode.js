@@ -5,12 +5,14 @@
 
 "use strict";
 
+/** @import { IncomingMessage, ClientRequest } from "http" */
+
 module.exports = class EventSource {
 	/**
 	 * @param {string} url url
 	 */
 	constructor(url) {
-		/** @type {import("http").IncomingMessage | undefined} */
+		/** @type {IncomingMessage | undefined} */
 		this.response = undefined;
 		/** @type {undefined | ((err: Error | { message: Error }) => void)} */
 		this.onerror = undefined;
@@ -36,7 +38,7 @@ module.exports = class EventSource {
 			if (!this.closed && this.onerror) this.onerror({ message: err });
 		});
 		request.end();
-		/** @type {import("http").ClientRequest} */
+		/** @type {ClientRequest} */
 		this.request = request;
 	}
 

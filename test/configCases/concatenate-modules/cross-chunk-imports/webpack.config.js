@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	// a namespace member call keeps the namespace as `this`

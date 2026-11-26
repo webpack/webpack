@@ -2,12 +2,12 @@
 
 const acorn = require("acorn");
 
-/** @import { Comment, SourceLocation } from "estree" */
+/** @import { Comment, SourceLocation, Program } from "estree" */
 /**
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../lib/javascript/JavascriptParser"
+ * } from "../../../lib/javascript/JavascriptParser.js"
  */
 
 /**
@@ -20,7 +20,7 @@ const acornParse = (sourceCode, options) => {
 	const comments = [];
 
 	const ast =
-		/** @type {import("estree").Program} */
+		/** @type {Program} */
 		(
 			acorn.parse(sourceCode, {
 				...options,

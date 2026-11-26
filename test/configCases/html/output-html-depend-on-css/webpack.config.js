@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -28,7 +30,7 @@ const copyTest = {
 
 // The dependOn target (`shared`) pulls in CSS — the dependant page must inject
 // that stylesheet too, before its own script.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	entry: {

@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Compiler, Chunk, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "UnorderableHashDependenciesPlugin";
 
 // a and b name each other, and the split `shared` chunk names `a`, which is
 // hashed in a later round: neither can be honored, so both are reported.
 class UnorderableHashDependenciesPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		/** @type {Record<string, string>} */
@@ -18,9 +20,7 @@ class UnorderableHashDependenciesPlugin {
 					const name = chunk.name && declared[chunk.name];
 					if (name) {
 						dependencies.add(
-							/** @type {import("../../../../").Chunk} */ (
-								compilation.namedChunks.get(name)
-							)
+							/** @type {Chunk} */ (compilation.namedChunks.get(name))
 						);
 					}
 				}
@@ -29,7 +29,7 @@ class UnorderableHashDependenciesPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "node",

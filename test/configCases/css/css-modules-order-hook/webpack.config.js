@@ -1,7 +1,7 @@
 "use strict";
 
-/** @import { Compiler } from "../../../../" */
-/** @typedef {ReturnType<typeof import("../../../../").css.CssModulesPlugin.getCompilationHooks>} CssCompilationHooks */
+/** @import { Compiler, css, WebpackPluginInstance, Configuration } from "../../../../" */
+/** @typedef {ReturnType<typeof css.CssModulesPlugin.getCompilationHooks>} CssCompilationHooks */
 
 /**
  * @typedef {object} Variant
@@ -60,7 +60,7 @@ const variants = [
 
 /**
  * @param {Variant} variant scenario variant
- * @returns {import("../../../../").WebpackPluginInstance} plugin instance
+ * @returns {WebpackPluginInstance} plugin instance
  */
 const makePlugin = (variant) => ({
 	/**
@@ -74,7 +74,7 @@ const makePlugin = (variant) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = variants.map((variant, idx) => ({
 	target: "web",
 	mode: "development",

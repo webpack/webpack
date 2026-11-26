@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.module` with `environment.dynamicImport: false` used to pick the CommonJS
 // wasm loader, emitting `require()` into an ES module — which the runtime refuses to
 // load at all. ESM output must always take the `import()` branch.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

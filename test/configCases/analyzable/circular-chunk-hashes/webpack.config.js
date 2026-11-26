@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Two chunks importing each other. Only the loader names a chunk, so neither one
 // names the other and the hash cycle the pair used to form cannot arise.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

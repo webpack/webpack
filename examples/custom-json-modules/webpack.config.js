@@ -4,7 +4,9 @@ const json5 = require("json5");
 const toml = require("toml");
 const yaml = require("yamljs");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	module: {
 		rules: [

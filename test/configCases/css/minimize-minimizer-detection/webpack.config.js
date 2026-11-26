@@ -3,6 +3,8 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const { BannerPlugin, LoaderOptionsPlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // A plugin carrying an `options` object that is not an asset matcher — reading
 // it as one would match every file and claim every type.
 class PluginWithUnrelatedOptions {
@@ -13,7 +15,7 @@ class PluginWithUnrelatedOptions {
 	apply() {}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

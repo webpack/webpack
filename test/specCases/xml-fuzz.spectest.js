@@ -5,6 +5,8 @@ const { invariantFindings } = require("../helpers/syntaxInvariants");
 const xmlInvariants = require("../helpers/syntaxInvariants/xml");
 const { createXmlDocumentGenerator } = require("../helpers/xmlFuzzDocument");
 
+/** @import { InvariantFinding } from "../helpers/syntaxInvariants/index.js" */
+
 const SEEDS = process.env.XML_FUZZ_SEED
 	? [
 			process.env.XML_FUZZ_SEED === "random"
@@ -29,7 +31,7 @@ const CHECK_IDEMPOTENCE = process.env.XML_FUZZ_CHECK_IDEMPOTENCE !== "0";
 const SEED_TIMEOUT = 300000;
 
 /**
- * @param {import("../helpers/syntaxInvariants").InvariantFinding} finding one finding
+ * @param {InvariantFinding} finding one finding
  * @param {Map<string, string>} sources its source by label
  * @returns {string} one failure line
  */

@@ -2497,6 +2497,7 @@
     "@swc-next/parser-binding-linux-x64-gnu" "0.8.1"
     "@swc-next/parser-binding-linux-x64-musl" "0.8.1"
     "@swc-next/parser-binding-win32-arm64-msvc" "0.8.1"
+    "@swc-next/parser-binding-win32-ia32-msvc" "0.8.1"
     "@swc-next/parser-binding-win32-x64-msvc" "0.8.1"
 
 "@swc-next/types@0.8.1":
@@ -4709,10 +4710,10 @@ eslint-config-prettier@^10.1.8:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
-eslint-config-webpack@^5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-5.0.2.tgz#27e8b38e19ac91213c289d48e35da3937e6e2192"
-  integrity sha512-vKQZeD4sv5M45GHLbRnPrjaoDSMkrJG8JO+zreweLK2npY5EiWbWHRGY4bxldGNahXwdLU4ywf3yTc6AhSYrTQ==
+eslint-config-webpack@^5.1.1:
+  version "5.1.1"
+  resolved "https://registry.yarnpkg.com/eslint-config-webpack/-/eslint-config-webpack-5.1.1.tgz#42c2dedf687d28c95cabf8dccf783a0104bd402c"
+  integrity sha512-yb3k2pLnDZeB5DLc+yLFw2K6o9JsiXM+6Qz01Lhfl9kAotj+wSS9Ga/isJ+Iv8FalLH0L5qjAIweiy8w03PUmQ==
   dependencies:
     "@eslint-community/eslint-utils" "^4.10.1"
     "@eslint-community/regexpp" "^4.12.2"

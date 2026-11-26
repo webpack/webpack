@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../" */
+
 /**
  * @typedef {object} HeldResponse
  * @property {string} url URL of the held request
@@ -24,7 +26,7 @@ const path = require("path");
  * Exposes `HOLD` to a hot case: a held chunk request reads its file at once, like a server
  * answering slowly, and the runtime receives that response only on release.
  * @param {Record<string, EXPECTED_ANY>} scope module scope
- * @param {import("../../").Configuration} options webpack options
+ * @param {Configuration} options webpack options
  * @returns {void}
  */
 const moduleScope = (scope, options) => {
@@ -76,9 +78,7 @@ const moduleScope = (scope, options) => {
 		/** @type {(src: string) => void} */
 		const load = document.onScript;
 		const outputPath = /** @type {string} */ (
-			/** @type {NonNullable<import("../../").Configuration["output"]>} */ (
-				options.output
-			).path
+			/** @type {NonNullable<Configuration["output"]>} */ (options.output).path
 		);
 		document.onScript = (/** @type {string} */ src) => {
 			if (!holding || !holding.test(src)) return load(src);

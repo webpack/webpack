@@ -2,17 +2,19 @@
 
 const { Compilation, optimize, sources } = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "RenameChainPlugin";
 // The first asset's new hash is the second's old one, which moves on in turn.
 /** @type {Record<string, string>} */
 const NEW_HASHES = { aaaaaaaa: "bbbbbbbb", bbbbbbbb: "cccccccc" };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: { realContentHash: true },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

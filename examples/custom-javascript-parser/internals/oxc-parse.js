@@ -7,7 +7,7 @@ const oxc = require("oxc-parser");
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../lib/javascript/JavascriptParser"
+ * } from "../../../lib/javascript/JavascriptParser.js"
  */
 
 /**

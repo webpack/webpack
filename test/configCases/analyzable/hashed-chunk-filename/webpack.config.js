@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 let INDEX = 0;
 
 // A hashed chunk name is emitted as a stand-in and filled in once the hash exists.
@@ -10,7 +12,7 @@ let INDEX = 0;
  * @param {string} name prefix keeping the emitted files of each config apart
  * @param {string} chunkFilename the template under test
  * @param {boolean=} realContentHash whether a stale name gets corrected
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (name, chunkFilename, realContentHash = true) => ({
 	target: "node",
@@ -35,7 +37,7 @@ const base = (name, chunkFilename, realContentHash = true) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base("a", "[name].[contenthash].mjs"),
 	base("b", "[name].[chunkhash].mjs"),

@@ -3,24 +3,24 @@
 const { ConcatSource } = require("webpack-sources");
 const { DefinePlugin, javascript } = require("../../../../");
 
+/** @import { Compiler, Chunk, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "NameOtherChunkPlugin";
 
 // Writes the file name of `other` into `main`, and declares that dependency so
 // `main` is hashed after `other` and changes with it. `main` sorts first by id.
 class NameOtherChunkPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
 			/**
 			 * @param {string} name chunk name
-			 * @returns {import("../../../../").Chunk} the chunk
+			 * @returns {Chunk} the chunk
 			 */
 			const byName = (name) =>
-				/** @type {import("../../../../").Chunk} */ (
-					compilation.namedChunks.get(name)
-				);
+				/** @type {Chunk} */ (compilation.namedChunks.get(name));
 			compilation.hooks.chunkHashDependencies.tap(
 				PLUGIN_NAME,
 				(chunk, dependencies) => {
@@ -42,7 +42,7 @@ class NameOtherChunkPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [true, false].map((realContentHash, index) => ({
 	name: `compiler-${index}`,
 	mode: "production",

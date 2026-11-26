@@ -2,10 +2,12 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../" */
+
 /**
  * @param {string} name name
  * @param {string} devtool devtool
- * @returns {import("../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (name, devtool) => ({
 	mode: "production",
@@ -45,7 +47,7 @@ const base = (name, devtool) => ({
 	}
 });
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base("a", "source-map"),
 	base("b", "source-map"),

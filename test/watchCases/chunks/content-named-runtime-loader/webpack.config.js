@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The runtime chunk carries no module of its own, so only its runtime modules can move
 // its content hash — and the loader one has to grow a chunk loader at the second step.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	optimization: {

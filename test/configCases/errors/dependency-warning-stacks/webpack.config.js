@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration, Compiler, WebpackError } from "../../../../" */
+
 const PLUGIN_NAME = "RewriteWarningDiagnosticsPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,
@@ -10,7 +12,7 @@ module.exports = {
 		/**
 		 * Rewrites the derived diagnostics the way `DefinePlugin` does — an
 		 * assignment must win over the value derived from the nested error.
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
@@ -18,7 +20,7 @@ module.exports = {
 					let assignedUnread = false;
 					for (const item of compilation.warnings) {
 						const warning =
-							/** @type {import("../../../../").WebpackError} */
+							/** @type {WebpackError} */
 							(item);
 						const details = warning.details;
 						if (details) {

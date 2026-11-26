@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// `es2016` has generators but not `async`/`await`. A module using top-level
 	// `for await…of` can't be lowered to a generator, so it keeps the async

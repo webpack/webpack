@@ -2,12 +2,14 @@
 
 const holdMainThread = require("../../../helpers/holdMainThread");
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 /**
  * Holds the main thread for a known stretch under one compilation hook.
  * @param {string} name the plugin name the report should carry
  * @param {"optimizeModules" | "afterSeal"} hook where it burns
  * @param {number} ms how long to burn
- * @returns {import("../../../../").WebpackPluginInstance} the plugin
+ * @returns {WebpackPluginInstance} the plugin
  */
 const burn = (name, hook, ms) => ({
 	apply(compiler) {
@@ -19,7 +21,7 @@ const burn = (name, hook, ms) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

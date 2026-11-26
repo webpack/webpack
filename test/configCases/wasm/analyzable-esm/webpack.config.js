@@ -6,12 +6,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { WebpackPluginInstance, Compiler, Configuration } from "../../../../" */
+
 const INSTANTIATE = "__webpack_require__.v(exports, ";
 
 /**
  * @param {string} chunkFile emitted file of the `flat` chunk
  * @param {string} wasmRef expected wasm reference in that chunk
- * @returns {import("../../../../").WebpackPluginInstance} define plugin
+ * @returns {WebpackPluginInstance} define plugin
  */
 const expectations = (chunkFile, wasmRef) =>
 	new webpack.DefinePlugin({
@@ -24,7 +26,7 @@ const expectations = (chunkFile, wasmRef) =>
  * there would end up in the very output the size report reads.
  * @param {string} chunkFile emitted file to read
  * @param {string} needle what it has to contain
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const assertChunk = (chunkFile, needle) =>
 	function apply() {
@@ -36,8 +38,8 @@ const assertChunk = (chunkFile, needle) =>
 	};
 
 /**
- * @param {Partial<import("../../../../").Configuration>} config config
- * @returns {import("../../../../").Configuration} configuration
+ * @param {Partial<Configuration>} config config
+ * @returns {Configuration} configuration
  */
 const base = (config) => ({
 	target: "node",
@@ -58,7 +60,7 @@ const base = (config) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base({
 		// Every chunk holding the wasm module sits at the same depth, so a plain

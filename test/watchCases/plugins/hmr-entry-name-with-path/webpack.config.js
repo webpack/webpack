@@ -2,7 +2,9 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	// The entry name carries a path and a literal `[name]` of its own.

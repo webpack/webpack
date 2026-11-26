@@ -6,7 +6,9 @@ const htmlMinify = require("../../../../lib/html/htmlMinify");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 const svgMinify = require("../../../helpers/svgMinify");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

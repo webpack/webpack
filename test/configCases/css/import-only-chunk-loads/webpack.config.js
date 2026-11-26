@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A lazy chunk whose only css is an `@import` external still emits a stylesheet, so
 // the css loading runtime has to cover it -- its predicate is the emitting one.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

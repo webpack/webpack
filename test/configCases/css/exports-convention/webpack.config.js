@@ -5,7 +5,7 @@ const webpack = require("../../../../");
 /**
  * @import {
  * 	ParserOptionsByModuleTypeKnown,
- * 	GeneratorOptionsByModuleTypeKnown
+ * 	GeneratorOptionsByModuleTypeKnown, Configuration
  * } from "../../../../"
  */
 
@@ -76,7 +76,7 @@ const common = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		...common,

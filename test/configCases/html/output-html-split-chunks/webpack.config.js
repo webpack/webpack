@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -28,7 +30,7 @@ const copyTest = {
 
 // `runtimeChunk` + `splitChunks` produce extra initial chunks; the page must
 // inject all of them (runtime, vendor, entry) in dependency order.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	entry: { app: "./src/app.js" },

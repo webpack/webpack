@@ -3,9 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "CleanOutputContainsContextPlugin";
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => {
 	// the output path holds the project, so cleaning it would remove the project
 	const context = path.join(testPath, "project");
@@ -18,7 +20,7 @@ module.exports = (env, { testPath }) => {
 		},
 		plugins: [
 			/**
-			 * @param {import("../../../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 */
 			(compiler) => {
 				compiler.hooks.environment.tap(PLUGIN_NAME, () => {

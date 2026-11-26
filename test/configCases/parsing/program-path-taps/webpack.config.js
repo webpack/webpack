@@ -2,9 +2,10 @@
 
 const acorn = require("acorn");
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import NormalModule from "../../../../lib/module/NormalModule" */
-/** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import NormalModule from "../../../../lib/module/NormalModule.js" */
+/** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "program-path-taps";
 
@@ -97,7 +98,7 @@ const programPathTaps = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: "./index.js",

@@ -2,6 +2,8 @@
 
 const { CopyPlugin } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "AssertCopyInfo";
 
 /**
@@ -10,7 +12,7 @@ const PLUGIN_NAME = "AssertCopyInfo";
  */
 class AssertCopyInfo {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -53,7 +55,7 @@ class AssertCopyInfo {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		new CopyPlugin({

@@ -3,7 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, OutputFileSystem } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: { dry: true }
@@ -11,9 +13,7 @@ module.exports = {
 	plugins: [
 		{
 			apply(compiler) {
-				const fs = /** @type {import("../../../../").OutputFileSystem} */ (
-					compiler.outputFileSystem
-				);
+				const fs = /** @type {OutputFileSystem} */ (compiler.outputFileSystem);
 				/** @type {string[]} */
 				const checked = [];
 				// the emit that follows the clean step checks its own files with lstat

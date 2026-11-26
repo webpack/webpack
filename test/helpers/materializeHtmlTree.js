@@ -11,7 +11,7 @@ const {
 	parseHtml: parseHtmlRefs
 } = require("../../lib/html/syntax-parser");
 
-/** @import { HtmlNodeRef, HtmlAttribute } from "../../lib/html/syntax-parser" */
+/** @import { HtmlNodeRef, HtmlAttribute, HtmlAstSkip } from "../../lib/html/syntax-parser.js" */
 
 /**
  * Materialized plain-object views of the struct-of-arrays AST — the shape
@@ -177,7 +177,7 @@ const materializedJson = (refs) => {
 /**
  * @param {string} src source
  * @param {string=} fragmentContext fragment context
- * @param {import("../../lib/html/syntax-parser").HtmlAstSkip=} skip skip options
+ * @param {HtmlAstSkip=} skip skip options
  * @returns {MatDocument} materialized document
  */
 const parseHtml = (src, fragmentContext, skip) => {

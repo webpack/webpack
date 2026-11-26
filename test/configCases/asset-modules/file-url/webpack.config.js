@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const { pathToFileURL } = require("url");
 
+/** @import { Configuration } from "../../../../" */
+
 const dir = path.resolve(__dirname, "temp");
 const file = path.resolve(dir, "index.js");
 
@@ -33,7 +35,7 @@ export const val2 = v2;`
 );
 fs.utimesSync(file, new Date(Date.now() - 10000), new Date(Date.now() - 10000));
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development"
 };

@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
 // ("Module not found") on less-loader's `import("less")`; on both load the CJS
 // less so it skips the dynamic import.
@@ -16,7 +18,7 @@ const lessLoader =
  * `<style module>` is scoped as a CSS module, and so is a linked `.module.css`;
  * the page's `class` and `id` are rewritten with their names. `lang` still
  * picks the loader through a `mimetype` rule.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	// A linked stylesheet is emitted for the web; the test runs beside the page.

@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Force the entry's heavy dependency into a separate chunk via
 // `optimization.splitChunks`. The extracted HTML must include a script tag
 // for the split-out vendor chunk in addition to the entry chunk so the
 // browser loads both.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		filename: "[name].js",

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One minor below the version that implements it: `import defer` is Deno >= 2.8,
 // so 2.7 must be reported rather than emitted.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "deno2.7",
 	entry: "./index.js",

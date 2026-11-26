@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { LibraryOptions, Configuration } from "../../../../" */
+
 /**
- * @param {import("../../../../").LibraryOptions} library library options
+ * @param {LibraryOptions} library library options
  * @param {string} entry entry module
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const libraryConfig = (library, entry = "./lib.js") => ({
 	target: "node",
@@ -11,7 +13,7 @@ const libraryConfig = (library, entry = "./lib.js") => ({
 	output: { library }
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	libraryConfig({ type: "commonjs" }),
 	libraryConfig({ type: "commonjs-static" }),

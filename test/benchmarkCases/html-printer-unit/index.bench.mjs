@@ -17,9 +17,12 @@
 
 import { createRequire } from "module";
 
+/** @import syntax from "../../../lib/html/syntax.js" */
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
-/** @type {typeof import("../../../lib/html/syntax")} */
+/** @type {typeof syntax} */
 const { SourceProcessor } = require("../../../lib/html/syntax.js");
 
 // No large real-world HTML ships in the repo, so generate a deterministic
@@ -151,7 +154,7 @@ const FIXTURES = [
 ];
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

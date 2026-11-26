@@ -2,7 +2,9 @@
 
 const { DefinePlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		paid: { import: "./main.js", layer: "paid" },

@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Stats, Configuration, Compiler } from "../" */
+
 require("./helpers/warmup-webpack");
 
 const path = require("path");
@@ -54,7 +56,7 @@ describe("MemoryLimitTestCases", () => {
 	});
 
 	for (const testName of tests) {
-		/** @type {{ heapSizeLimitBytes: number, validate?: (stats: import("../").Stats, stderr: string) => void }} */
+		/** @type {{ heapSizeLimitBytes: number, validate?: (stats: Stats, stderr: string) => void }} */
 		let testConfig = {
 			heapSizeLimitBytes: 250 * 1024 * 1024
 		};
@@ -74,7 +76,7 @@ describe("MemoryLimitTestCases", () => {
 			const outputDirectory = path.join(outputBase, testName);
 			rimraf.sync(outputDirectory);
 			fs.mkdirSync(outputDirectory, { recursive: true });
-			/** @type {import("../").Configuration} */
+			/** @type {Configuration} */
 			let options = {
 				mode: "development",
 				entry: "./index",
@@ -86,7 +88,7 @@ describe("MemoryLimitTestCases", () => {
 				options = require(path.join(base, testName, "webpack.config.js"));
 			}
 
-			const resolvedOptions = /** @type {import("../").Configuration[]} */ (
+			const resolvedOptions = /** @type {Configuration[]} */ (
 				Array.isArray(options) ? options : [options]
 			);
 			for (const options of resolvedOptions) {
@@ -102,7 +104,7 @@ describe("MemoryLimitTestCases", () => {
 			const heapSizeStart = process.memoryUsage().heapUsed;
 			const c = webpack(options);
 			const cAny = /** @type {EXPECTED_ANY} */ (c);
-			const compilers = /** @type {import("../").Compiler[]} */ (
+			const compilers = /** @type {Compiler[]} */ (
 				cAny.compilers ? cAny.compilers : [c]
 			);
 			for (const c of compilers) {
@@ -141,7 +143,7 @@ describe("MemoryLimitTestCases", () => {
 			}
 			c.run((err, _stats) => {
 				if (err) return done(err);
-				const stats = /** @type {import("../").Stats} */ (_stats);
+				const stats = /** @type {Stats} */ (_stats);
 				expect(stats.hasErrors()).toBe(testName.endsWith("error"));
 				if (!testName.endsWith("error") && stats.hasErrors()) {
 					return done(

@@ -1,6 +1,8 @@
 "use strict";
 
-/** @typedef {import("../../../../../").Compiler["options"]["optimization"]} Optimization */
+/** @import { Compiler, Configuration } from "../../../../../" */
+
+/** @typedef {Compiler["options"]["optimization"]} Optimization */
 
 /** @type {{ minimize?: Optimization["minimize"], minimizeOptions?: Optimization["minimizeOptions"] }} */
 const observed = {};
@@ -13,7 +15,7 @@ const mistyped = {
 	javascript: { compress: { unused: "yes" } }
 };
 
-/** @type {import("../../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",
@@ -29,7 +31,7 @@ module.exports = {
 		minimizer: [
 			{
 				/**
-				 * @param {import("../../../../../").Compiler} compiler compiler
+				 * @param {Compiler} compiler compiler
 				 * @returns {void}
 				 */
 				apply(compiler) {

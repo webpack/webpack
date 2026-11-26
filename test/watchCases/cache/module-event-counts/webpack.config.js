@@ -3,9 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @import { Module, NormalModule } from "webpack" */
+/** @import { Module, NormalModule, Configuration } from "webpack" */
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	cache: { type: "memory" },

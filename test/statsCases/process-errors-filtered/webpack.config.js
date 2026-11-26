@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../" */
+
 // The harness asserts `stats.hasErrors()` is false for a case whose name does
 // not end in "error", so it must agree with the filtered `processErrors` list.
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",

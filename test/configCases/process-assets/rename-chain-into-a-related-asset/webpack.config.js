@@ -2,6 +2,8 @@
 
 const { Compilation, optimize, sources } = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "RenameQueuePlugin";
 /** @type {Record<string, string>} */
 const NEW_HASHES = {
@@ -10,12 +12,12 @@ const NEW_HASHES = {
 	cccccccc: "dddddddd"
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: { realContentHash: true },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

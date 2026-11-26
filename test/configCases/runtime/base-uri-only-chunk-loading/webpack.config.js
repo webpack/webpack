@@ -6,6 +6,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // Needles built here so they are not source string literals the search would find.
 const needles = [
 	"installedChunks",
@@ -15,8 +17,8 @@ const needles = [
 
 /**
  * @param {number} index position of this config, so it finds its own bundle
- * @param {import("../../../../").Configuration} extra per-case overrides
- * @returns {import("../../../../").Configuration} configuration
+ * @param {Configuration} extra per-case overrides
+ * @returns {Configuration} configuration
  */
 const base = (index, extra) => {
 	const filename = `bundle${index}.${
@@ -49,7 +51,7 @@ const base = (index, extra) => {
 	};
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, { target: "web" }),
 	base(1, { target: "webworker" }),

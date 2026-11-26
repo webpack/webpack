@@ -3,6 +3,8 @@
 const { DefinePlugin } = require("../../../../");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration } from "../../../../" */
+
 const step = () => Number(currentWatchStep.step);
 
 const definitions = [
@@ -11,7 +13,7 @@ const definitions = [
 	{ SECOND: '"two"' }
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	cache: { type: "filesystem" },

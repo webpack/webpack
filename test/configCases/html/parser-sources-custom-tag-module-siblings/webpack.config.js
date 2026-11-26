@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Under `output.module` the emitted chunks are ESM, so a custom element
 // mapped to `type: "script"` must get `type="module"` sibling tags for its
 // runtime/split chunks — its entry chunk is ESM too, and a classic `<script>`
 // sibling would fail to load an ES module. Regression test for the
 // `willBeModuleScript` derivation no longer requiring a native `<script>`.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "es2022"],
 	output: {

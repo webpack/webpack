@@ -82,6 +82,9 @@ const {
 	wantedRespelling
 } = require("./compare-tools-harness");
 
+/** @import { Tool, Expected } from "./compare-tools-harness.js" */
+/** @import { Report, PuritySource } from "../test/helpers/syntaxInvariants/relations.js" */
+
 const ROOT = path.resolve(__dirname, "..");
 const CACHE_NAME = "js-tool-comparison";
 const CACHE = path.join(ROOT, "node_modules/.cache", CACHE_NAME);
@@ -165,7 +168,7 @@ const readOxcResult = (result) => {
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
-/** @type {import("./compare-tools-harness").Tool[]} */
+/** @type {Tool[]} */
 const TOOLS = [
 	{
 		// What a build asks for: a syntax tree, whose objects are built only
@@ -810,7 +813,7 @@ const reportable = (differences, limit = 10) =>
  * a build parses with, or null where they agree or acorn refuses it.
  * @param {string} source a script or a module
  * @param {EXPECTED_ANY} options what to parse it as
- * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} the difference, as a finding
+ * @returns {Report[]} the difference, as a finding
  */
 const acornDifference = (source, options) => {
 	/** @type {EXPECTED_ANY} */
@@ -845,7 +848,7 @@ const acornDifference = (source, options) => {
  * it, and otherwise a `SyntaxError`, as acorn's own refusal is.
  * @param {string} source a program cut short
  * @param {EXPECTED_ANY} options what to parse it as
- * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} the difference, as a finding
+ * @returns {Report[]} the difference, as a finding
  */
 const cutDifference = (source, options) => {
 	try {
@@ -887,7 +890,7 @@ const cutDifference = (source, options) => {
 };
 
 // Divergences already answered for, each with why it stands.
-/** @type {import("./compare-tools-harness").Expected[]} */
+/** @type {Expected[]} */
 const EXPECTED = [
 	{
 		relation: "respelling hex",
@@ -1056,7 +1059,7 @@ const invariants = async (write) => {
 		const [, presetOptions] = /** @type {[string, EXPECTED_ANY]} */ (
 			PRESETS.find(([name]) => name === "format")
 		);
-		/** @type {import("../test/helpers/syntaxInvariants/relations").PuritySource[]} */
+		/** @type {PuritySource[]} */
 		const sources = [];
 		for (const [label, source, options] of corpus) {
 			const settled = options === undefined ? goalFor(source) : options;

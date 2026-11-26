@@ -1,5 +1,7 @@
 import { createRequire } from "module";
 
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
 const { minify, transform } = require("minimizer-webpack-plugin/dist/minify");
@@ -27,7 +29,7 @@ const pathOptions = {
 	}
 };
 
-/** @param {import("tinybench").Bench} bench benchmark suite */
+/** @param {Bench} bench benchmark suite */
 export default (bench) => {
 	bench.add(
 		'unit benchmark "js-minimizer-plugin-unit", minify entry by module path',

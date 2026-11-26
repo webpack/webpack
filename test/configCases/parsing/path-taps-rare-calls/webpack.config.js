@@ -6,8 +6,9 @@ const acorn = require("acorn");
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../../lib/javascript/JavascriptParser"
+ * } from "../../../../lib/javascript/JavascriptParser.js"
  */
+/** @import { Configuration } from "../../../../" */
 
 /**
  * Parses with acorn, so the build walks a preparsed ESTree program.
@@ -30,7 +31,7 @@ const parse = (code, options) => {
 
 /**
  * @param {boolean} preparsed whether the build parses with acorn
- * @returns {import("../../../../").Configuration} the configuration
+ * @returns {Configuration} the configuration
  */
 const config = (preparsed) => ({
 	module: {
@@ -40,5 +41,5 @@ const config = (preparsed) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config(false), config(true)];

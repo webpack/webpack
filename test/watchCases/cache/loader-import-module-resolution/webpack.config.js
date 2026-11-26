@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../..").Configuration[]} */
+/** @import { Configuration } from "../../../.." */
+
+/** @type {Configuration[]} */
 module.exports = ["./loader.js", "./load-loader.js"].map((loader, index) => ({
 	output: { filename: `bundle${index}.js`, clean: false },
 	module: {

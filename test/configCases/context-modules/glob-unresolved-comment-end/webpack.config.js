@@ -3,13 +3,15 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "WriteGlobFilesPlugin";
 const WRITTEN_AT = new Date("2020-01-01T00:00:00Z");
 
 // Windows names cannot hold "*" or "?", so the files are written before the build.
 const FILE_NAMES = ["a.js", "b?c.js"];
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => {
 	const root = path.join(testPath, "files");
 	const directory = path.join(root, "x*");
@@ -19,7 +21,7 @@ module.exports = (env, { testPath }) => {
 		entry: path.join(__dirname, "index.js"),
 		plugins: [
 			/**
-			 * @param {import("../../../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 */
 			(compiler) => {
 				compiler.hooks.beforeRun.tap(PLUGIN_NAME, () => {

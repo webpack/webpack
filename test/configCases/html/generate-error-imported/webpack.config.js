@@ -5,7 +5,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	module: {

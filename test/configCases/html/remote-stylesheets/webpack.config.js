@@ -3,7 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = ["es2015", "es2020"].map((target) => ({
 	mode: "production",
 	target: ["web", target],

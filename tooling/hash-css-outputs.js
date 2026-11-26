@@ -27,7 +27,8 @@ const {
 	PACKED_FIXTURES
 } = require("./compare-css-tools");
 
-/** @import CssMinify from "../lib/css/cssMinify" */
+/** @import CssMinify from "../lib/css/cssMinify.js" */
+/** @import syntax from "../lib/css/syntax.js" */
 /** @typedef {NonNullable<Parameters<CssMinify>[2]>} CssMinifyOptions */
 
 const ROOT = path.resolve(__dirname, "..");
@@ -120,7 +121,7 @@ const main = async (repo) => {
 	/** @type {CssMinify} */
 	const cssMinify = require(path.join(repo, "lib/css/cssMinify.js"));
 
-	/** @type {typeof import("../lib/css/syntax")} */
+	/** @type {typeof syntax} */
 	const { SourceProcessor } = require(path.join(repo, "lib/css/syntax.js"));
 
 	const files = corpus();

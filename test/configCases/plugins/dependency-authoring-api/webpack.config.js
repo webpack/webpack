@@ -2,8 +2,8 @@
 
 const PLUGIN_NAME = "DependencyAuthoringApiPlugin";
 
-/** @import { Compiler } from "../../../../" */
-/** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
+/** @import { Compiler, javascript, Configuration } from "../../../../" */
+/** @typedef {javascript.JavascriptParser} JavascriptParser */
 /** @typedef {Compiler["webpack"]} WebpackApi */
 /** @import { ReplaceSource } from "webpack-sources" */
 
@@ -147,7 +147,7 @@ class DependencyAuthoringApiPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [new DependencyAuthoringApiPlugin()]
 };

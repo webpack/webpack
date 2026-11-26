@@ -2,7 +2,9 @@
 
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = (env, { srcPath }) => ({
 	mode: "development",
 	devtool: false,

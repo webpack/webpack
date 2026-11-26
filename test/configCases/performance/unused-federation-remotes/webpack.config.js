@@ -2,9 +2,11 @@
 
 const { ContainerReferencePlugin } = require("../../../../").container;
 
+/** @import { Configuration } from "../../../../" */
+
 // The declared names and the exposed paths both hold slashes, so only the rule
 // the plugin factorizes by tells one from the other.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

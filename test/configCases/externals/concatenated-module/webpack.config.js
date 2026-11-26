@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(variant: boolean) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(variant: boolean) => Configuration} */
 const config = (o) => ({
 	output: { module: true },
 	externals: {

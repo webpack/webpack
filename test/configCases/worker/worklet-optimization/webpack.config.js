@@ -2,13 +2,15 @@
 
 const { Compilation } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /**
  * A worklet chunk loads as a module, so its auto public-path reads
  * `import.meta.url` — never the worker-scope detection or the `importScripts`
  * shim in the bootstrap blob.
  */
 class AssertImportMetaPublicPathPlugin {
-	/** @param {import("../../../../").Compiler} compiler compiler */
+	/** @param {Compiler} compiler compiler */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("AssertImportMeta", (compilation) => {
 			compilation.hooks.processAssets.tap(
@@ -36,7 +38,7 @@ class AssertImportMetaPublicPathPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		filename: "[name].js",

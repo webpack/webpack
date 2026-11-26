@@ -2,9 +2,11 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // The elements resolve relative to the directory the alias named, so the
 // request as written survives only on the context dependency.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One runtime reassigns `__webpack_public_path__`, the wasm lives in another. The
 // loader is emitted once per runtime and shared, so the call site must not bake a
 // url the loader's own signature does not take.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

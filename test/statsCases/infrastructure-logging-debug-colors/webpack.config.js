@@ -2,7 +2,9 @@
 
 const InfrastructureLogPlugin = require("../infrastructure-logging-levels/InfrastructureLogPlugin");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index",

@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const values = {
 	DOTENV_EMPTY_PROCESS_ONLY: "",
 	DOTENV_EMPTY_OVERRIDE: "",
@@ -13,7 +15,7 @@ let compiling = 0;
  * Sets the variables while any of the compilers compiles. They run at once, so
  * the first to start saves what the process held and the last to end puts it
  * back; each saving its own would have one restore the other's values.
- * @param {import("../../../../").Compiler} compiler compiler
+ * @param {Compiler} compiler compiler
  * @returns {void}
  */
 const setProcessEnv = (compiler) => {
@@ -43,7 +45,7 @@ const setProcessEnv = (compiler) => {
 // such as `import-meta-env` snapshots in full.
 const prefix = "DOTENV_";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		dotenv: { prefix },

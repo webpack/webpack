@@ -4,6 +4,8 @@ const {
 	html: { HtmlModulesPlugin }
 } = require("../../");
 
+/** @import { Compiler, Configuration } from "../../" */
+
 // The `transformTags` hook hands a plugin the page's already-present
 // `<script>`/`<link>`/`<style>`/`<meta>` tags as mutable descriptors: mutate
 // `attrs`, set `remove: true`, or change `injectTo` to move a tag between
@@ -12,7 +14,7 @@ const {
 // and `html-module-nomodule` examples.)
 class TransformTagsPlugin {
 	/**
-	 * @param {import("../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("TransformTagsPlugin", (compilation) => {
@@ -44,7 +46,7 @@ class TransformTagsPlugin {
 	}
 }
 
-/** @type {import("../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: { index: "./src/index.html" },
 	experiments: { html: true },

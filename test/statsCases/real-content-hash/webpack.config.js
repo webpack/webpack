@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 const base = {
 	mode: "production",
 	entry: {
@@ -35,7 +37,7 @@ const base = {
 	}
 };
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

@@ -2,9 +2,9 @@
 
 const ConcatenatedModule = require("../../../../lib/optimize/ConcatenatedModule");
 
-/** @import { Compilation, Module, ModuleGraph } from "../../../../types" */
+/** @import { Compilation, Module, ModuleGraph, Configuration } from "../../../../types.d.ts" */
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	output: { library: { type: "commonjs2" } },

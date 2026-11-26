@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // A raw U+2028/U+2029 ends a string literal outside the ES2019 JSON superset,
 // so both must reach the emitted specifier escaped.
 const ESCAPED_SPECIFIERS = [
@@ -30,7 +32,7 @@ module.exports = {
 		"plain-module": { plain: 6 }
 	},
 	/**
-	 * @param {import("../../../../").Configuration | import("../../../../").Configuration[]} options webpack options
+	 * @param {Configuration | Configuration[]} options webpack options
 	 * @returns {void}
 	 */
 	afterExecute(options) {

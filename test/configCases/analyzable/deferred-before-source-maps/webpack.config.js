@@ -6,12 +6,14 @@
 
 const Compilation = require("../../../../lib/Compilation");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const MARKERS = ["@@webpackAnalyzableChunk", "@@webpackFullHash"];
 
 /** Fails the build if a stand-in is still there when source maps are written. */
 class AssertSubstitutedBeforeDevTooling {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -41,7 +43,7 @@ class AssertSubstitutedBeforeDevTooling {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

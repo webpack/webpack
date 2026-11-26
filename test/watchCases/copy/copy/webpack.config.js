@@ -2,12 +2,14 @@
 
 const path = require("path");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "AssertCopyDependenciesPlugin";
 
 /**
  * The watcher only rebuilds on a copied file which the compilation depends on,
  * so a change to one alone reaches the output through these two sets.
- * @param {import("../../../../").Compiler} compiler the compiler
+ * @param {Compiler} compiler the compiler
  * @returns {void}
  */
 const assertCopyDependencies = (compiler) => {
@@ -27,7 +29,7 @@ const assertCopyDependencies = (compiler) => {
 	});
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		copy: [{ from: "static", to: "copied" }]

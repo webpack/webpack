@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A resource hint must not stop `new Worker(new URL(...))` being analyzable — the
 // worker reference is itself a statically-followable construct. The hint is fired at
 // chunk startup instead of wrapping the href (which would stop the specifier being a
 // literal). `devtool: false` so the analyzable form is actually emitted.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "web",

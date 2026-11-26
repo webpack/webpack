@@ -2,14 +2,14 @@
 
 const fs = require("fs");
 
-/** @import { Compiler } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../../../" */
 
 /**
  * Emit through a directory junction or symlink to verify the build does not
  * stall at the emit phase (#5915). `output.path` is a junction pointing at the
  * real output directory the test runner reads from, so assets are written by
  * traversing it.
- * @type {(env: unknown, argv: { testPath: string }) => import("../../../../").Configuration}
+ * @type {(env: unknown, argv: { testPath: string }) => Configuration}
  */
 module.exports = (env, { testPath }) => {
 	const link = `${testPath}-via-junction`;

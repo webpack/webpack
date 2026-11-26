@@ -2,9 +2,11 @@
 
 const holdMainThread = require("../../../helpers/holdMainThread");
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 /**
  * Holds the main thread for the same stretch on every build, keeping how long it really took.
- * @type {import("../../../../").WebpackPluginInstance & { burned: number }}
+ * @type {WebpackPluginInstance & { burned: number }}
  */
 const burn = {
 	burned: 0,
@@ -22,7 +24,7 @@ const burn = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

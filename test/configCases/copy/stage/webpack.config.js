@@ -2,6 +2,8 @@
 
 const { Compilation, CopyPlugin } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "RecordAssetsPlugin";
 
 /**
@@ -10,7 +12,7 @@ const PLUGIN_NAME = "RecordAssetsPlugin";
  */
 class RecordAssetsPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -33,7 +35,7 @@ class RecordAssetsPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		new CopyPlugin({

@@ -2,7 +2,9 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 
-/** @type {(name: string, options: import("../../../../").Configuration) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(name: string, options: Configuration) => Configuration} */
 const config = (name, options) => ({
 	mode: "production",
 	// Chrome 50 still needs `-webkit-user-select`, so the stylesheet shows the

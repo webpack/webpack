@@ -2,9 +2,11 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 const source = path.resolve(__dirname, "src");
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.js",
 	resolve: {

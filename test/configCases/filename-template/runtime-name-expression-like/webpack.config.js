@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Chunk } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	entry: {
@@ -11,8 +13,7 @@ module.exports = {
 	},
 	output: {
 		filename: (pathData) =>
-			/** @type {import("../../../../").Chunk} */ (pathData.chunk).name ===
-			"main"
+			/** @type {Chunk} */ (pathData.chunk).name === "main"
 				? "main.js"
 				: "runtime-[runtime].js"
 	}

@@ -8,7 +8,7 @@ const Parser = require("../../../../").Parser;
 const webpack = require("../../../../");
 
 /** @import { Compiler, ParserState, Module } from "../../../../" */
-/** @import { PreparsedAst } from "../../../../lib/module/Parser" */
+/** @import { PreparsedAst } from "../../../../lib/module/Parser.js" */
 
 class LocalizationParser extends Parser {
 	/**

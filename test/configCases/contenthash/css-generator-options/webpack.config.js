@@ -1,6 +1,6 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 const common = {
 	target: "web",
 	optimization: {
@@ -11,9 +11,9 @@ const common = {
 	}
 };
 
-/** @import { GeneratorOptionsByModuleTypeKnown } from "../../../../" */
+/** @import { GeneratorOptionsByModuleTypeKnown, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...common,

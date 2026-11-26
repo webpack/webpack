@@ -3,7 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("../../../..").Configuration[]} */
+/** @import { Configuration } from "../../../.." */
+
+/** @type {Configuration[]} */
 module.exports = Array.from({ length: 4 }, (_, index) => ({
 	mode: "development",
 	target: "node",

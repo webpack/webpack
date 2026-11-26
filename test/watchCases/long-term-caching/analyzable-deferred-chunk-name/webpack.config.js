@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A deferred chunk's name is baked into the parent that references it, so a rebuild
 // that moves the child's hash has to re-bake the parent — and one that moves nothing
 // must leave the parent's asset alone.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	devtool: false,

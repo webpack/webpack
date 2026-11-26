@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// A selection that reads every color function below, so a declaration
 	// standing before one is read by nothing.

@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../" */
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -13,7 +15,7 @@ const stats = {
 	modules: false
 };
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	name: "default",
 	mode: "production",

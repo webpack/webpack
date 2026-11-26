@@ -3,6 +3,8 @@
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "webpack" */
+
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
 // The virtual module ID is an absolute path.
@@ -10,7 +12,7 @@ const { VirtualUrlPlugin } = webpack.experiments.schemes;
 // absolute path directly, not concatenate it with compiler.context.
 const virtualModulePath = path.join(__dirname, "virtual-entry.js");
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	entry: `virtual:${virtualModulePath}`,
 	plugins: [

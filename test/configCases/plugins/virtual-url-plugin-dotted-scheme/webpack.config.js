@@ -2,9 +2,11 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "webpack" */
+
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	plugins: [
 		new VirtualUrlPlugin(

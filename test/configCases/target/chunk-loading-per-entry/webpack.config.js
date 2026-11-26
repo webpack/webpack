@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 const base = {
 	entry: {
 		web: "./web",
@@ -12,7 +14,7 @@ const base = {
 	target: "web"
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{ ...base, output: { ...base.output, filename: "[name]-0.js" } },
 	{ ...base, output: { ...base.output, filename: "[name]-1.js" } }

@@ -4,13 +4,15 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const cssMinify = require("../../../../lib/css/cssMinify");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Two builds alike but for one CSS minifier option, which rewrites `16px` to
  * `1pc` in the source this module embeds. Nothing else differs, so a
  * `[contenthash]` that did not follow the embedded source would name both the
  * same file.
  * @param {boolean} convertLengthUnits whether to convert the length
- * @returns {import("../../../../").Configuration} the configuration
+ * @returns {Configuration} the configuration
  */
 const config = (convertLengthUnits) => ({
 	target: "node",
@@ -44,5 +46,5 @@ const config = (convertLengthUnits) => ({
 	experiments: { css: true }
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config(false), config(true)];

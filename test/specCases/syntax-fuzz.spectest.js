@@ -70,9 +70,12 @@ const UNREACHED_FILE = path.join(__dirname, "syntax-fuzz.unreached.json");
 /** @type {Record<string, Record<string, number>>} */
 const UNREACHED = JSON.parse(fs.readFileSync(UNREACHED_FILE, "utf8"));
 
-/** @import { Facets, PageHelpers, Relaxation, RenderReport, StyleReport } from "../helpers/syntaxEquivalence" */
+/** @import { Facets, PageHelpers, Relaxation, RenderReport, StyleReport } from "../helpers/syntaxEquivalence.js" */
 
-/** @import { KnownDifference } from "../helpers/fixture" */
+/** @import { KnownDifference } from "../helpers/fixture.js" */
+/** @import { Profiler as InspectorProfiler } from "inspector" */
+/** @import { Browser, Page } from "playwright-core" */
+/** @import { SyntaxInvariants } from "../helpers/syntaxInvariants/index.js" */
 
 /**
  * One relation an input breaks, cut down to the smallest input still breaking it.
@@ -532,7 +535,7 @@ const reach = new Map();
  * @returns {void}
  */
 const takeCoverage = (keep) => {
-	/** @type {import("inspector").Profiler.ScriptCoverage[]} */
+	/** @type {InspectorProfiler.ScriptCoverage[]} */
 	let scripts = [];
 	session.post("Profiler.takePreciseCoverage", (error, answer) => {
 		if (error) throw error;
@@ -736,9 +739,9 @@ describe("syntax fuzz generators", () => {
 });
 
 describe("syntax fuzz in real chrome", () => {
-	/** @type {import("playwright-core").Browser} */
+	/** @type {Browser} */
 	let browser;
-	/** @type {import("playwright-core").Page} */
+	/** @type {Page} */
 	let page;
 	const knownCss = knownOf("css");
 	const knownHtml = knownOf("html");
@@ -922,7 +925,7 @@ describe("syntax fuzz in real chrome", () => {
 	/**
 	 * Every relation each input breaks, each cut down to what still breaks it.
 	 * @param {string[]} sources the inputs
-	 * @param {import("../helpers/syntaxInvariants").SyntaxInvariants} invariants the syntax's invariants
+	 * @param {SyntaxInvariants} invariants the syntax's invariants
 	 * @param {(source: string) => Promise<{ relation: string, preset: string, what: string }[]>} inBrowser the browser's relations
 	 * @param {KnownDifference[]} known the differences fixtures file
 	 * @returns {Promise<Finding[]>} what broke

@@ -1,15 +1,16 @@
 "use strict";
 
-/** @type {(name: string) => (compiler: import("../../../../types").Compiler) => void} */
+/** @import { Compiler, Compilation, Configuration } from "../../../../types.d.ts" */
+/** @import { Source } from "webpack-sources" */
+
+/** @type {(name: string) => (compiler: Compiler) => void} */
 const snapshotBundle = (name) => (compiler) => {
 	compiler.hooks.compilation.tap(
 		"test",
-		(/** @type {import("../../../../types").Compilation} */ compilation) => {
+		(/** @type {Compilation} */ compilation) => {
 			compilation.hooks.afterProcessAssets.tap(
 				"test",
-				(
-					/** @type {Record<string, import("webpack-sources").Source>} */ assets
-				) => {
+				(/** @type {Record<string, Source>} */ assets) => {
 					// Named: the two compilers run concurrently, so an unnamed snapshot
 					// would key on call order and the two bundles could swap places.
 					expect(assets[name].source()).toMatchSnapshot(name);
@@ -19,7 +20,7 @@ const snapshotBundle = (name) => (compiler) => {
 	);
 };
 
-/** @type {import("../../../../types").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "plain",

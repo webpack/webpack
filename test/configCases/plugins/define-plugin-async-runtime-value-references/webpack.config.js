@@ -2,9 +2,11 @@
 
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 let unparsedCalls = 0;
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		noParse: /unparsed\.js$/,

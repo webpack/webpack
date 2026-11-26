@@ -3,10 +3,12 @@
 const { RawSource } = require("webpack-sources");
 const { Compilation } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // Two chunks importing each other, with nothing asked to repair their hashes: only
 // the loader names a chunk, so no name goes stale and no repair is needed.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

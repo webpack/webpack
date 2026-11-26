@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { Module } from "../../../../" */
+/** @import { Module, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	devtool: false,

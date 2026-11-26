@@ -5,6 +5,9 @@ const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 
+/** @import { ChildProcess, ExecFileOptions } from "child_process" */
+/** @import { Readable } from "stream" */
+
 const cacheDirectory = path.resolve(__dirname, "js/buildDepsCache");
 const outputDirectory = path.resolve(__dirname, "js/buildDeps");
 const inputDirectory = path.resolve(__dirname, "js/buildDepsInput");
@@ -35,24 +38,24 @@ const exec = (
 			n,
 			JSON.stringify(options)
 		]);
-		const p = /** @type {import("child_process").ChildProcess} */ (
+		const p = /** @type {ChildProcess} */ (
 			/** @type {EXPECTED_ANY} */ (childProcess.execFile)(
 				process.execPath,
 				execArgs,
-				/** @type {import("child_process").ExecFileOptions} */ ({
+				/** @type {ExecFileOptions} */ ({
 					stdio: ["ignore", "pipe", "pipe"]
 				})
 			)
 		);
 		/** @type {string[]} */
 		const chunks = [];
-		/** @type {import("stream").Readable} */ (p.stderr).on(
+		/** @type {Readable} */ (p.stderr).on(
 			"data",
 			(/** @type {string} */ chunk) => {
 				chunks.push(chunk);
 			}
 		);
-		/** @type {import("stream").Readable} */ (p.stdout).on(
+		/** @type {Readable} */ (p.stdout).on(
 			"data",
 			(/** @type {string} */ chunk) => {
 				chunks.push(chunk);

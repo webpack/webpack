@@ -2,7 +2,9 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		library: {

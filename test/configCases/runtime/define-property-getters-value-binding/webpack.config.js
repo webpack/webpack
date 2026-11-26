@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// Production: only there does the const-value optimization feed a value
 	// binding. No minify or tree-shake: both rewrite what the test reads.

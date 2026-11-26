@@ -2,6 +2,8 @@
 
 const assert = require("assert");
 
+/** @import { Compiler } from "../../../.." */
+
 module.exports = {
 	strictWatchDependencies: true,
 	/**
@@ -14,7 +16,7 @@ module.exports = {
 	},
 	/**
 	 * @param {Error} error comparison failure
-	 * @param {import("../../../..").Compiler} compiler watched compiler
+	 * @param {Compiler} compiler watched compiler
 	 * @returns {Promise<void>} rebuild with the correct dependencies
 	 */
 	watchError(error, compiler) {

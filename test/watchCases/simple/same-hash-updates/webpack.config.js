@@ -3,7 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @type {import("../../../..").Configuration} */
+/** @import { Configuration } from "../../../.." */
+
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	module: {

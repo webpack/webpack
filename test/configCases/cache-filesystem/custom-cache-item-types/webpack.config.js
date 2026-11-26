@@ -2,6 +2,8 @@
 
 const assert = require("assert");
 
+/** @import { Configuration } from "../../../../" */
+
 const hasBigInt = typeof BigInt !== "undefined";
 const hasErrorCause =
 	typeof new Error("test", { cause: new Error("cause") }).cause !== "undefined";
@@ -73,7 +75,7 @@ const assertRestored = (restored) => {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	plugins: [

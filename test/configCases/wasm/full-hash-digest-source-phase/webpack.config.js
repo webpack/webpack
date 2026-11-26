@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A source-phase import names its binary through `compileWasm` rather than through the
 // instantiating loader, so that runtime module has to inline the re-encoded hash too.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

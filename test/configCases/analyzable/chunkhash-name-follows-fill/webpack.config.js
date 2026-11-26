@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `[chunkhash]` reads this chunk's own modules, which a fill does not touch, so nothing
 // repairs it after. It bakes because the fold reaches the hash before the name is taken.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

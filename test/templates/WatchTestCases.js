@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Compiler, MultiCompiler, Stats, MultiStats, Configuration, FileCacheOptions, Compilation } from "../../" */
+
 require("../helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
@@ -16,7 +18,7 @@ require("../helpers/warmup-webpack");
  * @property {boolean=} noTests
  * @property {boolean=} restartCompiler close the compiler after each step and start a new one
  * @property {boolean=} strictWatchDependencies require identical dependency sets for history-independent fixtures
- * @property {((error: Error, compiler: import("../../").Compiler | import("../../").MultiCompiler) => void | Promise<void>)=} watchError check a watch or comparison error and request recovery on the same compiler
+ * @property {((error: Error, compiler: Compiler | MultiCompiler) => void | Promise<void>)=} watchError check a watch or comparison error and request recovery on the same compiler
  * @property {string=} skipFreshAssetContent reason asset contents depend on build history
  * @property {string=} skipFreshWarnings reason warnings depend on build history
  * @property {string=} skipFreshCompilation reason an independent compilation cannot reproduce this case
@@ -186,7 +188,7 @@ const describeCases = (config) => {
 							testName
 						);
 						const testDirectory = path.join(casesPath, category.name, testName);
-						/** @type {import("../../").Compiler | import("../../").MultiCompiler | undefined} */
+						/** @type {Compiler | MultiCompiler | undefined} */
 						let watchedCompiler;
 						/** @type {Promise<Error | null | undefined> | undefined} */
 						let closing;
@@ -211,7 +213,7 @@ const describeCases = (config) => {
 							}
 							return closing;
 						};
-						/** @type {{ name: string, done?: boolean, comparing?: boolean, lateHash?: string, stats?: import("../../").Stats | import("../../").MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
+						/** @type {{ name: string, done?: boolean, comparing?: boolean, lateHash?: string, stats?: Stats | MultiStats, it?: EXPECTED_ANY, getNumberOfTests?: () => number }[]} */
 						const runs = fs
 							.readdirSync(testDirectory)
 							.sort()
@@ -264,7 +266,7 @@ const describeCases = (config) => {
 								});
 							}
 							const applyConfig = (
-								/** @type {import("../../").Configuration} */ options,
+								/** @type {Configuration} */ options,
 								/** @type {number} */ idx
 							) => {
 								if (!options.mode) options.mode = "development";
@@ -303,15 +305,15 @@ const describeCases = (config) => {
 								}
 								if (
 									options.cache &&
-									/** @type {import("../../").FileCacheOptions} */ (
+									/** @type {FileCacheOptions} */ (
 										options.cache
 									).type === "filesystem"
 								) {
 									const cacheDirectory = path.join(tempDirectory, ".cache");
-									/** @type {import("../../").FileCacheOptions} */ (
+									/** @type {FileCacheOptions} */ (
 										options.cache
 									).cacheDirectory = cacheDirectory;
-									/** @type {import("../../").FileCacheOptions} */ (
+									/** @type {FileCacheOptions} */ (
 										options.cache
 									).name = `config-${idx}`;
 								}
@@ -348,7 +350,7 @@ const describeCases = (config) => {
 							} else {
 								applyConfig(options, 0);
 							}
-							/** @returns {Promise<import("../../").Configuration[]>} independent configurations */
+							/** @returns {Promise<Configuration[]>} independent configurations */
 							const createFreshOptions = async () => {
 								const freshOptions = fs.existsSync(configPath)
 									? await prepareOptions(loadWatchConfig(configPath), {
@@ -390,9 +392,9 @@ const describeCases = (config) => {
 							// builds started so far, and how many had started when the step was written
 							const buildCount = { started: 0, beforeStep: 0 };
 							// the same per child compiler, whose stats stay its last build's until it rebuilds
-							/** @type {Map<import("../../").Compiler, number>} */
+							/** @type {Map<Compiler, number>} */
 							const childBuilds = new Map();
-							/** @type {Map<import("../../").Compiler, number>} */
+							/** @type {Map<Compiler, number>} */
 							let childBuildsBeforeStep = new Map();
 							// watched files the current step changed, kept after builds report them
 							/** @type {Set<string>} */
@@ -400,18 +402,18 @@ const describeCases = (config) => {
 							// changes and removals the watchers delivered since the current step was written
 							/** @type {Set<string>} */
 							let receivedChanges = new Set();
-							/** @type {Map<import("../../").Compiler, import("../../").Compilation>} */
+							/** @type {Map<Compiler, Compilation>} */
 							const lastChildCompilations = new Map();
 							// each child's stats from the builds of the current step
-							/** @type {Map<import("../../").Compiler, import("../../").Stats>} */
+							/** @type {Map<Compiler, Stats>} */
 							let stepStats = new Map();
 							// each child's changed and removed files over the builds of the current step
-							/** @type {Map<import("../../").Compiler, Set<string>>} */
+							/** @type {Map<Compiler, Set<string>>} */
 							let stepReports = new Map();
 
 							/**
 							 * Adds what a child's last build reported to the current step's reports.
-							 * @param {import("../../").Compiler} child child compiler
+							 * @param {Compiler} child child compiler
 							 * @returns {void}
 							 */
 							const recordStepReports = (child) => {
@@ -484,7 +486,7 @@ const describeCases = (config) => {
 
 							/**
 							 * Describes where the step's unreported changes went, for the failure message.
-							 * @param {import("../../").Compiler[]} compilers watched compilers
+							 * @param {Compiler[]} compilers watched compilers
 							 * @returns {string} each child's builds, reports and watcher state
 							 */
 							const describeUnseenChanges = (compilers) =>
@@ -524,7 +526,7 @@ const describeCases = (config) => {
 
 							/**
 							 * Gives the watcher a new mtime for each change no build reported while idle.
-							 * @param {import("../../").Compiler[]} compilers watched compilers
+							 * @param {Compiler[]} compilers watched compilers
 							 * @param {number} retries re-touches left before the step fails
 							 */
 							const retouchUnseenChanges = (compilers, retries) => {
@@ -586,7 +588,7 @@ const describeCases = (config) => {
 
 							/**
 							 * Resumes the watchings once their watchers received every pending change.
-							 * @param {NonNullable<import("../../").Compiler["watching"]>[]} watchings suspended watchings
+							 * @param {NonNullable<Compiler["watching"]>[]} watchings suspended watchings
 							 * @param {Set<string>} pending changes of the step not received yet
 							 */
 							const resumeWhenReceived = (watchings, pending) => {
@@ -625,7 +627,7 @@ const describeCases = (config) => {
 
 							/**
 							 * Records each change and removal the compiler's watchers deliver.
-							 * @param {import("../../").Compiler} child watched compiler
+							 * @param {Compiler} child watched compiler
 							 */
 							const recordReceivedChanges = (child) => {
 								const { watchFileSystem } = child;
@@ -675,7 +677,7 @@ const describeCases = (config) => {
 										compiler instanceof webpack.MultiCompiler
 											? compiler.compilers
 											: [compiler];
-									/** @type {Map<import("../../").Compiler, import("../../").Stats>} */
+									/** @type {Map<Compiler, Stats>} */
 									const latestStats = new Map();
 									for (const child of compilers) {
 										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
@@ -720,7 +722,7 @@ const describeCases = (config) => {
 										},
 										async (
 											err,
-											/** @type {import("../../").Stats | import("../../").MultiStats | undefined} */ stats
+											/** @type {Stats | MultiStats | undefined} */ stats
 										) => {
 											try {
 												if (failed) return;
@@ -743,7 +745,7 @@ const describeCases = (config) => {
 												// a multi-compiler reports only the children that built since its last
 												// report, so a child built late arrives alone: assert on all of the step
 												if ("stats" in stats) {
-													const children = /** @type {import("../../").Stats[]} */ (
+													const children = /** @type {Stats[]} */ (
 														stats.stats
 													);
 													for (const childStats of children) {
@@ -759,7 +761,7 @@ const describeCases = (config) => {
 												// timeout; a build that missed some reuses the stale cached module,
 												// and the late change starts the build this step's tests wait for
 												/**
-												 * @param {import("../../").Compiler} child child compiler
+												 * @param {Compiler} child child compiler
 												 * @returns {boolean} true, when it built since the step was written
 												 */
 												const builtThisStep = (child) =>
@@ -767,7 +769,7 @@ const describeCases = (config) => {
 													(childBuildsBeforeStep.get(child) || 0);
 												for (const child of compilers) recordStepReports(child);
 												/**
-												 * @param {import("../../").Compiler} child child compiler
+												 * @param {Compiler} child child compiler
 												 * @param {string} file a file the step changed
 												 * @returns {boolean} true, when a build of the child this step reported it
 												 */
@@ -809,7 +811,7 @@ const describeCases = (config) => {
 												// a change the build no longer depends on (a deleted import, a context
 												// entry gone when it read the directory) cannot make it stale; a file
 												// created in a context or once missing is seen only through its report
-												const builds = /** @type {import("../../").Stats[]} */ (
+												const builds = /** @type {Stats[]} */ (
 													"stats" in stats ? stats.stats : [stats]
 												);
 												for (const file of unseenChanges) {
@@ -1024,7 +1026,7 @@ const describeCases = (config) => {
 																	// a fatal error stops watching, so no late event rebuilds a failed
 																	// build that missed it: such a case builds a step only once the
 																	// watchers received all of it
-																	/** @type {NonNullable<import("../../").Compiler["watching"]>[]} */
+																	/** @type {NonNullable<Compiler["watching"]>[]} */
 																	const suspended = [];
 																	if (
 																		testConfig.watchError &&

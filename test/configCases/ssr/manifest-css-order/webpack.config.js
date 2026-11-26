@@ -5,7 +5,9 @@ const path = require("path");
 const webpack = require("../../../../");
 const { SSRManifestPlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

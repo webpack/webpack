@@ -2,7 +2,9 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [true, false].map((symbol) => ({
 	output: {
 		environment: {

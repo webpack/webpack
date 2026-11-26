@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = ["node14", "web", "universal"].map((target, index) => ({
 	target,
 	entry: {

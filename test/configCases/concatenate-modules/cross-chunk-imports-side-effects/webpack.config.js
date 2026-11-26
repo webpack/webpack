@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 /**
  * Returns a cache group holding one directory's modules in a chunk of their own.
  * @param {string} name the directory and chunk name
@@ -14,7 +16,7 @@ const group = (name) => ({
 	enforce: true
 });
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "node",

@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compilation, Compiler } from "../../../../" */
+/** @import { Compilation, Compiler, Configuration } from "../../../../" */
 
 // A `commonjs-static` library writes one assignment per export name, so merging
 // has to widen that list and not only the runtime exports object.
@@ -32,7 +32,7 @@ function expectExportNames() {
 	this.hooks.compilation.tap("testcase", handler);
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: ["./a.js", "./b.js"]

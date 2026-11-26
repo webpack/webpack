@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Same as `wasm/fetch`, but `webassemblyModuleFilename` carries an explicit
 // full-hash length (`[fullhash:16]`) so the fetch-based async and sync wasm
 // runtime plugins request `getFullHash` — the regressed `[fullhash]` path.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "web",

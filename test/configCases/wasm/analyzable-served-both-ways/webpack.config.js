@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One wasm module in a chunk the host fetched and in one the loader fetched through a
 // base-needing public path — each asset gets its own literal, so the pair still bakes.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

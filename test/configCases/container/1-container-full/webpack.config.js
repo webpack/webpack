@@ -2,6 +2,8 @@
 
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @import { Configuration } from "../../../../" */
+
 const common = {
 	entry: {
 		main: "./index.js"
@@ -21,7 +23,7 @@ const commonMF = {
 	shared: ["react"]
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...common,

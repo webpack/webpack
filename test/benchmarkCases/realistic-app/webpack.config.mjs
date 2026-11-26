@@ -1,9 +1,11 @@
 import { dirname, resolve } from "path";
 import { fileURLToPath } from "url";
 
+/** @import { Configuration } from "../../.." */
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
-/** @type {import("../../..").Configuration} */
+/** @type {Configuration} */
 export default {
 	entry: "./generated/index.js",
 	target: "web",

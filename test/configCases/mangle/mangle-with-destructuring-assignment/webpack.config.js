@@ -2,8 +2,9 @@
 
 /** @import { CodeGenerationResults } from "webpack" */
 /** @import { Source } from "webpack-sources" */
+/** @import { Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

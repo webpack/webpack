@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {boolean} JSONParse use JSON.parse for large JSON
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const variant = (JSONParse) => ({
 	name: JSONParse ? "json-parse" : "no-json-parse",
@@ -24,5 +26,5 @@ const variant = (JSONParse) => ({
 
 // An own `__proto__` key in an object literal needs a computed key, which an
 // es5 target cannot parse.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [variant(false), variant(true)];

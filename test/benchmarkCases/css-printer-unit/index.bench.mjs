@@ -21,9 +21,12 @@ import fs from "fs";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
 
+/** @import syntax from "../../../lib/css/syntax.js" */
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
-/** @type {typeof import("../../../lib/css/syntax")} */
+/** @type {typeof syntax} */
 const { SourceProcessor } = require("../../../lib/css/syntax.js");
 
 // Real-world ~1.9 MiB minified stylesheet (Tailwind), shared with the
@@ -117,7 +120,7 @@ const FIXTURES = [
 ];
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

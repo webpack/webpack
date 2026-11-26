@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{ target: "universal", devtool: "eval", output: { module: true } },
 	{ target: "node", devtool: "eval", output: { module: true } },

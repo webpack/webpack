@@ -6,6 +6,8 @@ import remarkParse from "remark-parse";
 import remarkRehype from "remark-rehype";
 import { unified } from "unified";
 
+/** @import { Configuration } from "webpack" */
+
 const markdownToHtml = unified()
 	.use(remarkParse)
 	.use(remarkFrontmatter)
@@ -14,7 +16,7 @@ const markdownToHtml = unified()
 	.use(rehypeSanitize)
 	.use(rehypeStringify);
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	// mode: "development" || "production",
 	module: {

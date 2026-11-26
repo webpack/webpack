@@ -2,9 +2,11 @@
 
 const WebpackError = require("../../../../lib/WebpackError");
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 const PLUGIN_NAME = "PrepareModuleTypeTestPlugin";
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [{ test: /\.custom$/, type: "asset/source" }]

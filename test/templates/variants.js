@@ -3,7 +3,8 @@
 const path = require("path");
 const webpack = require("../..");
 
-/** @import { SuiteConfig } from "./TestCases" */
+/** @import { SuiteConfig } from "./TestCases.js" */
+/** @import { Compiler } from "../.." */
 
 const repositoryRoot = path.join(__dirname, "..", "..");
 
@@ -89,7 +90,7 @@ const testCases = {
 		minimize: true,
 		optimization: { moduleIds: "named", chunkIds: "named" },
 		plugins: [
-			/** @param {import("../..").Compiler} compiler compiler */
+			/** @param {Compiler} compiler compiler */
 			(compiler) => {
 				new webpack.HotModuleReplacementPlugin().apply(compiler);
 			}

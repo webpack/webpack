@@ -3,7 +3,9 @@
 const { DefinePlugin } = require("../../../../");
 const supportsTraceEvents = require("../../../helpers/supportsTraceEvents");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	entry: {

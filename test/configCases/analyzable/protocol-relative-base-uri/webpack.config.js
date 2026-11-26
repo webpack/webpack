@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A `baseUri` naming a host but no scheme is read against the chunk's own url — the
 // url the literal resolves against — so it stays protocol-relative and settles there.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

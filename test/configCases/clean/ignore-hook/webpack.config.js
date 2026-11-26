@@ -6,7 +6,9 @@ const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 const readDir = require("../enabled/readdir");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true

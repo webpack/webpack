@@ -2,11 +2,13 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration, Compiler, Module } from "../../../../" */
+
 const { ExternalModule } = webpack;
 
 const PLUGIN_NAME = "AssertExternalInteropIdentityPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	output: {
@@ -29,7 +31,7 @@ module.exports = {
 				"function define(deps, fn) { fn(...deps.map(dep => require(dep))); }\n"
 		}),
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
@@ -45,7 +47,7 @@ module.exports = {
 					// interop variants rather than whichever two come first
 					/**
 					 * @param {string} interop interop kind
-					 * @returns {import("../../../../").Module} the external declaring it
+					 * @returns {Module} the external declaring it
 					 */
 					const withInterop = (interop) => {
 						const found = externals.find(
@@ -77,9 +79,7 @@ module.exports = {
 							throw new Error(`interop missing from ${identifier}`);
 						}
 					}
-					const hashOf = (
-						/** @type {import("../../../../").Module} */ module
-					) =>
+					const hashOf = (/** @type {Module} */ module) =>
 						chunkGraph.getModuleHash(
 							module,
 							[...chunkGraph.getModuleChunks(module)][0].runtime

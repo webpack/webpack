@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// a browser with `Object.assign`, iterable collections, `remove()` and `append()`
 	target: "browserslist:chrome 120",

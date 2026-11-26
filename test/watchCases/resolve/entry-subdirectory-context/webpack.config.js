@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	// entry lives below the context; re-factorizing must resolve the request

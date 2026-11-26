@@ -4,7 +4,9 @@ const path = require("path");
 const NormalModuleReplacementPlugin =
 	require("../../../../").NormalModuleReplacementPlugin;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	plugins: [

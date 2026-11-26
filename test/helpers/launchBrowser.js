@@ -2,6 +2,8 @@
 
 const fs = require("fs");
 
+/** @import { Browser, LaunchOptions } from "playwright-core" */
+
 /** @typedef {"chrome" | "firefox" | "webkit"} Engine */
 
 /**
@@ -21,7 +23,7 @@ const pointedAt = (engine, executablePath) =>
  * engine moves only in the pull request bumping playwright-core. One that is
  * missing or will not launch throws rather than skipping the suite.
  * @param {{ browser?: Engine, executablePath?: string, timeout?: number }=} options `browser` picks the engine
- * @returns {Promise<import("playwright-core").Browser>} the running browser
+ * @returns {Promise<Browser>} the running browser
  */
 module.exports = async (options) => {
 	const {
@@ -33,7 +35,7 @@ module.exports = async (options) => {
 	const playwright = require("playwright-core");
 
 	const type = engine === "chrome" ? playwright.chromium : playwright[engine];
-	/** @type {import("playwright-core").LaunchOptions} */
+	/** @type {LaunchOptions} */
 	const launchOptions = {
 		headless: true,
 		// a cold runner can take a while to print the browser's endpoint; this

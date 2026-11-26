@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	output: {
 		path: path.join(__dirname, "dist"),

@@ -3,6 +3,7 @@
 const { createHash } = require("crypto");
 
 /** @import { Encoding, BinaryToTextEncoding } from "crypto" */
+/** @import { Configuration } from "../../../../" */
 
 class SHA256Hash {
 	constructor() {
@@ -38,7 +39,7 @@ class SHA256Hash {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		hashDigest: "base64",

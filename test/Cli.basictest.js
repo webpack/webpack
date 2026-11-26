@@ -3,6 +3,10 @@
 const { createColors, getArguments, isColorSupported, processArguments } =
 	require("../").cli;
 
+/** @import { Configuration } from "../" */
+/** @import { Values, Flags, SimpleType } from "../lib/config/cli.js" */
+/** @import { PrintFunction } from "../lib/util/terminalColors.js" */
+
 describe("Cli", () => {
 	describe("getArguments", () => {
 		it("should generate the correct cli flags", () => {
@@ -144,7 +148,7 @@ describe("Cli", () => {
 		const test = (
 			/** @type {string} */ name,
 			/** @type {Record<string, EXPECTED_ANY>} */ values,
-			/** @type {import("../").Configuration} */ config,
+			/** @type {Configuration} */ config,
 			/** @type {(e: EXPECTED_ANY) => void} */ fn
 		) => {
 			it(`should correctly process arguments for ${name}`, () => {
@@ -152,7 +156,7 @@ describe("Cli", () => {
 				const problems = processArguments(
 					args,
 					config,
-					/** @type {import("../lib/config/cli").Values} */ (values)
+					/** @type {Values} */ (values)
 				);
 				fn(expect(problems || config));
 			});
@@ -648,22 +652,18 @@ describe("Cli", () => {
 
 		for (const key of ["__proto__", "constructor", "prototype"]) {
 			it(`should not pollute the prototype through a "${key}" path segment`, () => {
-				/** @type {import("../lib/config/cli").Flags} */
+				/** @type {Flags} */
 				const args = {
 					"evil-flag": {
 						description: undefined,
 						configs: [
 							{
-								type: /** @type {import("../lib/config/cli").SimpleType} */ (
-									"string"
-								),
+								type: /** @type {SimpleType} */ ("string"),
 								multiple: false,
 								path: `${key}.polluted`
 							}
 						],
-						simpleType: /** @type {import("../lib/config/cli").SimpleType} */ (
-							"string"
-						),
+						simpleType: /** @type {SimpleType} */ ("string"),
 						multiple: false
 					}
 				};
@@ -671,7 +671,7 @@ describe("Cli", () => {
 				const problems = processArguments(
 					args,
 					config,
-					/** @type {import("../lib/config/cli").Values} */ (
+					/** @type {Values} */ (
 						/** @type {unknown} */ ({ "evil-flag": "PWNED" })
 					)
 				);
@@ -685,22 +685,18 @@ describe("Cli", () => {
 			});
 
 			it(`should not pollute the prototype through a trailing "${key}" path segment`, () => {
-				/** @type {import("../lib/config/cli").Flags} */
+				/** @type {Flags} */
 				const args = {
 					"evil-flag": {
 						description: undefined,
 						configs: [
 							{
-								type: /** @type {import("../lib/config/cli").SimpleType} */ (
-									"string"
-								),
+								type: /** @type {SimpleType} */ ("string"),
 								multiple: false,
 								path: key
 							}
 						],
-						simpleType: /** @type {import("../lib/config/cli").SimpleType} */ (
-							"string"
-						),
+						simpleType: /** @type {SimpleType} */ ("string"),
 						multiple: false
 					}
 				};
@@ -708,7 +704,7 @@ describe("Cli", () => {
 				const problems = processArguments(
 					args,
 					config,
-					/** @type {import("../lib/config/cli").Values} */ (
+					/** @type {Values} */ (
 						/** @type {unknown} */ ({ "evil-flag": "PWNED" })
 					)
 				);
@@ -866,7 +862,7 @@ describe("Cli", () => {
 		it("simple", () => {
 			for (const [name, open, close] of colorsMap) {
 				expect(
-					/** @type {Record<string, import("../lib/util/terminalColors").PrintFunction>} */ (
+					/** @type {Record<string, PrintFunction>} */ (
 						/** @type {unknown} */ (colors)
 					)[name](name)
 				).toBe(open + name + close);
@@ -922,7 +918,7 @@ describe("Cli", () => {
 		it("simple (no colors)", () => {
 			for (const [name] of colorsMap) {
 				expect(
-					/** @type {Record<string, import("../lib/util/terminalColors").PrintFunction>} */ (
+					/** @type {Record<string, PrintFunction>} */ (
 						/** @type {unknown} */ (noColors)
 					)[name](name)
 				).toBe(name);
@@ -934,7 +930,7 @@ describe("Cli", () => {
 		it("simple (colors by default)", () => {
 			for (const [name, open, close] of colorsMap) {
 				expect(
-					/** @type {Record<string, import("../lib/util/terminalColors").PrintFunction>} */ (
+					/** @type {Record<string, PrintFunction>} */ (
 						/** @type {unknown} */ (defaultColors)
 					)[name](name)
 				).toBe(open + name + close);

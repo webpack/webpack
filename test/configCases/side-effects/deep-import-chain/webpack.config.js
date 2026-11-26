@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // A long chain of side-effect-free modules, each importing the next and using the
 // binding in its own export. `getModuleEvaluationSideEffectsState` used to recurse
 // and overflow V8's stack (#20986); the 20000-deep case is in the unit test.
@@ -25,7 +27,7 @@ export const config = { id: ${i} };
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: {

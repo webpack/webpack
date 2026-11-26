@@ -5,12 +5,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
- * @param {NonNullable<import("../../../../").Configuration["output"]>["publicPath"]} publicPath the public path under test
+ * @param {NonNullable<Configuration["output"]>["publicPath"]} publicPath the public path under test
  * @param {boolean} baked whether the specifier is expected to be a literal
  * @param {boolean=} hashed whether the value it bakes carries the compilation hash
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, publicPath, baked, hashed = false) => ({
 	target: "node",
@@ -35,7 +37,7 @@ const base = (index, publicPath, baked, hashed = false) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, () => "https://cdn.example.com/", true),
 	// The same answer whatever the hash is, so it is still bakeable.

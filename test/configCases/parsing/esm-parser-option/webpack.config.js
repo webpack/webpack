@@ -1,7 +1,8 @@
 "use strict";
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "CheckParserStateAliasPlugin";
 
@@ -66,7 +67,7 @@ class CheckParserStateAliasPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

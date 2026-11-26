@@ -2,7 +2,9 @@
 
 const IgnorePlugin = require("../../../../").IgnorePlugin;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "node",

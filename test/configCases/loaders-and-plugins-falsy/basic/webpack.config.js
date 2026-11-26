@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compiler } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../../../" */
 
 const DefinePlugin = require("../../../../").DefinePlugin;
 
@@ -44,7 +44,7 @@ class TestChildCompilationPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	// Will failed because we don't have unknown-loader
 	module: {

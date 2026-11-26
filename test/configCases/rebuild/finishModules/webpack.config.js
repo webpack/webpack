@@ -3,10 +3,10 @@
 const { join, resolve } = require("path");
 const { NormalModule } = require("../../../../");
 
-/** @import { Module } from "../../../../" */
+/** @import { Module, Compiler, Configuration } from "../../../../" */
 
 /**
- * @param {import("../../../../").Compiler} compiler the compiler
+ * @param {Compiler} compiler the compiler
  */
 const testPlugin = (compiler) => {
 	compiler.hooks.compilation.tap("TestPlugin", (compilation) => {
@@ -59,7 +59,7 @@ const testPlugin = (compiler) => {
 	});
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

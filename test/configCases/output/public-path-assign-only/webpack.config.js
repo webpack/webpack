@@ -5,12 +5,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so the entry finds its own stats
  * @param {string} name output sub-directory
  * @param {string} entry entry module
  * @param {boolean} reads whether any module reads the public path back
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const variant = (index, name, entry, reads) => ({
 	mode: "development",
@@ -33,7 +35,7 @@ const variant = (index, name, entry, reads) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Nothing reads it back, so auto-detection has no reader to serve.
 	variant(0, "assign-only", "./assign.js", false),

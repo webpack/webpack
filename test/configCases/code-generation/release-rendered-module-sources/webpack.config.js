@@ -1,18 +1,21 @@
 "use strict";
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+/** @import { Source } from "webpack-sources" */
+
 /**
  * Reads the emitted assets so the rendered module sources memoize their
  * flattened text, then checks that emitting released it again.
- * @type {import("../../../../").WebpackPluginInstance}
+ * @type {WebpackPluginInstance}
  */
 const observeRenderedSourceRelease = {
 	apply(compiler) {
 		const { Compilation } = compiler.webpack;
 		const { JavascriptModulesPlugin } = compiler.webpack.javascript;
 		compiler.hooks.compilation.tap("Observe", (compilation) => {
-			/** @type {Map<import("webpack-sources").Source, string>} */
+			/** @type {Map<Source, string>} */
 			const textBefore = new Map();
-			/** @type {Set<import("webpack-sources").Source>} */
+			/** @type {Set<Source>} */
 			const cleared = new Set();
 			JavascriptModulesPlugin.getCompilationHooks(
 				compilation
@@ -70,7 +73,7 @@ const observeRenderedSourceRelease = {
 
 // A child compiler renders its own modules but never emits, and it does not
 // inherit `afterEmit`, so its sources are released by the parent's.
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const buildChildCompilation = {
 	apply(compiler) {
 		const { EntryPlugin } = compiler.webpack;
@@ -85,7 +88,7 @@ const buildChildCompilation = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	// Keeps the two modules apart, so the chunk renders module factories rather
 	// than inlining one module into its startup.

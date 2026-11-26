@@ -3,7 +3,11 @@
 const acorn = require("acorn");
 const { javascript, sources } = require("../../../../");
 
-/** @param {import("../../../../").Compiler} compiler compiler */
+/** @import { Compiler, Configuration } from "../../../../" */
+/** @import { ParseOptions } from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Program } from "acorn" */
+
+/** @param {Compiler} compiler compiler */
 const renderPlugin = (compiler) => {
 	compiler.hooks.compilation.tap("RenderPlugin", (compilation) => {
 		javascript.JavascriptModulesPlugin.getCompilationHooks(
@@ -25,7 +29,7 @@ const renderPlugin = (compiler) => {
 
 let nextIndex = 0;
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = ["node14", "web", ["web", "node14"]].flatMap(
 	(target, targetIndex) =>
 		["./async.js", "./barrel.js", ["./store.js", "./own.js"]].flatMap(
@@ -49,8 +53,8 @@ module.exports = ["node14", "web", ["web", "node14"]].flatMap(
 															// A custom parser permits a return that is valid inside the module factory.
 															/**
 															 * @param {string} code source
-															 * @param {import("../../../../lib/javascript/JavascriptParser").ParseOptions} options parser options
-															 * @returns {{ ast: import("acorn").Program, comments: [] }} parsed source
+															 * @param {ParseOptions} options parser options
+															 * @returns {{ ast: Program, comments: [] }} parsed source
 															 */
 															parse: (code, options) => ({
 																ast: acorn.parse(code, {

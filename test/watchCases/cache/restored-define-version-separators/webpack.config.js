@@ -3,6 +3,8 @@
 const { DefinePlugin } = require("../../../../");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration } from "../../../../" */
+
 const step = () => Number(currentWatchStep.step);
 
 const keyB = `${DefinePlugin.VALUE_DEP_PREFIX}process.env.B`;
@@ -12,7 +14,7 @@ const steps = [
 	{ suffix: "2", versionA: "1", versionB: `2|${keyB}=3` }
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	cache: { type: "filesystem" },

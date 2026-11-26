@@ -2,9 +2,11 @@
 
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @import { Configuration } from "../../../../" */
+
 // The container and sharing runtime modules — the largest block of generated
 // code webpack ships, and the one with the most branches to keep es5.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "es5"],
 	output: {

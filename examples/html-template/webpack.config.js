@@ -3,6 +3,8 @@
 const path = require("path");
 const { Eta } = require("eta");
 
+/** @import { Configuration } from "webpack" */
+
 // Default Eta: standard `<% %>` tags, can `include()` partials from ./src.
 // `cache: false` keeps partials being read on every render so the dependency
 // capture in `renderWithDeps` stays reliable across rebuilds.
@@ -49,7 +51,7 @@ function renderWithDeps(source, addDependency) {
 	}
 }
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	entry: {
 		// HTML entry points only — no JavaScript entry.

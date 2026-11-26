@@ -3,7 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @returns {import("../../../..").Configuration} watch configuration */
+/** @import { Configuration, Compiler } from "../../../.." */
+
+/** @returns {Configuration} watch configuration */
 module.exports = () => {
 	/** @type {Set<string | undefined>} */
 	const detected = new Set();
@@ -23,7 +25,7 @@ module.exports = () => {
 			detected.add(step);
 		},
 		/**
-		 * @param {import("../../../..").Compiler} compiler watched compiler
+		 * @param {Compiler} compiler watched compiler
 		 * @returns {void}
 		 */
 		apply(compiler) {

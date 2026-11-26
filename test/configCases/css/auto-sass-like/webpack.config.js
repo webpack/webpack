@@ -2,10 +2,12 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // The common sass setup registers one loader chain for `.sass`, `.scss` AND `.css`.
 // Because that rule matches `.css`, the "auto" default must keep the built-in CSS
 // type off so the chain keeps handling `.css` (no double-processing / breakage).
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

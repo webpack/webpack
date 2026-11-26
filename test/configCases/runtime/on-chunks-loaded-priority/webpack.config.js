@@ -2,9 +2,11 @@
 
 const RuntimeGlobals = require("../../../../lib/runtime/RuntimeGlobals");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "OnChunksLoadedPriorityTestPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	plugins: [

@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// `web` names no browsers, so nothing states what the output is read by and
 	// the drop below is the option's alone.

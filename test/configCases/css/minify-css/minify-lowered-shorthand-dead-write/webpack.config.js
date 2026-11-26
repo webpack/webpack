@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// Reads `text-decoration` as CSS 2.1's line alone, so the shorthand is
 	// written out as the line plus the longhands beside it.

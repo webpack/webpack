@@ -2,11 +2,15 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { AssetModuleBuildInfo } from "../../../../lib/asset/AssetModule.js" */
+/** @import { Configuration } from "../../../../" */
+
 // An image minimizer's shape: it awaits, and re-encodes the asset as another
 // format, so the name it is emitted under has to change with the bytes.
 class RenameOnProcessResult {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("RenameOnProcessResult", (compilation) => {
@@ -17,7 +21,7 @@ class RenameOnProcessResult {
 					// Nothing here needs to wait; awaiting is what the sync hook
 					// could not do, so the case is only meaningful if it does.
 					await Promise.resolve();
-					/** @type {import("../../../../lib/asset/AssetModule").AssetModuleBuildInfo} */
+					/** @type {AssetModuleBuildInfo} */
 					(module.buildInfo).assetResource = module.resource.replace(
 						/\.png$/,
 						".webp"
@@ -29,7 +33,7 @@ class RenameOnProcessResult {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {

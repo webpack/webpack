@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `b` depends on `a`, so `a`'s initial chunks are loaded before `b` runs and
 // its `import()` of a module already there defers nothing.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {

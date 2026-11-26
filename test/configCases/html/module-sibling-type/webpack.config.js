@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A native `<script type="module" src>` entry that gains a sibling chunk (the
 // split-out runtime) exercises the in-place `type="module"` rewrite: the parser
 // captures the original `type` value range and the sibling-clone template
@@ -9,7 +11,7 @@
 // page (named after it), so
 // the test's own bundle keeps its inline runtime and stays loadable.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "es2022"],
 	node: {

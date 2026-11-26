@@ -4,7 +4,10 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+/** @import { OutputHtmlOptions } from "../../../../declarations/WebpackOptions.js" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -26,9 +29,9 @@ const copyTest = {
 	}
 };
 
-/** @typedef {NonNullable<import("../../../../declarations/WebpackOptions").OutputHtmlOptions["manifest"]>} Manifest */
+/** @typedef {NonNullable<OutputHtmlOptions["manifest"]>} Manifest */
 
-/** @type {(name: string, manifest: Manifest) => import("../../../../").Configuration} */
+/** @type {(name: string, manifest: Manifest) => Configuration} */
 const config = (name, manifest) => ({
 	name,
 	target: "web",
@@ -42,7 +45,7 @@ const config = (name, manifest) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// default — nothing injected
 	{

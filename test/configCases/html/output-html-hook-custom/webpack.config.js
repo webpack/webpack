@@ -5,10 +5,12 @@ const path = require("path");
 const webpack = require("../../../../");
 const EntryOptionPlugin = require("../../../../").EntryOptionPlugin;
 
+/** @import { Configuration } from "../../../../" */
+
 // A third-party plugin can tap the entry hook to wrap a non-HTML entry in its
 // own HTML, exactly as HtmlModulesPlugin does for `output.html` — here with a
 // custom marker, without `output.html` being set.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	entry: { main: "./src/main.js" },

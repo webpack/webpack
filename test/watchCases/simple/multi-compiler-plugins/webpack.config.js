@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { MultiCompiler, Compiler, MultiCompilerPluginFunction, MultiCompilerOptions, MultiConfiguration } from "../../../../" */
+
 /** @type {string[]} */
 const events = [];
 /** @type {{ applied: number, thisIsCompiler: boolean, optionsPlugins: boolean }} */
@@ -7,7 +9,7 @@ const state = { applied: 0, thisIsCompiler: false, optionsPlugins: false };
 
 class MultiCompilerRecorderPlugin {
 	/**
-	 * @param {import("../../../../").MultiCompiler} compiler the multi compiler
+	 * @param {MultiCompiler} compiler the multi compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -15,7 +17,7 @@ class MultiCompilerRecorderPlugin {
 		compiler.hooks.watchRun.tap(
 			"MultiCompilerRecorderPlugin",
 			/**
-			 * @param {import("../../../../").Compiler} child the child compiler starting
+			 * @param {Compiler} child the child compiler starting
 			 */
 			(child) => {
 				events.push(`watchRun ${child.name}`);
@@ -29,16 +31,16 @@ class MultiCompilerRecorderPlugin {
 	}
 }
 
-/** @type {import("../../../../").MultiCompilerPluginFunction} */
+/** @type {MultiCompilerPluginFunction} */
 function recordThis(compiler) {
 	state.thisIsCompiler = this === compiler && compiler.compilers.length === 2;
 	state.optionsPlugins = compiler.options.plugins === plugins;
 }
 
-/** @type {import("../../../../").MultiCompilerOptions["plugins"]} */
+/** @type {MultiCompilerOptions["plugins"]} */
 const plugins = [new MultiCompilerRecorderPlugin(), recordThis, false, null];
 
-/** @type {import("../../../../").MultiConfiguration} */
+/** @type {MultiConfiguration} */
 module.exports = Object.assign(
 	[
 		{

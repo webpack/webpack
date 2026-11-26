@@ -1,11 +1,12 @@
 "use strict";
 
-/** @import { JavascriptParserOptions } from "../../../../declarations/WebpackOptions" */
+/** @import { JavascriptParserOptions } from "../../../../declarations/WebpackOptions.js" */
+/** @import { Configuration } from "../../../../types.d.ts" */
 
 /** @type {JavascriptParserOptions["importMeta"][]} */
 const importMetaOptions = ["preserve-unknown", {}];
 
-/** @type {import("../../../../types").Configuration[]} */
+/** @type {Configuration[]} */
 const configurations = [];
 
 for (const target of ["node", "web", "webworker", "universal"]) {

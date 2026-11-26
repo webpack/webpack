@@ -7,13 +7,15 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "webpack" */
+
 /**
  * @param {string} name compilation name
  * @returns {string} per-scenario output directory
  */
 const distFor = (name) => path.join(__dirname, "dist", name);
 
-/** @type {import("webpack").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	/*
 	 * 1. AUTO — the simplest opt-in.

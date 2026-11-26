@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Stats } from "../../../" */
+
 module.exports = {
-	/** @param {import("../../../").Stats} stats compilation stats */
+	/** @param {Stats} stats compilation stats */
 	validate(stats) {
 		const { chunks } = stats.toJson({
 			all: false,

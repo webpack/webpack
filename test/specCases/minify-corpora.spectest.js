@@ -39,7 +39,7 @@ const SWC_SMALLER = {
 };
 
 /** @import { MinifyOptions } from "terser" */
-/** @import { JavascriptProcessOptions } from "../../lib/javascript/syntax-parser" */
+/** @import { JavascriptProcessOptions } from "../../lib/javascript/syntax-parser.js" */
 /** @typedef {(code: string, options: MinifyOptions) => Promise<{ code?: string }> | { code?: string }} Minify */
 /** @typedef {{ code?: string, error?: string }} Outcome */
 /** @typedef {{ expected: string | Error | true, input: string, prepend: string, microtasks?: boolean, strict?: boolean }} Stdout */

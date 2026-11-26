@@ -2,6 +2,8 @@
 
 const WebpackError = require("../../../lib/errors/WebpackError");
 
+/** @import { Configuration } from "../../../" */
+
 /** @typedef {Error & { cause?: unknown }} ErrorWithCause */
 
 /**
@@ -64,7 +66,7 @@ function createAggregateError(errors, message, options = {}) {
 	return new AggregateError(errors, message, options);
 }
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	name: "error cause",
 	mode: "development",

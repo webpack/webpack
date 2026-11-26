@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /**
  * Regression guard for the inlined module-library entry: its top-level
  * declarations must be exported as live ESM bindings, not snapshotted through
@@ -10,7 +12,7 @@
  * runtime helpers — including the `__esModule` marker on either generator path.
  * @param {string} assetName emitted entry asset to assert on
  * @param {string} binding exported binding expected to stay live
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const assertLiveBindings = (assetName, binding) =>
 	function apply() {
@@ -29,7 +31,7 @@ const assertLiveBindings = (assetName, binding) =>
  * @param {string} entry entry module
  * @param {string} binding exported binding to assert on
  * @param {boolean} concatenateModules concatenation flag
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const variant = (name, entry, binding, concatenateModules) => ({
 	mode: "development",
@@ -45,7 +47,7 @@ const variant = (name, entry, binding, concatenateModules) => ({
 	plugins: [assertLiveBindings(`${name}.mjs`, binding)]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Concatenated entry: `topLevelDeclarations` comes from code generation data.
 	variant("concat", "./lib.js", "value", true),

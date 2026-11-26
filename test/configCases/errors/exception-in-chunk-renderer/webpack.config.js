@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compiler } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../../../" */
 
 class ThrowsExceptionInRender {
 	/**
@@ -18,7 +18,7 @@ class ThrowsExceptionInRender {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [new ThrowsExceptionInRender()]
 };
