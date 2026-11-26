@@ -1514,9 +1514,11 @@ describe("htmlMinify — what a second reader sees", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
 		const name =
 			"prints-mixed-template-delimiters-in-a-foreign-style-as-written";
-		expect(
-			new SourceProcessor().process(source(name), { mode: "beautify" }).code
-		).toBe(source(name));
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			expect(new SourceProcessor().process(source(name), { mode }).code).toBe(
+				source(name)
+			);
+		}
 	});
 
 	it("keeps a script language whose padding names no JavaScript type", async () => {

@@ -2893,7 +2893,7 @@ exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
 
-exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written prints {"mode":"minify"} 1`] = `"<svg><style>&#123;{live}} &#123;{literal}}</style></svg>"`;
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written prints {"mode":"minify"} 1`] = `"<svg><style>{{live}} &#123;{literal}}</style></svg>"`;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,37] close[37,45|39,44] close[45,51|47,50] end=51"`;
 
