@@ -1035,10 +1035,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what swc's `pass-1` tests cover",
-		[
-			"swc minifier: pass-1/issue-6123/1/input.js",
-			"swc minifier: pass-1/issue-6405/1/input.js"
-		]
+		["swc minifier: pass-1/issue-6123/1/input.js"]
 	],
 	[
 		"oxc goes further than webpack on what oxc's `mangler/property_mangler.rs` tests cover",

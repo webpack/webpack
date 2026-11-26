@@ -180,7 +180,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/7241/input.js",
 			"swc minifier: fixture/issues/7287/1/input.js",
 			"swc minifier: fixture/issues/7331/2/input.js",
-			"swc minifier: fixture/issues/7575/1/input.js",
 			"swc minifier: fixture/issues/7784/1/input.js",
 			"swc minifier: fixture/issues/7784/2/input.js",
 			"swc minifier: fixture/issues/8173/input.js",
@@ -188,10 +187,8 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8718/4/input.js",
 			"swc minifier: fixture/issues/8806/input.js",
 			"swc minifier: fixture/issues/8841/input.js",
-			"swc minifier: fixture/issues/8844/input.js",
 			"swc minifier: fixture/issues/8919/input.js",
 			"swc minifier: fixture/issues/8953/input.js",
-			"swc minifier: fixture/issues/9628/input.js",
 			"swc minifier: fixture/issues/d3-time-format/3/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
 			"swc minifier: fixture/issues/emotion/react/2/input.js",
@@ -298,7 +295,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.ddc4110d/input.js",
 			"swc minifier: full/size/6d52ebcc72a64f1f1ef2594baecb5dcab49b1a32/input.js",
 			"swc minifier: fixture/issues/12118/input.js",
-			"swc minifier: fixture/issues/2614/1/input.js",
 			"swc minifier: fixture/issues/6422/1/input.js"
 		]
 	],
@@ -388,7 +384,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: conditionals/ifs_1",
 			"terser compress: conditionals/ifs_2",
-			"terser compress: conditionals/cond_2",
 			"terser compress: conditionals/cond_4",
 			"terser compress: conditionals/cond_5",
 			"terser compress: conditionals/cond_7",
@@ -426,10 +421,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what swc's `pass-1` tests cover",
-		[
-			"swc minifier: pass-1/issue-6788/1/input.js",
-			"swc minifier: pass-1/issue-6405/1/input.js"
-		]
+		["swc minifier: pass-1/issue-6788/1/input.js"]
 	],
 	[
 		"swc restructures conditionals: an `if` as `&&` or `?:`, a shared tail or call factored out, `continue` and `break` folded into the condition",
