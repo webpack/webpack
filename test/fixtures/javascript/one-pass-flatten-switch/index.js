@@ -111,4 +111,54 @@ switch (1) {
 		// kept
 		f(27);
 }
+var c;
+switch ((c = 2)) {
+	case 1:
+		f(28);
+	case 2:
+		f(29);
+	case 3:
+		f(30);
+		break;
+	case 4:
+		f(31);
+}
+switch ((f(32), 3)) {
+	case 1:
+		f(33);
+		break;
+	case 3:
+		f(34);
+}
+switch (5) {
+	case 1:
+		f(35);
+	default:
+		f(36);
+	case 2:
+		f(37);
+}
+switch (1) {
+	default:
+		f(38);
+	case 1:
+		f(39);
+}
+switch (9) {
+	case 1:
+		let n = 1;
+		f(n);
+}
+switch (9) {
+	case 9:
+		f(40);
+	case 1:
+		let m = 1;
+}
+switch (7) {
+	case 1:
+		var u = 1;
+		f(41);
+}
+console.log(c, u);
 console.log(w, log.join(","));
