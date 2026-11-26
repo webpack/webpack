@@ -41091,7 +41091,7 @@ exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-sti
 
 exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-place-content-1px parses 2`] = `""`;
 
-exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-place-content-1px prints {"environment":{"browsers":["chrome 40"]},"mode":"minify"} 1`] = `"a{align-content:1px;justify-content:1px;justify-content:2px}"`;
+exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-place-content-1px prints {"environment":{"browsers":["chrome 40"]},"mode":"minify"} 1`] = `"a{align-content:1px;justify-content:2px}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-place-content-1px prints {"mode":"minify"} 1`] = `"a{place-content:1px 2px}"`;
 
@@ -41101,7 +41101,7 @@ exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-sti
 
 exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-text-decoration parses 2`] = `""`;
 
-exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-text-decoration prints {"environment":{"browsers":["safari 12"]},"mode":"minify"} 1`] = `"a{text-decoration:underline;text-decoration-style:solid;text-decoration-color:red;text-decoration-thickness:1px}"`;
+exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-text-decoration prints {"environment":{"browsers":["safari 12"]},"mode":"minify"} 1`] = `"a{text-decoration:underline;-webkit-text-decoration-style:solid;text-decoration-style:solid;-webkit-text-decoration-color:red;text-decoration-color:red;text-decoration-thickness:1px}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-what-a-printed-rule-can-still-hit-prints-a-text-decoration prints {"mode":"minify"} 1`] = `"a{text-decoration:underline red 1px}"`;
 
