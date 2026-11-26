@@ -676,7 +676,7 @@ describe("tokenize", () => {
 		// The state switch has literal labels, so only a label's comment ties
 		// it to the constant the transitions assign.
 		const source = fs.readFileSync(
-			require.resolve("../../../lib/html/syntax-parser"),
+			require.resolve("../../../lib/html/syntax-tokenizer"),
 			"utf8"
 		);
 		/**
