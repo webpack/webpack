@@ -12680,6 +12680,17 @@ exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rej
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-rejected-input-in-a-2 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] left-curly-bracket[8,9] left-curly-bracket[9,10] ident[10,11] right-curly-bracket[11,12] right-curly-bracket[12,13] right-curly-bracket[13,14] end=14"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-the-newline-ending-a-bad-string parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"x\\"]],[[\\"error\\",\\"bad-string\\"],\\" \\"]],[\\"qualified rule\\",[[\\"ident\\",\\"y\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-the-newline-ending-a-bad-string parses 2`] = `"warning[3,4]:newline-in-string warning[4,5]:unexpected-right-curly-bracket"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-the-newline-ending-a-bad-string prints {"mode":"minify"} 1`] = `
+"x{'
+}y{color:red}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-the-newline-ending-a-bad-string tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] bad-string[2,3] whitespace[3,4] right-curly-bracket[4,5] ident[5,6] left-curly-bracket[6,7] ident[7,12] colon[12,13] ident[13,16] right-curly-bracket[16,17] end=17"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-never-materializes-rejected parses {"entry":"parseAStylesheet","fields":["childCount","fieldCount:prelude","fieldCount:value","fieldCount:declarations","fieldCount:rules"]} 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[\\"*\\",[\\"ident\\",\\"zoom\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-never-materializes-rejected parses {"entry":"parseAStylesheet","fields":["childCount","fieldCount:prelude","fieldCount:value","fieldCount:declarations","fieldCount:rules"]} 2`] = `"warning[9,10]:missing-qualified-rule-block"`;
