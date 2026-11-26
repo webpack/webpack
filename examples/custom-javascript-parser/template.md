@@ -22,6 +22,14 @@ Implementation example:
 _{{internals/oxc-parse.js}}_
 ```
 
+### swc-next
+
+Implementation example:
+
+```javascript
+_{{internals/swc-next-parse.mjs}}_
+```
+
 ### meriyah
 
 Implementation example:

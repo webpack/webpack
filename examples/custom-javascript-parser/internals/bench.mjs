@@ -3,6 +3,7 @@ import path from "node:path";
 import { Bench } from "tinybench";
 
 import oxcParse from "./oxc-parse.js";
+import swcNextParse from "./swc-next-parse.mjs";
 import meriyahParse from "./meriyah-parse.js";
 import acornParse from "./acorn-parse.js";
 
@@ -29,6 +30,9 @@ const sourceCode = fs.readFileSync(
 bench
 	.add("oxc", () => {
 		oxcParse(sourceCode, options);
+	})
+	.add("swc-next", () => {
+		swcNextParse(sourceCode, options);
 	})
 	.add("meriyah", () => {
 		meriyahParse(sourceCode, options);

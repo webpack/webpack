@@ -3,6 +3,7 @@
 const acornParse = require("./internals/acorn-parse");
 const meriyahParse = require("./internals/meriyah-parse");
 const oxcParse = require("./internals/oxc-parse");
+const swcNextParse = require("./internals/swc-next-parse.mjs").default;
 
 /** @type {import("webpack").Configuration[]} */
 const config = [
@@ -31,6 +32,23 @@ const config = [
 			// 		}
 			// 	}
 			// ]
+		}
+	},
+	// swc-next
+	{
+		mode: "production",
+		optimization: {
+			chunkIds: "deterministic"
+		},
+		output: {
+			filename: "swc-next.[name].js"
+		},
+		module: {
+			parser: {
+				javascript: {
+					parse: swcNextParse
+				}
+			}
 		}
 	},
 	// meriyah

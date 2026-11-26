@@ -106,6 +106,54 @@ const oxcParse = (sourceCode, options) => {
 module.exports = oxcParse;
 ```
 
+### swc-next
+
+Implementation example:
+
+```javascript
+import { parseSync } from "@swc-next/parser";
+
+/** @import { Program, Comment } from "estree" */
+/**
+ * @import {
+ * 	ParseOptions,
+ * 	ParseResult
+ * } from "../../../lib/javascript/JavascriptParser.js"
+ */
+
+/**
+ * SWC Next supplies source offsets. webpack uses them to derive line and
+ * column locations and reads ASI positions from the source text.
+ * @param {string} sourceCode the source code
+ * @param {ParseOptions} options options
+ * @returns {ParseResult} the parsed result
+ */
+export default function swcNextParse(sourceCode, options) {
+	const result = parseSync(sourceCode, {
+		semanticErrors: true,
+		preserveParens: false,
+		sourceType: options.allowReturnOutsideFunction
+			? "commonjs"
+			: options.sourceType,
+		comments: options.comments ? "all" : "none"
+	});
+
+	const comments =
+		/** @type {(Comment & { start: number, end: number })[]} */
+		(result.comments);
+
+	// webpack's magic-comment lookup reads `comment.range`
+	for (const comment of comments) {
+		if (!comment.range) comment.range = [comment.start, comment.end];
+	}
+
+	return {
+		ast: /** @type {Program} */ (/** @type {unknown} */ (result.program)),
+		comments
+	};
+}
+```
+
 ### meriyah
 
 Implementation example:
@@ -167,9 +215,10 @@ module.exports = meriyahParse;
 ```javascript
 "use strict";
 
-const acornParse = require("./internals/acorn-parse.js");
-const meriyahParse = require("./internals/meriyah-parse.js");
-const oxcParse = require("./internals/oxc-parse.js");
+const acornParse = require("./internals/acorn-parse");
+const meriyahParse = require("./internals/meriyah-parse");
+const oxcParse = require("./internals/oxc-parse");
+const swcNextParse = require("./internals/swc-next-parse.mjs").default;
 
 /** @type {import("webpack").Configuration[]} */
 const config = [
@@ -198,6 +247,23 @@ const config = [
 			// 		}
 			// 	}
 			// ]
+		}
+	},
+	// swc-next
+	{
+		mode: "production",
+		optimization: {
+			chunkIds: "deterministic"
+		},
+		output: {
+			filename: "swc-next.[name].js"
+		},
+		module: {
+			parser: {
+				javascript: {
+					parse: swcNextParse
+				}
+			}
 		}
 	},
 	// meriyah
@@ -284,6 +350,24 @@ chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.2 KiB (runtime) 
     entry ./example.js main
 webpack X.X.X compiled successfully
 
+asset output.js 11.2 KiB [emitted] (name: main)
+asset 655.output.js 800 bytes [emitted]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
+  ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    [used exports unknown]
+    import() ./async-loaded ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.2 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.2 KiB 8 modules
+  dependent modules 281 bytes [dependent] 2 modules
+  ./example.js 176 bytes [built] [code generated]
+    [no exports]
+    [used exports unknown]
+    entry ./example.js main
+webpack X.X.X compiled successfully
+
 asset output.js 11.2 KiB [compared for emit] (name: main)
 asset 655.output.js 800 bytes [compared for emit]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
@@ -324,6 +408,22 @@ webpack X.X.X compiled successfully
 ## Production mode
 
 ```
+asset output.js 1.88 KiB [emitted] [minimized] (name: main)
+asset 655.output.js 153 bytes [emitted] [minimized]
+chunk (runtime: main) 655.output.js 24 bytes [rendered]
+  > ./async-loaded ./example.js 6:0-24
+  ./async-loaded.js 24 bytes [built] [code generated]
+    [exports: answer]
+    import() ./async-loaded ./example.js + 2 modules ./example.js 6:0-24
+chunk (runtime: main) output.js (main) 457 bytes (javascript) 5.2 KiB (runtime) [entry] [rendered]
+  > ./example.js main
+  runtime modules 5.2 KiB 8 modules
+  ./example.js + 2 modules 457 bytes [built] [code generated]
+    [no exports]
+    [no exports used]
+    entry ./example.js main
+webpack X.X.X compiled successfully
+
 asset output.js 1.88 KiB [emitted] [minimized] (name: main)
 asset 655.output.js 153 bytes [emitted] [minimized]
 chunk (runtime: main) 655.output.js 24 bytes [rendered]
