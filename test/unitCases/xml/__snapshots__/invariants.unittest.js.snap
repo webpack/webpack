@@ -5846,6 +5846,14 @@ exports[`XML syntax — invariants source-processor-xml-printing-closes-a-commen
 
 exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer tokenizes 1`] = `"open[0,3|1,2] comment[3,8|7,8] end=8"`;
 
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"text\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&\\",\\"start\\":9,\\"end\\":10}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":10,\\"tagEnd\\":5,\\"nameEnd\\":5,\\"contentEnd\\":10}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended prints {"xml":true,"mode":"minify"} 1`] = `"<text>&amp;</text>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended tokenizes 1`] = `"open[0,5|1,5] close[5,9|7,8] text[9,10] end=10"`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":0,\\"end\\":21},{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":21,\\"end\\":42}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root parses 2`] = `""`;
