@@ -8,7 +8,7 @@
 const fc = require("fast-check");
 const { invariantFindings } = require("./syntaxInvariants");
 
-/** @import { InvariantFinding, SyntaxInvariants } from "./syntaxInvariants" */
+/** @import { InvariantFinding, SyntaxInvariants } from "./syntaxInvariants/index.js" */
 
 /**
  * A finding the syntax is known to report on some generated sources.
