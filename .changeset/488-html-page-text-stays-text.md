@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Keep page text that spells internal names as text in HTML and ESM output.
+Keep HTML pages, minified markup and ESM output reading as their source does.
