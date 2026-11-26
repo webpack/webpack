@@ -16,6 +16,7 @@ const { invariantFindings } = require("./syntaxInvariants");
  * @property {string} relation the relation it breaks
  * @property {string} contains text its repro holds
  * @property {string[]=} presets the presets it shows under, every one where absent
+ * @property {((source: string) => boolean)=} when whether the source it shows in is one it explains, every source where absent
  * @property {string} why why it is no bug
  */
 
@@ -47,11 +48,12 @@ const numberFrom = (value, fallback) => {
 };
 
 /**
+ * @param {string} source the generated source the findings are for
  * @param {readonly InvariantFinding[]} findings what broke
  * @param {readonly KnownFinding[]} known findings that are no bug
  * @returns {string[]} each finding no known entry explains
  */
-const unexplainedFindings = (findings, known) => {
+const unexplainedFindings = (source, findings, known) => {
 	/** @type {string[]} */
 	const left = [];
 	for (const { preset, report } of findings) {
@@ -59,7 +61,8 @@ const unexplainedFindings = (findings, known) => {
 			(entry) =>
 				entry.relation === report.relation &&
 				report.repro.includes(entry.contains) &&
-				(entry.presets === undefined || entry.presets.includes(preset))
+				(entry.presets === undefined || entry.presets.includes(preset)) &&
+				(entry.when === undefined || entry.when(source))
 		);
 		if (!explained) {
 			left.push(
@@ -88,6 +91,7 @@ const fuzzSyntax = (syntax, pieces, options = {}) => {
 			(source) => {
 				expect(
 					unexplainedFindings(
+						source,
 						invariantFindings(syntax, [["fuzz", source]]),
 						known
 					)

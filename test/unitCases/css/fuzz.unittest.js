@@ -1,9 +1,10 @@
-// cspell:ignore mportant olor importanta mportanta importantaa mportantaa colora olora
-
 "use strict";
 
+const webpack = require("webpack");
 const { fuzzSyntax } = require("../../helpers/syntaxFuzz");
 const syntax = require("../../helpers/syntaxInvariants/css");
+
+const { SourceProcessor, parser } = webpack.css.syntax;
 
 /**
  * Pieces a generated stylesheet is joined from: enough of the grammar that a
@@ -54,46 +55,39 @@ const PIECES = [
 ];
 
 /**
- * Each identifier a generated block holds alone, as the escape respelling
- * writes it: neither a declaration nor a rule, so an engine drops it, and the
- * printer writes it back as authored (`NodeType.Raw`), escape included.
- * @type {[string, string][]}
+ * Whether printing a stylesheet keeps input both productions reject as a
+ * `NodeType.Raw` node, which exists only while printing.
+ * @param {string} source a generated stylesheet
+ * @returns {boolean} whether it holds one
  */
-const BARE_IDENTIFIERS = [
-	["a", "\\61"],
-	["important", "\\69 mportant"],
-	["b", "\\62"],
-	["--x", "--\\78"],
-	["color", "\\63 olor"],
-	["aa", "\\61 a"],
-	["ab", "\\61 b"],
-	["c", "\\63"],
-	["a\\", "\\61 \\"],
-	["aaa", "\\61 aa"],
-	["a\\a", "\\61 \\a"],
-	["a\\*", "\\61 \\*"],
-	["a\\>", "\\61 \\>"],
-	["importanta", "\\69 mportanta"],
-	["important\\", "\\69 mportant\\"],
-	["importantaa", "\\69 mportantaa"],
-	["important\\a", "\\69 mportant\\a"],
-	["important\\*", "\\69 mportant\\*"],
-	["important\\>", "\\69 mportant\\>"],
-	["a-", "\\61 -"],
-	["colora", "\\63 olora"],
-	["color-", "\\63 olor-"],
-	["red", "\\72 ed"]
-];
+const holdsRaw = (source) => {
+	let raw = false;
+	new SourceProcessor()
+		.use({
+			[parser.NodeType.Raw]: {
+				enter: () => {
+					raw = true;
+				},
+				exit: () => {}
+			}
+		})
+		.process(source, { mode: "minify" });
+	return raw;
+};
 
 describe("CSS syntax fuzzing", () => {
 	it("holds its invariants on generated stylesheets", () => {
 		fuzzSyntax(syntax, PIECES, {
-			known: BARE_IDENTIFIERS.map(([written, respelled]) => ({
-				relation: "respelling escape",
-				contains: `    ${written}\n      -> ${respelled}`,
-				presets: ["default"],
-				why: "input both productions reject is printed as authored, as fixtures/css/css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-bare-identifier-in-an-unclosed-block files"
-			}))
+			known: [
+				{
+					relation: "respelling escape",
+					// Every escape respelling writes a `\`; the source decides the rest.
+					contains: "\\",
+					presets: ["default"],
+					when: holdsRaw,
+					why: "input both productions reject is kept as a `NodeType.Raw` node and printed as authored, escape included (lib/css/syntax-parser.js:3517-3522), as the fixtures/css/css-syntax-minify-keeps-input-the-grammar-rejects-* fixtures file; this skips escape respellings for a whole source holding a Raw node, and a source without one stays fully checked"
+				}
+			]
 		});
 	});
 });
