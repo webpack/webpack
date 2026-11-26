@@ -1535,6 +1535,41 @@ describe("WorkerPool", () => {
 			}
 		});
 
+		it("replaces a worn thread for a loader job of another module at max", async () => {
+			const pool = createPool({ max: 1 });
+			try {
+				const [first] = await infoTimes(pool, TARGET, 8);
+				const other = /** @type {Info} */ (
+					await pool.runJob(OTHER, "info", [], { rpc: () => undefined })
+				);
+
+				expect(other.threadId).not.toBe(first);
+				expect(pool.stats.spawned).toBe(2);
+			} finally {
+				await pool.end({ force: true });
+			}
+		});
+
+		it("lets a worn thread finish its preload before replacing it", async () => {
+			const pool = createPool({ max: 1 });
+			try {
+				const [first] = await infoTimes(pool, TARGET, 7);
+				// the preload reaches the thread while its eighth call runs, so
+				// the thread is idle with the preload in flight once that settles
+				const eighth = pool.run(TARGET, "info");
+				const warming = pool.warmup([SLOW], 1);
+				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
+
+				await eighth;
+
+				await expect(warming).resolves.toBeUndefined();
+				expect(other.threadId).not.toBe(first);
+				expect(pool.stats.spawned).toBe(2);
+			} finally {
+				await pool.end({ force: true });
+			}
+		});
+
 		it("starts a thread below max and keeps the worn one for its module", async () => {
 			const pool = createPool({ max: 2 });
 			try {
