@@ -1,0 +1,1 @@
+a { &:--custom-pseudo, &:visited { b { top: 0; } } }

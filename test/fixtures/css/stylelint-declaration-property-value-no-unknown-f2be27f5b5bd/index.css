@@ -1,0 +1,1 @@
+a { width: calc(abs(10px) + max(5px, 2px)); }

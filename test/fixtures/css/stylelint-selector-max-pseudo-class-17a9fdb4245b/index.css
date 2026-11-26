@@ -1,0 +1,1 @@
+.foo:last-child { .bar:first-child { .baz:visited {} } }

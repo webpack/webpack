@@ -1,0 +1,2 @@
+@property --foo, --bar { syntax: "<color>"; }
+a { --bar: 1px; }

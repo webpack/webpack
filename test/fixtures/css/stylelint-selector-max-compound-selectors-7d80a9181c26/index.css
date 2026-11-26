@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-max-compound-selectors */
+a b c, /* stylelint-disable-next-line selector-max-compound-selectors */
+a b c,
+/* stylelint-disable-next-line selector-max-compound-selectors */
+a b c
+{}

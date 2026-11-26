@@ -1,0 +1,1 @@
+a { color: hsla(var(--hue), var(--sat), var(--sat), var(--alpha)) }

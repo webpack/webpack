@@ -1,0 +1,1 @@
+.class-name { transition-delay: 25ms, 50ms; transition-duration: 10ms, 20ms; transition-property: margin, padding; transition-timing-function: cubic-bezier(0, 1, 1, 1), cubic-bezier(1, 0, 0, 1); }

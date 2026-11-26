@@ -1,0 +1,3 @@
+@property --foo { syntax: "<length>"; }
+@property --bar { syntax: "<color>"; }
+a { --bar: var(--foo); }

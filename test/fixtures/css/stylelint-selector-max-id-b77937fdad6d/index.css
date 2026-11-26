@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-max-id */
+#foo, /* stylelint-disable-next-line selector-max-id */
+#bar,
+/* stylelint-disable-next-line selector-max-id */
+#baz
+{}

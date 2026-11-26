@@ -1,0 +1,7 @@
+a {
+	background-image: linear-gradient(
+		to right,
+		rgb(30 75 115 / 1),
+		hsl(255 255 255)
+	);
+}

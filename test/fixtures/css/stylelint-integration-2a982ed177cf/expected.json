@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/.foo[1]: css-tree content: \"horse \"; } .foo { content: \"horse \"; }, tool rule content: \"horse \"; } .foo",
+		"why": "a value with a block beside other components is a nested rule, not a declaration; css-tree keeps it as a declaration"
+	}
+]

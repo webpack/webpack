@@ -1,0 +1,1 @@
+a { --custom-property: pink; @media { --custom-property: orange; --custom-property: black; } }

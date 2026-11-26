@@ -1,0 +1,1 @@
+:is(.foo) { color: red; } :host { .bar { color: red; } }

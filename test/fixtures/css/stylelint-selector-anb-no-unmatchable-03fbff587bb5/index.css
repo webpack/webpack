@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-anb-no-unmatchable */
+a:nth-child(0), /* stylelint-disable-next-line selector-anb-no-unmatchable */
+b:nth-child(0),
+/* stylelint-disable-next-line selector-anb-no-unmatchable */
+c:nth-child(0)
+{}

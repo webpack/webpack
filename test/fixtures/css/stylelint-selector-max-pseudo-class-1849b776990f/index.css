@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-max-pseudo-class */
+a:first-child, /* stylelint-disable-next-line selector-max-pseudo-class */
+a:first-child,
+/* stylelint-disable-next-line selector-max-pseudo-class */
+a:first-child
+{}

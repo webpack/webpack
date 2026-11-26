@@ -1,0 +1,1 @@
+@keyframes foo {} a { animation: steps(12, end) 2s foo; }

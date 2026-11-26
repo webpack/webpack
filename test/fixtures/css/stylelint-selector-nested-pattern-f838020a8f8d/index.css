@@ -1,0 +1,8 @@
+.foo {
+	/* stylelint-disable-next-line selector-nested-pattern */
+	.bar, /* stylelint-disable-next-line selector-nested-pattern */
+	.bar,
+	/* stylelint-disable-next-line selector-nested-pattern */
+	.bar
+	{}
+}

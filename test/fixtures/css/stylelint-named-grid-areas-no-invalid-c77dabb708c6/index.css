@@ -1,0 +1,6 @@
+a {
+	grid-template-areas:
+		/* "" */ "head head"
+		"nav  main" /* "a b c" */
+		"nav  foot" /* "" */;
+}

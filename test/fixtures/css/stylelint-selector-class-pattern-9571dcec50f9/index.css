@@ -1,0 +1,8 @@
+a {
+	/* stylelint-disable-next-line selector-class-pattern */
+	& .foo, /* stylelint-disable-next-line selector-class-pattern */
+	& .foo,
+	/* stylelint-disable-next-line selector-class-pattern */
+	& .foo
+	{}
+}

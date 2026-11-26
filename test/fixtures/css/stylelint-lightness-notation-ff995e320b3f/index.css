@@ -1,0 +1,7 @@
+a {
+	background-image: linear-gradient(
+		to right,
+		lab(29.2345% 39.3825 20.0664);
+		lch(56.29% 19.86 236.62deg)
+	);
+}

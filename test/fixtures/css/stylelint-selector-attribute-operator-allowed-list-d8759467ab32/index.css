@@ -1,0 +1,6 @@
+/* a comment */
+a[class*="foo"], /* a comment */
+a[id*="foo"],
+/* a comment */
+a[data-foo*="foo"]
+{ }

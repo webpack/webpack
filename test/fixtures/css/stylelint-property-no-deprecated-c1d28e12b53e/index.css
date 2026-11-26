@@ -1,0 +1,4 @@
+a {
+	-moz-box-flex: revert;
+	-moz-box-pack: start;
+}

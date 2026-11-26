@@ -1,0 +1,6 @@
+/* a comment */
+a[title=flower], /* a comment */
+a[class^=top],
+/* a comment */
+a[title~=text]
+{ }

@@ -1,0 +1,1 @@
+button { --state: normal; background-color: if(style(--state: hover): gray; else: white;); }

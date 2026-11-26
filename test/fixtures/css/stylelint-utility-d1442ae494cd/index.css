@@ -1,0 +1,7 @@
+
+/* stylelint-disable */
+a {}
+/* stylelint-enable */
+a {
+	b {} /* stylelint-disable-line block-no-empty */
+}

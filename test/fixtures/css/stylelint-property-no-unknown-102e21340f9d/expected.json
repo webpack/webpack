@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "wdth\n      -> \\77 dth",
+		"why": "`*wdth: 100px` is a star hack the printer writes back as authored, escape included"
+	}
+]

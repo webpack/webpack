@@ -1,0 +1,4 @@
+@charset "UTF-8";
+
+@import url(x.css); /* comment */
+@import url(y.css);

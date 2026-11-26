@@ -1,0 +1,6 @@
+a {
+ --custom-prop: pink; 
+
+ b {color: red; } 
+ c {color: blue; }
+}

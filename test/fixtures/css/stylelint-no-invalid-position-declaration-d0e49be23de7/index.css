@@ -1,0 +1,4 @@
+@supports (color: red) {
+	a { color: red; }
+	color: blue;
+}

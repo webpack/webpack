@@ -1,0 +1,1 @@
+.foo:has(a.bar, a.baz) {}

@@ -1,0 +1,1 @@
+@property --state {} button { background-color: if(style(--state: hover): gray; else: white;); }

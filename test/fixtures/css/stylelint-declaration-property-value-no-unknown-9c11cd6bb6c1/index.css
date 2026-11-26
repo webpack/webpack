@@ -1,0 +1,2 @@
+@property --foo { syntax: "auto"; }
+a { color: var(--foo); }

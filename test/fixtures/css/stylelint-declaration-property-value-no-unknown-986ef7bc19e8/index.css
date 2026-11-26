@@ -1,0 +1,1 @@
+a { height: calc(env(--some-var) + 10px); }

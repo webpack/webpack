@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree unparsed font-family: Arial, Ahem!, sans-serif;, tool font-family: Arial, Ahem!, sans-serif",
+		"why": "css-tree rejects the invalid font-family value; the generic CSS Syntax parser retains the declaration's component values"
+	}
+]

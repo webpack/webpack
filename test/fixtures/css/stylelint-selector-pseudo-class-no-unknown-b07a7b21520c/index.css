@@ -1,0 +1,1 @@
+p:has(img):not(:has(:not(img))) { }

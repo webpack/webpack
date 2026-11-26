@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-attribute-quotes */
+a[title=flower], /* stylelint-disable-next-line selector-attribute-quotes */
+a[class^=top],
+/* stylelint-disable-next-line selector-attribute-quotes */
+a[title~=text]
+{ }

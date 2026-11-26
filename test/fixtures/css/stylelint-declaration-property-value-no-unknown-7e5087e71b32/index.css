@@ -1,0 +1,2 @@
+@property --foo { syntax: "<color> | <length>"; }
+a { --foo: red; top: var(--foo); }

@@ -1,0 +1,1 @@
+.foo { & h2 { @media { color: red; } } } h1 { & h2 { @media { color: red; } } }

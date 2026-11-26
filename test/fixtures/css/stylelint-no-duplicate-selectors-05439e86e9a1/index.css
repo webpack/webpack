@@ -1,0 +1,7 @@
+a {}
+/* stylelint-disable-next-line no-duplicate-selectors */
+a {} /* stylelint-disable-next-line no-duplicate-selectors */
+a
+/* stylelint-disable-next-line no-duplicate-selectors */ {}
+a
+{}

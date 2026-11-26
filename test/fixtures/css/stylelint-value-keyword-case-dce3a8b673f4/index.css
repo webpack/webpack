@@ -1,0 +1,1 @@
+@media screen { color: GREEN; @media (min-width: 768px) { color: RED; } }

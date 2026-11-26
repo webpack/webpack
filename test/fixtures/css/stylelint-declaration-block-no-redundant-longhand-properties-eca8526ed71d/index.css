@@ -1,0 +1,1 @@
+a { background-image: url(a), url(b); background-position: 0 0, 5px 5px; background-size: cover, contain; background-repeat: no-repeat, repeat; background-origin: border-box, padding-box; background-clip: text, border-box; background-attachment: fixed, scroll; background-color: red; }

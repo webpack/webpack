@@ -1,0 +1,6 @@
+a { --foo: 10px; }
+@property --foo {
+	syntax: "<color>";
+	inherits: false;
+	initial-value: #c0ffee;
+}

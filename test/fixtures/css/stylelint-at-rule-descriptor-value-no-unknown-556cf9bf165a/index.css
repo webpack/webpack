@@ -1,0 +1,13 @@
+@mixin --qux-baz(@contents) {
+	@supports (overflow-anchor: auto) {
+		@contents;
+	}
+}
+
+body {
+	@apply --qux-baz {
+		@font-face {
+		  ascent-override: foo;
+		}
+	}
+}

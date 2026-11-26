@@ -1,0 +1,1 @@
+:root { --bar: 0px; } a { color: calc(var(--foo) + --bar); }

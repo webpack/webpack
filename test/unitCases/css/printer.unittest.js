@@ -1165,6 +1165,61 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 	const minify = (css, environment) =>
 		new SourceProcessor().process(css, { mode: "minify", environment }).code;
 
+	it("keeps invalid CSS-wide values and substitution token streams", () => {
+		const out = minify(fixture("css", "minify-border-radius-substitution"));
+		expect(out).toContain(".a{border-radius:inherit/inherit}");
+		expect(out).toContain(".b{border-radius:initial/initial}");
+		expect(out).toContain(".c{border-radius:var(--x)var(--x)/1px 1px}");
+		expect(out).toContain(".d{border-radius:1px 1px/var(--x)var(--x)}");
+		expect(out).toContain(
+			".e{border-radius:var(--x)var(--x)/var(--x)var(--x)}"
+		);
+	});
+
+	it.each(["chrome 30", "safari 8"])(
+		"lowers adjacent text-decoration declarations once for %s",
+		(browser) => {
+			const source = fixture("css", "minify-legacy-text-decoration");
+			const out = minifyFor(source, [browser]);
+			const overridden = out.slice(out.indexOf(".e{"), out.indexOf(".f{"));
+			expect(minifyFor(overridden, [browser])).toBe(overridden);
+			const stable = out.slice(0, out.indexOf(".e{"));
+			expect(minifyFor(stable, [browser])).toBe(stable);
+			expect(out).toContain("text-decoration-color:red!important");
+			expect(out).toContain("text-decoration-color:blue");
+			expect(out).toContain("text-decoration-color:#d4896e");
+			const fallback = out.slice(out.indexOf(".h{"), out.indexOf(".i{"));
+			expect(fallback).toContain("text-decoration-color:red");
+			expect(fallback).not.toContain("text-decoration-color:#d4896e");
+			if (browser === "safari 8") {
+				expect(out).toContain("-webkit-text-decoration-color:#d4896e");
+				expect(out).toContain("-webkit-text-decoration-color:green");
+				expect(out).toContain(
+					".i{text-decoration:underline;-webkit-text-decoration-color:red;"
+				);
+				expect(out).toContain(
+					"text-decoration-color:#d4896e;-webkit-text-decoration-color:#d4896e;"
+				);
+				const earlier = out.slice(out.indexOf(".k{"));
+				expect(earlier).toContain(
+					".k{text-decoration:underline;-webkit-text-decoration-color:red"
+				);
+				expect(earlier).not.toContain("-webkit-text-decoration-color:green");
+			}
+		}
+	);
+
+	it("keeps lowered duplicate declarations when dead-rule removal is off", () => {
+		const source = fixture("css", "minify-legacy-text-decoration").split(
+			"\n"
+		)[0];
+		expect(
+			minifyForWith(source, ["chrome 30"], { removeDeadRules: false })
+		).toBe(
+			".a{text-decoration:underline;text-decoration-color:red;text-decoration-color:red}"
+		);
+	});
+
 	// Each case below is one a real stylesheet of the comparison corpus wrote,
 	// and each is held to its own output as well: a second minify adds nothing.
 	describe("what a wider corpus found", () => {

@@ -1,0 +1,8 @@
+/* a comment */
+a:nth-child(0), /* a comment */
+b:nth-child(0),
+/* a comment */
+c:nth-child(0),
+d:nth-child(0 /* a comment */ of a),
+/* a comment */ e:nth-child(0)
+{}

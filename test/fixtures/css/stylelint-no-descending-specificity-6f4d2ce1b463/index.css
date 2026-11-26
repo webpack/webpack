@@ -1,0 +1,7 @@
+b a, b aa, b aaa { color: red; }
+/* stylelint-disable-next-line no-descending-specificity */
+a, /* stylelint-disable-next-line no-descending-specificity */
+aa,
+/* stylelint-disable-next-line no-descending-specificity */
+aaa
+{ color: red; }

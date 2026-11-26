@@ -1,0 +1,1 @@
+a { width: max(min(10px, 20px), 5px); }

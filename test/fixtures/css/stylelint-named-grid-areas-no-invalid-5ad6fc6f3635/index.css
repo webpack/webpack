@@ -1,0 +1,5 @@
+.test-grid {
+	grid-template:
+		"a a a"
+		"b b	b";
+}

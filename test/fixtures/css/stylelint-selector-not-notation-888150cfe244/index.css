@@ -1,0 +1,6 @@
+/* a comment */
+:not(a, div), /* a comment */
+:not(a, div),
+/* a comment */
+:not(a, div)
+{}

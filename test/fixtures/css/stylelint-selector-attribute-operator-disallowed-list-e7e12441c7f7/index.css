@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-attribute-operator-disallowed-list */
+a[class*="foo"], /* stylelint-disable-next-line selector-attribute-operator-disallowed-list */
+a[id~="foo"],
+/* stylelint-disable-next-line selector-attribute-operator-disallowed-list */
+a[data-foo*="foo"]
+{ }

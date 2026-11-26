@@ -1,0 +1,1 @@
+a { --foo: 1; --color: red; color: if(style(--foo: 1): --color; else: green;); }

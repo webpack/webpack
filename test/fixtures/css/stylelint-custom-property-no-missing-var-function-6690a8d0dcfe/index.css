@@ -1,0 +1,1 @@
+a { color: calc(var(--foo) + 100px); }

@@ -1,0 +1,6 @@
+
+      /* stylelint-disable string-no-newline */
+      .foo { content: "horse 
+"; }
+      /* stylelint-enable string-no-newline */
+    

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed display: -webkit-box; -webkit-box-orie…, tool nothing",
+		"why": "css-tree keeps raw text where CSS Syntax drops a qualified rule that reaches the end without a block"
+	}
+]

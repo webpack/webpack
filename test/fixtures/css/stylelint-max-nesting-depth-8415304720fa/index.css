@@ -1,0 +1,9 @@
+a {
+	color: red;
+	& { color: blue; }
+	b {
+		color: gray;
+		& { color: white; }
+		&, &:hover { color: purple; }
+	}
+}

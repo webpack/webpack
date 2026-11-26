@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-id-pattern */
+a #foo, /* stylelint-disable-next-line selector-id-pattern */
+a #bar,
+/* stylelint-disable-next-line selector-id-pattern */
+a #foo
+{}

@@ -1,0 +1,1 @@
+a { color: hsl(var(--hue) var(--sat) var(--sat) / var(--alpha)) }

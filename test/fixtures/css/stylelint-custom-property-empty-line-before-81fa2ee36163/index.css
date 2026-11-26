@@ -1,0 +1,16 @@
+a {
+
+ --custom-prop: value; 
+
+ --custom-prop2: value; 
+ /* comment */ 
+
+ --custom-prop3: value;
+
+ @extends 'x';
+ --custom-prop4: value; 
+ & b {
+ prop: value;
+ } 
+ --custom-prop5: value; 
+ }

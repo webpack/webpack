@@ -1,0 +1,8 @@
+a { --foo: 10px; }
+a { --foo: 10%; }
+
+@property --foo {
+	syntax: "<length> | <percentage>";
+	inherits: false;
+	initial-value: 10px;
+}

@@ -1,0 +1,4 @@
+a{
+ @extends .class;
+ --custom-prop: value;
+}

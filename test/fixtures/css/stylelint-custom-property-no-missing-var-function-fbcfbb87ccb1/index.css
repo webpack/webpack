@@ -1,0 +1,1 @@
+:root { --theme: dark; } a { color: if(style(--theme: light): black; else: white;); }

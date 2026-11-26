@@ -1,0 +1,1 @@
+@media screen and (min-width: env(some-width-variable)) and (hover: env(some-width-variable)) and (aspect-ratio < env(some-number-variable) / 100) {}

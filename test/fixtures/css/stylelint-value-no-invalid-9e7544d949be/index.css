@@ -1,0 +1,1 @@
+a { height: min(calc(1px + 1), 2px); }

@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@starting-style[1]: css-tree unparsed color:red;, tool color: red",
+		"why": "CSS Syntax reads declarations and rules inside an at-rule block; css-tree reads this block as a rule list and retains the declaration as raw text"
+	}
+]

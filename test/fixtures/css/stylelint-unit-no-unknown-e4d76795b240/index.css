@@ -1,0 +1,1 @@
+a { background-image: url('first.png'), -webkit-image-set(url('second.png') 1x), -webkit-image-set(url('third.png') 1x) }

@@ -1,0 +1,1 @@
+a { color: lab(FROM red 50% a b) }

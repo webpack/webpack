@@ -1,0 +1,7 @@
+a {
+	background-image: linear-gradient(
+		to right,
+		hsl(270deg 60% 70%)
+		lch(56.29% 19.86 236.62deg)
+	);
+}

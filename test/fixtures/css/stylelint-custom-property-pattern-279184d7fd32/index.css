@@ -1,0 +1,1 @@
+:root { --foo-sub-color: #f00; } a { color: var(--foo-color, var(--foo-sub-color)); }

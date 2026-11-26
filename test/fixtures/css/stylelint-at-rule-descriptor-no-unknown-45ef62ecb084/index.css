@@ -1,0 +1,1 @@
+@counter-style foo { system: cyclic; symbols: url(bar.svg); suffix: " "; }

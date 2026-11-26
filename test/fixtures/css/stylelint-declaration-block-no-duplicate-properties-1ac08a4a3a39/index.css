@@ -1,0 +1,1 @@
+p { width: env(--foo); width: env(bar); }

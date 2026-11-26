@@ -1,0 +1,8 @@
+.foo {
+	/* a comment */
+	.bar, /* a comment */
+	.bar,
+	/* a comment */
+	.bar
+	{}
+}

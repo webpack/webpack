@@ -1,0 +1,1 @@
+:is(.buildResultsSummaryTable) span { color: red; } :is(.buildResultsSummaryTable) span:nth-child(2) { color: red; }

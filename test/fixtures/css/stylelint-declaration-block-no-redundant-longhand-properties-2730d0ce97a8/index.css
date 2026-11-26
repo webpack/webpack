@@ -1,0 +1,1 @@
+a { transition-delay: 500ms, 1s, 1.5s; transition-duration: 250ms, 0.5s; transition-timing-function: ease-in-out; transition-property: transform, visibility, padding; }

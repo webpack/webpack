@@ -1,0 +1,19 @@
+nav {
+	a {
+		color: green;
+
+		&:hover {
+			background-color: #ccc;
+		}
+	}
+}
+
+aside {
+	a {
+		color: blue;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+}

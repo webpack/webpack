@@ -1,0 +1,6 @@
+a {
+	color: HSLA(
+		calc(var(--hue) + 30),
+		28%, 50%, 0.2
+	);
+}

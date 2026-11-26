@@ -1,0 +1,1 @@
+@keyframes foo {} a { animation: var(--custom-property) 2s linear; }

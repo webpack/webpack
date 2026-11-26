@@ -1,0 +1,5 @@
+a {
+	grid-template-areas: "header header header header"
+		"main main . sidebar"
+		"footer footer footer header";
+}

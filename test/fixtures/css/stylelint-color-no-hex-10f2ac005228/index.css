@@ -1,0 +1,8 @@
+@font-face {
+font-family: dashicons;
+src: url(data:application/font-woff;charset=utf-8;base64, ABCDEF==) format("woff"),
+url(../fonts/dashicons.ttf) format("truetype"),
+url(../fonts/dashicons.svg#dashicons) format("svg");
+font-weight: normal;
+font-style: normal;
+}

@@ -1,0 +1,1 @@
+a { top: calc(var(--foo) + 2); }

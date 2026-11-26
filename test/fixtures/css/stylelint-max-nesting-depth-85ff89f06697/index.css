@@ -1,0 +1,10 @@
+.foo {
+	.baz {
+		.my-selector {
+			opacity: 0.4;
+		}
+		.bar {
+			color: red;
+		}
+	}
+}

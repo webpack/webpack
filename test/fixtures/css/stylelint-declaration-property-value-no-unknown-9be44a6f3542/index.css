@@ -1,0 +1,8 @@
+a { --foo: bigger; }
+a { --foo: BIGGER; }
+
+@property --foo {
+	syntax: "big | bigger | BIGGER";
+	inherits: false;
+	initial-value: big;
+}

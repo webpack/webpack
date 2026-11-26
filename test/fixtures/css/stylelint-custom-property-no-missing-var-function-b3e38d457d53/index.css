@@ -1,0 +1,6 @@
+a {
+	--foo: qux;
+	--bar: baz;
+
+	position: running(var(--foo, --bar));
+}

@@ -1,0 +1,1 @@
+a { grid: "foo " 1fr /*  comment */ "bar" 1fr; }

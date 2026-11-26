@@ -1,0 +1,5 @@
+@scope (.foo) {
+	@media all {
+		color: red;
+	}
+}

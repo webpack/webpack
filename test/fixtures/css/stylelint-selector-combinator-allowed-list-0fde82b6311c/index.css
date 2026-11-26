@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-combinator-allowed-list */
+a + b, /* stylelint-disable-next-line selector-combinator-allowed-list */
+a + b,
+/* stylelint-disable-next-line selector-combinator-allowed-list */
+a + b
+{}

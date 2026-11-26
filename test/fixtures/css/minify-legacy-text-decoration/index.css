@@ -1,0 +1,11 @@
+.a { text-decoration: underline red; text-decoration-color: red }
+.b { text-decoration: underline oklch(70% 0.1 40); text-decoration-color: oklch(70% 0.1 40) }
+.c { text-decoration: underline red !important; text-decoration-color: red !important }
+.d { text-decoration: underline red !important; text-decoration-color: red }
+.e { text-decoration: underline red; text-decoration-color: blue }
+.f { text-decoration: underline red; -webkit-text-decoration-color: green; text-decoration-color: red }
+.g { text-decoration: underline oklch(70% 0.1 40); text-decoration-color: red }
+.h { text-decoration: underline red; text-decoration-color: oklch(70% 0.1 40) }
+.i { text-decoration: underline red }
+.j { text-decoration: underline oklch(70% 0.1 40) }
+.k { -webkit-text-decoration-color: green; text-decoration: underline red; text-decoration-color: red }

@@ -1,0 +1,1 @@
+@supports (--foo: green) { body { color: green; } }

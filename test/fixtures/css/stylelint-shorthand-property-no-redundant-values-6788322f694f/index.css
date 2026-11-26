@@ -1,0 +1,1 @@
+a { border-radius: var(--foo) var(--foo) / calc(1px + 1px) calc(1px + 1px); }

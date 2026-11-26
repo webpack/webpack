@@ -1,0 +1,1 @@
+a { --foo: 0; color: rgb(var(--foo) 0 0); }

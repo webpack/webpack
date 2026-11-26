@@ -1,0 +1,1 @@
+.foo.bar, .foo.bar:focus { @mixin: foo; } .baz.bar, .baz.bar:focus {}
