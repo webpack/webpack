@@ -2386,14 +2386,14 @@ describe("one-pass minify of statement sequences", () => {
 				),
 				"function s(c,s,w){/*! c */c(),42,w()}"
 			],
-			// What it runs first joins only expressions, before a match it ran
-			// a case's test, and running nothing else it stays.
+			// What it runs first prints before what the match runs, but a test
+			// not known before the match, or a value not known, keeps it.
 			[
 				fixture(
 					"javascript",
 					"one-pass-minify-of-statement-sequences-should-fold-a-switch-on-a-sequence-known-5"
 				),
-				"function s(c,i,s){switch(c(),42){case 42:if(i)s()}}"
+				"function s(c,i,s){c();if(i)s()}"
 			],
 			[
 				fixture(
@@ -2407,7 +2407,7 @@ describe("one-pass minify of statement sequences", () => {
 					"javascript",
 					"one-pass-minify-of-statement-sequences-should-fold-a-switch-on-a-sequence-known-7"
 				),
-				"function s(c,s){switch(c(),42){case 13:s()}}"
+				"function s(c,s){c()}"
 			],
 			[
 				fixture(

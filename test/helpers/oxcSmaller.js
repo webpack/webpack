@@ -389,7 +389,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_useless_for:166b57e4",
 			"oxc minifier: peephole/remove_dead_code.rs:remove_unused_expressions_in_for:5b3fb43b",
 			"swc minifier: fixture/issues/12299/input.js",
-			"swc minifier: fixture/issues/9619/input.js",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:097786dc",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:1e8b08b2",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:48e1a076",
@@ -496,7 +495,6 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: reduce_vars/inner_var_if",
 			"terser compress: reduce_vars/issue_1595_4",
 			"terser compress: reduce_vars/side_effects_assign",
-			"terser compress: reduce_vars/immutable",
 			"terser compress: reduce_vars/recursive_inlining_4",
 			"terser compress: reduce_vars/var_if",
 			"terser compress: reduce_vars/issue_3068_2",
@@ -620,7 +618,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/inline.rs:small_value:ff51252e",
 			"oxc minifier: peephole/inline.rs:dead_code_depending_on_const:265c1e7e",
 			"oxc minifier: peephole/inline.rs:inline_constant_iife_arguments:dfbac248",
-			"oxc minifier: peephole/inline.rs:unmapped_parameters_allow_unused_writes:7ba04818",
 			"oxc minifier: peephole/inline.rs:unconditional_var_declarator_positions_still_inline:bf87dce3",
 			"oxc minifier: peephole/inline.rs:readonly_var_unsafe_preceding_call:1eb03d7d",
 			"oxc minifier: peephole/inline.rs:fold_writeonce_falsy_var_in_boolean_context:50cc1a84",
@@ -857,12 +854,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `pure_funcs` tests cover",
-		[
-			"terser compress: pure_funcs/relational",
-			"terser compress: pure_funcs/issue_2638",
-			"terser compress: pure_funcs/issue_2705_6",
-			"terser compress: pure_funcs/issue_526_1"
-		]
+		["terser compress: pure_funcs/relational"]
 	],
 	[
 		"oxc goes further than webpack on what swc's `fixture/next` tests cover",
@@ -876,12 +868,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1052` tests cover",
-		[
-			"terser compress: issue-1052/not_hoisted_when_already_nested",
-			"terser compress: issue-1052/defun_if_return",
-			"terser compress: issue-1052/defun_hoist_funs",
-			"terser compress: issue-1052/defun_else_if_return"
-		]
+		["terser compress: issue-1052/not_hoisted_when_already_nested"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `destructuring` tests cover",
@@ -1117,10 +1104,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `class-properties` tests cover",
-		[
-			"terser compress: class-properties/computed_class_properties",
-			"terser compress: class-properties/same_name_public_private"
-		]
+		["terser compress: class-properties/same_name_public_private"]
 	],
 	[
 		"oxc goes further than webpack on what terser's `issue-1833` tests cover",

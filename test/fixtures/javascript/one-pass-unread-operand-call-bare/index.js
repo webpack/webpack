@@ -1,0 +1,13 @@
+var r={},ok=1,i=0,o={length:0,needDrain:1,emit(){console.log("d")}},c=0;
+ok&&function(){["a","b"].forEach(function(t){!r[t]&&(r[t]=function(){return t})})}();
+i||function g(s){0===s.length&&s.needDrain&&(s.needDrain=!1,s.emit("drain"))}(o),c++;
+ok&&function(){c=c||1}();
+ok||function(){i&&c++}();
+ok&&function(){i&&c++}();
+ok??function(){i||c++}();
+ok?function(){c+=1}():function(){c=2,i++}();
+ok&&function(){c>>=1}();
+ok&&function(){c>=1&&i++}();
+ok&&function(){var q=o?.length;c++}();
+ok&&function(){(()=>c++)()}();
+console.log(Object.keys(r),c,i,o.needDrain);

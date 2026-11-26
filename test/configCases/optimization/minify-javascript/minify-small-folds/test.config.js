@@ -44,7 +44,7 @@ module.exports = {
 			'function neverCalled(){for(;;);do{track("loop")}while(/*! kept */1)}'
 		);
 		expect(code).toContain(
-			'found:{log.push("before");log.push("one");if(done)break found;log.push("two")}if(done){log.push("bare");if(log.length)log.push("again")}log.push("try");'
+			'log.push("before"),log.push("one");if(!done)log.push("two");if(done){log.push("bare");if(log.length)log.push("again")}log.push("try");'
 		);
 		const chunk = files.find(
 			(file) => file !== "bundle0.js" && file.endsWith(".js")
