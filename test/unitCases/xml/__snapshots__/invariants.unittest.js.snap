@@ -5838,6 +5838,14 @@ exports[`XML syntax — invariants source-processor-svg-minification-should-writ
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-write-a-smooth-cubic-only-where tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] text[40,41] attr[47,48|50,74]\\" open[41,77|42,46]/ text[77,78] attr[84,85|87,127]\\" open[78,130|79,83]/ text[130,131] attr[137,138|140,182]\\" open[131,185|132,136]/ text[185,186] attr[192,193|195,247]\\" open[186,250|187,191]/ text[250,251] attr[257,258|260,338]\\" open[251,341|252,256]/ text[341,342] attr[348,349|351,398]\\" open[342,401|343,347]/ text[401,402] close[402,408|404,407] text[408,409] end=409"`;
 
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":5,\\"data\\":\\">\\",\\"start\\":3,\\"end\\":8}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":8,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":8}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer prints {"xml":true,"mode":"minify"} 1`] = `"<a/>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer tokenizes 1`] = `"open[0,3|1,2] comment[3,8|7,8] end=8"`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":0,\\"end\\":21},{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":21,\\"end\\":42}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root parses 2`] = `""`;
