@@ -8,15 +8,17 @@ on:
 concurrency: ${{ github.workflow }}-${{ github.ref }}
 
 permissions:
-  id-token: write # Required for OIDC
-  contents: write
-  pull-requests: write
+  contents: read
 
 jobs:
   release:
     if: github.repository == 'webpack/webpack'
     name: Release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC
+      contents: write
+      pull-requests: write
     timeout-minutes: 30
     outputs:
       published: ${{ steps.changesets.outputs.published }}
