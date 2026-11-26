@@ -70,7 +70,6 @@ const BY_DESIGN = [
 			"terser compress: functions/issue_1841_2",
 			"terser compress: functions/issue_2620_1",
 			"terser compress: functions/issue_2620_4",
-			"terser compress: issue-1609/chained_evaluation_1",
 			"terser compress: issue-1609/chained_evaluation_2",
 			"terser compress: issue-1656/f7",
 			"terser compress: issue-2001/export_class_2",

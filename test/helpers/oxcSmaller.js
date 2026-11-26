@@ -385,8 +385,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_dead_code.rs:remove_unused_expressions_in_sequence:20a45768",
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_block:655d338f",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_no_op_labelled_statement:0b6582b2",
-			"oxc minifier: peephole/remove_dead_code.rs:test_fold_useless_for:7a6e18e6",
-			"oxc minifier: peephole/remove_dead_code.rs:test_fold_useless_for:166b57e4",
 			"oxc minifier: peephole/remove_dead_code.rs:remove_unused_expressions_in_for:5b3fb43b",
 			"swc minifier: fixture/issues/12299/input.js",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_unused_labels:097786dc",
@@ -531,7 +529,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/11684/with-scope/input.js",
 			"swc minifier: fixture/projects/underscore/7/input.js",
 			"swc exec: terser_hoist_props_issue_3046",
-			"oxc minifier: peephole/dead_code_elimination.rs:dce_remove_unreachable_after_terminating_statement:84da5db4",
 			"oxc minifier: peephole/minimize_exit_points.rs:test_dont_test_block_scoped_variables_in_loops:4e4b6818",
 			"oxc minifier: peephole/minimize_statements.rs:test_for_in_block_scoped_no_inline:9457a854",
 			"oxc minifier: peephole/minimize_statements.rs:test_for_in_block_scoped_no_inline:b1a58ea3",
@@ -732,8 +729,7 @@ const OXC_SMALLER_BY_REASON = [
 			"terser compress: loops/drop_if_break_4",
 			"terser compress: loops/drop_if_else_break_4",
 			"terser compress: loops/issue_1532",
-			"terser compress: loops/issue_1648",
-			"terser compress: loops/in_parenthesis_3"
+			"terser compress: loops/issue_1648"
 		]
 	],
 	[
@@ -782,8 +778,7 @@ const OXC_SMALLER_BY_REASON = [
 		"oxc goes further than webpack on what terser's `dead-code` tests cover",
 		[
 			"terser compress: dead-code/dead_code_const_annotation_regex",
-			"terser compress: dead-code/dead_code_const_annotation_complex_scope",
-			"terser compress: dead-code/return_assignment"
+			"terser compress: dead-code/dead_code_const_annotation_complex_scope"
 		]
 	],
 	[
