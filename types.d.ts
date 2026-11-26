@@ -6393,6 +6393,7 @@ declare interface ContextOptions {
 	 */
 	referencedExports?: null | (string[] | ReferencedCall)[];
 	layer?: null | string;
+	issuer?: null | string;
 	attributes?: ImportAttributes;
 	phase?: 0 | 1 | 2;
 
