@@ -1492,6 +1492,18 @@ describe("WorkerPool", () => {
 		/** @typedef {{ threadId: number }} Info */
 
 		/**
+		 * Idle threads stay alive, so a slow spawn (Deno) cannot retire the
+		 * thread a test expects to be reused.
+		 * @param {Partial<WorkerPoolOptions>} options pool options
+		 * @returns {WorkerPool} the pool
+		 */
+		const createKeptPool = (options) => {
+			const pool = createPool(options);
+			pool.setKeepAlive(true);
+			return pool;
+		};
+
+		/**
 		 * @param {WorkerPool} pool the pool
 		 * @param {string} module the module
 		 * @param {number} times how many calls, one after another
@@ -1509,7 +1521,7 @@ describe("WorkerPool", () => {
 		};
 
 		it("replaces a thread worn by one module for a call of another at max", async () => {
-			const pool = createPool({ max: 1 });
+			const pool = createKeptPool({ max: 1, idleTimeout: 1 });
 			try {
 				const [first] = await infoTimes(pool, TARGET, 8);
 				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
@@ -1523,7 +1535,7 @@ describe("WorkerPool", () => {
 		});
 
 		it("reuses a thread that ran few calls of another module", async () => {
-			const pool = createPool({ max: 1 });
+			const pool = createKeptPool({ max: 1, idleTimeout: 1 });
 			try {
 				const [first] = await infoTimes(pool, TARGET, 3);
 				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
@@ -1536,7 +1548,7 @@ describe("WorkerPool", () => {
 		});
 
 		it("replaces a worn thread for a loader job of another module at max", async () => {
-			const pool = createPool({ max: 1 });
+			const pool = createKeptPool({ max: 1, idleTimeout: 1 });
 			try {
 				const [first] = await infoTimes(pool, TARGET, 8);
 				const other = /** @type {Info} */ (
@@ -1551,7 +1563,7 @@ describe("WorkerPool", () => {
 		});
 
 		it("lets a worn thread finish its preload before replacing it", async () => {
-			const pool = createPool({ max: 1 });
+			const pool = createKeptPool({ max: 1, idleTimeout: 1 });
 			try {
 				const [first] = await infoTimes(pool, TARGET, 7);
 				// the preload reaches the thread while its eighth call runs, so
@@ -1571,7 +1583,7 @@ describe("WorkerPool", () => {
 		});
 
 		it("starts a thread below max and keeps the worn one for its module", async () => {
-			const pool = createPool({ max: 2 });
+			const pool = createKeptPool({ max: 2, idleTimeout: 1 });
 			try {
 				const [first] = await infoTimes(pool, TARGET, 8);
 				const other = /** @type {Info} */ (await pool.run(OTHER, "info"));
