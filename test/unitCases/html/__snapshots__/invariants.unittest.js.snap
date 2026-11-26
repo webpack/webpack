@@ -2882,6 +2882,21 @@ exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-an-escaped-url tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,28|22,27] text[28,40] close[40,48|42,47] open[48,55|49,54] text[55,94] close[94,102|96,101] close[102,109|104,108] open[109,115|110,114] text[115,116] end=116"`;
 
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"{{live}} {{literal}}\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written prints {"mode":"minify"} 1`] = `"<svg><style>&#123;{live}} &#123;{literal}}</style></svg>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,37] close[37,45|39,44] close[45,51|47,50] end=51"`;
+
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-quotes-a-value-holding-a-template-placeholder parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -24941,6 +24956,20 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 prints {"mode":"minify"} 1`] = `"∳∳&∳"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 tokenizes 1`] = `"text[0,104] end=104"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <x�y>
+|       \\"t\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul parses 2`] = `"warning[2,3]:unexpected-null-character warning[0,5]:expected-doctype-but-got-start-tag warning[9,10]:unexpected-null-character"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul prints {"mode":"minify"} 1`] = `"\\"<x\\\\u0000y>t</x\\\\u0000y>\\""`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul tokenizes 1`] = `"warning[2,3]:unexpected-null-character open[0,5|1,4] text[5,6] warning[9,10]:unexpected-null-character close[6,12|8,11] end=12"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-fosters-text-past-foreign parses 1`] = `
 "| <html>
@@ -48509,6 +48538,19 @@ exports[`HTML syntax — invariants source-processor-merging-adjacent-style-clos
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 prints {"mode":"minify"} 1`] = `"x{}@\\\\"`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 tokenizes 1`] = `"text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\".a{color:#\\\\75rl(foo\\"bar\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 parses 2`] = `"warning[0,23]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 prints {"mode":"minify"} 1`] = `".a{color:#\\\\75rl(foo\\"bar"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 tokenizes 1`] = `"text[0,23] end=23"`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-comment parses 1`] = `
 "| <html>

@@ -46,6 +46,8 @@ it("should not inline into foreign content and keep `</noscript>` escaped", () =
 
 it("should keep a license banner's comment closed where it ends", () => {
 	const html = read("banner");
+	// no `<noscript>` on the page, so a raw template keeps `</noscript>` as written
+	expect(html).toContain("String.raw`</noscript>`");
 	expect(html).toContain("see a* /window.banner = 1;/*b.js.LICENSE.txt */");
 });
 
@@ -64,11 +66,18 @@ it("should keep a sheet's `@charset` and overlapping markers as text", () => {
 	expect(html).toContain(
 		'.overlap{content:"\\5F_WEBPACK_CSS_PUBLIC_PATH_AUTO\\5F_WEBPACK_CSS_PUBLIC_PATH_AUTO__"}'
 	);
+	expect(html).toContain(
+		'.escaped{content:"\\5F_WEBPACK_CSS_PUBLIC_PATH_AUTO__"}'
+	);
 });
 
 it("should keep text spelling an internal marker in a page exported to JavaScript", () => {
 	require("./exported.js");
-	expect(globalThis.exportedPage).toBe(
+	expect(window.exportedPage).toBe(
 		'<p>__WEBPACK_HTML_ASSET_URL__00__END__<p>__WEBPACK_CSS_PUBLIC_PATH_AUTO__<p title=__WEBPACK_HTML_ASSET_URL__00__END__>a</p>\n'
 	);
+});
+
+it("should bundle a foreign script whose `<` is a comparison", () => {
+	expect(read("foreign")).toContain("<svg><script src=foreign.js></script></svg>");
 });

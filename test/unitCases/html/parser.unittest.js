@@ -1051,6 +1051,19 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		);
 	});
 
+	it("finds the end tag of a name holding a NUL", () => {
+		const source = fixture(
+			"html",
+			"parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul"
+		);
+		const element = A.child(
+			0,
+			A.child(1, A.child(0, parseHtmlRefs(source, 0)))
+		);
+		expect(A.name(element)).toBe("x\uFFFDy");
+		expect(A.rangeOf(Part.endTag, element)).toEqual([6, 12]);
+	});
+
 	it("clears the whole name memo once a document filled every slot", () => {
 		// 512 unknown names, one per memo slot (`z` repeated 1…512 times).
 		expect(

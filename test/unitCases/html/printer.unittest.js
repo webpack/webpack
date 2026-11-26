@@ -370,6 +370,14 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22"
 				),
 				null
+			],
+			// After `#` the name is a hash token, so its `(` opens no url.
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23"
+				),
+				'")}'
 			]
 		])) {
 			expect({ sheet, closing: _sheetClosing(sheet) }).toEqual({
@@ -1500,6 +1508,15 @@ describe("htmlMinify — what a second reader sees", () => {
 	])("%s and keeps the next sheet's rule", async (name) => {
 		const code = await minify(name, { mergeStyles: true });
 		expect(code).toContain('.hint:after{content:"{} p{color:red}"}');
+	});
+
+	it("prints a foreign style's mixed template delimiters as written", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name =
+			"prints-mixed-template-delimiters-in-a-foreign-style-as-written";
+		expect(
+			new SourceProcessor().process(source(name), { mode: "beautify" }).code
+		).toBe(source(name));
 	});
 
 	it("keeps a script language whose padding names no JavaScript type", async () => {

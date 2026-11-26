@@ -42,7 +42,8 @@ module.exports = {
 		banner: "./banner.html",
 		nested: "./nested.html",
 		charset: "./charset.html",
-		exported: "./exported.js"
+		exported: "./exported.js",
+		foreign: "./foreign.html"
 	},
 	output: {
 		filename: "[name].js"

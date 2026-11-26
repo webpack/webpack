@@ -1257,7 +1257,10 @@ const invariantFixtures = () => {
 };
 
 const TEMPLATE_DELIMITER_REFERENCES =
-	"a template delimiter (`<?`, `<%`) the source spells with character references stays one, as a template engine that reads the page next would run it; spelled literally it is the engine's and stays live";
+	"a template delimiter (`<?`, `<%`, `{{`) the source spells with character references stays one, as a template engine that reads the page next would run it; spelled literally it is the engine's and stays live";
+
+const TEMPLATE_DELIMITER_QUOTES =
+	"a value holding a template delimiter (`{{`, `<%`) keeps its quotes, so a template engine reading the page next sees the value whole; one the source wrote unquoted is written as the source wrote it";
 
 /**
  * What the sweep reports that the printer owes nothing for. Each entry states
@@ -1266,6 +1269,44 @@ const TEMPLATE_DELIMITER_REFERENCES =
  * @type {readonly Expected[]}
  */
 const EXPECTED = [
+	{
+		relation: "respelling unquote",
+		contains: '<img alt={{name}} src="/u/{{id}}">',
+		source: "test/configCases/asset-modules/keep-asset-source-text/text.html",
+		why: TEMPLATE_DELIMITER_QUOTES
+	},
+	{
+		relation: "respelling references",
+		contains: '<img alt=&#123;{name}} src="/u/{{id}}">',
+		source: "test/configCases/asset-modules/keep-asset-source-text/text.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
+	{
+		relation: "respelling unquote",
+		contains: "<img src={{image}} alt=image>",
+		source: "test/configCases/html/parser-template/page.html",
+		why: TEMPLATE_DELIMITER_QUOTES
+	},
+	{
+		relation: "respelling references",
+		contains: "<img src=&#123;{image}} alt=image>",
+		source: "test/configCases/html/parser-template/page.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
+	{
+		relation: "respelling quote-double",
+		contains: "&#123;{ b }}</p>",
+		source:
+			"test/configCases/html/minify-html/parser-foreign-style-and-escaped-template-text/page.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
+	{
+		relation: "respelling quote-single",
+		contains: "&#123;{ b }}</p>",
+		source:
+			"test/configCases/html/minify-html/parser-foreign-style-and-escaped-template-text/page.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
 	{
 		relation: "behavior",
 		contains: "px ",
