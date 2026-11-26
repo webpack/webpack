@@ -7,8 +7,10 @@ function arg(n) {
 	console.log("arg", n);
 	return n;
 }
-/*@__PURE__*/ (pick() || Array)(arg(1), arg(2));
-/*@__PURE__*/ new (pick() || Array)(arg(3));
+/*@__PURE__*/ (String || Array)(arg(1), arg(2));
+/*@__PURE__*/ new (String || Array)(arg(3));
+// Kept: the callee reads a name declared here, whose read it would drop.
+/*@__PURE__*/ (pick() || Array)(arg(4));
 function made() {
 	console.log("made");
 	return function () {
