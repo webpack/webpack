@@ -759,6 +759,25 @@ describe("tokenize", () => {
 			["unknown-named-character-reference", 54]
 		]);
 	});
+
+	it("releases the input when a handler throws", () => {
+		const { _S, parseHtml } = require("../../../lib/html/syntax-parser");
+		expect(() =>
+			parseHtml(
+				fixture(
+					"html",
+					"a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads"
+				),
+				0,
+				{
+					parseError() {
+						throw new Error("stop");
+					}
+				}
+			)
+		).toThrow("stop");
+		expect(_S._source).toBe("");
+	});
 });
 
 describe("a tag whose name a NUL interrupts", () => {
