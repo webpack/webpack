@@ -839,10 +839,11 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
-// Inline elements an empty, attribute-less one of which renders nothing, so it
-// splits no word; one with attributes is kept, and its edges are edges.
+// Elements an empty, attribute-less one of which renders nothing, so it splits
+// no word: inline ones, and `script` and `style`, which are `display: none`. One
+// with attributes is kept, and its edges are edges.
 const EMPTY_INLINE_ELEMENTS = new Set(
-	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp small span strong sub sup time u var".split(
+	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp script small span strong style sub sup time u var".split(
 		" "
 	)
 );
@@ -857,9 +858,10 @@ const EMPTY_INLINE_ELEMENTS = new Set(
  * @param {boolean} tree whether the element tree is read too
  * @param {CssOptions} cssOptions the options the sheets are minified with
  * @param {boolean=} edgesDrop whether whitespace at every element's edge may go, as `collapseWhitespace: "all"` drops it
+ * @param {boolean=} sheetsDrop whether a `<style>` whose sheet minifies to nothing may go, as a renderer under `removeEmptyElements` drops it
  * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
  */
-const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
+const htmlMeaning = (html, tree, cssOptions, edgesDrop, sheetsDrop) => {
 	/** @type {string[]} */
 	const said = [];
 	/** @type {string[]} */
@@ -921,15 +923,18 @@ const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
 			enter: (nodePath) => {
 				// Whitespace an empty inline element holds sits at both its edges.
 				if (pending && edgesDrop && /^\s*$/.test(nodePath.value())) return;
-				settle();
 				const parent = open[open.length - 1];
-				if (parent === "script") return;
 				const text = nodePath.value();
 				if (parent === "style") {
 					const css = canonicalCss(text, cssOptions);
+					// A sheet that says nothing leaves a dropped `<style>` as empty as none.
+					if (css === "" && sheetsDrop) return;
+					settle();
 					if (css !== "") sheets.push(css);
 					return;
 				}
+				settle();
+				if (parent === "script") return;
 				run += text;
 			},
 			exit: () => {}
@@ -981,8 +986,11 @@ const meaningReports = (html, printed, options, cssOptions) => {
 		!options.removeRedundantAttributes &&
 		!options.mergeStyles;
 	const edgesDrop = options.collapseWhitespace === "all";
-	const before = htmlMeaning(html, tree, cssOptions, edgesDrop);
-	const after = htmlMeaning(printed, tree, cssOptions, edgesDrop);
+	const sheetsDrop =
+		options.removeEmptyElements === true &&
+		options.renderEmbeddedSource !== undefined;
+	const before = htmlMeaning(html, tree, cssOptions, edgesDrop, sheetsDrop);
+	const after = htmlMeaning(printed, tree, cssOptions, edgesDrop, sheetsDrop);
 	let at = 0;
 	while (at < before.said.length && before.said[at] === after.said[at]) at++;
 	if (at < before.said.length || at < after.said.length) {
