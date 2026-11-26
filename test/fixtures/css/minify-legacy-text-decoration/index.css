@@ -8,3 +8,4 @@
 .h { text-decoration: underline red; text-decoration-color: oklch(70% 0.1 40) }
 .i { text-decoration: underline red }
 .j { text-decoration: underline oklch(70% 0.1 40) }
+.k { -webkit-text-decoration-color: green; text-decoration: underline red; text-decoration-color: red }
