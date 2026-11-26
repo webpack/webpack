@@ -6,7 +6,7 @@
 "use strict";
 
 // Generate every table the HTML parser and minifier look a name up in:
-// `lib/html/data.js`, and the entity region inside `lib/html/syntax-parser.js`.
+// `lib/html/data.js`, and the entity region inside `lib/html/syntax-tokenizer.js`.
 //
 //   node tooling/generate-html-data.js --write
 //
@@ -72,7 +72,10 @@ const svgInheritedInitialValues = () => {
 		return [name, [initial, supplement[name] || ""].filter(Boolean).join(" ")];
 	});
 };
-const SYNTAX_TARGET = path.resolve(__dirname, "../lib/html/syntax-parser.js");
+const SYNTAX_TARGET = path.resolve(
+	__dirname,
+	"../lib/html/syntax-tokenizer.js"
+);
 // Vendored because the table is frozen — the spec says it "will not be expanded
 // or changed in the future" — and no package carries it faithfully: the ones
 // that exist drop the semicolon, losing the 106 names that match without one.
@@ -3217,7 +3220,7 @@ const main = async () => {
 		settle(
 			SYNTAX_TARGET,
 			nextSyntax,
-			"lib/html/syntax-parser.js entities",
+			"lib/html/syntax-tokenizer.js entities",
 			`${Object.keys(entities).length} entities`
 		)
 	];

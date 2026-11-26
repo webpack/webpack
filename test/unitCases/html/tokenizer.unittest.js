@@ -676,7 +676,7 @@ describe("tokenize", () => {
 		// The state switch has literal labels, so only a label's comment ties
 		// it to the constant the transitions assign.
 		const source = fs.readFileSync(
-			require.resolve("../../../lib/html/syntax-parser"),
+			require.resolve("../../../lib/html/syntax-tokenizer"),
 			"utf8"
 		);
 		/**
@@ -758,6 +758,25 @@ describe("tokenize", () => {
 			["missing-semicolon-after-character-reference", 35],
 			["unknown-named-character-reference", 54]
 		]);
+	});
+
+	it("releases the input when a handler throws", () => {
+		const { _S, parseHtml } = require("../../../lib/html/syntax-parser");
+		expect(() =>
+			parseHtml(
+				fixture(
+					"html",
+					"a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads"
+				),
+				0,
+				{
+					parseError() {
+						throw new Error("stop");
+					}
+				}
+			)
+		).toThrow("stop");
+		expect(_S._source).toBe("");
 	});
 });
 
