@@ -1202,8 +1202,9 @@ describe("CssSyntax minify — the value transforms' rejection paths", () => {
 				);
 				const earlier = out.slice(out.indexOf(".k{"));
 				expect(earlier).toContain(
-					"-webkit-text-decoration-color:green;text-decoration:underline;-webkit-text-decoration-color:red"
+					".k{text-decoration:underline;-webkit-text-decoration-color:red"
 				);
+				expect(earlier).not.toContain("-webkit-text-decoration-color:green");
 			}
 		}
 	);

@@ -61997,6 +61997,14 @@ exports[`CSS syntax — invariants stylelint-color-function-notation-0a7b5efb022
 
 exports[`CSS syntax — invariants stylelint-color-function-notation-0a7b5efb022d tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,5] ident[5,21] colon[21,22] whitespace[22,23] function[23,39] whitespace[39,42] ident[42,44] whitespace[44,45] ident[45,50] comma[50,51] whitespace[51,54] function[54,59] number[59,61] comma[61,62] whitespace[62,63] number[63,65] comma[65,66] whitespace[66,67] number[67,70] comma[70,71] whitespace[71,72] number[72,73] right-parenthesis[73,74] comma[74,75] whitespace[75,78] function[78,82] number[82,85] comma[85,86] whitespace[86,87] number[87,90] comma[90,91] whitespace[91,92] number[92,95] right-parenthesis[95,96] whitespace[96,98] right-parenthesis[98,99] semicolon[99,100] whitespace[100,101] right-curly-bracket[101,102] end=102"`;
 
+exports[`CSS syntax — invariants stylelint-color-function-notation-1d762458fd9c parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"rgba\\",[\\"hash\\",\\"fff\\",\\"id\\"],\\",\\",\\" \\",[\\"number\\",\\"0.85\\",0.85,\\"number\\"]],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-1d762458fd9c parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-1d762458fd9c prints {"mode":"minify"} 1`] = `"a{color:rgba(#fff,.85)}"`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-1d762458fd9c tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] function[11,16] hash[16,20]# comma[20,21] whitespace[21,22] number[22,26] right-parenthesis[26,27] whitespace[27,28] right-curly-bracket[28,29] whitespace[29,30] end=30"`;
+
 exports[`CSS syntax — invariants stylelint-color-function-notation-1f2b66815d6b parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"hsl\\",[\\"number\\",\\"270\\",270,\\"integer\\"],\\" \\",[\\"percentage\\",\\"60\\",60,\\"integer\\"],\\" \\",[\\"percentage\\",\\"50\\",50,\\"integer\\"],\\" \\",\\"/\\",\\" \\",[\\"percentage\\",\\"15\\",15,\\"integer\\"]],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-color-function-notation-1f2b66815d6b parses 2`] = `""`;
@@ -62252,6 +62260,14 @@ exports[`CSS syntax — invariants stylelint-color-function-notation-f0b3aa4dbba
 exports[`CSS syntax — invariants stylelint-color-function-notation-f0b3aa4dbba8 prints {"mode":"minify"} 1`] = `"a{color:hsl(var(--hue) var(--sat) var(--sat) / var(--alpha))}"`;
 
 exports[`CSS syntax — invariants stylelint-color-function-notation-f0b3aa4dbba8 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] function[11,15] function[15,19] ident[19,24] right-parenthesis[24,25] whitespace[25,26] function[26,30] ident[30,35] right-parenthesis[35,36] whitespace[36,37] function[37,41] ident[41,46] right-parenthesis[46,47] whitespace[47,48] delim[48,49] whitespace[49,50] function[50,54] ident[54,61] right-parenthesis[61,62] right-parenthesis[62,63] whitespace[63,64] right-curly-bracket[64,65] end=65"`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-f3ef30a7ef12 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"rgb\\",[\\"ident\\",\\"white\\"],\\",\\",\\" \\",[\\"number\\",\\".5\\",0.5,\\"number\\"]],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-f3ef30a7ef12 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-f3ef30a7ef12 prints {"mode":"minify"} 1`] = `"a{color:rgb(#fff,.5)}"`;
+
+exports[`CSS syntax — invariants stylelint-color-function-notation-f3ef30a7ef12 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] function[11,15] ident[15,20] comma[20,21] whitespace[21,22] number[22,24] right-parenthesis[24,25] semicolon[25,26] whitespace[26,27] right-curly-bracket[27,28] whitespace[28,29] end=29"`;
 
 exports[`CSS syntax — invariants stylelint-color-function-notation-f12209b01a62 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"HSLA\\",\\" \\",[\\"function\\",\\"calc\\",[\\"function\\",\\"var\\",[\\"ident\\",\\"--hue\\"]],\\" \\",\\"+\\",\\" \\",[\\"number\\",\\"30\\",30,\\"integer\\"]],\\" \\",\\",\\",\\" \\",[\\"percentage\\",\\"28\\",28,\\"integer\\"],\\",\\",\\" \\",[\\"percentage\\",\\"50\\",50,\\"integer\\"],\\" \\",\\",\\",\\" \\",[\\"number\\",\\"0.2\\",0.2,\\"number\\"],\\" \\"],\\";\\",\\" \\"]]]"`;
 
@@ -89985,6 +90001,22 @@ exports[`CSS syntax — invariants stylelint-selector-id-pattern-1a7e4c3415bb pr
 
 exports[`CSS syntax — invariants stylelint-selector-id-pattern-1a7e4c3415bb tokenizes 1`] = `"comment[0,53] whitespace[53,54] ident[54,55] whitespace[55,56] hash[56,60]# comma[60,61] whitespace[61,62] comment[62,115] whitespace[115,116] ident[116,117] whitespace[117,118] hash[118,122]# comma[122,123] whitespace[123,124] comment[124,177] whitespace[177,178] ident[178,179] whitespace[179,180] hash[180,184]# whitespace[184,185] left-curly-bracket[185,186] right-curly-bracket[186,187] end=187"`;
 
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-1e1c4510ecaa parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"hash\\",\\"ABABA\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-1e1c4510ecaa parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-1e1c4510ecaa prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-1e1c4510ecaa tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] hash[4,10]# whitespace[10,11] left-curly-bracket[11,12] right-curly-bracket[12,13] whitespace[13,14] right-curly-bracket[14,15] end=15"`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-9d373ef19acc parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"hash\\",\\"bar\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-9d373ef19acc parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-9d373ef19acc prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-id-pattern-9d373ef19acc tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] hash[4,8]# whitespace[8,9] left-curly-bracket[9,10] right-curly-bracket[10,11] whitespace[11,12] right-curly-bracket[12,13] end=13"`;
+
 exports[`CSS syntax — invariants stylelint-selector-id-pattern-168adf7f58d0 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\",\\" \\"],[]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-id-pattern-168adf7f58d0 parses 2`] = `""`;
@@ -91377,6 +91409,14 @@ exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-2c208221f
 
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-2c208221f921 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,8] whitespace[8,9] left-curly-bracket[9,10] right-curly-bracket[10,11] end=11"`;
 
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-3a367b773118 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",\\":\\",[\\"ident\\",\\"hover\\"],\\" \\",[\\"{}\\"]]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-3a367b773118 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-3a367b773118 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-3a367b773118 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] delim[4,5] colon[5,6] ident[6,11] whitespace[11,12] left-curly-bracket[12,13] right-curly-bracket[13,14] right-curly-bracket[14,15] end=15"`;
+
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-4d3aefb20bef parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"first\\"],\\":\\",[\\"ident\\",\\"hover\\"],\\" \\"],[]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-4d3aefb20bef parses 2`] = `""`;
@@ -91425,6 +91465,14 @@ exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-9d7a1663f
 
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-9d7a1663f3f1 tokenizes 1`] = `"delim[0,1] ident[1,4] colon[4,5] ident[5,10] comma[10,11] whitespace[11,13] delim[13,14] ident[14,17] colon[17,18] ident[18,23] whitespace[23,24] left-curly-bracket[24,25] right-curly-bracket[25,26] end=26"`;
 
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-17a9fdb4245b parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"foo\\"],\\":\\",[\\"ident\\",\\"last-child\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"bar\\"],\\":\\",[\\"ident\\",\\"first-child\\"],\\" \\",[\\"{}\\",\\" \\",\\".\\",[\\"ident\\",\\"baz\\"],\\":\\",[\\"ident\\",\\"visited\\"],\\" \\",[\\"{}\\"],\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-17a9fdb4245b parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-17a9fdb4245b prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-17a9fdb4245b tokenizes 1`] = `"delim[0,1] ident[1,4] colon[4,5] ident[5,15] whitespace[15,16] left-curly-bracket[16,17] whitespace[17,18] delim[18,19] ident[19,22] colon[22,23] ident[23,34] whitespace[34,35] left-curly-bracket[35,36] whitespace[36,37] delim[37,38] ident[38,41] colon[41,42] ident[42,49] whitespace[49,50] left-curly-bracket[50,51] right-curly-bracket[51,52] whitespace[52,53] right-curly-bracket[53,54] whitespace[54,55] right-curly-bracket[55,56] end=56"`;
+
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-64a944c50c6a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\",\\",\\" \\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"first-child\\"],\\" \\"],[]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-64a944c50c6a parses 2`] = `""`;
@@ -91472,6 +91520,14 @@ exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-156595493
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-156595493501 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-156595493501 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,13] whitespace[13,14] left-curly-bracket[14,15] right-curly-bracket[15,16] end=16"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-a2d05566952b parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"first-child\\"],\\",\\",\\" \\",\\" \\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"first-child\\"],\\",\\",\\" \\",\\" \\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"first-child\\"],\\" \\"],[]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-a2d05566952b parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-a2d05566952b prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-a2d05566952b tokenizes 1`] = `"comment[0,15] whitespace[15,16] ident[16,17] colon[17,18] ident[18,29] comma[29,30] whitespace[30,31] comment[31,46] whitespace[46,47] ident[47,48] colon[48,49] ident[49,60] comma[60,61] whitespace[61,62] comment[62,77] whitespace[77,78] ident[78,79] colon[79,80] ident[80,91] whitespace[91,92] left-curly-bracket[92,93] right-curly-bracket[93,94] end=94"`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-pseudo-class-ad59088b6aa9 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"function\\",\\"not\\",\\":\\",[\\"ident\\",\\"first-child\\"],\\":\\",[\\"function\\",\\"lang\\",[\\"ident\\",\\"en\\"]]],\\" \\"],[]]]"`;
 
@@ -91584,6 +91640,14 @@ exports[`CSS syntax — invariants stylelint-selector-max-specificity-2b37ae0e79
 exports[`CSS syntax — invariants stylelint-selector-max-specificity-2b37ae0e7948 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-specificity-2b37ae0e7948 tokenizes 1`] = `"colon[0,1] function[1,7] delim[7,8] ident[8,10] whitespace[10,11] delim[11,12] ident[12,14] right-parenthesis[14,15] whitespace[15,16] left-curly-bracket[16,17] right-curly-bracket[17,18] end=18"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-specificity-2cdc33e7e431 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"navigation__item\\"],\\":\\",[\\"function\\",\\"nth-of-type\\",[\\"dimension\\",\\"4\\",4,\\"integer\\",\\"n\\"]],\\" \\",\\".\\",[\\"ident\\",\\"navigation__sub-list\\"],\\" \\"],[]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-specificity-2cdc33e7e431 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-specificity-2cdc33e7e431 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-specificity-2cdc33e7e431 tokenizes 1`] = `"delim[0,1] ident[1,17] colon[17,18] function[18,30] dimension[30,32|31,32] right-parenthesis[32,33] whitespace[33,34] delim[34,35] ident[35,55] whitespace[55,56] left-curly-bracket[56,57] right-curly-bracket[57,58] end=58"`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-specificity-2e8729088343 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"],\\" \\",[\\"[]\\",[\\"ident\\",\\"value\\"]],\\" \\"],[]]]"`;
 
@@ -92224,6 +92288,14 @@ exports[`CSS syntax — invariants stylelint-selector-max-type-79dc3cb29a0b pars
 exports[`CSS syntax — invariants stylelint-selector-max-type-79dc3cb29a0b prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-type-79dc3cb29a0b tokenizes 1`] = `"ident[0,3] whitespace[3,4] ident[4,7] whitespace[7,8] ident[8,11] whitespace[11,12] left-curly-bracket[12,13] right-curly-bracket[13,14] end=14"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-type-79f2968350a7 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",\\":\\",[\\"ident\\",\\"hover\\"],\\" \\",[\\"{}\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-type-79f2968350a7 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-type-79f2968350a7 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-max-type-79f2968350a7 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] delim[4,5] colon[5,6] ident[6,11] whitespace[11,12] left-curly-bracket[12,13] whitespace[13,14] right-curly-bracket[14,15] whitespace[15,16] right-curly-bracket[16,17] end=17"`;
 
 exports[`CSS syntax — invariants stylelint-selector-max-type-85f719cc4126 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\".\\",[\\"ident\\",\\"foo\\"],\\" \\"],[]]]"`;
 
@@ -93881,6 +93953,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6b3ae9a
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6b3ae9a13481 tokenizes 1`] = `"ident[0,3] whitespace[3,4] ident[4,5] whitespace[5,6] left-curly-bracket[6,7] whitespace[7,8] right-curly-bracket[8,9] end=9"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6ba78e2f34cd parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6ba78e2f34cd parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6ba78e2f34cd prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6ba78e2f34cd tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] delim[4,5] left-square-bracket[5,6] ident[6,15] right-square-bracket[15,16] whitespace[16,17] left-curly-bracket[17,18] right-curly-bracket[18,19] whitespace[19,20] right-curly-bracket[20,21] end=21"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6ba4804307b7 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"ul\\"],[\\"[]\\",[\\"ident\\",\\"target\\"]],\\".\\",[\\"ident\\",\\"class\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-6ba4804307b7 parses 2`] = `""`;
@@ -93977,6 +94057,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9d30805
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9d30805ef3fa tokenizes 1`] = `"ident[0,3] whitespace[3,4] hash[4,7]# whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] right-curly-bracket[10,11] end=11"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9dae92a9b0b5 parses 1`] = `"[[\\"qualified rule\\",[[\\"hash\\",\\"id\\",\\"id\\"],\\" \\"],[\\" \\",\\"&\\",\\".\\",[\\"ident\\",\\"class-two\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9dae92a9b0b5 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9dae92a9b0b5 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9dae92a9b0b5 tokenizes 1`] = `"hash[0,3]# whitespace[3,4] left-curly-bracket[4,5] whitespace[5,6] delim[6,7] delim[7,8] ident[8,17] whitespace[17,18] left-curly-bracket[18,19] right-curly-bracket[19,20] whitespace[20,21] right-curly-bracket[21,22] end=22"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9e073cb9b181 parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",\\">\\",\\" \\",[\\"ident\\",\\"p\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9e073cb9b181 parses 2`] = `""`;
@@ -93984,6 +94072,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9e073cb
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9e073cb9b181 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9e073cb9b181 tokenizes 1`] = `"left-square-bracket[0,1] ident[1,10] right-square-bracket[10,11] whitespace[11,12] delim[12,13] whitespace[13,14] ident[14,15] whitespace[15,16] left-curly-bracket[16,17] whitespace[17,18] right-curly-bracket[18,19] end=19"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9ed544c8f1fd parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9ed544c8f1fd parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9ed544c8f1fd prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9ed544c8f1fd tokenizes 1`] = `"ident[0,3] whitespace[3,4] ident[4,5] whitespace[5,6] left-curly-bracket[6,7] whitespace[7,8] delim[8,9] hash[9,12]# whitespace[12,13] left-curly-bracket[13,14] right-curly-bracket[14,15] whitespace[15,16] right-curly-bracket[16,17] end=17"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9ed6934ba877 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"class\\"],\\" \\",\\"+\\",\\" \\",[\\"ident\\",\\"p\\"],\\" \\"],[\\" \\"]]]"`;
 
@@ -94048,6 +94144,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-49a2d28
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-49a2d28d3940 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-49a2d28d3940 tokenizes 1`] = `"delim[0,1] ident[1,4] colon[4,5] function[5,9] ident[9,10] colon[10,11] ident[11,16] right-parenthesis[16,17] whitespace[17,18] left-curly-bracket[18,19] right-curly-bracket[19,20] end=20"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-54dee2bc3163 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"class\\"],\\" \\"],[\\" \\",\\"&\\",\\".\\",[\\"ident\\",\\"class-two\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-54dee2bc3163 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-54dee2bc3163 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-54dee2bc3163 tokenizes 1`] = `"delim[0,1] ident[1,6] whitespace[6,7] left-curly-bracket[7,8] whitespace[8,9] delim[9,10] delim[10,11] ident[11,20] whitespace[20,21] left-curly-bracket[21,22] right-curly-bracket[22,23] whitespace[23,24] right-curly-bracket[24,25] end=25"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-59c78a2bd690 parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",[\\"[]\\",[\\"ident\\",\\"src\\"]],\\" \\"],[\\" \\"]]]"`;
 
@@ -94161,6 +94265,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-169d5ff
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-169d5ff6311e tokenizes 1`] = `"hash[0,3]# whitespace[3,4] hash[4,7]# whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] right-curly-bracket[10,11] end=11"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-381c3a71bf4b parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",\\".\\",[\\"ident\\",\\"class\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-381c3a71bf4b parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-381c3a71bf4b prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-381c3a71bf4b tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] delim[4,5] delim[5,6] ident[6,11] whitespace[11,12] left-curly-bracket[12,13] right-curly-bracket[13,14] whitespace[14,15] right-curly-bracket[15,16] end=16"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-628ba7e50d5a parses 1`] = `"[[\\"qualified rule\\",[[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",\\"~\\",\\" \\",[\\"ident\\",\\"p\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-628ba7e50d5a parses 2`] = `""`;
@@ -94208,6 +94320,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-745cf34
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-745cf340541f prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-745cf340541f tokenizes 1`] = `"hash[0,3]# whitespace[3,4] delim[4,5] whitespace[5,6] ident[6,7] whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] right-curly-bracket[10,11] end=11"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-773fb46da7c6 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"class\\"],\\" \\"],[\\" \\",\\"&\\",[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-773fb46da7c6 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-773fb46da7c6 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-773fb46da7c6 tokenizes 1`] = `"delim[0,1] ident[1,6] whitespace[6,7] left-curly-bracket[7,8] whitespace[8,9] delim[9,10] left-square-bracket[10,11] ident[11,20] right-square-bracket[20,21] whitespace[21,22] left-curly-bracket[22,23] right-curly-bracket[23,24] whitespace[24,25] right-curly-bracket[25,26] end=26"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-793b8f4ca16a parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"lang\\"],\\"|\\",\\"=\\",[\\"ident\\",\\"en\\"]],\\" \\"],[\\" \\"]]]"`;
 
@@ -94264,6 +94384,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3069e29
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3069e293b93f prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3069e293b93f tokenizes 1`] = `"ident[0,1] left-square-bracket[1,2] ident[2,8] right-square-bracket[8,9] left-square-bracket[9,10] ident[10,14] delim[14,15] string[15,22] right-square-bracket[22,23] whitespace[23,24] left-curly-bracket[24,25] whitespace[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3329ed1d57d1 parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"target\\"]],\\" \\"],[\\" \\",\\"&\\",[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3329ed1d57d1 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3329ed1d57d1 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-3329ed1d57d1 tokenizes 1`] = `"left-square-bracket[0,1] ident[1,7] right-square-bracket[7,8] whitespace[8,9] left-curly-bracket[9,10] whitespace[10,11] delim[11,12] hash[12,15]# whitespace[15,16] left-curly-bracket[16,17] right-curly-bracket[17,18] whitespace[18,19] right-curly-bracket[19,20] end=20"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-4340e9f42d0a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\",\\",\\" \\",[\\"ident\\",\\"p\\"],\\" \\"],[\\" \\"]]]"`;
 
@@ -94353,6 +94481,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-32965a0
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-32965a0717a5 tokenizes 1`] = `"hash[0,3]# whitespace[3,4] ident[4,5] whitespace[5,6] left-curly-bracket[6,7] whitespace[7,8] right-curly-bracket[8,9] end=9"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-45988ea3ce83 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\"],[\\" \\",\\"&\\",\\" \\",\\">\\",\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"{}\\",\\" \\",\\"&\\",[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-45988ea3ce83 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-45988ea3ce83 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-45988ea3ce83 tokenizes 1`] = `"ident[0,3] whitespace[3,4] left-curly-bracket[4,5] whitespace[5,6] delim[6,7] whitespace[7,8] delim[8,9] whitespace[9,10] ident[10,11] whitespace[11,12] left-curly-bracket[12,13] whitespace[13,14] delim[14,15] hash[15,18]# whitespace[18,19] left-curly-bracket[19,20] right-curly-bracket[20,21] whitespace[21,22] right-curly-bracket[22,23] whitespace[23,24] right-curly-bracket[24,25] end=25"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-48010ba61abc parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"ul\\"],\\".\\",[\\"ident\\",\\"list\\"],\\":\\",\\":\\",[\\"ident\\",\\"before\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-48010ba61abc parses 2`] = `""`;
@@ -94424,6 +94560,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-989967e
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-989967e131f0 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-989967e131f0 tokenizes 1`] = `"delim[0,1] ident[1,6] whitespace[6,7] delim[7,8] whitespace[8,9] delim[9,10] ident[10,15] whitespace[15,16] left-curly-bracket[16,17] whitespace[17,18] right-curly-bracket[18,19] end=19"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-162698072b34 parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"target\\"]],\\" \\"],[\\" \\",\\"&\\",[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-162698072b34 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-162698072b34 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-162698072b34 tokenizes 1`] = `"left-square-bracket[0,1] ident[1,7] right-square-bracket[7,8] whitespace[8,9] left-curly-bracket[9,10] whitespace[10,11] delim[11,12] left-square-bracket[12,13] ident[13,22] right-square-bracket[22,23] whitespace[23,24] left-curly-bracket[24,25] right-curly-bracket[25,26] whitespace[26,27] right-curly-bracket[27,28] end=28"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-9727346968ed parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],[\\"[]\\",[\\"ident\\",\\"href\\"],\\"=\\",[\\"string\\",\\"place\\"]],\\" \\"],[\\" \\"]]]"`;
 
@@ -94521,6 +94665,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ac515f5
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ac515f5f5225 tokenizes 1`] = `"ident[0,1] whitespace[1,2] delim[2,3] whitespace[3,4] ident[4,5] left-square-bracket[5,6] ident[6,10] delim[10,11] string[11,18] right-square-bracket[18,19] whitespace[19,20] left-curly-bracket[20,21] whitespace[21,22] right-curly-bracket[22,23] end=23"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ac2833f67525 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"class\\"],\\" \\"],[\\" \\",\\"&\\",[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ac2833f67525 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ac2833f67525 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ac2833f67525 tokenizes 1`] = `"delim[0,1] ident[1,6] whitespace[6,7] left-curly-bracket[7,8] whitespace[8,9] delim[9,10] hash[10,13]# whitespace[13,14] left-curly-bracket[14,15] right-curly-bracket[15,16] whitespace[16,17] right-curly-bracket[17,18] end=18"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-acfb2ed08e89 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],[\\"hash\\",\\"thing\\",\\"id\\"],\\",\\",\\" \\",\\" \\",[\\"ident\\",\\"div\\"],[\\"hash\\",\\"thing\\",\\"id\\"],\\",\\",\\" \\",\\" \\",[\\"ident\\",\\"div\\"],[\\"hash\\",\\"thing\\",\\"id\\"],\\" \\"],[]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-acfb2ed08e89 parses 2`] = `""`;
@@ -94537,6 +94689,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ae08252
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ae082528923e tokenizes 1`] = `"colon[0,1] function[1,6] ident[6,7] delim[7,8] ident[8,11] right-parenthesis[11,12] end=12"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-aeb22675b70b parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"target\\"]],\\" \\"],[\\" \\",\\"&\\",\\".\\",[\\"ident\\",\\"class\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-aeb22675b70b parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-aeb22675b70b prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-aeb22675b70b tokenizes 1`] = `"left-square-bracket[0,1] ident[1,7] right-square-bracket[7,8] whitespace[8,9] left-curly-bracket[9,10] whitespace[10,11] delim[11,12] delim[12,13] ident[13,18] whitespace[18,19] left-curly-bracket[19,20] right-curly-bracket[20,21] whitespace[21,22] right-curly-bracket[22,23] end=23"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b4d66ed71349 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\",\\"~\\",\\" \\",[\\"ident\\",\\"ul\\"],\\".\\",[\\"ident\\",\\"list\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b4d66ed71349 parses 2`] = `""`;
@@ -94545,6 +94705,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b4d66ed
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b4d66ed71349 tokenizes 1`] = `"ident[0,1] whitespace[1,2] delim[2,3] whitespace[3,4] ident[4,6] delim[6,7] ident[7,11] whitespace[11,12] left-curly-bracket[12,13] whitespace[13,14] right-curly-bracket[14,15] end=15"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b5abdf617e9a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"div\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"a\\"],[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b5abdf617e9a parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b5abdf617e9a prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b5abdf617e9a tokenizes 1`] = `"ident[0,3] whitespace[3,4] left-curly-bracket[4,5] whitespace[5,7] ident[7,10] whitespace[10,11] left-curly-bracket[11,12] whitespace[12,15] ident[15,16] hash[16,19]# whitespace[19,20] left-curly-bracket[20,21] right-curly-bracket[21,22] whitespace[22,24] right-curly-bracket[24,25] whitespace[25,26] right-curly-bracket[26,27] end=27"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bb74dc2d2d parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"target\\"]],\\".\\",[\\"ident\\",\\"class\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bb74dc2d2d parses 2`] = `""`;
@@ -94552,6 +94720,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bb74d
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bb74dc2d2d prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bb74dc2d2d tokenizes 1`] = `"left-square-bracket[0,1] ident[1,7] right-square-bracket[7,8] delim[8,9] ident[9,14] whitespace[14,15] left-curly-bracket[15,16] whitespace[16,17] right-curly-bracket[17,18] end=18"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bf5faadf55 parses 1`] = `"[[\\"qualified rule\\",[[\\"hash\\",\\"id\\",\\"id\\"],\\" \\"],[\\" \\",\\"&\\",[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bf5faadf55 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bf5faadf55 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b7bf5faadf55 tokenizes 1`] = `"hash[0,3]# whitespace[3,4] left-curly-bracket[4,5] whitespace[5,6] delim[6,7] left-square-bracket[7,8] ident[8,17] right-square-bracket[17,18] whitespace[18,19] left-curly-bracket[19,20] right-curly-bracket[20,21] whitespace[21,22] right-curly-bracket[22,23] end=23"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-b8a595a7ee4d parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\":\\",[\\"ident\\",\\"hover\\"],\\" \\",[\\"ident\\",\\"a\\"],[\\"[]\\",[\\"ident\\",\\"href\\"],\\"=\\",[\\"string\\",\\"place\\"]],\\" \\"],[\\" \\"]]]"`;
 
@@ -94600,6 +94776,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-be8eabb
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-be8eabb6c820 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-be8eabb6c820 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,7] whitespace[7,8] left-square-bracket[8,9] ident[9,18] right-square-bracket[18,19] whitespace[19,20] left-curly-bracket[20,21] whitespace[21,22] right-curly-bracket[22,23] end=23"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-bf186997f09a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",\\".\\",[\\"ident\\",\\"class\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-bf186997f09a parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-bf186997f09a prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-bf186997f09a tokenizes 1`] = `"ident[0,3] whitespace[3,4] ident[4,5] whitespace[5,6] left-curly-bracket[6,7] whitespace[7,8] delim[8,9] delim[9,10] ident[10,15] whitespace[15,16] left-curly-bracket[16,17] right-curly-bracket[17,18] whitespace[18,19] right-curly-bracket[19,20] end=20"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c7ded6e19377 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],[\\"[]\\",[\\"ident\\",\\"href\\"],\\"=\\",[\\"string\\",\\"place\\"]],\\",\\",\\" \\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\"]]]"`;
 
@@ -94657,6 +94841,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c97ad80
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c97ad80229da tokenizes 1`] = `"delim[0,1] ident[1,6] whitespace[6,7] delim[7,8] ident[8,13] whitespace[13,14] left-curly-bracket[14,15] whitespace[15,16] right-curly-bracket[16,17] end=17"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c1430c0de02a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\"],[\\" \\",\\"&\\",\\" \\",\\">\\",\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"{}\\",\\" \\",\\"&\\",\\".\\",[\\"ident\\",\\"class\\"],\\" \\",[\\"{}\\"],\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c1430c0de02a parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c1430c0de02a prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-c1430c0de02a tokenizes 1`] = `"ident[0,3] whitespace[3,4] left-curly-bracket[4,5] whitespace[5,6] delim[6,7] whitespace[7,8] delim[8,9] whitespace[9,10] ident[10,11] whitespace[11,12] left-curly-bracket[12,13] whitespace[13,14] delim[14,15] delim[15,16] ident[16,21] whitespace[21,22] left-curly-bracket[22,23] right-curly-bracket[23,24] whitespace[24,25] right-curly-bracket[25,26] whitespace[26,27] right-curly-bracket[27,28] end=28"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-cb716ffb5f95 parses 1`] = `"[[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"min-width\\"],\\":\\",\\" \\",[\\"dimension\\",\\"700\\",700,\\"integer\\",\\"px\\"]],\\" \\"],[\\" \\",[\\"ident\\",\\"div\\"],[\\"hash\\",\\"thing\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-cb716ffb5f95 parses 2`] = `""`;
@@ -94705,6 +94897,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d102a31
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d102a3197067 tokenizes 1`] = `"ident[0,3] delim[3,4] ident[4,9] hash[9,15]# whitespace[15,16] left-curly-bracket[16,17] whitespace[17,18] right-curly-bracket[18,19] end=19"`;
 
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d5958e799bc5 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"div\\"],\\" \\"],[\\" \\",\\"&\\",\\" \\",\\">\\",\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"{}\\",\\" \\",\\"&\\",[\\"[]\\",[\\"ident\\",\\"attribute\\"]],\\" \\",[\\"{}\\"],\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d5958e799bc5 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d5958e799bc5 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d5958e799bc5 tokenizes 1`] = `"ident[0,3] whitespace[3,4] left-curly-bracket[4,5] whitespace[5,6] delim[6,7] whitespace[7,8] delim[8,9] whitespace[9,10] ident[10,11] whitespace[11,12] left-curly-bracket[12,13] whitespace[13,14] delim[14,15] left-square-bracket[15,16] ident[16,25] right-square-bracket[25,26] whitespace[26,27] left-curly-bracket[27,28] right-curly-bracket[28,29] whitespace[29,30] right-curly-bracket[30,31] whitespace[31,32] right-curly-bracket[32,33] end=33"`;
+
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d18660565a81 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"hover\\"],\\" \\",[\\"ident\\",\\"ul\\"],\\".\\",[\\"ident\\",\\"list\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-d18660565a81 parses 2`] = `""`;
@@ -94752,6 +94952,14 @@ exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-eaa61b7
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-eaa61b73e318 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-eaa61b73e318 tokenizes 1`] = `"left-square-bracket[0,1] ident[1,7] delim[7,8] ident[8,14] right-square-bracket[14,15] whitespace[15,16] left-curly-bracket[16,17] whitespace[17,18] right-curly-bracket[18,19] end=19"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ec8a7d2ced38 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",\\"&\\",[\\"hash\\",\\"id\\",\\"id\\"],\\" \\",[\\"{}\\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ec8a7d2ced38 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ec8a7d2ced38 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ec8a7d2ced38 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] delim[4,5] hash[5,8]# whitespace[8,9] left-curly-bracket[9,10] right-curly-bracket[10,11] whitespace[11,12] right-curly-bracket[12,13] end=13"`;
 
 exports[`CSS syntax — invariants stylelint-selector-no-qualifying-type-ee0cc6b4822d parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"ul\\"],\\".\\",[\\"ident\\",\\"list\\"],\\" \\",\\"+\\",\\" \\",[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\"]]]"`;
 
@@ -96049,6 +96257,14 @@ exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-38
 
 exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-385df220ba98 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] right-curly-bracket[12,13] end=13"`;
 
+exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-388c1e9ae495 parses 1`] = `"[[\\"at-rule\\",\\"directive\\",[\\" \\",[\\"string\\",\\":foo\\"]],null]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-388c1e9ae495 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-388c1e9ae495 prints {"mode":"minify"} 1`] = `"@directive \\":foo\\";"`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-388c1e9ae495 tokenizes 1`] = `"at-keyword[0,10] whitespace[10,11] string[11,17] semicolon[17,18] end=18"`;
+
 exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-530e2f31d018 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"-moz-placeholder\\"],\\" \\"],[\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-530e2f31d018 parses 2`] = `""`;
@@ -96409,6 +96625,14 @@ exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-ff
 
 exports[`CSS syntax — invariants stylelint-selector-pseudo-class-no-unknown-fff83642a365 tokenizes 1`] = `"ident[0,1] colon[1,2] ident[2,9] colon[9,10] colon[10,11] ident[11,17] whitespace[17,18] left-curly-bracket[18,19] whitespace[19,20] right-curly-bracket[20,21] end=21"`;
 
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-0d8e8f35ec3e parses 1`] = `"[[\\"qualified rule\\",[\\":\\",\\":\\",[\\"ident\\",\\"-moz-focus-inner\\"],\\" \\"],[]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-0d8e8f35ec3e parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-0d8e8f35ec3e prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-0d8e8f35ec3e tokenizes 1`] = `"colon[0,1] colon[1,2] ident[2,18] whitespace[18,19] left-curly-bracket[19,20] right-curly-bracket[20,21] end=21"`;
+
 exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-1a23eedcb63b parses 1`] = `"[[\\"qualified rule\\",[\\":\\",\\":\\",[\\"ident\\",\\"selection\\"],\\" \\"],[]]]"`;
 
 exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-1a23eedcb63b parses 2`] = `""`;
@@ -96464,6 +96688,14 @@ exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-lis
 exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-5472c47fdf66 prints {"mode":"minify"} 1`] = `""`;
 
 exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-5472c47fdf66 tokenizes 1`] = `"ident[0,1] colon[1,2] colon[2,3] ident[3,8] whitespace[8,9] left-curly-bracket[9,10] right-curly-bracket[10,11] end=11"`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-91430183d0a0 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",\\":\\",[\\"ident\\",\\"focus-inner\\"],\\" \\"],[]]]"`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-91430183d0a0 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-91430183d0a0 prints {"mode":"minify"} 1`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-91430183d0a0 tokenizes 1`] = `"ident[0,1] colon[1,2] colon[2,3] ident[3,14] whitespace[14,15] left-curly-bracket[15,16] right-curly-bracket[16,17] end=17"`;
 
 exports[`CSS syntax — invariants stylelint-selector-pseudo-element-allowed-list-402615128367 parses 1`] = `"[[\\"qualified rule\\",[\\":\\",\\":\\",[\\"ident\\",\\"before-custom\\"],\\" \\"],[]]]"`;
 
@@ -100770,6 +101002,14 @@ exports[`CSS syntax — invariants stylelint-unit-no-unknown-1ed6acacb2de prints
 
 exports[`CSS syntax — invariants stylelint-unit-no-unknown-1ed6acacb2de tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,14] colon[14,15] whitespace[15,16] function[16,26] string[26,37] whitespace[37,38] dimension[38,40|39,40] comma[40,41] whitespace[41,42] string[42,53] whitespace[53,54] dimension[54,56|55,56] right-parenthesis[56,57] whitespace[57,58] ident[58,62] whitespace[62,63] dimension[63,66|65,66] whitespace[66,67] delim[67,68] whitespace[68,69] percentage[69,72] whitespace[72,73] percentage[73,76] whitespace[76,77] ident[77,85] semicolon[85,86] whitespace[86,87] right-curly-bracket[87,88] end=88"`;
 
+exports[`CSS syntax — invariants stylelint-unit-no-unknown-1ee881e8ec38 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"margin\\"],\\":\\",\\" \\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"pix\\"],\\" \\",\\"+\\",\\" \\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-unit-no-unknown-1ee881e8ec38 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-unit-no-unknown-1ee881e8ec38 prints {"mode":"minify"} 1`] = `"a{margin:10pix+ 10px}"`;
+
+exports[`CSS syntax — invariants stylelint-unit-no-unknown-1ee881e8ec38 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,10] colon[10,11] whitespace[11,12] dimension[12,17|14,17] whitespace[17,18] delim[18,19] whitespace[19,20] dimension[20,24|22,24] semicolon[24,25] whitespace[25,26] right-curly-bracket[26,27] end=27"`;
+
 exports[`CSS syntax — invariants stylelint-unit-no-unknown-2bc2c9ce2322 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"flex\\"],\\":\\",\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"dimension\\",\\"9\\",9,\\"integer\\",\\"r9\\"],\\" \\",[\\"ident\\",\\"auto\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-unit-no-unknown-2bc2c9ce2322 parses 2`] = `""`;
@@ -101738,6 +101978,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-066ed37eed41 pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-066ed37eed41 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,18] colon[18,19] whitespace[19,20] url[20,30|24,29] semicolon[30,31] whitespace[31,32] right-curly-bracket[32,33] end=33"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0736d1ac2f0f parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"Some-function\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"]],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0736d1ac2f0f parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0736d1ac2f0f prints {"mode":"minify"} 1`] = `"a{color:some-function(10px)}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0736d1ac2f0f tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] function[11,25] dimension[25,29|27,29] right-parenthesis[29,30] semicolon[30,31] whitespace[31,32] right-curly-bracket[32,33] end=33"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-0803dfeaa5d3 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"background-image\\"],\\":\\",\\" \\",[\\"function\\",\\"linear-gradient\\",[\\"ident\\",\\"to\\"],\\" \\",[\\"ident\\",\\"right\\"],\\",\\",\\" \\",[\\"ident\\",\\"white\\"],\\" \\",[\\"function\\",\\"calc\\",[\\"percentage\\",\\"100\\",100,\\"integer\\"],\\" \\",\\"-\\",\\" \\",[\\"dimension\\",\\"50\\",50,\\"integer\\",\\"em\\"]],\\",\\",\\" \\",[\\"ident\\",\\"Silver\\"]],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-0803dfeaa5d3 parses 2`] = `""`;
@@ -101761,6 +102009,22 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-03703ef0378b par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-03703ef0378b prints {"mode":"minify"} 1`] = `".ablock{display:block}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-03703ef0378b tokenizes 1`] = `"delim[0,1] ident[1,7] whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] ident[10,17] colon[17,18] whitespace[18,19] ident[19,24] semicolon[24,25] whitespace[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-09011fe6d657 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"bordered\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"border-bottom\\"],\\":\\",\\" \\",[\\"ident\\",\\"SOLID\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"BLOCK\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-09011fe6d657 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-09011fe6d657 prints {"mode":"minify"} 1`] = `".bordered{border-bottom:solid 2px block}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-09011fe6d657 tokenizes 1`] = `"delim[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] ident[12,25] colon[25,26] whitespace[26,27] ident[27,32] whitespace[32,33] dimension[33,36|34,36] whitespace[36,37] ident[37,42] semicolon[42,43] whitespace[43,44] right-curly-bracket[44,45] end=45"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0ba53a11b233 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"bordered\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"border-bottom\\"],\\":\\",\\" \\",[\\"ident\\",\\"Solid\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"BLACK\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0ba53a11b233 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0ba53a11b233 prints {"mode":"minify"} 1`] = `".bordered{border-bottom:solid 2px#000}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-0ba53a11b233 tokenizes 1`] = `"delim[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] ident[12,25] colon[25,26] whitespace[26,27] ident[27,32] whitespace[32,33] dimension[33,36|34,36] whitespace[36,37] ident[37,42] semicolon[42,43] whitespace[43,44] right-curly-bracket[44,45] end=45"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-0c1b2c6ff7eb parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"t\\",[\\"ident\\",\\"--camelCase\\"]],\\";\\",\\" \\"]]]"`;
 
@@ -101962,6 +102226,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-3d8134888c31 pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-3d8134888c31 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,14] colon[14,15] whitespace[15,16] ident[16,36] whitespace[36,37] function[37,41] string[41,58] right-parenthesis[58,59] whitespace[59,60] ident[60,67] semicolon[67,68] whitespace[68,69] right-curly-bracket[69,70] end=70"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3e1fda402253 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"bordered\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"border-bottom\\"],\\":\\",\\" \\",[\\"ident\\",\\"solid\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"black\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3e1fda402253 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3e1fda402253 prints {"mode":"minify"} 1`] = `".bordered{border-bottom:solid 2px#000}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3e1fda402253 tokenizes 1`] = `"delim[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] ident[12,25] colon[25,26] whitespace[26,27] ident[27,32] whitespace[32,33] dimension[33,36|34,36] whitespace[36,37] ident[37,42] semicolon[42,43] whitespace[43,44] right-curly-bracket[44,45] end=45"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-3f9ee4280e08 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font-family\\"],\\":\\",\\" \\",[\\"ident\\",\\"serif\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-3f9ee4280e08 parses 2`] = `""`;
@@ -101977,6 +102249,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-3ff70ed100b9 par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-3ff70ed100b9 prints {"mode":"minify"} 1`] = `"a{font-size:var(--some-fs-block)}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-3ff70ed100b9 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,13] colon[13,14] whitespace[14,15] function[15,19] ident[19,34] right-parenthesis[34,35] semicolon[35,36] whitespace[36,37] right-curly-bracket[37,38] end=38"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-4a74aa13540a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"margin\\"],\\":\\",\\" \\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"PX\\"],\\" \\",\\"+\\",\\" \\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-4a74aa13540a parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-4a74aa13540a prints {"mode":"minify"} 1`] = `"a{margin:10px+}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-4a74aa13540a tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,10] colon[10,11] whitespace[11,12] dimension[12,16|14,16] whitespace[16,17] delim[17,18] whitespace[18,19] dimension[19,23|21,23] semicolon[23,24] whitespace[24,25] right-curly-bracket[25,26] end=26"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-4a81a0d8ae7c parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"content\\"],\\":\\",\\" \\",[\\"function\\",\\"attr\\",[\\"ident\\",\\"vAlUe-StRiNg\\"]],\\";\\",\\" \\"]]]"`;
 
@@ -102186,6 +102466,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-7ab6df6e87f3 pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-7ab6df6e87f3 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,18] colon[18,19] whitespace[19,20] ident[20,34] semicolon[34,35] whitespace[35,36] right-curly-bracket[36,37] end=37"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7c3012728f7e parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font\\"],\\":\\",\\" \\",[\\"()\\",[\\"ident\\",\\"italic\\"],\\" \\",[\\"ident\\",\\"Bold\\"],\\" \\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\"/\\",[\\"dimension\\",\\"8\\",8,\\"integer\\",\\"PX\\"]],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7c3012728f7e parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7c3012728f7e prints {"mode":"minify"} 1`] = `"a{font:(italic Bold 10px/8px)}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7c3012728f7e tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,8] colon[8,9] whitespace[9,10] left-parenthesis[10,11] ident[11,17] whitespace[17,18] ident[18,22] whitespace[22,23] dimension[23,27|25,27] delim[27,28] dimension[28,31|29,31] right-parenthesis[31,32] whitespace[32,33] right-curly-bracket[33,34] end=34"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-7ea17799bf39 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"content\\"],\\":\\",\\" \\",[\\"function\\",\\"counters\\",[\\"ident\\",\\"cOuNtEr-NaMe\\"]],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-7ea17799bf39 parses 2`] = `""`;
@@ -102322,6 +102610,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-26fdb9a75f5b pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-26fdb9a75f5b tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,11] colon[11,12] whitespace[12,13] ident[13,17] semicolon[17,18] whitespace[18,19] right-curly-bracket[19,20] end=20"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-28ac75d9b67e parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"bordered\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"border-bottom\\"],\\":\\",\\" \\",[\\"ident\\",\\"Solid\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"black\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-28ac75d9b67e parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-28ac75d9b67e prints {"mode":"minify"} 1`] = `".bordered{border-bottom:solid 2px#000}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-28ac75d9b67e tokenizes 1`] = `"delim[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] ident[12,25] colon[25,26] whitespace[26,27] ident[27,32] whitespace[32,33] dimension[33,36|34,36] whitespace[36,37] ident[37,42] semicolon[42,43] whitespace[43,44] right-curly-bracket[44,45] end=45"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-31f56fca0fe8 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"BLOCK\\"],\\" \\",\\"!\\",[\\"ident\\",\\"iMpOrT\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-31f56fca0fe8 parses 2`] = `""`;
@@ -102346,6 +102642,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-38b719f78b69 pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-38b719f78b69 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,13] colon[13,14] whitespace[14,15] function[15,22] dimension[22,27|24,27] right-parenthesis[27,28] semicolon[28,29] whitespace[29,30] right-curly-bracket[30,31] end=31"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-41ed07031186 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"content\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"link\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"BLOCK\\"],\\";\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-41ed07031186 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-41ed07031186 prints {"mode":"minify"} 1`] = `".content{.link{display:block}}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-41ed07031186 tokenizes 1`] = `"delim[0,1] ident[1,8] whitespace[8,9] left-curly-bracket[9,10] whitespace[10,11] delim[11,12] ident[12,16] whitespace[16,17] left-curly-bracket[17,18] whitespace[18,19] ident[19,26] colon[26,27] whitespace[27,28] ident[28,33] semicolon[33,34] whitespace[34,35] right-curly-bracket[35,36] whitespace[36,37] right-curly-bracket[37,38] end=38"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-45bb3e94c3da parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"grid-area\\"],\\":\\",\\" \\",[\\"number\\",\\"5\\",5,\\"integer\\"],\\" \\",[\\"ident\\",\\"somegridarea\\"],\\" \\",[\\"ident\\",\\"SPAN\\"],\\" \\",\\"/\\",\\" \\",[\\"number\\",\\"2\\",2,\\"integer\\"],\\" \\",[\\"ident\\",\\"SPAN\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-45bb3e94c3da parses 2`] = `""`;
@@ -102369,6 +102673,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-51be962c163e par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-51be962c163e prints {"mode":"minify"} 1`] = `"a{counter-reset:COUNTER-NAME}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-51be962c163e tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,17] colon[17,18] whitespace[18,19] ident[19,31] semicolon[31,32] whitespace[32,33] right-curly-bracket[33,34] end=34"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-52c7a2b559fc parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"bordered\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"border-bottom\\"],\\":\\",\\" \\",[\\"ident\\",\\"solid\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"Black\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-52c7a2b559fc parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-52c7a2b559fc prints {"mode":"minify"} 1`] = `".bordered{border-bottom:solid 2px#000}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-52c7a2b559fc tokenizes 1`] = `"delim[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] ident[12,25] colon[25,26] whitespace[26,27] ident[27,32] whitespace[32,33] dimension[33,36|34,36] whitespace[36,37] ident[37,42] semicolon[42,43] whitespace[43,44] right-curly-bracket[44,45] end=45"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-55b89d14b219 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"grid-column\\"],\\":\\",\\" \\",[\\"ident\\",\\"SPAN\\"],\\" \\",[\\"ident\\",\\"SOMEGRIDAREA\\"],\\";\\",\\";\\",\\" \\"]]]"`;
 
@@ -102497,6 +102809,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-93c0d046f12b par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-93c0d046f12b prints {"mode":"minify"} 1`] = `"a{color:currentcolor}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-93c0d046f12b tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] ident[11,23] semicolon[23,24] whitespace[24,25] right-curly-bracket[25,26] end=26"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-95ae2a55453a parses 1`] = `"[[\\"qualified rule\\",[[\\"hash\\",\\"header\\",\\"id\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"navigation\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"Block\\"],\\";\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-95ae2a55453a parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-95ae2a55453a prints {"mode":"minify"} 1`] = `"#header{.navigation{display:block}}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-95ae2a55453a tokenizes 1`] = `"hash[0,7]# whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] delim[10,11] ident[11,21] whitespace[21,22] left-curly-bracket[22,23] whitespace[23,24] ident[24,31] colon[31,32] whitespace[32,33] ident[33,38] semicolon[38,39] whitespace[39,40] right-curly-bracket[40,41] whitespace[41,42] right-curly-bracket[42,43] end=43"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-98feffa75cb9 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"counter-reset\\"],\\":\\",\\" \\",[\\"ident\\",\\"counter-name\\"],\\";\\",\\" \\"]]]"`;
 
@@ -102666,6 +102986,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-3014f58bc3ba pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-3014f58bc3ba tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,14] colon[14,15] whitespace[15,16] ident[16,20] semicolon[20,21] whitespace[21,22] right-curly-bracket[22,23] end=23"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3838c68a6fa1 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"content\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"link\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"block\\"],\\";\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3838c68a6fa1 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3838c68a6fa1 prints {"mode":"minify"} 1`] = `".content{.link{display:block}}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-3838c68a6fa1 tokenizes 1`] = `"delim[0,1] ident[1,8] whitespace[8,9] left-curly-bracket[9,10] whitespace[10,11] delim[11,12] ident[12,16] whitespace[16,17] left-curly-bracket[17,18] whitespace[18,19] ident[19,26] colon[26,27] whitespace[27,28] ident[28,33] semicolon[33,34] whitespace[34,35] right-curly-bracket[35,36] whitespace[36,37] right-curly-bracket[37,38] end=38"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-4205a374fe1b parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"list-style\\"],\\":\\",\\" \\",[\\"ident\\",\\"LOWER-ROMAN\\"],\\" \\",[\\"function\\",\\"url\\",[\\"string\\",\\"../img/dino.png\\"]],\\" \\",[\\"ident\\",\\"OUTSIDE\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-4205a374fe1b parses 2`] = `""`;
@@ -102802,6 +103130,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-728119c6c80f pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-728119c6c80f tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,13] colon[13,14] whitespace[14,15] ident[15,22] semicolon[22,23] whitespace[23,24] right-curly-bracket[24,25] end=25"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-741265c76106 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"some-Function\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"]],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-741265c76106 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-741265c76106 prints {"mode":"minify"} 1`] = `"a{color:some-function(10px)}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-741265c76106 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] function[11,25] dimension[25,29|27,29] right-parenthesis[29,30] semicolon[30,31] whitespace[31,32] right-curly-bracket[32,33] end=33"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-2131749d2b61 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font\\"],\\":\\",\\" \\",[\\"ident\\",\\"ITALIC\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"em\\"],\\" \\",[\\"ident\\",\\"FONT-FAMILY\\"],\\",\\",\\" \\",[\\"ident\\",\\"sans-serif\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-2131749d2b61 parses 2`] = `""`;
@@ -102849,6 +103185,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-89424318db27 par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-89424318db27 prints {"mode":"minify"} 1`] = `"a{display:block}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-89424318db27 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,11] colon[11,12] whitespace[12,13] ident[13,18] whitespace[18,19] comment[19,32] semicolon[32,33] whitespace[33,34] right-curly-bracket[34,35] end=35"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7800981076fe parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"bordered\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"border-bottom\\"],\\":\\",\\" \\",[\\"ident\\",\\"SOLID\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"Black\\"],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7800981076fe parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7800981076fe prints {"mode":"minify"} 1`] = `".bordered{border-bottom:solid 2px#000}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-7800981076fe tokenizes 1`] = `"delim[0,1] ident[1,9] whitespace[9,10] left-curly-bracket[10,11] whitespace[11,12] ident[12,25] colon[25,26] whitespace[26,27] ident[27,32] whitespace[32,33] dimension[33,36|34,36] whitespace[36,37] ident[37,42] semicolon[42,43] whitespace[43,44] right-curly-bracket[44,45] end=45"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-33372319602a parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font\\"],\\":\\",\\" \\",[\\"ident\\",\\"italic\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"em\\"],\\" \\",[\\"ident\\",\\"fOnT-FaMiLy\\"],\\",\\",\\" \\",[\\"ident\\",\\"sans-serif\\"],\\";\\",\\" \\"]]]"`;
 
@@ -102929,6 +103273,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-a3372de1b97d par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-a3372de1b97d prints {"mode":"minify"} 1`] = `"a{display:block!import}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-a3372de1b97d tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,11] colon[11,12] whitespace[12,13] ident[13,18] whitespace[18,19] delim[19,20] ident[20,26] semicolon[26,27] whitespace[27,28] right-curly-bracket[28,29] end=29"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-a29976deb29c parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"content\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"link\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"Block\\"],\\";\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-a29976deb29c parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-a29976deb29c prints {"mode":"minify"} 1`] = `".content{.link{display:block}}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-a29976deb29c tokenizes 1`] = `"delim[0,1] ident[1,8] whitespace[8,9] left-curly-bracket[9,10] whitespace[10,11] delim[11,12] ident[12,16] whitespace[16,17] left-curly-bracket[17,18] whitespace[18,19] ident[19,26] colon[26,27] whitespace[27,28] ident[28,33] semicolon[33,34] whitespace[34,35] right-curly-bracket[35,36] whitespace[36,37] right-curly-bracket[37,38] end=38"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-a828754479e8 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font-size\\"],\\":\\",\\" \\",[\\"function\\",\\"VAR\\",[\\"ident\\",\\"--some-fs-block\\"]],\\";\\",\\" \\"]]]"`;
 
@@ -103330,6 +103682,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-d845af2dc46b pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-d845af2dc46b tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,12] colon[12,13] whitespace[13,14] ident[14,18] whitespace[18,19] delim[19,20] whitespace[20,21] ident[21,25] semicolon[25,26] whitespace[26,27] right-curly-bracket[27,28] end=28"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-d850e63afb23 parses 1`] = `"[[\\"qualified rule\\",[[\\"hash\\",\\"header\\",\\"id\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"navigation\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"block\\"],\\";\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-d850e63afb23 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-d850e63afb23 prints {"mode":"minify"} 1`] = `"#header{.navigation{display:block}}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-d850e63afb23 tokenizes 1`] = `"hash[0,7]# whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] delim[10,11] ident[11,21] whitespace[21,22] left-curly-bracket[22,23] whitespace[23,24] ident[24,31] colon[31,32] whitespace[32,33] ident[33,38] semicolon[38,39] whitespace[39,40] right-curly-bracket[40,41] whitespace[41,42] right-curly-bracket[42,43] end=43"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-d7445fd9d030 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"background-image\\"],\\":\\",\\" \\",[\\"function\\",\\"linear-gradient\\",[\\"ident\\",\\"TO\\"],\\" \\",[\\"ident\\",\\"RIGHT\\"],\\",\\",\\" \\",[\\"ident\\",\\"WHITE\\"],\\" \\",[\\"function\\",\\"calc\\",[\\"percentage\\",\\"100\\",100,\\"integer\\"],\\" \\",\\"-\\",\\" \\",[\\"dimension\\",\\"50\\",50,\\"integer\\",\\"em\\"]],\\",\\",\\" \\",[\\"ident\\",\\"SILVER\\"]],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-d7445fd9d030 parses 2`] = `""`;
@@ -103434,6 +103794,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-e25f3049a60f pri
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-e25f3049a60f tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,21] colon[21,22] whitespace[22,23] ident[23,35] semicolon[35,36] whitespace[36,37] right-curly-bracket[37,38] end=38"`;
 
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e32f24db2344 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font\\"],\\":\\",\\" \\",[\\"()\\",[\\"ident\\",\\"ITALIC\\"],\\" \\",[\\"ident\\",\\"Bold\\"],\\" \\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\"/\\",[\\"dimension\\",\\"8\\",8,\\"integer\\",\\"PX\\"]],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e32f24db2344 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e32f24db2344 prints {"mode":"minify"} 1`] = `"a{font:(ITALIC Bold 10px/8px)}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e32f24db2344 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,8] colon[8,9] whitespace[9,10] left-parenthesis[10,11] ident[11,17] whitespace[17,18] ident[18,22] whitespace[22,23] dimension[23,27|25,27] delim[27,28] dimension[28,31|29,31] right-parenthesis[31,32] whitespace[32,33] right-curly-bracket[33,34] end=34"`;
+
 exports[`CSS syntax — invariants stylelint-value-keyword-case-e163e978a3d7 parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"list-style\\"],\\":\\",\\" \\",[\\"ident\\",\\"CUSTOM-COUNTER-STYLE\\"],\\";\\",\\" \\"]]]"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-e163e978a3d7 parses 2`] = `""`;
@@ -103449,6 +103817,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-e3961df19de1 par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-e3961df19de1 prints {"mode":"minify"} 1`] = `"ol{list-style-type:UPPER-ALPHA}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-e3961df19de1 tokenizes 1`] = `"ident[0,2] whitespace[2,3] left-curly-bracket[3,4] whitespace[4,5] ident[5,20] colon[20,21] whitespace[21,22] ident[22,33] semicolon[33,34] whitespace[34,35] right-curly-bracket[35,36] end=36"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e5331c56be29 parses 1`] = `"[[\\"qualified rule\\",[[\\"hash\\",\\"header\\",\\"id\\"],\\" \\"],[\\" \\",\\".\\",[\\"ident\\",\\"navigation\\"],\\" \\",[\\"{}\\",\\" \\",[\\"ident\\",\\"display\\"],\\":\\",\\" \\",[\\"ident\\",\\"BLOCK\\"],\\";\\",\\" \\"],\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e5331c56be29 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e5331c56be29 prints {"mode":"minify"} 1`] = `"#header{.navigation{display:block}}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-e5331c56be29 tokenizes 1`] = `"hash[0,7]# whitespace[7,8] left-curly-bracket[8,9] whitespace[9,10] delim[10,11] ident[11,21] whitespace[21,22] left-curly-bracket[22,23] whitespace[23,24] ident[24,31] colon[31,32] whitespace[32,33] ident[33,38] semicolon[38,39] whitespace[39,40] right-curly-bracket[40,41] whitespace[41,42] right-curly-bracket[42,43] end=43"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-e7880945690e parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"font\\"],\\":\\",\\" \\",[\\"ident\\",\\"ITALIC\\"],\\" \\",[\\"dimension\\",\\"2\\",2,\\"integer\\",\\"em\\"],\\" \\",[\\"ident\\",\\"font-family\\"],\\",\\",\\" \\",[\\"ident\\",\\"SANS-SERIF\\"],\\";\\",\\" \\"]]]"`;
 
@@ -103513,6 +103889,14 @@ exports[`CSS syntax — invariants stylelint-value-keyword-case-ee181d352861 par
 exports[`CSS syntax — invariants stylelint-value-keyword-case-ee181d352861 prints {"mode":"minify"} 1`] = `"a{display:super-block}"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-ee181d352861 tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,11] colon[11,12] whitespace[12,13] ident[13,24] semicolon[24,25] whitespace[25,26] right-curly-bracket[26,27] end=27"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-f0396dbb0aad parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"color\\"],\\":\\",\\" \\",[\\"function\\",\\"some-function\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"]],\\";\\",\\" \\"]]]"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-f0396dbb0aad parses 2`] = `""`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-f0396dbb0aad prints {"mode":"minify"} 1`] = `"a{color:some-function(10px)}"`;
+
+exports[`CSS syntax — invariants stylelint-value-keyword-case-f0396dbb0aad tokenizes 1`] = `"ident[0,1] whitespace[1,2] left-curly-bracket[2,3] whitespace[3,4] ident[4,9] colon[9,10] whitespace[10,11] function[11,25] dimension[25,29|27,29] right-parenthesis[29,30] semicolon[30,31] whitespace[31,32] right-curly-bracket[32,33] end=33"`;
 
 exports[`CSS syntax — invariants stylelint-value-keyword-case-f5b454ab7fcf parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\" \\"],[\\" \\",[\\"ident\\",\\"content\\"],\\":\\",\\" \\",[\\"function\\",\\"counter\\",[\\"ident\\",\\"counter-name\\"]],\\";\\",\\" \\"]]]"`;
 

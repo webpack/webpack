@@ -2,8 +2,9 @@
 
 These fixtures contain distinct CSS inputs from
 [Stylelint](https://github.com/stylelint/stylelint) at commit
-`6830965c2f536d4d557ec00c7534820dbb96bc10`. Tests using custom syntaxes,
-preprocessor syntax and CSS-in-JavaScript are excluded.
+`6830965c2f536d4d557ec00c7534820dbb96bc10`. Preprocessor syntax and
+CSS-in-JavaScript are excluded; CSS-only inputs from custom-syntax tests are
+included.
 The upstream MIT license is in `LICENSE`.
 
 Where `fixed.css` is present, the invariant runner requires the input and
