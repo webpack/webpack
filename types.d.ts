@@ -39030,7 +39030,7 @@ declare interface WorkerModule {
  */
 declare interface WorkerOptions {
 	/**
-	 * without `experiments.threads`, run on up to this many threads (at most one less than the CPUs) instead of inline; `0` runs inline. Ignored when `experiments.threads` is set, which configures the threads.
+	 * without `experiments.threads`, run on up to this many threads (at most one less than the CPUs) instead of inline, started for each build as jest-worker's were; `0` runs inline. Ignored when `experiments.threads` is set, which configures and shares the threads.
 	 */
 	numWorkers?: number;
 }

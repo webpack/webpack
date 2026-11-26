@@ -1390,7 +1390,7 @@ describe("WorkerPool", () => {
 		});
 
 		itWithCores(
-			"shares the threads of compilers with experiments.threads",
+			"keeps its own threads apart from compilers with experiments.threads",
 			async () => {
 				const forced = createCompiler();
 				const configured = createCompiler({
@@ -1398,13 +1398,15 @@ describe("WorkerPool", () => {
 				});
 				try {
 					const pool = configured.worker(TARGET)._pool;
+					const own = forced.worker(TARGET, { numWorkers: 1 })._pool;
 
-					expect(forced.worker(TARGET, { numWorkers: 1 })._pool).toBe(pool);
+					expect(own).not.toBe(pool);
+					expect(
+						createCompiler().worker(TARGET, { numWorkers: 1 })._pool
+					).not.toBe(own);
 					// configured threads ignore numWorkers
 					expect(configured.worker(TARGET, { numWorkers: 4 })._pool).toBe(pool);
 					expect(pool.options.max).toBe(1);
-					await close(configured);
-					expect(pool.ending).toBe(false);
 				} finally {
 					await close(configured);
 					await close(forced);
@@ -1445,27 +1447,39 @@ describe("WorkerPool", () => {
 			}
 		);
 
-		itWithCores("keeps the threads between watch rebuilds", async () => {
+		itWithCores("starts new threads for every watch build", async () => {
+			/** @type {number[]} */
+			const threadIds = [];
 			const compiler = createCompiler(undefined, async (compiler) => {
-				await compiler.worker(TARGET, { numWorkers: 1 }).run("add", 1, 2);
+				const worker = /** @type {InfoWorker} */ (
+					compiler.worker(TARGET, { numWorkers: 1 })
+				);
+				threadIds.push((await worker.run("info")).threadId);
 			});
 			try {
 				/** @type {import("../../lib/watch/Watching") | undefined} */
 				let watching;
+				let builds = 0;
 				await new Promise((resolve, reject) => {
-					watching = compiler.watch({}, (err) =>
-						err ? reject(err) : resolve(undefined)
-					);
+					watching = compiler.watch({}, (err) => {
+						if (err) return reject(err);
+						if (++builds === 2) return resolve(undefined);
+						/** @type {import("../../lib/watch/Watching")} */ (
+							watching
+						).invalidate();
+					});
 				});
 				const pool = compiler.worker(TARGET, { numWorkers: 1 })._pool;
 
-				expect(pool._keepAlive).toBe(true);
+				// as with jest-worker, a build's threads end with it
+				expect(threadIds).toHaveLength(2);
+				expect(threadIds[1]).not.toBe(threadIds[0]);
+				expect(pool.stats.spawned).toBe(2);
 				await new Promise((resolve) =>
 					/** @type {import("../../lib/watch/Watching")} */ (watching).close(
 						() => resolve(undefined)
 					)
 				);
-				expect(pool._keepAlive).toBe(false);
 			} finally {
 				await close(compiler);
 			}
