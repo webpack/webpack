@@ -9,9 +9,9 @@ const acorn = require("acorn");
 const ConcatenatedModule = require("../../lib/optimize/ConcatenatedModule");
 const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
-/** @import Chunk from "../../lib/graph/Chunk" */
-/** @import Compilation from "../../lib/Compilation" */
-/** @import Module from "../../lib/module/Module" */
+/** @import Chunk from "../../lib/graph/Chunk.js" */
+/** @import Compilation from "../../lib/Compilation.js" */
+/** @import Module from "../../lib/module/Module.js" */
 
 const JS_ASSET = /\.[cm]?js$/;
 // A specifier naming a place rather than a package: what webpack emitted is

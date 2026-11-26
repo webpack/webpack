@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 const { decodeUrlPath } = require("../harness/runner/RunnerHelpers");
 
-/** @import { MutableToken } from "../../lib/css/syntax-parser" */
+/** @import { MutableToken } from "../../lib/css/syntax-parser.js" */
 /** @typedef {Record<string, unknown> & { getPropertyValue: (property: string) => unknown }} StyleDeclaration */
 /** @typedef {{ selectorText: string | undefined, style: StyleDeclaration, cssText: string }} CssRule */
 /** @typedef {{ type: string, target?: FakeElement }} FakeEvent */

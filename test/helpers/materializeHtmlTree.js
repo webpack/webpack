@@ -11,7 +11,7 @@ const {
 	parseHtml: parseHtmlRefs
 } = require("../../lib/html/syntax-parser");
 
-/** @import { HtmlNodeRef, HtmlAttribute } from "../../lib/html/syntax-parser" */
+/** @import { HtmlNodeRef, HtmlAttribute } from "../../lib/html/syntax-parser.js" */
 
 /**
  * Materialized plain-object views of the struct-of-arrays AST — the shape
