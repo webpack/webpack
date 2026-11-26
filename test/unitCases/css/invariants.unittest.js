@@ -43,7 +43,7 @@ const { renderBehavior } = require("../../helpers/syntaxInvariants/behavior");
 const { purityRelation } = require("../../helpers/syntaxInvariants/relations");
 const syntax = require("../../helpers/syntaxInvariants/css");
 
-/** @typedef {import("../../../lib/css/syntax-parser").MutableToken} MutableToken */
+/** @typedef {import("../../../lib/css/syntax-tokenizer").MutableToken} MutableToken */
 /** @typedef {import("../../../lib/css/syntax-parser").CssParseOptions} CssParseOptions */
 /** @typedef {import("../../helpers/fixture").ParseEntry} ParseEntry */
 /** @typedef {import("../../helpers/fixture").Printers} Printers */

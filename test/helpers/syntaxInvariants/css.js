@@ -17,7 +17,7 @@ const {
 	Flag,
 	NodeType,
 	Part,
-	TokenStream,
+	CssTokenizer,
 	TokenType,
 	pickTransforms,
 	unescapeIdentifier
@@ -137,7 +137,7 @@ const cssCuts = (css) => {
 	};
 	// The stream skips a comment rather than returning it, so its callback is
 	// the one place a comment is seen to cut inside.
-	const stream = new TokenStream(css, 0, undefined, (_input, start, end) => {
+	const stream = new CssTokenizer(css, 0, undefined, (_input, start, end) => {
 		offer(TokenType.Comment, start, end);
 		return end;
 	});
@@ -191,7 +191,7 @@ const cssCuts = (css) => {
  * @returns {string} its stream, as the JSON of every token in order
  */
 const tokenStream = (css) => {
-	const stream = new TokenStream(css);
+	const stream = new CssTokenizer(css);
 	/** @type {string[]} */
 	const out = [];
 	for (;;) {
@@ -482,7 +482,7 @@ const cssPurityDigest = (css, print) => {
  * @returns {string} its meaning, as the JSON of every token in order
  */
 const tokenMeaning = (css) => {
-	const stream = new TokenStream(css);
+	const stream = new CssTokenizer(css);
 	/** @type {string[]} */
 	const out = [];
 	for (;;) {
@@ -641,7 +641,7 @@ const opaqueDeclarationRanges = (css) => {
  */
 const cssSites = (css) => {
 	const kept = opaqueDeclarationRanges(css);
-	const stream = new TokenStream(css);
+	const stream = new CssTokenizer(css);
 	/** @type {Site[]} */
 	const sites = [];
 	// Both are in source order, so the ranges are walked alongside the tokens
@@ -1020,7 +1020,7 @@ const sweepRespellings = (minify, css, minified) => {
  */
 const legalNotices = (css) => {
 	let count = 0;
-	const stream = new TokenStream(css, 0, undefined, (input, start, end) => {
+	const stream = new CssTokenizer(css, 0, undefined, (input, start, end) => {
 		if (
 			input[start + 2] === "!" ||
 			/@(?:license|preserve)/i.test(input.slice(start, end))
@@ -1200,7 +1200,7 @@ const meaningHead = (nodePath, kind, children) => {
 	if (kind === NodeType.SimpleBlock) return `${name} ${nodePath.value()}`;
 	if (children !== 0 || kind === NodeType.QualifiedRule) return name;
 	const text = nodePath.source(...nodePath.range());
-	const token = new TokenStream(text).consume();
+	const token = new CssTokenizer(text).consume();
 	return `${name} ${canonicalToken(token.type, text, token)}`;
 };
 

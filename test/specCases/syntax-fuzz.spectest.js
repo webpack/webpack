@@ -510,8 +510,10 @@ const ruleDifference = (before, after) => {
 
 // The files the generated inputs have to reach every line of.
 const COVERED_FILES = [
+	"lib/css/syntax-tokenizer.js",
 	"lib/css/syntax-parser.js",
 	"lib/css/syntax-printer.js",
+	"lib/html/syntax-tokenizer.js",
 	"lib/html/syntax-parser.js",
 	"lib/html/syntax-printer.js"
 ];

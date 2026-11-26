@@ -57,7 +57,7 @@ const ENTRIES = new Set([
 	"tokenize",
 	"tokenizeXml",
 	"tokenizer",
-	"TokenStream"
+	"CssTokenizer"
 ]);
 
 /** The minimizers, which read each value of their first argument. */
