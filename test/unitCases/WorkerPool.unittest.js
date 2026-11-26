@@ -636,6 +636,8 @@ describe("WorkerPool", () => {
 
 		it("waits for a preload before ending", async () => {
 			const pool = createThreadPool({ max: 1 });
+			// Spawn first: the ending deadline must not race thread startup.
+			await pool.warmup([TARGET], 1);
 			const preloading = pool.warmup([SLOW], 1);
 			await pool.end();
 			await expect(preloading).resolves.toBeUndefined();
@@ -791,6 +793,7 @@ describe("WorkerPool", () => {
 
 		it("rejects queued calls when ending", async () => {
 			const pool = createThreadPool({ max: 1 });
+			await pool.warmup([TARGET], 1);
 			const running = pool.run(TARGET, "sleep", [50]);
 			const queued = pool.run(TARGET, "add", [1, 2]);
 			const ending = pool.end();
@@ -801,6 +804,7 @@ describe("WorkerPool", () => {
 
 		it("ends gracefully or forcefully", async () => {
 			const pool = createThreadPool({ max: 1 });
+			await pool.warmup([TARGET], 1);
 			const running = pool.run(TARGET, "sleep", [50]);
 			await pool.end();
 			expect(await running).toBe(50);
@@ -1006,6 +1010,16 @@ describe("WorkerPool", () => {
 			child.close();
 			expect(child._rpc.size).toBe(0);
 			await closed(port2);
+		});
+
+		it("releases a port that cannot close, so its thread can exit", () => {
+			const unref = jest.fn();
+			const port = /** @type {MessagePort} */ (
+				/** @type {unknown} */ ({ on: () => {}, unref })
+			);
+			const WorkerChild = require("../../lib/worker/WorkerChild");
+			new WorkerChild(port, 1).close();
+			expect(unref).toHaveBeenCalledTimes(1);
 		});
 	});
 
