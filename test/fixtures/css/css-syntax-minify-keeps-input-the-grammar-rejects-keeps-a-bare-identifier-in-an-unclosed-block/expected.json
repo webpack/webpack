@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "    a\n      -> \\61",
+		"why": "a bare `a` in a block is neither a declaration nor a rule, so an engine drops it; the printer writes it back as authored (`NodeType.Raw`), escape included, as it does `*zoom: 1`"
+	},
+	{
+		"relation": "agreement",
+		"contains": "/[1]: css-tree unparsed a, tool nothing",
+		"why": "a statement opening no `{}` block is a parse error the spec drops, whether the input ends in it or a block's `;` or `}` ends it (§5.4.3); css-tree keeps it as raw text"
+	}
+]

@@ -12632,6 +12632,14 @@ exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rej
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-drops-the-source-mapping-url-2 tokenizes 1`] = `"comment[0,11] delim[11,12] ident[12,13] left-curly-bracket[13,14] ident[14,19] colon[19,20] ident[20,23] right-curly-bracket[23,24] end=24"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-bare-identifier-in-an-unclosed-block parses 1`] = `"[[\\"qualified rule\\",[],[[\\"ident\\",\\"a\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-bare-identifier-in-an-unclosed-block parses 2`] = `"error[2,2]:eof-in-qualified-rule"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-bare-identifier-in-an-unclosed-block prints {"mode":"minify"} 1`] = `"{a}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-bare-identifier-in-an-unclosed-block tokenizes 1`] = `"left-curly-bracket[0,1] ident[1,2] end=2"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[\\"*\\",[\\"ident\\",\\"zoom\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],\\";\\",[\\"ident\\",\\"_height\\"],\\":\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-keeps-input-the-grammar-rejects-keeps-a-declaration-neither parses 2`] = `"warning[9,10]:missing-qualified-rule-block"`;
