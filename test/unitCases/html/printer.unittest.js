@@ -1452,3 +1452,87 @@ describe("htmlMinify — what it reads as written", () => {
 		);
 	});
 });
+
+describe("htmlMinify — what a second reader sees", () => {
+	const { htmlMinify } = require("../../..").html;
+
+	/**
+	 * @param {string} name the fixture's name past the shared prefix
+	 * @returns {string} its source
+	 */
+	const source = (name) =>
+		fixture("html", `html-minify-what-a-second-reader-sees-${name}`);
+
+	/**
+	 * @param {string} name the fixture's name past the shared prefix
+	 * @param {EXPECTED_OBJECT=} options the minifier's options
+	 * @returns {Promise<string>} the minified document
+	 */
+	const minify = async (name, options) =>
+		(await htmlMinify({ "a.html": source(name) }, undefined, options)).code;
+
+	/**
+	 * @param {string} html a document
+	 * @returns {string} the tree it parses to
+	 */
+	const tree = (html) => serializeHtmlTree(parseHtmlRefs(html));
+
+	it.each([
+		// A third `<h2>` printed under the outer one would close it.
+		["keeps-a-heading-a-form-end-left-under-another", {}],
+		// `a"` then `="`: written as `a" ="`, the second would be the first's value.
+		["keeps-a-name-ending-in-a-quote-apart-from-the-next", {}],
+		[
+			"keeps-an-empty-unquoted-value-a-sort-moves-apart",
+			{ sortAttributes: true }
+		],
+		[
+			"keeps-an-empty-unquoted-value-a-sort-moves-apart",
+			{ sortAttributes: true, normalizeAttributeQuotes: false }
+		]
+	])("prints %s so it parses to the same tree", async (name, options) => {
+		expect(tree(await minify(name, options))).toBe(tree(source(name)));
+	});
+
+	it.each([
+		"merges-a-sheet-ending-in-an-escaped-url",
+		"merges-a-sheet-ending-in-a-hex-escape-before-a-newline"
+	])("%s and keeps the next sheet's rule", async (name) => {
+		const code = await minify(name, { mergeStyles: true });
+		expect(code).toContain('.hint:after{content:"{} p{color:red}"}');
+	});
+
+	it("keeps a script language whose padding names no JavaScript type", async () => {
+		expect(
+			await minify("keeps-a-padded-script-language", {
+				removeRedundantAttributes: true
+			})
+		).toContain('<script language=" javascript ">');
+	});
+
+	it("keeps a template delimiter the source escaped escaped", async () => {
+		const code = await minify("keeps-escaped-template-delimiters-escaped", {
+			renderEmbeddedSource: (
+				/** @type {string} */ body,
+				/** @type {{ type: string }} */ { type }
+			) => (type === "javascript" ? body.replace(/\s+/g, "") : undefined)
+		});
+		expect(code).not.toMatch(/<%|\{\{|\{%|\$\{/);
+		expect(code).toContain("&lt;%= 3 %>");
+	});
+
+	it("quotes a value holding a template placeholder", async () => {
+		expect(
+			await minify("quotes-a-value-holding-a-template-placeholder")
+		).toContain('alt="{{name}}" title="${w}" class="[[u]]" id="#{s}"');
+	});
+
+	it("reads a srcdoc document in no-quirks mode", async () => {
+		// In quirks mode `<table>` stays inside the `<p>`, which moves the `</mi>`.
+		expect(
+			await minify("reads-a-srcdoc-document-in-no-quirks-mode", {
+				as: "srcdoc"
+			})
+		).toBe(source("reads-a-srcdoc-document-in-no-quirks-mode"));
+	});
+});

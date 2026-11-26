@@ -1023,6 +1023,34 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		).toBe(['| "x"', "| <plaintext>", '|   "&amp;"'].join("\n"));
 	});
 
+	it("closes a foreign element by its ASCII-folded name", () => {
+		// `É` folds to nothing, so `</unit-é>` closes the HTML element and the svg.
+		expect(
+			treeOf(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-closes-a-foreign-element-by-its-ascii-folded-name"
+				)
+			)
+		).toContain(
+			["|         <svg unit-É>", "|     <title>", '|       "x"'].join("\n")
+		);
+	});
+
+	it("reads a NUL in a tag name as U+FFFD", () => {
+		// So `</x\uFFFD>` closes `<x\0>`, and the svg with it.
+		expect(
+			treeOf(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-nul-in-a-tag-name-as-u-fffd"
+				)
+			)
+		).toContain(
+			["|     <x\uFFFD>", "|       <svg svg>", "|     <title>"].join("\n")
+		);
+	});
+
 	it("clears the whole name memo once a document filled every slot", () => {
 		// 512 unknown names, one per memo slot (`z` repeated 1…512 times).
 		expect(

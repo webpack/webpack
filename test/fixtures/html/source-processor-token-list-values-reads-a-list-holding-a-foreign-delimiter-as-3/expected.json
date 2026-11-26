@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling references",
+		"contains": "preload &#123;{extra}} preload &#123;{extra}}",
+		"why": "a template delimiter written escaped stays escaped, so a template engine reading the page next never runs one the source kept inert; written literally, it already is one"
+	}
+]

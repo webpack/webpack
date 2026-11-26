@@ -14317,11 +14317,11 @@ declare interface HtmlParserOptions {
 							| "css-url"
 							| "stylesheet"
 							| "script-module"
+							| "srcdoc"
 							| "src"
 							| "srcset"
 							| "stylesheet-style"
-							| "stylesheet-style-attribute"
-							| "srcdoc";
+							| "stylesheet-style-attribute";
 				  }
 		  )[];
 
@@ -35080,11 +35080,11 @@ type SourceType =
 	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "srcdoc"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
-	| "srcdoc"
 	| "msapplication-task";
 type SourceTypeOrResolver =
 	| "html"
@@ -35095,11 +35095,11 @@ type SourceTypeOrResolver =
 	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "srcdoc"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
-	| "srcdoc"
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
@@ -41395,6 +41395,7 @@ declare namespace exports {
 				HtmlPrintOptions,
 				"renderEmbeddedSource" | "deferEmbeddedSource"
 			> & {
+				as?: "srcdoc";
 				environment?: CssEnvironment;
 				css?: {
 					convertLengthUnits?: boolean;
