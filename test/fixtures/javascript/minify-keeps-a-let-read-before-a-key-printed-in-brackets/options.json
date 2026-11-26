@@ -1,0 +1,36 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"format": {
+			"ie8": true
+		},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {}
+		},
+		"sourceType": "script"
+	},
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {
+			"properties": {}
+		},
+		"format": {
+			"ie8": true
+		},
+		"sourceType": "script"
+	}
+]
