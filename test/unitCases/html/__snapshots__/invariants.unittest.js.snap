@@ -71921,6 +71921,22 @@ exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-
 
 exports[`HTML syntax — invariants syntax-fuzz-a-fostered-list-prints-an-empty-value-as-the-bare-name tokenizes 1`] = `"open[0,7|1,6] attr[14,15|-1,-1] open[7,16|8,13] open[16,20|17,19] open[20,24|21,23] open[24,28|25,27] end=28"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-run-moves-only-for-a-start-tag-the-print-keeps parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       <b>
+|         <b>
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-run-moves-only-for-a-start-tag-the-print-keeps parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,10]:unexpected-start-tag-implies-table-voodoo warning[10,13]:unexpected-start-tag-implies-table-voodoo warning[13,16]:unexpected-start-tag-implies-table-voodoo warning[16,16]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-run-moves-only-for-a-start-tag-the-print-keeps prints {"mode":"minify"} 1`] = `"<table><p><b><b></b></b></p></table>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-fostered-run-moves-only-for-a-start-tag-the-print-keeps tokenizes 1`] = `"open[0,7|1,6] open[7,10|8,9] open[10,13|11,12] open[13,16|14,15] end=16"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-holder-printing-from-source-adds-no-end-tag-a-later-table-wrote parses 1`] = `
 "| <html>
 |   <head>
