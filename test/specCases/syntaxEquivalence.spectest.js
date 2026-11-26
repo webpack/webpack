@@ -136,7 +136,7 @@ const {
 
 /** @import { Fixture, PageHelpers, Relaxation, StylePair, RenderPair, RenderReport } from "../helpers/syntaxEquivalence.js" */
 /** @import { Page, Browser } from "playwright-core" */
-/** @import { MutableToken } from "../../lib/css/syntax-parser.js" */
+/** @import { MutableToken } from "../../lib/css/syntax-tokenizer.js" */
 
 /**
  * Every pair whose stylesheets style some element differently, on a page with

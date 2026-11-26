@@ -7621,7 +7621,7 @@ type CssNormalModule = NormalModule & {
 };
 declare interface CssParseOptions {
 	/**
-	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `TokenStream` so the outer parser's comment tracker still sees magic comments inside the consumed range
+	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `CssTokenizer` so the outer parser's comment tracker still sees magic comments inside the consumed range
 	 */
 	comment?: (input: string, start: number, end: number) => number;
 
@@ -8253,6 +8253,107 @@ declare abstract class CssSyntaxPath {
 	 * Escapes stay as written; `name` and `value` read them resolved.
 	 */
 	textOf(part: number, n?: number): null | string;
+}
+
+/**
+ * Position-based view over the lexer - webpack's stand-in for the spec's
+ * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
+ * stream in one class: the `readToken` primitive lexes one token (the CSS
+ * tokenizer), and the spec token-stream operations `next` / `consume` /
+ * `discard` / `mark` / `restoreMark` / `discardMark` drive it from a byte
+ * cursor. `parse*` entry points wrap a source string in one of these and every
+ * `consume*` algorithm reads tokens from it.
+ * No token buffer is kept: the cursor is a byte offset and the only state is
+ * the next token (lazily tokenized once and cached until consumed). The
+ * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
+ * rewinds by `mark`ing / `restoreMark`ing that byte offset, which simply
+ * re-tokenizes the rewound span - comment tokens are filtered here and fire
+ * `onComment` once each, tracked by a monotonic high-water mark so a
+ * re-tokenized span never re-fires them.
+ * `SourceProcessor` is handed this class (not an instance) and threads it to
+ * the grammar, so a different language can drive the same visitor machinery by
+ * swapping the tokenizer - the per-token `readToken` primitive - for its own.
+ */
+declare class CssTokenizer {
+	constructor(
+		input: string,
+		pos?: number,
+		locConverter?: LocConverter,
+		onComment?: (input: string, start: number, end: number) => number
+	);
+	input: string;
+	locConverter: LocConverter;
+
+	/**
+	 * The next token (CSS Syntax §3 "next token") - the upcoming token without
+	 * consuming it; the `<eof-token>` once the source is exhausted. This is the
+	 * token the consume algorithms dispatch on (the spec's "process"). Tokenized
+	 * from `_pos` on first use and cached until consumed; comment tokens are
+	 * skipped here, firing `onComment` once each.
+	 */
+	next(): MutableToken;
+
+	/**
+	 * Consume a token (CSS Syntax §3 "consume a token") - return the next token
+	 * and advance the cursor past it. The returned token is valid until the next
+	 * `next` re-tokenizes (the reused instance is not cleared by advancing).
+	 */
+	consume(): MutableToken;
+
+	/**
+	 * Discard a token (CSS Syntax §3 "discard a token") - advance the cursor past
+	 * the next token without returning it.
+	 */
+	discard(): void;
+
+	/**
+	 * Advance past the already-peeked next token, skipping the redundant `next()`
+	 * re-check `consume` / `discard` pay. Precondition: the caller has just called
+	 * `next()` (so `_tok` is the cached next token and `_hasNext` is true) and that
+	 * token is not the `<eof-token>` - the hot "peek, decide, advance" sites where
+	 * both always hold. Callers that can't guarantee a non-EOF cached token use
+	 * `consume` / `discard` instead.
+	 */
+	advance(): void;
+
+	/**
+	 * Step over the whitespace the next token would be, without tokenizing it -
+	 * for the sites that discard whitespace tokens. No-op while a token is cached.
+	 */
+	skipWhitespace(): void;
+
+	/**
+	 * Step over the run of selector-prelude leaves a skip-mode parse drops (CSS
+	 * Syntax §5.4.3's "append to prelude", which skip mode does not do), without
+	 * lexing one token each. Only valid where every leaf up to the next
+	 * `BC_PRELUDE_STOP` code point is dropped whatever it is - which in
+	 * `consumeAQualifiedRule` is once the two tokens the `--foo: {`
+	 * disambiguation reads have both been seen. No-op while a token is cached.
+	 */
+	skipPreludeLeaves(): void;
+
+	/**
+	 * Mark (CSS Syntax §3 "mark") - push the current cursor position.
+	 */
+	mark(): void;
+
+	/**
+	 * Restore a mark (CSS Syntax §3 "restore a mark") - pop the last mark and
+	 * rewind the cursor to it. The rewound span is re-tokenized on the next read;
+	 * already-fired comments are not re-fired (`_commentHigh`).
+	 */
+	restoreMark(): void;
+
+	/**
+	 * Rewind the cursor to `pos`, an offset `_pos` held, as `restoreMark` does
+	 * for a mark the caller kept itself.
+	 */
+	rewind(pos: number): void;
+
+	/**
+	 * Discard a mark (CSS Syntax §3 "discard a mark") - pop without rewinding.
+	 */
+	discardMark(): void;
 }
 
 /**
@@ -24602,7 +24703,7 @@ declare abstract class MultiWatching {
 
 /**
  * A mutable lexer token. The `next` / `consume` hot path reuses a single
- * instance per `TokenStream` (the lexer writes into it instead of allocating
+ * instance per `CssTokenizer` (the lexer writes into it instead of allocating
  * one object per token), which also keeps the parser's `t.type` reads
  * monomorphic. All fields are present from construction so the shape never
  * transitions; type-specific fields (`isId` / `contentStart` / `contentEnd` /
@@ -37119,107 +37220,6 @@ declare interface TokenRead {
 }
 
 /**
- * Position-based view over the lexer - webpack's stand-in for the spec's
- * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
- * stream in one class: the `readToken` primitive lexes one token (the CSS
- * tokenizer), and the spec token-stream operations `next` / `consume` /
- * `discard` / `mark` / `restoreMark` / `discardMark` drive it from a byte
- * cursor. `parse*` entry points wrap a source string in one of these and every
- * `consume*` algorithm reads tokens from it.
- * No token buffer is kept: the cursor is a byte offset and the only state is
- * the next token (lazily tokenized once and cached until consumed). The
- * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
- * rewinds by `mark`ing / `restoreMark`ing that byte offset, which simply
- * re-tokenizes the rewound span - comment tokens are filtered here and fire
- * `onComment` once each, tracked by a monotonic high-water mark so a
- * re-tokenized span never re-fires them.
- * `SourceProcessor` is handed this class (not an instance) and threads it to
- * the grammar, so a different language can drive the same visitor machinery by
- * swapping the tokenizer - the per-token `readToken` primitive - for its own.
- */
-declare class TokenStream {
-	constructor(
-		input: string,
-		pos?: number,
-		locConverter?: LocConverter,
-		onComment?: (input: string, start: number, end: number) => number
-	);
-	input: string;
-	locConverter: LocConverter;
-
-	/**
-	 * The next token (CSS Syntax §3 "next token") - the upcoming token without
-	 * consuming it; the `<eof-token>` once the source is exhausted. This is the
-	 * token the consume algorithms dispatch on (the spec's "process"). Tokenized
-	 * from `_pos` on first use and cached until consumed; comment tokens are
-	 * skipped here, firing `onComment` once each.
-	 */
-	next(): MutableToken;
-
-	/**
-	 * Consume a token (CSS Syntax §3 "consume a token") - return the next token
-	 * and advance the cursor past it. The returned token is valid until the next
-	 * `next` re-tokenizes (the reused instance is not cleared by advancing).
-	 */
-	consume(): MutableToken;
-
-	/**
-	 * Discard a token (CSS Syntax §3 "discard a token") - advance the cursor past
-	 * the next token without returning it.
-	 */
-	discard(): void;
-
-	/**
-	 * Advance past the already-peeked next token, skipping the redundant `next()`
-	 * re-check `consume` / `discard` pay. Precondition: the caller has just called
-	 * `next()` (so `_tok` is the cached next token and `_hasNext` is true) and that
-	 * token is not the `<eof-token>` - the hot "peek, decide, advance" sites where
-	 * both always hold. Callers that can't guarantee a non-EOF cached token use
-	 * `consume` / `discard` instead.
-	 */
-	advance(): void;
-
-	/**
-	 * Step over the whitespace the next token would be, without tokenizing it -
-	 * for the sites that discard whitespace tokens. No-op while a token is cached.
-	 */
-	skipWhitespace(): void;
-
-	/**
-	 * Step over the run of selector-prelude leaves a skip-mode parse drops (CSS
-	 * Syntax §5.4.3's "append to prelude", which skip mode does not do), without
-	 * lexing one token each. Only valid where every leaf up to the next
-	 * `BC_PRELUDE_STOP` code point is dropped whatever it is - which in
-	 * `consumeAQualifiedRule` is once the two tokens the `--foo: {`
-	 * disambiguation reads have both been seen. No-op while a token is cached.
-	 */
-	skipPreludeLeaves(): void;
-
-	/**
-	 * Mark (CSS Syntax §3 "mark") - push the current cursor position.
-	 */
-	mark(): void;
-
-	/**
-	 * Restore a mark (CSS Syntax §3 "restore a mark") - pop the last mark and
-	 * rewind the cursor to it. The rewound span is re-tokenized on the next read;
-	 * already-fired comments are not re-fired (`_commentHigh`).
-	 */
-	restoreMark(): void;
-
-	/**
-	 * Rewind the cursor to `pos`, an offset `_pos` held, as `restoreMark` does
-	 * for a mark the caller kept itself.
-	 */
-	rewind(pos: number): void;
-
-	/**
-	 * Discard a mark (CSS Syntax §3 "discard a mark") - pop without rewinding.
-	 */
-	discardMark(): void;
-}
-
-/**
  * The tokens and comments of one parse, a token read by its index past
  * `base`, a list of comments and a comment by numbers of their own.
  */
@@ -41370,42 +41370,42 @@ declare namespace exports {
 				export let isSimpleIdentifier: (value: string) => boolean;
 				export let normalizeUrl: (str: string, isString: boolean) => string;
 				export let parseABlocksContents: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => { decls: number[]; rules: number[] };
 				export let parseACommaSeparatedListOfComponentValues: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => number[][];
 				export let parseAComponentValue: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => undefined | number;
 				export let parseADeclaration: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => undefined | number;
 				export let parseAListOfComponentValues: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => number[];
 				export let parseARule: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => undefined | number;
 				export let parseAStylesheet: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => number;
 				export let parseAStylesheetsContents: (
-					input: string | TokenStream,
+					input: string | CssTokenizer,
 					pos?: number,
 					options?: CssParseOptions
 				) => number[];
@@ -41435,7 +41435,7 @@ declare namespace exports {
 				export let unescapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
-				export { TokenStream };
+				export { CssTokenizer };
 			}
 			/** exposed as `webpack.css.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let printer: (
