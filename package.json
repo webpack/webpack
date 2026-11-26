@@ -193,6 +193,7 @@
     "eslint-config-webpack": "^5.0.2",
     "eslint-scope": "^9.1.2",
     "eta": "^4.6.0",
+    "fast-check": "^4.11.0",
     "file-loader": "^6.0.0",
     "fork-ts-checker-webpack-plugin": "^9.0.2",
     "glob": "^13.0.6",

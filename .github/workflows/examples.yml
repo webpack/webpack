@@ -11,6 +11,9 @@ concurrency:
   # run makes an older one redundant.
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   examples:
     runs-on: ubuntu-latest

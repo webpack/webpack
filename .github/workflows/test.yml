@@ -581,7 +581,7 @@ jobs:
         id: runtime
         # An empty version would let setup-bun fall back to the latest release.
         run: |
-          version="$(sed -n 's/^FROM [^:]*:\(.*\) AS ${{ matrix.runtime }}$/\1/p' .github/runtimes/Dockerfile)"
+          version="$(sed -n 's/^FROM [^:]*:\([^@ ]*\)[^ ]* AS ${{ matrix.runtime }}$/\1/p' .github/runtimes/Dockerfile)"
           if [ -z "$version" ]; then
             echo "No ${{ matrix.runtime }} stage in .github/runtimes/Dockerfile" >&2
             exit 1
