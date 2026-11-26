@@ -31,3 +31,11 @@ function constant(n) {
 	return n;
 }
 console.log(constant(1));
+
+function apart(list) {
+	var show = function (item) {
+		console.log("item", item);
+	};
+	for (var i = 0; i < list.length; i++) show(list[i]);
+}
+apart([1, 2]);
