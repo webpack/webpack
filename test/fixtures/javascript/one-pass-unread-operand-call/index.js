@@ -29,7 +29,7 @@ function returned(x) {
 log(returned(1), returned(0));
 function passed(x, y) {
 	var n = 0;
-	x && (function (z) { log(z); n++; })(y());
+	x && (function (z) { log(z), n++; })(y());
 	return n;
 }
 log(passed(1, function () { return 10; }), passed(0));
@@ -39,3 +39,11 @@ function kept(x) {
 }
 kept(1);
 kept(0);
+function sequenced(x, y) {
+	return (
+		x && (function () { log(11); log(12); })(),
+		y ? (function () { log(13); })() : 0,
+		x
+	);
+}
+log(sequenced(1, 0), sequenced(0, 1));
