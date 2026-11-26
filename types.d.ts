@@ -8285,6 +8285,17 @@ declare class CssTokenizer {
 	locConverter: LocConverter;
 
 	/**
+	 * Point the stream at a new input, as a fresh one would start. The parse tree
+	 * is its own stream and starts each parse this way rather than allocating one.
+	 */
+	reset(
+		input: string,
+		pos: number,
+		locConverter: LocConverter,
+		onComment?: (input: string, start: number, end: number) => number
+	): CssTokenizer;
+
+	/**
 	 * The next token (CSS Syntax §3 "next token") - the upcoming token without
 	 * consuming it; the `<eof-token>` once the source is exhausted. This is the
 	 * token the consume algorithms dispatch on (the spec's "process"). Tokenized
