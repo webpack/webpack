@@ -4993,3 +4993,47 @@ describe("printing Babel's default parameters as ES2015 ones", () => {
 		}
 	});
 });
+
+describe("jsMinify source maps", () => {
+	const SOURCE = fixture("javascript", "js-minify-source-maps");
+
+	it("writes a map when the asset has one, the input named in it", async () => {
+		const { map } = await jsMinify({ "a.js": SOURCE }, INPUT_MAP, {}, false);
+		expect(map).toMatchObject({
+			version: 3,
+			file: "a.js",
+			sources: ["a.js"],
+			sourcesContent: [SOURCE]
+		});
+	});
+
+	it("writes no map when the asset has none", async () => {
+		const { code, map } = await jsMinify(
+			{ "a.js": SOURCE },
+			undefined,
+			{},
+			false
+		);
+		expect(code).toBe("var x=1;console.log(x);");
+		expect(map).toBeUndefined();
+	});
+
+	it("takes no `sourceMap` option, which the asset's map decides", async () => {
+		const withoutMap = await jsMinify(
+			{ "a.js": SOURCE },
+			undefined,
+			// @ts-expect-error a map comes from the asset, not from an option
+			{ sourceMap: true },
+			false
+		);
+		const withMap = await jsMinify(
+			{ "a.js": SOURCE },
+			INPUT_MAP,
+			// @ts-expect-error a map comes from the asset, not from an option
+			{ sourceMap: false },
+			false
+		);
+		expect(withoutMap.map).toBeUndefined();
+		expect(typeof withMap.map).toBe("object");
+	});
+});

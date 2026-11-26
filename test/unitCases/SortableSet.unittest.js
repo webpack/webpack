@@ -304,4 +304,67 @@ describe("util/SortableSet", () => {
 		expect(added).toEqual([1, 2, 2]);
 		expect([...recording]).toEqual([1, 2]);
 	});
+
+	// These run as tests and are type-checked by `yarn lint:types-test`: each
+	// `@ts-expect-error` fails that check once the line it marks compiles.
+	describe("cache types", () => {
+		/**
+		 * The set as an array, as webpack's own `getArray` helpers take a set.
+		 * @template T
+		 * @param {SortableSet<T>} set the set
+		 * @returns {T[]} its items
+		 */
+		const getArray = (set) => [...set];
+
+		/**
+		 * How many items a set holds, for any set.
+		 * @param {SortableSet<number>} set the set
+		 * @returns {number} its size
+		 */
+		const countOf = (set) => set.size;
+
+		it("passes a set typed by what it caches to a helper taking any set", () => {
+			// WHY: a typedef at the top of SortableSet.js made `require` give a
+			// second SortableSet type, which tsc failed to relate to this one.
+			/** @type {SortableSet<number, number[] | number>} */
+			const set = new SortableSet([3, 1, 2]);
+			/** @type {number[]} */
+			const items = set.getFromCache(getArray);
+			/** @type {number} */
+			const count = set.getFromUnorderedCache(countOf);
+			expect(items).toEqual([3, 1, 2]);
+			expect(count).toBe(3);
+			/** @type {SortableSet<number>} */
+			const plain = set;
+			expect(plain.size).toBe(3);
+		});
+
+		it("caches only what a set says it caches", () => {
+			/** @type {SortableSet<number, number[]>} */
+			const set = new SortableSet([1, 2]);
+			// @ts-expect-error a set caching arrays caches no string
+			const label = set.getFromCache(() => "two");
+			expect(label).toBe("two");
+		});
+
+		it("caches any value on a set that names nothing it caches", () => {
+			/** @type {SortableSet<number>} */
+			const set = new SortableSet([1, 2]);
+			/** @type {string} */
+			const label = set.getFromCache(() => "two");
+			/** @type {number[]} */
+			const items = set.getFromCache(getArray);
+			expect(label).toBe("two");
+			expect(items).toEqual([1, 2]);
+		});
+
+		it("answers each function with that function's own type", () => {
+			/** @type {SortableSet<number, number[] | number>} */
+			const set = new SortableSet([1, 2]);
+			const items = set.getFromCache(getArray);
+			// @ts-expect-error an array answer is no number
+			/** @type {number} */ const wrong = items;
+			expect(wrong).toEqual([1, 2]);
+		});
+	});
 });

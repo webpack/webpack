@@ -36744,6 +36744,16 @@ exports[`JavaScript syntax — invariants js-minify-should-report-a-parse-error-
 
 exports[`JavaScript syntax — invariants js-minify-should-report-a-parse-error-rather-than-throwing-a-different-shape tokenizes 1`] = `"function[0,8] ([9,10] eof[10,10]"`;
 
+exports[`JavaScript syntax — invariants js-minify-source-maps parses 1`] = `"Program[0,27](body=[VariableDeclaration[0,10](declarations=[VariableDeclarator[4,9](id=Identifier[4,5](name=\\"x\\") init=Literal[8,9](value=1 raw=\\"1\\"))] kind=\\"var\\"),ExpressionStatement[11,26](expression=CallExpression[11,25](callee=MemberExpression[11,22](object=Identifier[11,18](name=\\"console\\") property=Identifier[19,22](name=\\"log\\") computed=false optional=false) arguments=[Identifier[23,24](name=\\"x\\")] optional=false))] sourceType=\\"module\\")"`;
+
+exports[`JavaScript syntax — invariants js-minify-source-maps parses 2`] = `""`;
+
+exports[`JavaScript syntax — invariants js-minify-source-maps parses 3`] = `"as the module"`;
+
+exports[`JavaScript syntax — invariants js-minify-source-maps prints {"mode":"minify"} 1`] = `"var x=1;console.log(x);"`;
+
+exports[`JavaScript syntax — invariants js-minify-source-maps tokenizes 1`] = `"var[0,3] name[4,5] =[6,7] num[8,9] ;[9,10] name[11,18] .[18,19] name[19,22] ([22,23] name[23,24] )[24,25] ;[25,26] eof[27,27]"`;
+
 exports[`JavaScript syntax — invariants js-minify-takes-the-minimizer-options-as-optional parses 1`] = `"Program[0,10](body=[VariableDeclaration[0,10](declarations=[VariableDeclarator[4,9](id=Identifier[4,5](name=\\"a\\") init=Literal[8,9](value=1 raw=\\"1\\"))] kind=\\"var\\")] sourceType=\\"module\\")"`;
 
 exports[`JavaScript syntax — invariants js-minify-takes-the-minimizer-options-as-optional parses 2`] = `""`;
