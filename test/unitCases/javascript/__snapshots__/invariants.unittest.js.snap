@@ -49291,19 +49291,19 @@ exports[`JavaScript syntax — invariants one-pass-pure-annotation-drop parses 3
 
 exports[`JavaScript syntax — invariants one-pass-pure-annotation-drop prints {"mode":"minify","compress":{"defaults":false,"side_effects":true},"mangle":false,"format":{"preserve_annotations":true}} 1`] = `
 "var log=[];function a(v){return{x:function(){return this},y:v}}function b(){return log.push(\\"b\\"),2}function K(){}a(3),a(5).x();
-/*@__PURE__*/a(6).y;b();if(log.length>100)a(8);
+/*@__PURE__*/a(6).y;b();if(log.length>100)/*@__PURE__*/a(8);
 /*! kept */var kept=/*@__PURE__*/a(10);console.log(log.join(),kept.y,b());"
 `;
 
 exports[`JavaScript syntax — invariants one-pass-pure-annotation-drop prints {"mode":"minify","compress":{"toplevel":true},"mangle":{"toplevel":true},"format":{"preserve_annotations":true,"comments":"all"}} 1`] = `
 "var a=[];function n(a){return{x:function(){return this},y:a}}function o(){return a.push(\\"b\\"),2}n(5).x();
-/*@__PURE__*/n(6).y;o();if(a.length>100);
+/*@__PURE__*/n(6).y;o();if(a.length>100)/*@__PURE__*/n(8);
 /*! kept */var t=/*@__PURE__*/n(10);console.log(a.join(),t.y,o());"
 `;
 
 exports[`JavaScript syntax — invariants one-pass-pure-annotation-drop prints {"mode":"minify","compress":{},"mangle":false,"format":{"preserve_annotations":true}} 1`] = `
 "var log=[];function a(v){return{x:function(){return this},y:v}}function b(){return log.push(\\"b\\"),2}function K(){}a(3),a(5).x();
-/*@__PURE__*/a(6).y;b();if(log.length>100)a(8);
+/*@__PURE__*/a(6).y;b();if(log.length>100)/*@__PURE__*/a(8);
 /*! kept */var kept=/*@__PURE__*/a(10);console.log(log.join(),kept.y,b());"
 `;
 
