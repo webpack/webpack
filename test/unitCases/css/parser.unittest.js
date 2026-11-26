@@ -15,6 +15,7 @@ const {
 	parseABlocksContents,
 	parseACommaSeparatedListOfComponentValues,
 	parseAComponentValue,
+	parseAListOfComponentValues,
 	parseADeclaration,
 	parseARule,
 	parseAStylesheet,
@@ -73,6 +74,20 @@ describe("CssSyntax — parser entry points", () => {
 			)
 		);
 		expect(A.fieldCount(Field.rules, ss)).toBe(1);
+	});
+
+	it("keeps a string parse's tokens when its comment hook parses another string", () => {
+		const css = fixture(
+			"css",
+			"css-syntax-minify-a-call-or-a-sub-rule-named-with-an-escape-fires-a-comment"
+		);
+		const values = parseAListOfComponentValues(css, 0, {
+			comment: (input, start, end) => {
+				parseAListOfComponentValues(css, end);
+				return end;
+			}
+		});
+		expect(values).toHaveLength(2);
 	});
 
 	it("returns refs valid until the next parse", () => {
