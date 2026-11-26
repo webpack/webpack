@@ -1,0 +1,64 @@
+name: Fuzz
+
+# The unit suite replays one fixed seed; this searches new seeds at length, so
+# a red run here is a new syntax bug, reproducible from the seed it prints.
+on:
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: Seed to replay (random when empty)
+        required: false
+      runs:
+        description: Generated sources per syntax
+        required: false
+        default: "20000"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    if: github.repository == 'webpack/webpack'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    strategy:
+      fail-fast: false
+      matrix:
+        syntax: [css, html, javascript, xml]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: node tooling/retry.js yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Pick the seed
+        id: seed
+        run: |
+          seed="${INPUT_SEED:-$((RANDOM * 32768 + RANDOM))}"
+          echo "Seed: $seed (replay with FUZZ_SEED=$seed)" >> "$GITHUB_STEP_SUMMARY"
+          echo "seed=$seed" >> "$GITHUB_OUTPUT"
+        env:
+          INPUT_SEED: ${{ inputs.seed }}
+
+      - name: Fuzz ${{ matrix.syntax }}
+        run: yarn test:base --testPathPatterns="unitCases/${{ matrix.syntax }}/fuzz" --testTimeout=3000000
+        env:
+          FUZZ_SEED: ${{ steps.seed.outputs.seed }}
+          FUZZ_RUNS: ${{ inputs.runs || '20000' }}
