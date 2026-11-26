@@ -281,7 +281,9 @@ class BenchmarkRunner {
 
 		try {
 			await fs.mkdir(baselinesPath, { recursive: true });
-		} catch (_err) {} // eslint-disable-line no-empty
+		} catch (_err) {
+			// cloning the baselines below reports a missing directory
+		}
 
 		/** @type {Baseline[]} */
 		const baselines = [];
@@ -302,7 +304,9 @@ class BenchmarkRunner {
 
 				try {
 					await fs.mkdir(baselinePath);
-				} catch (_err) {} // eslint-disable-line no-empty
+				} catch (_err) {
+					// it exists from an earlier run
+				}
 
 				const gitIndex = path.resolve(rootPath, ".git/index");
 				const index = await fs.readFile(gitIndex);
