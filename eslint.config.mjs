@@ -153,6 +153,13 @@ export default defineConfig([
 		settings: { jsdoc: { tagNamePreference: { instanceof: "instanceof" } } }
 	},
 	{
+		// The minifiers require webpack itself, resolved again inside the worker
+		files: ["lib/{css,html,javascript}/*Minify.js"],
+		settings: {
+			"import-x/core-modules": ["webpack"]
+		}
+	},
+	{
 		files: ["bin/**/*.js"],
 		// Allow to use `dynamic` import
 		languageOptions: {
