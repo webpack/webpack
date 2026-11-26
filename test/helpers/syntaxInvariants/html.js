@@ -604,16 +604,17 @@ const htmlNodeRuns = (html, fragmentContext) => {
 	for (const type of Object.values(NodeType)) {
 		visitors[type] = {
 			enter: (nodePath) => {
-				const [start, end] = nodePath.range();
 				stack.push({
 					held: 0,
 					lo: html.length,
 					hi: 0,
 					context: fragmentContextOf(nodePath),
+					// A rebuilt element has no start tag of its own, though an end
+					// tag closing it later gives it a range.
 					rebuilt:
 						stack[stack.length - 1].rebuilt ||
-						(end <= start &&
-							nodePath.type() === NodeType.Element &&
+						(nodePath.type() === NodeType.Element &&
+							nodePath.rangeOf(Part.startTag) === null &&
 							_namespaceOf(nodePath.node) === Namespace.HTML &&
 							FORMATTING_ELEMENTS.has(nodePath.name()))
 				});

@@ -71978,6 +71978,24 @@ exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-on-
 
 exports[`HTML syntax — invariants syntax-fuzz-a-numeric-default-is-dropped-on-the-first-print tokenizes 1`] = `"text[0,1] open[1,8|2,7] warning[13,14]:unexpected-solidus-in-tag attr[13,17|19,21]' open[8,23|9,12] end=23"`;
 
+exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-closed-by-its-end-tag-is-still-rebuilt parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <b>
+|     <table>
+|     <b>
+|       \\"a\\"
+|       <script>
+|     <table>"
+`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-closed-by-its-end-tag-is-still-rebuilt parses 2`] = `"warning[0,7]:expected-doctype-but-got-start-tag warning[7,10]:unexpected-start-tag-implies-table-voodoo warning[10,17]:unexpected-start-tag-implies-end-tag warning[17,18]:unexpected-character-implies-table-voodoo warning[35,39]:unexpected-end-tag-implies-table-voodoo"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-closed-by-its-end-tag-is-still-rebuilt prints {"mode":"minify"} 1`] = `"<b></b><table></table><b>a<script></script></b><table></table>"`;
+
+exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-closed-by-its-end-tag-is-still-rebuilt tokenizes 1`] = `"open[0,7|1,6] open[7,10|8,9] open[10,17|11,16] text[17,18] open[18,26|19,25] close[26,35|28,34] close[35,39|37,38] close[39,47|41,46] end=47"`;
+
 exports[`HTML syntax — invariants syntax-fuzz-a-reconstructed-element-collapses-a-boolean-value-like-the-written-one parses 1`] = `
 "| <html>
 |   <head>
