@@ -1,0 +1,6 @@
+/* a comment */
+div[class*="foo"], /* a comment */
+div[id*="foo"],
+/* a comment */
+div[data-foo*="foo"]
+{ color: red; }

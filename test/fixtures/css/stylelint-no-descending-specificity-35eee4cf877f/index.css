@@ -1,0 +1,1 @@
+a::before { color: red; } a { color: red; } a:hover a:hover::before { color: red; } 

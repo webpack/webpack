@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree color: green !important, tool color: green !imprtant",
+		"why": "css-tree treats an unknown annotation as `!important`; only the ident `important` after `!` sets the flag"
+	}
+]

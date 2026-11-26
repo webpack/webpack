@@ -1,0 +1,5 @@
+.a { border-radius: inherit / inherit }
+.b { border-radius: initial / initial }
+.c { border-radius: var(--x) var(--x) / 1px 1px }
+.d { border-radius: 1px 1px / var(--x) var(--x) }
+.e { border-radius: var(--x) var(--x) / var(--x) var(--x) }

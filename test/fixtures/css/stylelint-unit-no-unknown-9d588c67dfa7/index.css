@@ -1,0 +1,1 @@
+a { background: /* comment */ image-set('img1x.png' 1x, 'img2x.png' 2x) left 20x / 15% 60% repeat-x; }

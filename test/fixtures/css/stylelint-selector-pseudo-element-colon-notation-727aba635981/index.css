@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-pseudo-element-colon-notation */
+a::after, /* stylelint-disable-next-line selector-pseudo-element-colon-notation */
+a::after,
+/* stylelint-disable-next-line selector-pseudo-element-colon-notation */
+a::after
+{}

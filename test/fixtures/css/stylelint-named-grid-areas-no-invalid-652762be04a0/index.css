@@ -1,0 +1,6 @@
+a {
+	grid-template:
+		"a a" 40px
+		"b c c" 40px
+		"b c c" 40px / 1fr 1fr 1fr;
+}

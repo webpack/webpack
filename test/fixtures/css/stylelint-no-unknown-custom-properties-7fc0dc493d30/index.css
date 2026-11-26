@@ -1,0 +1,2 @@
+@property --foo { syntax: "<color>"; inherits: false; initial-value: #f00; }
+a { color: var(--foo); }

@@ -1,0 +1,17 @@
+a {
+
+ top: 15px; 
+
+ bottom: 5px; 
+ /* comment */ 
+
+ prop: 15px;
+
+ @extends 'x';
+ prop: 15px; 
+ & b {
+
+ prop: 15px;
+ } 
+ prop: 15px; 
+ }

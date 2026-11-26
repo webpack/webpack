@@ -1,0 +1,8 @@
+a {
+				background: linear-gradient(in hsl longer hue, red, red);
+				background: radial-gradient(in hsl longer hue, red, red);
+				background: conic-gradient(in hsl longer hue, red, red);
+				background: repeating-linear-gradient(in hsl longer hue, red, red 50px);
+				background: repeating-radial-gradient(in hsl longer hue, red, red 50px);
+				background: repeating-conic-gradient(in hsl longer hue, red 0%, yellow 15%, red 33%);
+			}

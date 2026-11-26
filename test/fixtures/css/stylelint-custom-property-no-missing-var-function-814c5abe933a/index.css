@@ -1,0 +1,1 @@
+:root { --bar: 0; } a { color: --foo(--bar); }

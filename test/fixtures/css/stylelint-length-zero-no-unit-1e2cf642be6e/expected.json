@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed padding: min(1vw, 0in) max(1vw, 0px) c…, tool nothing",
+		"why": "css-tree keeps raw text where CSS Syntax drops a qualified rule that reaches the end without a block"
+	}
+]

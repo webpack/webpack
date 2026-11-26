@@ -1,0 +1,9 @@
+:root {
+	--bar: 0;
+	--baz: 0;
+}
+
+a {
+	--foo: --bar;
+	color: --baz;
+}

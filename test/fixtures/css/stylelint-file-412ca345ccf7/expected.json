@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed }, tool nothing",
+		"why": "css-tree keeps the unmatched brace as raw text; CSS Syntax drops the qualified rule that reaches the end without a block"
+	}
+]

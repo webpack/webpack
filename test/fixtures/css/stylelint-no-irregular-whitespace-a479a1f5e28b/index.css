@@ -1,0 +1,8 @@
+.foo {
+	/* stylelint-disable-next-line no-irregular-whitespace */
+	padding : /* stylelint-disable-next-line no-irregular-whitespace */
+	  /* stylelint-disable-next-line no-irregular-whitespace */
+	1px 2px
+	/* stylelint-disable-next-line no-irregular-whitespace */
+	calc(5px + 6px);
+}

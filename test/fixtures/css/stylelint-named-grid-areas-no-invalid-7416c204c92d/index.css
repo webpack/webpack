@@ -1,0 +1,5 @@
+a {
+	grid-template-areas: "head head"
+		"nav  main"
+		"nav  foot";
+}

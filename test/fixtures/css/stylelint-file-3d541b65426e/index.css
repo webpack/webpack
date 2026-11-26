@@ -1,0 +1,10 @@
+/* stylelint-disable block-no-empty */
+a {}
+/* stylelint-enable */
+
+a {} /* stylelint-disable-line color-named */
+a { color: red; } /* stylelint-disable-line block-no-empty */
+
+/* stylelint-disable block-no-empty */
+a { color: red; } /* stylelint-disable-line */
+/* stylelint-enable */

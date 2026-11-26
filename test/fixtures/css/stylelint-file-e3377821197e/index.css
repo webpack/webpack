@@ -1,0 +1,13 @@
+@keyframes foo {}
+
+:root {
+  --bar: red;
+}
+
+@property --baz {
+  syntax: "<color>";
+  inherits: false;
+  initial-value: red;
+}
+
+@custom-media --qux (width > 10em);

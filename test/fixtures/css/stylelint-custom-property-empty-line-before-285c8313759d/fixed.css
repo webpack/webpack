@@ -1,0 +1,5 @@
+a {
+  top: 15px;
+
+  --custom-prop: value;
+}

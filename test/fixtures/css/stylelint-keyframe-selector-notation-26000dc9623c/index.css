@@ -1,0 +1,8 @@
+@keyframes foo {
+	/* stylelint-disable-next-line keyframe-selector-notation */
+	from, /* stylelint-disable-next-line keyframe-selector-notation */
+	from,
+	/* stylelint-disable-next-line keyframe-selector-notation */
+	from
+	{}
+}

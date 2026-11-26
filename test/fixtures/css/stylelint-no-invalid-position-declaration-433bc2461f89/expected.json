@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/--foo: red; a[1]: css-tree rule --foo: red; a, tool nothing",
+		"why": "CSS Syntax drops a qualified rule whose prelude starts with a dashed ident and colon; css-tree keeps it as a rule"
+	}
+]

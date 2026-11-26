@@ -1,0 +1,1 @@
+a { height: calc(var(--foo) + 2); }

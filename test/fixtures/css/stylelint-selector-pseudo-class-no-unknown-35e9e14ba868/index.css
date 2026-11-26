@@ -1,0 +1,1 @@
+div.sidebar:has(*:nth-child(5)):not(:has(*:nth-child(6))) { }

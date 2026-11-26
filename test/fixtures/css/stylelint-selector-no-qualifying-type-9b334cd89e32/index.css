@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-no-qualifying-type */
+div#thing, /* stylelint-disable-next-line selector-no-qualifying-type */
+div#thing,
+/* stylelint-disable-next-line selector-no-qualifying-type */
+div#thing
+{}

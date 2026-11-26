@@ -1,0 +1,1 @@
+:where(a :is(b, i)) { color: red; } :where(a) { color: red; }

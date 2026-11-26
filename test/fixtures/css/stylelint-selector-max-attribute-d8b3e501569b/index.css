@@ -1,0 +1,1 @@
+[type="text"] { &:hover > [data-attribute="value"][data-attribute-2="value"] {} }

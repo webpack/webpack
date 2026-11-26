@@ -1,0 +1,1 @@
+a { --foo: initial; top: var(--foo); }

@@ -1,0 +1,1 @@
+a { margin: var(--foo, 0px) 0px --bar(0px); }

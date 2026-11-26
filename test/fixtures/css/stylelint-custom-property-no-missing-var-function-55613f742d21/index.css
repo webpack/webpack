@@ -1,0 +1,1 @@
+a { --foo: 10px; --bar: 0; width: anchor-size(--bar width, --foo); }

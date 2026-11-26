@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]: css-tree unparsed padding: 10px; padding-left: 20px;, tool padding: 10px",
+		"why": "CSS Syntax reads declarations and rules inside an at-rule block; css-tree reads this block as a rule list and retains the declaration as raw text"
+	}
+]

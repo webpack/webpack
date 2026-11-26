@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-max-attribute */
+[foo], /* stylelint-disable-next-line selector-max-attribute */
+[bar],
+/* stylelint-disable-next-line selector-max-attribute */
+[foo]
+{}

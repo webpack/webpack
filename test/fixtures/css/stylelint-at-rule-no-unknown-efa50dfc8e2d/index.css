@@ -1,0 +1,1 @@
+@supports ( (perspective: 10px) or (-webkit-perspective: 10px) ) { font-size: 10pt }

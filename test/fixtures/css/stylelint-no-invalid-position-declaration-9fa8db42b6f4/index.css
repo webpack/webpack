@@ -1,0 +1,5 @@
+@media all {
+	@supports (color: red) {
+		color: red;
+	}
+}

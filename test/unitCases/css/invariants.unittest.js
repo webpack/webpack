@@ -1,5 +1,7 @@
 "use strict";
 
+const fs = require("fs");
+const path = require("path");
 const { SourceProcessor, parser } = require("../../../lib/css/syntax");
 const {
 	buildSkipSet,
@@ -283,6 +285,22 @@ describe("CSS syntax — invariants", () => {
 		expected
 	} of all) {
 		describe(name, () => {
+			const fixedFile = path.join(dir, "fixed.css");
+			if (fs.existsSync(fixedFile)) {
+				it("minifies the original and fixed CSS alike", () => {
+					const fixed = fs.readFileSync(fixedFile, "utf8");
+					const processor = new SourceProcessor();
+					const options = {
+						mode: /** @type {const} */ ("minify"),
+						transforms: { removeDeadRules: false }
+					};
+					const original = processor.process(source, options).code;
+					const corrected = processor.process(fixed, options).code;
+					expect(original).not.toBe("");
+					expect(original).toBe(corrected);
+				});
+			}
+
 			it("tokenizes", () => {
 				expect(
 					snapshotOf(

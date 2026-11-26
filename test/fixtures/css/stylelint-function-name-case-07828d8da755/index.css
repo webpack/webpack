@@ -1,0 +1,2 @@
+a::before { content: ATTR(data-foo
+); }

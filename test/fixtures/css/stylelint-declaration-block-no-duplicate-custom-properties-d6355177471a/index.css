@@ -1,0 +1,1 @@
+@media { --custom-property: orange; .foo { --custom-property: black; --custom-property: white; } }

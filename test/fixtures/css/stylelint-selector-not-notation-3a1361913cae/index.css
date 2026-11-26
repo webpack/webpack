@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-not-notation */
+:not(a, div), /* stylelint-disable-next-line selector-not-notation */
+:not(a, div),
+/* stylelint-disable-next-line selector-not-notation */
+:not(a, div)
+{}

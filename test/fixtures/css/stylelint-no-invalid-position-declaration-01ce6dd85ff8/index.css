@@ -1,0 +1,6 @@
+@page {
+	size: 11in;
+	@top-right {
+		content: "foo";
+	}
+}

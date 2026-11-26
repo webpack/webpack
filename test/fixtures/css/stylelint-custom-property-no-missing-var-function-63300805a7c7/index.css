@@ -1,0 +1,6 @@
+a {
+	--foo: red;
+	--bar: blue;
+
+	color: var(--foo, --bar);
+}

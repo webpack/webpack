@@ -1,0 +1,9 @@
+@keyframes foo {
+	from {}
+	/* a comment */
+	from, /* a comment */
+	from,
+	/* a comment */
+	from
+	{}
+}

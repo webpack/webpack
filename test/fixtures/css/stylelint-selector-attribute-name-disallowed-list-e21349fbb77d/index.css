@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-attribute-name-disallowed-list */
+div[class*="foo"], /* stylelint-disable-next-line selector-attribute-name-disallowed-list */
+div[id*="foo"],
+/* stylelint-disable-next-line selector-attribute-name-disallowed-list */
+div[data-foo*="foo"]
+{ color: red; }

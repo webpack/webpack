@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-max-specificity */
+.ab .ab, /* stylelint-disable-next-line selector-max-specificity */
+.ab .ab,
+/* stylelint-disable-next-line selector-max-specificity */
+.ab .ab
+{}

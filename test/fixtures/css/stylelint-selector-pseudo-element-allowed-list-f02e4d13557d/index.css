@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-pseudo-element-allowed-list */
+a::after, /* stylelint-disable-next-line selector-pseudo-element-allowed-list */
+a::after,
+/* stylelint-disable-next-line selector-pseudo-element-allowed-list */
+a::after
+{}

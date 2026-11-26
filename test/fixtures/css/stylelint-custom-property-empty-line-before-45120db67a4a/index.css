@@ -1,0 +1,6 @@
+a {
+
+ --foo: red;
+ @media all {} 
+
+ --bar: red;}

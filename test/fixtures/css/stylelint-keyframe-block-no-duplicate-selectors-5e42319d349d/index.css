@@ -1,0 +1,9 @@
+@keyframes foo {
+	from {}
+	/* stylelint-disable-next-line keyframe-block-no-duplicate-selectors */
+	from, /* stylelint-disable-next-line keyframe-block-no-duplicate-selectors */
+	from,
+	/* stylelint-disable-next-line keyframe-block-no-duplicate-selectors */
+	from
+	{}
+}

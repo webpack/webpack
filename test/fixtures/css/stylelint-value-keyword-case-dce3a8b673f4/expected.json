@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]/color: GREEN; @media (min-width: 768px)[1]: css-tree rule color: GREEN; @media (min-width: 768px), tool color: GREEN",
+		"why": "CSS Syntax reads declarations and rules inside an at-rule block; css-tree joins the declaration to the following rule's prelude"
+	}
+]

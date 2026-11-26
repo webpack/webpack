@@ -1,0 +1,7 @@
+a {
+	color: HSLA(
+		calc(var(--hue) + 30) /* comment */,
+		28%, 50% /* comment */
+		, 0.2
+	);
+}

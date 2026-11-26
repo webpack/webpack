@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree display: BLOCK !important, tool display: BLOCK !IMPORT",
+		"why": "css-tree treats an unknown annotation as `!important`; only the ident `important` after `!` sets the flag"
+	}
+]

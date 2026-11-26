@@ -1,0 +1,1 @@
+:root { --foo: 10px; } a { --foo: min(50%, 10px); }

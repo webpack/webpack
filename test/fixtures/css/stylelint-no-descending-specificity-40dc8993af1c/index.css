@@ -1,0 +1,7 @@
+b a, b aa, b aaa { color: red; }
+/* a comment */
+a, /* a comment */
+aa,
+/* a comment */
+aaa
+{ color: red; }

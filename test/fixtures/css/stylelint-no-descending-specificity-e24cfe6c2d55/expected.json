@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/a[1]: css-tree b: first-of-type { &:hover i::after { color: re…, tool rule b:first-of-type",
+		"why": "the brace makes this a nested qualified rule; css-tree reads its type selector and pseudo-class as a declaration"
+	}
+]

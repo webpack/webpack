@@ -1,0 +1,1 @@
+a { --foo: 1px; width: calc(var(--foo) + 2rem); }

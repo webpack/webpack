@@ -1,0 +1,14 @@
+/* stylelint-disable color-named */
+a {}
+/* stylelint-enable */
+
+/* stylelint-disable block-no-empty */
+a { color: red; }
+/* stylelint-enable */
+
+a {} /* stylelint-disable-line */
+a { color: red; } /* stylelint-disable-line */
+
+/* stylelint-disable */
+a {}
+/* stylelint-enable */

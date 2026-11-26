@@ -1,0 +1,5 @@
+@media screen { /* comment */
+  .foo {
+    display: none;
+  }
+}

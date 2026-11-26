@@ -1,0 +1,4 @@
+a {
+	box-shadow: -0.25rem 0rem 0rem rgba(0, 0, 0, 0), /* comment */
+		inset -0.25rem 0rem 0rem rgba(0, 0, 0, 0); /* comment */
+}

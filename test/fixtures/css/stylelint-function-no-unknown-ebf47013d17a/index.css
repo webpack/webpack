@@ -1,0 +1,1 @@
+a { --color: if(media(width >= 1px): red; else: green); }

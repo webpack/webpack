@@ -1,0 +1,14 @@
+a {
+	border-top-width: 1px;
+	border-top-style: dotted;
+	border-top-color: red;
+	border-right-width: 2px;
+	border-bottom-width: 3px;
+	border-left-width: 4px;
+	border-right-style: solid;
+	border-bottom-style: dashed;
+	border-left-style: double;
+	border-right-color: green;
+	border-bottom-color: blue;
+	border-left-color: yellow;
+}

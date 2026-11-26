@@ -1,0 +1,1 @@
+@position-try --foo { @supports (bar: 0) { bar: 0 } }

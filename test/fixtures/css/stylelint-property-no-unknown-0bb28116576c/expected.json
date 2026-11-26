@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling escape",
+		"contains": "width\n      -> \\77 idth",
+		"why": "`*width: 100px` is a star hack the printer writes back as authored, escape included"
+	}
+]

@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-pseudo-class-disallowed-list */
+:focus, /* stylelint-disable-next-line selector-pseudo-class-disallowed-list */
+:focus,
+/* stylelint-disable-next-line selector-pseudo-class-disallowed-list */
+:focus
+{}

@@ -1,0 +1,1 @@
+a { right: calc(min(100vw, 0rem))); }

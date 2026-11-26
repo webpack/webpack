@@ -1,0 +1,1 @@
+@container foo-bar (inline-size > 30em) and foo-baz style(--large: true) {}

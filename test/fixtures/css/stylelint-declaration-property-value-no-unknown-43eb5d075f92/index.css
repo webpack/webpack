@@ -1,0 +1,2 @@
+@property --foo { syntax: "<custom-ident>"; }
+a { color: var(--foo); }

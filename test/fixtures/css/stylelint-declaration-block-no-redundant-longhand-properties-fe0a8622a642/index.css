@@ -1,0 +1,1 @@
+a { grid-template-columns: repeat(3, 1fr); grid-template-rows: auto; grid-template-areas: "left center right"; }

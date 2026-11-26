@@ -1,0 +1,1 @@
+.a:not(.b) .c:matches(.d, .e) .f:unknown(.g, .h) { color: red; } .a { color: red; }

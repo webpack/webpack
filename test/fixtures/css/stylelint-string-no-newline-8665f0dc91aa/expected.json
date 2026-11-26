@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/: css-tree unparsed a[href^='foo bar'] {}, tool nothing",
+		"why": "css-tree keeps raw text where CSS Syntax drops a qualified rule that reaches the end without a block"
+	}
+]

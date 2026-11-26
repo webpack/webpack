@@ -1,0 +1,1 @@
+a { composes: grey blue from 'lib/index.css'; }

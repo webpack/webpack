@@ -1,0 +1,1 @@
+a { --cUstOm-prOpErtY: pink; { &:hover { --custom-property: orange; --cUstOm-prOpErtY: black; } } }

@@ -1,0 +1,1 @@
+a { b:first-of-type { &:hover i::after { color: red; } } b:last-of-type { i::after { color: red; } } }

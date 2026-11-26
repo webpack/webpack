@@ -1,0 +1,1 @@
+a:not(.foo):hover { color: red; } a::before { color: red; }

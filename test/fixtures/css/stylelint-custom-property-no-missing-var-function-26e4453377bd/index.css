@@ -1,0 +1,7 @@
+@property --bar {}
+@property --baz {}
+
+a {
+	--foo: --bar;
+	color: --baz;
+}

@@ -1,0 +1,1 @@
+:is(a, c), :is(b, c) {} :is(b, c), :is(c, a) {}

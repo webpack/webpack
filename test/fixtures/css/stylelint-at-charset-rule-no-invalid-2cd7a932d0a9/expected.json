@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@charset[1]: css-tree @charset \"utf-8\";, tool nothing",
+		"why": "css-tree strips the byte order mark, but this parser reads the supplied string after decoding, which would have removed it"
+	}
+]

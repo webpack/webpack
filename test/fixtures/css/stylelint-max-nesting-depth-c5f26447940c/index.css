@@ -1,0 +1,1 @@
+a { &:hover, &:--custom-pseudo { b { top: 0; } } }

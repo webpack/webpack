@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-max-class */
+.foo, /* stylelint-disable-next-line selector-max-class */
+.bar,
+/* stylelint-disable-next-line selector-max-class */
+.foo
+{}

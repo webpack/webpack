@@ -1,0 +1,1 @@
+.foo { & h2 { & + p { color: red; } } } h1 { & h2 { & + #baz { color: red; } } }

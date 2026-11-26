@@ -1,0 +1,1 @@
+@keyframes foo {} a { animation: linear foo 2s backwards; }

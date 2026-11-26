@@ -1,0 +1,1 @@
+a { border: calc(var(--baz) * 2) solid; }

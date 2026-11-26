@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@mixin[1]/@supports[1]: css-tree unparsed text-wrap: pretty;, tool text-wrap: pretty",
+		"why": "CSS Syntax reads declarations and rules inside an at-rule block; css-tree reads this block as a rule list and retains the declaration as raw text"
+	}
+]

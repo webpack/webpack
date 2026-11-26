@@ -1,0 +1,1 @@
+p { width: var(--foo); width: var(--bar); }

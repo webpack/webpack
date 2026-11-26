@@ -1,0 +1,1 @@
+a { height: calc-size(foo, 10px * 1.5); }

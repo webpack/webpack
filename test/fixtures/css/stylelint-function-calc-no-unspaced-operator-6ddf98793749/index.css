@@ -1,0 +1,1 @@
+a { top: rgb(from red calc(r+1) calc(g-+2) calc(clamp(10px+2px, g+2, none))); }

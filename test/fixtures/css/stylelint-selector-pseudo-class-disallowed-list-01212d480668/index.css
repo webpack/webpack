@@ -1,0 +1,1 @@
+body:not(div):has(span) {}

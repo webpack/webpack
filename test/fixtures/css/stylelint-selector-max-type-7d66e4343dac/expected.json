@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/.foo[1]: css-tree div: is(&) {}, tool rule div:is(&)",
+		"why": "the brace makes this a nested qualified rule; css-tree reads its type selector and pseudo-class as a declaration"
+	}
+]

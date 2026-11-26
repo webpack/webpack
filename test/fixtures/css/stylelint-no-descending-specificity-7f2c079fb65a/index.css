@@ -1,0 +1,8 @@
+.tng-button {
+	&:where(:not(.is-md, .is-lg)),
+	.is-sm {
+		.tng-icon {
+			color: red;
+		}
+	}
+}

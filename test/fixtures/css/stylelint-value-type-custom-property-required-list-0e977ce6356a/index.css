@@ -1,0 +1,1 @@
+a { --foo: red; --bar: blue; background: linear-gradient(45deg, var(--foo) 0%, var(--bar) 100%); }

@@ -1,0 +1,1 @@
+:root { --foo: pink; }  a { color: --foo, red; }

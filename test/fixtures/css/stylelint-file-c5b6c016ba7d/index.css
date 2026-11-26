@@ -1,0 +1,7 @@
+@property --foo {
+  syntax: "<color>";
+}
+
+:root {
+  --foo: red;
+}

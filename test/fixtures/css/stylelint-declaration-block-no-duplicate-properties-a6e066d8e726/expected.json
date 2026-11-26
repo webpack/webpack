@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@media[1]/color: orange; .foo[1]: css-tree rule color: orange; .foo, tool color: orange",
+		"why": "CSS Syntax reads declarations and rules inside an at-rule block; css-tree joins the declaration to the following rule's prelude"
+	}
+]

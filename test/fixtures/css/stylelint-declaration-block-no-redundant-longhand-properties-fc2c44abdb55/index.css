@@ -1,0 +1,4 @@
+a {
+	grid-column: line-outer-left / line-outer-right;
+	grid-row: line-inner-top / line-inner-bottom;
+}

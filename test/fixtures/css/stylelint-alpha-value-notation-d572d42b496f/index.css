@@ -1,0 +1,7 @@
+a {
+	background-image: linear-gradient(
+		to right,
+		hwb(270 60% 70% / 10%)
+		lch(56.29% 19.86 236.62 / 40%)
+	);
+}

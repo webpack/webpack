@@ -1,0 +1,2 @@
+@custom-media --modern (color), (hover);
+@media (--modern) and (width > 1024px) {}

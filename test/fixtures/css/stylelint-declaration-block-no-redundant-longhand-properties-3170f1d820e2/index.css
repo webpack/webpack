@@ -1,0 +1,9 @@
+a {
+	font-variant-ligatures: foo1;
+	font-variant-position: foo2;
+	font-variant-caps: foo3;
+	font-variant-numeric: foo4;
+	font-variant-alternates: foo5;
+	font-variant-east-asian: foo6;
+	font-variant-emoji: foo7;
+}

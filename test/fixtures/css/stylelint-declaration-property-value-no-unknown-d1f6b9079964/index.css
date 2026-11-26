@@ -1,0 +1,1 @@
+a { width: calc-size(auto, round(up, size, 1px)); }

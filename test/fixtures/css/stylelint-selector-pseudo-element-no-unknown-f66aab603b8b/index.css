@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+a::pseudo, /* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+a::pseudo,
+/* stylelint-disable-next-line selector-pseudo-element-no-unknown */
+a::pseudo
+{ }

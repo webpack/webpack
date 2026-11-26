@@ -1,0 +1,1 @@
+a { --foo: 10px; --bar: 0; top: anchor(--bar calc(50% + --foo)); }

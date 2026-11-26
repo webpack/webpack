@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "agreement",
+		"contains": "/@import[1]: css-tree @import 'foo .css';;, tool @import 'foo .css';",
+		"why": "css-tree's recovered `@import` includes the unterminated string's semicolon, then its tree reader appends another"
+	}
+]

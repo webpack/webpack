@@ -1,0 +1,8 @@
+a { --foo: red; }
+a { --foo: 10px 10vh; }
+
+@property --foo {
+	syntax: "*";
+	inherits: false;
+	initial-value: 10px;
+}

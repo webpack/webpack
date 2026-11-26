@@ -1,0 +1,3 @@
+@import url("foo.css");
+--foo: red;
+a { color: blue; }

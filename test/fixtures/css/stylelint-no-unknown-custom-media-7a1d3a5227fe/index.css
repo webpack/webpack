@@ -1,0 +1,1 @@
+@media screen and (--bar) {}; @custom-media --bar (max-width: 30em);

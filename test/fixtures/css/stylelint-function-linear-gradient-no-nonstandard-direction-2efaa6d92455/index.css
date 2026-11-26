@@ -1,0 +1,1 @@
+.foo { background: url(foo.png), -moz-linear-gradient(to bottom, #fff, #000), url(foo.png); }

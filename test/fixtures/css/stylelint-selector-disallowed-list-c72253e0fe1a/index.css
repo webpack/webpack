@@ -1,0 +1,6 @@
+/* stylelint-disable-next-line selector-disallowed-list */
+.foo, /* stylelint-disable-next-line selector-disallowed-list */
+.foo,
+/* stylelint-disable-next-line selector-disallowed-list */
+.foo
+{}
