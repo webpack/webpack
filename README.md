@@ -10,6 +10,7 @@
 [![node][node]][node-url]
 [![builds1][builds1]][builds1-url]
 [![dependency-review][dependency-review]][dependency-review-url]
+[![OpenSSF Scorecard][scorecard]][scorecard-url]
 [![coverage][cover]][cover-url]
 [![pkg.pr.new](https://pkg.pr.new/badge/webpack/webpack)](https://pkg.pr.new/~/webpack/webpack)
 [![PR's welcome][prs]][prs-url]
@@ -656,5 +657,7 @@ Before we started using OpenCollective, donations were made anonymously. Now tha
 [builds1-url]: https://github.com/webpack/webpack/actions/workflows/test.yml
 [dependency-review-url]: https://github.com/webpack/webpack/actions/workflows/dependency-review.yml
 [dependency-review]: https://github.com/webpack/webpack/actions/workflows/dependency-review.yml/badge.svg
+[scorecard]: https://api.scorecard.dev/projects/github.com/webpack/webpack/badge
+[scorecard-url]: https://scorecard.dev/viewer/?uri=github.com/webpack/webpack
 [cover]: https://codecov.io/gh/webpack/webpack/graph/badge.svg?token=mDP3mQJNnn
 [cover-url]: https://codecov.io/gh/webpack/webpack
