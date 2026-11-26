@@ -15,21 +15,28 @@ class RepeatedWarningsPlugin {
 					const target = [...compilation.modules].find((module) =>
 						module.identifier().includes("module.js")
 					);
+					const createWarnings = [
+						() => new WebpackError("alpha warning"),
+						() => {
+							const beta = new WebpackError("beta warning");
+							beta.file = "beta.js";
+							return beta;
+						},
+						() => {
+							const gamma = new WebpackError("gamma warning");
+							gamma.module = target;
+							return gamma;
+						},
+						() => new WebpackError("sticky warning"),
+						() => new WebpackError("delta warning"),
+						() => new WebpackError("kept warning")
+					];
 					// Identical warnings in a row: a global or sticky regexp that
 					// resumes at `lastIndex` would match only every other one.
-					for (let i = 0; i < 3; i++) {
-						compilation.warnings.push(new WebpackError("alpha warning"));
-						const beta = new WebpackError("beta warning");
-						beta.file = "beta.js";
-						compilation.warnings.push(beta);
-						const gamma = new WebpackError("gamma warning");
-						gamma.module = target;
-						compilation.warnings.push(gamma);
-						compilation.warnings.push(new WebpackError("sticky warning"));
-						compilation.warnings.push(new WebpackError("kept warning"));
-					}
-					for (let i = 0; i < 3; i++) {
-						compilation.warnings.push(new WebpackError("delta warning"));
+					for (const createWarning of createWarnings) {
+						for (let i = 0; i < 3; i++) {
+							compilation.warnings.push(createWarning());
+						}
 					}
 				});
 			}
