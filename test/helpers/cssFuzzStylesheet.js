@@ -36,8 +36,8 @@ const {
 
 // Past this many references a choice takes its cheapest alternative, so a
 // recursive grammar (`<calc-sum>`, `<media-condition>`) always ends.
-const MAX_DEPTH = 7;
-const MAX_NESTING = 3;
+const MAX_DEPTH = 8;
+const MAX_NESTING = 4;
 
 /** @type {Record<string, string[]>} */
 const DIMENSION_UNITS = {
@@ -703,7 +703,7 @@ const createStylesheetGenerator = (seed, createRandom) => {
 	const declarations = (context) => {
 		/** @type {string[]} */
 		const list = [];
-		const count = below(5);
+		const count = below(7);
 		for (let i = 0; i < count; i++) list.push(declaration(context));
 		return (
 			list.join(pick(random, [";", "; ", ";\n", ";;"])) +
@@ -718,11 +718,11 @@ const createStylesheetGenerator = (seed, createRandom) => {
 	const styleRule = (context) => {
 		const inner = { ...context, nesting: context.nesting + 1, depth: 0 };
 		let body = declarations(inner);
-		if (context.nesting < MAX_NESTING && chance(0.2)) {
+		if (context.nesting < MAX_NESTING && chance(0.3)) {
 			// Without the `;` a custom property's value would take the rules in.
 			body += `;${gap()}${rules(inner, 2)}`;
 		}
-		return `${selectorList(context, 3)}${gap()}{${body}}`;
+		return `${selectorList(context, 4)}${gap()}{${body}}`;
 	};
 
 	/**
@@ -808,7 +808,7 @@ const createStylesheetGenerator = (seed, createRandom) => {
 
 	return {
 		stylesheet: () => {
-			let sheet = rules({ depth: 0, nesting: 0, atRule: undefined }, 8);
+			let sheet = rules({ depth: 0, nesting: 0, atRule: undefined }, 10);
 			if (chance(0.1)) sheet = `@charset "utf-8";${sheet}`;
 			if (chance(0.1)) sheet = `@import url(x.css) layer(a);${sheet}`;
 			if (chance(0.05)) sheet = `<!--${sheet}-->`;
