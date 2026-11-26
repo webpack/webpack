@@ -1872,7 +1872,7 @@ declare class Chunk {
 	ids: null | ChunkId[];
 	debugId: number;
 	name?: null | string;
-	idNameHints: SortableSet<string>;
+	idNameHints: SortableSet<string, never>;
 	preventIntegration: boolean;
 	filenameTemplate?:
 		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
@@ -2059,7 +2059,7 @@ declare class Chunk {
 	/**
 	 * Gets groups iterable.
 	 */
-	get groupsIterable(): SortableSet<ChunkGroup>;
+	get groupsIterable(): SortableSet<ChunkGroup, never>;
 
 	/**
 	 * Disconnects from groups.
@@ -2773,7 +2773,7 @@ declare abstract class ChunkGroup {
 	 */
 	getChildren(): ChunkGroup[];
 	getNumberOfChildren(): number;
-	get childrenIterable(): SortableSet<ChunkGroup>;
+	get childrenIterable(): SortableSet<ChunkGroup, ChunkGroup[]>;
 
 	/**
 	 * Removes a child chunk group and clears the corresponding parent link on
@@ -2796,7 +2796,7 @@ declare abstract class ChunkGroup {
 	 * Checks whether the provided group is registered as a parent.
 	 */
 	hasParent(parent: ChunkGroup): boolean;
-	get parentsIterable(): SortableSet<ChunkGroup>;
+	get parentsIterable(): SortableSet<ChunkGroup, ChunkGroup[]>;
 
 	/**
 	 * Removes a parent chunk group and clears the reverse child relationship.
@@ -2807,7 +2807,7 @@ declare abstract class ChunkGroup {
 	 * Registers an async entrypoint that is rooted in this chunk group.
 	 */
 	addAsyncEntrypoint(entrypoint: Entrypoint): boolean;
-	get asyncEntrypointsIterable(): SortableSet<ChunkGroup>;
+	get asyncEntrypointsIterable(): SortableSet<ChunkGroup, never>;
 
 	/**
 	 * Returns the async dependency blocks that create or reference this group.
@@ -9874,7 +9874,7 @@ declare class ESMImportDependencyTemplate extends DependencyTemplate {
 	static getImportEmittedRuntime(
 		module: Module,
 		referencedModule: Module
-	): undefined | string | boolean | SortableSet<string>;
+	): undefined | string | boolean | SortableSet<string, string>;
 }
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
@@ -11677,7 +11677,9 @@ declare abstract class ExportsInfo {
 	/**
 	 * Returns set of used exports, or true (when namespace object is used), or false (when unused), or null (when unknown).
 	 */
-	getUsedExports(runtime: RuntimeSpec): null | boolean | SortableSet<string>;
+	getUsedExports(
+		runtime: RuntimeSpec
+	): null | boolean | SortableSet<string, never>;
 
 	/**
 	 * Gets provided exports.
@@ -12075,7 +12077,7 @@ declare interface ExternalModuleInfo {
 	 */
 	eager: boolean;
 	module: Module;
-	runtimeCondition?: string | boolean | SortableSet<string>;
+	runtimeCondition?: string | boolean | SortableSet<string, string>;
 	nonDeferAccess: boolean;
 	index: number;
 
@@ -22586,7 +22588,7 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * @deprecated
 	 */
-	get usedExports(): null | boolean | SortableSet<string>;
+	get usedExports(): null | boolean | SortableSet<string, never>;
 
 	/**
 	 * Gets optimization bailout.
@@ -23605,7 +23607,7 @@ declare class ModuleGraph {
 	getUsedExports(
 		module: Module,
 		runtime: RuntimeSpec
-	): null | boolean | SortableSet<string>;
+	): null | boolean | SortableSet<string, never>;
 
 	/**
 	 * Gets pre order index.
@@ -32527,7 +32529,8 @@ declare class RuntimeChunkPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type RuntimeCondition = undefined | string | boolean | SortableSet<string>;
+type RuntimeCondition =
+	undefined | string | boolean | SortableSet<string, string>;
 type RuntimeId = string | number;
 declare class RuntimeModule extends Module {
 	/**
@@ -32633,7 +32636,7 @@ declare interface RuntimeRequirementsContext {
 	 */
 	codeGenerationResults: CodeGenerationResults;
 }
-type RuntimeSpec = undefined | string | SortableSet<string>;
+type RuntimeSpec = undefined | string | SortableSet<string, string>;
 
 /**
  * Represents RuntimeSpecMap.
@@ -33277,7 +33280,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * only execute the statement in some runtimes
 		 */
-		runtimeCondition?: string | boolean | SortableSet<string>;
+		runtimeCondition?: string | boolean | SortableSet<string, string>;
 		/**
 		 * if set, will be filled with runtime requirements
 		 */
@@ -41722,7 +41725,7 @@ declare namespace exports {
 			export let filterRuntime: (
 				runtime: RuntimeSpec,
 				filter: (runtime?: RuntimeSpec) => boolean
-			) => undefined | string | boolean | SortableSet<string>;
+			) => undefined | string | boolean | SortableSet<string, string>;
 			export let forEachRuntime: (
 				runtime: RuntimeSpec,
 				fn: (runtime?: string) => void,
@@ -41746,10 +41749,10 @@ declare namespace exports {
 				runtime: RuntimeSpec
 			) => RuntimeCondition;
 			export let mergeRuntimeConditionNonFalse: (
-				a: undefined | string | true | SortableSet<string>,
-				b: undefined | string | true | SortableSet<string>,
+				a: undefined | string | true | SortableSet<string, string>,
+				b: undefined | string | true | SortableSet<string, string>,
 				runtime: RuntimeSpec
-			) => undefined | string | true | SortableSet<string>;
+			) => undefined | string | true | SortableSet<string, string>;
 			export let mergeRuntimeOwned: (
 				a: RuntimeSpec,
 				b: RuntimeSpec
