@@ -1353,9 +1353,9 @@ const compareRenders = async ({ pairs, width }) => {
 	// bounded; what is read then is the page as far as it got.
 	const PATIENCE = 3000;
 	// WHY: on a busy runner Firefox took longer than `PATIENCE` to replace a
-	// frame's initial `about:blank`, read then as a page of 3 elements; nothing
-	// fetched decides when that happens, so this bound only catches a hang.
-	const COMMIT_PATIENCE = 30000;
+	// frame's initial `about:blank`, read then as a page of 3 elements; this
+	// bound is paid only by a frame whose document never comes in.
+	const COMMIT_PATIENCE = 10000;
 	/** @type {HTMLIFrameElement} */
 	let frame = document.createElement("iframe");
 
@@ -1372,30 +1372,29 @@ const compareRenders = async ({ pairs, width }) => {
 		]);
 
 	/**
-	 * Whether the frame holds its `srcdoc` document, parsed, rather than the
-	 * `about:blank` it starts with.
+	 * Resolves once the frame no longer holds the document it started with, its
+	 * `load` fired, or `COMMIT_PATIENCE` passed. Only the swap is waited for: a
+	 * page still parsing gets `PATIENCE` for its `load`, as any page does.
 	 * @param {HTMLIFrameElement} of the frame
-	 * @returns {boolean} true once the document is the frame's own and parsed
-	 */
-	const committed = (of) => {
-		const doc = of.contentDocument;
-		return (
-			doc !== null && doc.URL === "about:srcdoc" && doc.readyState !== "loading"
-		);
-	};
-
-	/**
-	 * Resolves once the frame holds its own parsed document, or after
-	 * `COMMIT_PATIENCE`.
-	 * @param {HTMLIFrameElement} of the frame
+	 * @param {Document | null} initial the document it held when appended
+	 * @param {Promise<unknown>} load the frame's `load`
 	 * @returns {Promise<void>} settles when the document is in or the wait ends
 	 */
-	const commit = (of) =>
+	const commit = (of, initial, load) =>
 		new Promise((resolve) => {
+			let done = false;
+			load.then(() => {
+				done = true;
+				resolve(undefined);
+			});
 			const until = Date.now() + COMMIT_PATIENCE;
 			const poll = () => {
-				if (committed(of) || Date.now() > until) resolve(undefined);
-				else setTimeout(poll, 20);
+				if (done) return;
+				if (of.contentDocument !== initial || Date.now() > until) {
+					resolve(undefined);
+				} else {
+					setTimeout(poll, 20);
+				}
 			};
 			poll();
 		});
@@ -1419,7 +1418,7 @@ const compareRenders = async ({ pairs, width }) => {
 		document.body.append(frame);
 		// `load` gets its patience from when the document is in, not from when
 		// it was asked for.
-		await commit(frame);
+		await commit(frame, frame.contentDocument, load);
 		return settled(load);
 	};
 
