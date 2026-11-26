@@ -399,6 +399,10 @@ class BenchmarkRunner {
 		// Dealt round-robin in `run()` once unit benchmarks are split per bench.
 		const roundRobin = isRoundRobinMode();
 
+		if (countOfBenchmarks === 0) {
+			throw new Error("No benchmark matched FILTER and NEGATIVE_FILTER");
+		}
+
 		// A round-robin mode deals tasks, not benchmarks: one benchmark's
 		// scenarios may fill several shards.
 		if (!roundRobin && countOfBenchmarks < shard[1]) {
