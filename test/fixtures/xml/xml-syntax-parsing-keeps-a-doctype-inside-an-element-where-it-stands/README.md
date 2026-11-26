@@ -1,0 +1,1 @@
+A DOCTYPE inside an element is no well-formed XML, and the parser keeps it in the element where it stands, as XML keeps character data outside the root as a comment. Appended to the document, it sat after an element that ends past it (`spans`).

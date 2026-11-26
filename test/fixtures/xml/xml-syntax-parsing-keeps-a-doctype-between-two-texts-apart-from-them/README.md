@@ -1,0 +1,1 @@
+A DOCTYPE inside an element between two texts stays a child of the element between them. Appended to the document, it let the two texts merge into one node whose source held the DOCTYPE, so beautifying wrote it twice (`spans`, `idempotence`).
