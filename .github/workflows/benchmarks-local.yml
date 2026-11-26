@@ -1,0 +1,85 @@
+name: Benchmarks (local cases)
+
+# The `-local` benchmark cases, too long for `benchmarks.yml`, which filters them
+# out on every event. A cron measures them on `main` instead, and a manual run
+# measures them on any branch.
+on:
+  schedule:
+    - cron: "17 2 * * 3"
+  workflow_dispatch:
+
+concurrency:
+  group: Benchmarks-local-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write # Required for OIDC authentication with CodSpeed
+
+jobs:
+  benchmark:
+    strategy:
+      fail-fast: false
+      matrix:
+        # Each case builds three scenarios, one per shard of its jobs. Memory mode
+        # takes minutes per case. Simulation takes about 6 minutes per second of
+        # local harness time: about 45 minutes for medium's production scenario,
+        # about 160 for large's and about 11 hours for very large's, past the 6-hour
+        # job limit, so very large is measured in memory mode only.
+        include:
+          - { case: realistic-app-medium-local, mode: memory, shard: 1/1 }
+          - { case: realistic-app-large-local, mode: memory, shard: 1/1 }
+          - { case: realistic-app-very-large-local, mode: memory, shard: 1/1 }
+          - { case: realistic-app-medium-local, mode: simulation, shard: 1/3 }
+          - { case: realistic-app-medium-local, mode: simulation, shard: 2/3 }
+          - { case: realistic-app-medium-local, mode: simulation, shard: 3/3 }
+          - { case: realistic-app-large-local, mode: simulation, shard: 1/3 }
+          - { case: realistic-app-large-local, mode: simulation, shard: 2/3 }
+          - { case: realistic-app-large-local, mode: simulation, shard: 3/3 }
+    name: ${{ matrix.case }} (${{ matrix.mode }}, ${{ matrix.shard }})
+    runs-on: ubuntu-latest
+    # GitHub's limit for a hosted job; only a hang should reach it.
+    timeout-minutes: 360
+    env:
+      LAST_COMMIT: 1
+      SHARD: ${{ matrix.shard }}
+      FILTER: ^${{ matrix.case }}$
+      # Single libuv thread → deterministic fs-completion order, so a build
+      # runs the same instructions and allocations every time.
+      UV_THREADPOOL_SIZE: 1
+    permissions:
+      # A job's own block replaces the workflow's, so checkout's read and
+      # CodSpeed's OIDC upload are granted again here.
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-tags: true
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          # Pinned as in `benchmarks.yml`: bump both together.
+          node-version: "24.22.0"
+          cache: yarn
+
+      - run: node tooling/retry.js yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Check CPU and memory
+        run: |
+          lscpu | grep -E '^(Model name|CPU\(s\)):'
+          free -g
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@b1f28b5eccf7cb5bfe6a2a89cb3053eb67f1150c # v5.8.0
+        with:
+          run: yarn benchmark --ci
+          mode: ${{ matrix.mode }}
+          token: ${{ secrets.CODSPEED_TOKEN }}

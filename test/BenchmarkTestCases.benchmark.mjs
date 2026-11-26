@@ -396,15 +396,16 @@ class BenchmarkRunner {
 	 */
 	createBenchmarkTasks(benchmarks, shard, baselines) {
 		const countOfBenchmarks = benchmarks.length;
+		// Dealt round-robin in `run()` once unit benchmarks are split per bench.
+		const roundRobin = isRoundRobinMode();
 
-		if (countOfBenchmarks < shard[1]) {
+		// A round-robin mode deals tasks, not benchmarks: one benchmark's
+		// scenarios may fill several shards.
+		if (!roundRobin && countOfBenchmarks < shard[1]) {
 			throw new Error(
 				`Shard upper limit is more than count of benchmarks, count of benchmarks is ${countOfBenchmarks}, shard is ${shard[1]}`
 			);
 		}
-
-		// Dealt round-robin in `run()` once unit benchmarks are split per bench.
-		const roundRobin = isRoundRobinMode();
 		const shardBenchmarks = roundRobin
 			? benchmarks
 			: splitToNChunks([...benchmarks], shard[1])[shard[0] - 1];
