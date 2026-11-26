@@ -8540,13 +8540,6 @@ declare interface DecodedEntitiesWithMap {
 	text: string;
 	map?: number[];
 }
-type DecodedSegment =
-	| [number]
-	| [number, number, number, number]
-	| [number, number, number, number, number];
-type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
-	mappings: DecodedSegment[][];
-};
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -9651,41 +9644,6 @@ declare interface DriverMangleOptions {
 	 * whether top-level names are mangled
 	 */
 	toplevel: boolean;
-}
-
-/**
- * terser's `sourceMap` options, as terser's `minify` defaults them.
- */
-declare interface DriverSourceMapOptions {
-	/**
-	 * whether `map` is answered as an object rather than as JSON
-	 */
-	asObject: boolean;
-
-	/**
-	 * the input's map or its JSON, `"inline"` for the one the source ends in
-	 */
-	content: null | string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
-
-	/**
-	 * the minified file's name
-	 */
-	filename: null | string;
-
-	/**
-	 * whether the map holds the sources' content
-	 */
-	includeSources: boolean;
-
-	/**
-	 * the sources' root
-	 */
-	root: null | string;
-
-	/**
-	 * where the code says its map is, `"inline"` for the map itself
-	 */
-	url: null | string;
 }
 
 declare interface DualModeResolve {
@@ -13122,7 +13080,7 @@ type GivenCompressOptions = Omit<Partial<CompressOptions>, "globalDefs"> & {
 
 /**
  * terser's `format` options as a caller gives them; `sourceMap` is left out,
- * as the minify writes it from the top-level `sourceMap` option.
+ * as the minify writes a map from the `SourceProcessor`'s `source` option.
  */
 declare interface GivenFormatOptions {
 	code?: boolean;
@@ -13310,18 +13268,6 @@ declare interface GivenFormatOptions {
 	wrap_iife?: boolean;
 	spidermonkey?: boolean;
 }
-
-/**
- * A source map made of sections, each a map of its own, as a caller gives it.
- */
-declare interface GivenIndexSourceMap {
-	version: number;
-	file?: null | string;
-	sections: {
-		offset: { line: number; column: number };
-		map: string | GivenSourceMap | GivenIndexSourceMap;
-	}[];
-}
 type GivenMangleOptions = Omit<Partial<DriverMangleOptions>, "properties"> & {
 	properties?: boolean | GivenPropertyMangleOptions;
 } & TerserMangleAliases;
@@ -13329,27 +13275,6 @@ type GivenPropertyMangleOptions = Omit<
 	Partial<PropertyMangleOptions>,
 	"cache"
 > & { cache?: null | NameCacheEntry } & TerserPropertyAliases;
-type GivenSourceMap = Pick<
-	RawSourceMap,
-	"version" | "names" | "sourceRoot" | "ignoreList"
-> & {
-	file?: null | string;
-	sources: (null | string)[];
-	sourcesContent?: (null | string)[];
-};
-type GivenSourceMapOptions = Omit<
-	Partial<DriverSourceMapOptions>,
-	"content"
-> & {
-	content?:
-		| null
-		| string
-		| RawSourceMap
-		| DecodedSourceMap
-		| IndexSourceMap
-		| GivenSourceMap
-		| GivenIndexSourceMap;
-};
 
 /**
  * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
@@ -15775,18 +15700,6 @@ declare interface ImportSettings {
 type ImportSource =
 	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
-
-/**
- * a map made of sections, each a map of its own, or its JSON
- */
-declare interface IndexSourceMap {
-	version: number;
-	file?: string;
-	sections: {
-		offset: { line: number; column: number };
-		map: string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
-	}[];
-}
 
 /**
  * Options for infrastructure level logging.
@@ -22478,11 +22391,6 @@ declare interface MinifyOptions {
 		 */
 		html5_comments?: boolean;
 	};
-
-	/**
-	 * whether a source map is written, and how
-	 */
-	sourceMap?: boolean | GivenSourceMapOptions;
 
 	/**
 	 * whether the source is a module

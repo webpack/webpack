@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Let a SortableSet type name what its cache holds.
+Type SortableSet caches and drop the minifier's unread `sourceMap` option type.
