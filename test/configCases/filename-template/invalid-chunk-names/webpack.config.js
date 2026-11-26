@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Compiler } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "node",
@@ -28,7 +30,7 @@ module.exports = [
 		plugins: [
 			/**
 			 * Exercises chunks without assets and repeated sealing.
-			 * @param {import("../../../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 */
 			(compiler) => {
 				compiler.hooks.compilation.tap("test", (compilation) => {

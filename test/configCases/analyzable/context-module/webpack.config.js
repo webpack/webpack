@@ -5,10 +5,12 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so an entry finds its own stats
  * @param {string} name output prefix keeping the emitted files of each config apart
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name) => ({
 	name,
@@ -31,7 +33,7 @@ const base = (index, name) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// One chunk per request, so the loader is reached without a `Promise.all`.
 	base(0, "plain"),

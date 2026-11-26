@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(concatenateModules: boolean) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(concatenateModules: boolean) => Configuration} */
 const config = (concatenateModules) => ({
 	target: [`async-node${process.versions.node.split(".").map(Number)[0]}`],
 	optimization: {
@@ -11,5 +13,5 @@ const config = (concatenateModules) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config(false), config(true)];

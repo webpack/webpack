@@ -6,8 +6,11 @@ const htmlMinify = require("../../../../lib/html/htmlMinify");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 const svgMinify = require("../../../helpers/svgMinify");
 
+/** @import { BasicMinimizerImplementation, MinimizeFunctionHelpers } from "minimizer-webpack-plugin" */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 /**
- * @typedef {import("minimizer-webpack-plugin").BasicMinimizerImplementation<EXPECTED_ANY> & import("minimizer-webpack-plugin").MinimizeFunctionHelpers} Minifier
+ * @typedef {BasicMinimizerImplementation<EXPECTED_ANY> & MinimizeFunctionHelpers} Minifier
  */
 
 /**
@@ -25,7 +28,7 @@ const MINIFIERS = [
 
 /**
  * @param {Minifier[]} minify the minimizers
- * @returns {import("../../../../").WebpackPluginInstance} the plugin
+ * @returns {WebpackPluginInstance} the plugin
  */
 const minimizer = (minify) => ({
 	apply: (compiler) => {
@@ -39,7 +42,7 @@ const minimizer = (minify) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "web",

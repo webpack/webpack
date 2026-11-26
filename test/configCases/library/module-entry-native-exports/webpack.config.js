@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 // A `module` library exports top-level declarations natively, so the exports object
 // and `.d`/`.o` have no reader; a wrapped entry keeps them, being read from it.
 
 /**
  * @param {string} assetName emitted entry asset to assert on
  * @param {(source: string) => void} assert what the emitted bundle must look like
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const assertBundle = (assetName, assert) =>
 	function apply() {
@@ -24,7 +26,7 @@ const assertBundle = (assetName, assert) =>
  * @param {("production" | "development")=} mode which mode to build in
  * @param {boolean=} avoidEntryIife whether the entry may be inlined without an IIFE
  * @param {boolean=} concatenateModules whether the entry may absorb its ESM dependencies
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const variant = (
 	name,
@@ -55,7 +57,7 @@ const defineGetters = "__webpack_require__.d =";
 const markNamespace = "__webpack_require__.r(";
 const defineMarkNamespace = "__webpack_require__.r =";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	variant("inlined", "./lib.js", (source) => {
 		expect(source).toMatch(/export \{[^}]*\banswer\b/);

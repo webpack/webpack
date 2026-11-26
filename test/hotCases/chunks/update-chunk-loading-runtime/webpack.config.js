@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
- * @param {{ config: import("../../../../").Configuration }} config configuration
- * @returns {import("../../../../").Configuration} configuration
+ * @param {{ config: Configuration }} config configuration
+ * @returns {Configuration} configuration
  */
 module.exports = ({ config }) => ({
 	output: {

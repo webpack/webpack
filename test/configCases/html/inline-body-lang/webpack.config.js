@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { RuleSetUseItem, Configuration } from "../../../../" */
+
 // Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
 // ("Module not found") on less-loader's `import("less")`; on both load the CJS
 // less so it skips the dynamic import.
@@ -12,7 +14,7 @@ const lessLoader =
 
 /**
  * @param {string} marker class the loader appends, naming the rule that ran
- * @returns {import("../../../../").RuleSetUseItem} the stand-in loader
+ * @returns {RuleSetUseItem} the stand-in loader
  */
 const variablesLoader = (marker) => ({
 	loader: path.resolve(__dirname, "variables-loader.js"),
@@ -22,7 +24,7 @@ const variablesLoader = (marker) => ({
 /**
  * A `<style lang>` / `<script lang>` body is a `data:` module typed as its
  * language's files, so a `mimetype` rule runs that language's loader on it.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	devtool: false,

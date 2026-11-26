@@ -3,11 +3,13 @@
 const path = require("path");
 const webpack = require("../../../");
 
+/** @import { WebpackPluginFunction, Configuration } from "../../../" */
+
 /**
  * Names the given chunks by their own content, which `output` alone cannot do for
  * some chunks and not others.
  * @param {string[]} names chunk names to rename
- * @returns {import("../../../").WebpackPluginFunction} the plugin
+ * @returns {WebpackPluginFunction} the plugin
  */
 const nameConsumersByContent = (names) => (compiler) => {
 	compiler.hooks.compilation.tap("NameConsumersByContent", (compilation) => {
@@ -26,8 +28,8 @@ const nameConsumersByContent = (names) => (compiler) => {
  * One analyzable-ESM build. `name` is both the output subdir and the label; `extra`
  * overrides entry/output/plugins to trigger a single analyzable-import limitation.
  * @param {string} name case name
- * @param {import("../../../").Configuration} extra per-case overrides
- * @returns {import("../../../").Configuration} configuration
+ * @param {Configuration} extra per-case overrides
+ * @returns {Configuration} configuration
  */
 const base = (name, extra = {}) => ({
 	name,
@@ -50,7 +52,7 @@ const base = (name, extra = {}) => ({
 	}
 });
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Analyzable: the loader holds `import("./async.mjs")`, read by chunk id.
 	base("analyzable"),

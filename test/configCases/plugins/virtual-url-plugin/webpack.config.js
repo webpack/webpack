@@ -4,11 +4,13 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "webpack" */
+
 const { VirtualUrlPlugin } = webpack.experiments.schemes;
 
 const watchDir = path.join(__dirname, "./routes");
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const config = {
 	plugins: [
 		new VirtualUrlPlugin({

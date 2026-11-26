@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const { DefinePlugin, Module } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const valueFile = path.resolve(__dirname, "value.txt");
 const sharedValue = DefinePlugin.runtimeValue(async ({ key }) =>
 	JSON.stringify(key)
@@ -31,7 +33,7 @@ const later = (value) =>
 		setTimeout(() => resolve(value), 1);
 	});
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		new DefinePlugin({

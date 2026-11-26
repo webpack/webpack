@@ -1,9 +1,9 @@
 "use strict";
 
-/** @import { EmbeddedSourceRenderer } from "../../lib/html/syntax-parser" */
-/** @import { BuiltinEmbeddedRendererOptions } from "../../lib/html/builtinEmbeddedRenderer" */
+/** @import { EmbeddedSourceRenderer } from "../../lib/html/syntax-parser.js" */
+/** @import { BuiltinEmbeddedRendererOptions } from "../../lib/html/builtinEmbeddedRenderer.js" */
 
-/** @import { AsyncEmbeddedSourceRenderer } from "../../lib/html/htmlMinify" */
+/** @import { AsyncEmbeddedSourceRenderer } from "../../lib/html/htmlMinify.js" */
 
 /**
  * A renderer a fixture's `options.json` names, since JSON holds no function.

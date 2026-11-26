@@ -5,12 +5,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so an entry finds its own stats
  * @param {string} name output prefix keeping the emitted files of each config apart
- * @param {import("../../../../").Configuration["devtool"]} devtool the devtool under test
- * @param {import("../../../../").Configuration["experiments"]=} experiments extra experiments
- * @returns {import("../../../../").Configuration} configuration
+ * @param {Configuration["devtool"]} devtool the devtool under test
+ * @param {Configuration["experiments"]=} experiments extra experiments
+ * @returns {Configuration} configuration
  */
 const base = (index, name, devtool, experiments) => ({
 	name,
@@ -37,7 +39,7 @@ const base = (index, name, devtool, experiments) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, "plain", false),
 	base(1, "evaldev", "eval"),

@@ -1,8 +1,10 @@
 "use strict";
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import NormalModule from "../../../../lib/module/NormalModule" */
-/** @import { JavascriptScopes } from "../../../../lib/javascript/syntax" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import NormalModule from "../../../../lib/module/NormalModule.js" */
+/** @import { JavascriptScopes } from "../../../../lib/javascript/syntax.js" */
+/** @import { Configuration } from "../../../../" */
+/** @import { Source } from "webpack-sources" */
 /** @typedef {ReturnType<JavascriptScopes["analyzeScope"]>} ScopeAnalysis */
 
 const PLUGIN_NAME = "scope-analysis-api";
@@ -24,7 +26,7 @@ const EXPECTED = {
 	"index.js": { declared: ["double", "local"], free: ["it", "expect"] }
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		/**
@@ -52,11 +54,7 @@ module.exports = {
 							module
 						).originalSource();
 						expect(original).not.toBeNull();
-						const source = /** @type {import("webpack-sources").Source} */ (
-							original
-						)
-							.source()
-							.toString();
+						const source = /** @type {Source} */ (original).source().toString();
 						const logged = summarize(
 							analyzeScope(
 								/** @type {number} */ (

@@ -2,9 +2,11 @@
 
 const fs = require("fs");
 
+/** @import { Configuration } from "../../../../" */
+
 module.exports = {
 	/**
-	 * @param {import("../../../../").Configuration} options options
+	 * @param {Configuration} options options
 	 */
 	afterExecute(options) {
 		const outputPath = /** @type {string} */ (

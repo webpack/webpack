@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
 // ("Module not found") on less-loader's `import("less")`; on both load the CJS
 // less so it skips the dynamic import.
@@ -13,7 +15,7 @@ const lessImplementation =
 /**
  * @param {string} exportType the CSS parser exportType under test
  * @param {boolean} useLess whether to compile through less-loader
- * @returns {import("../../../../").Configuration} webpack configuration
+ * @returns {Configuration} webpack configuration
  */
 const makeConfig = (exportType, useLess) => {
 	const sourceFile = useLess ? "style.less" : "style.css";
@@ -54,7 +56,7 @@ const makeConfig = (exportType, useLess) => {
 	};
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	makeConfig("link", false),
 	makeConfig("text", false),

@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = ["array", "regexp"].map((name) => ({
 	mode: "production",
 	target: ["web", "es2018"],

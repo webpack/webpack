@@ -4,8 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @import { Compiler } from "../../../../" */
-/** @typedef {import("webpack-sources").Source & { _value?: unknown, _valueAsString?: unknown, _valueAsBuffer?: unknown }} CachingSource */
+/** @import { Compiler, Configuration } from "../../../../" */
+/** @import { Source } from "webpack-sources" */
+/** @typedef {Source & { _value?: unknown, _valueAsString?: unknown, _valueAsBuffer?: unknown }} CachingSource */
 
 const PLUGIN_NAME = "SourceReleaseTest";
 
@@ -66,7 +67,7 @@ const expectCachedForms = (expected) => (compiler) => {
 	});
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		devtool: false,

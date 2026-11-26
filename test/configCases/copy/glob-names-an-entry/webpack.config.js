@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "BuildTreePlugin";
 
 /**
@@ -46,7 +48,7 @@ const buildTree = (source) => {
 	fs.symlinkSync("dog.png", path.join(source, "links/*.png"), "file");
 };
 
-/** @type {(env: unknown, argv: { testPath: string }) => import("../../../../").Configuration} */
+/** @type {(env: unknown, argv: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => {
 	const source = `${testPath}-source`;
 	return {

@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { ParserOptionsByModuleTypeKnown } from "../../../../" */
+/** @import { ParserOptionsByModuleTypeKnown, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

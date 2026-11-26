@@ -105,7 +105,7 @@ const setup = () => installPackages(CACHE_NAME);
  * @property {{ startOffset: number, endOffset: number }=} sourceCodeLocation where it was written, when asked for
  */
 /** @typedef {{ parse: (html: string, options?: { sourceCodeLocationInfo: boolean, scriptingEnabled: boolean }) => Parse5Node }} Parse5 */
-/** @import { HtmlPath } from "../lib/html/syntax-parser" */
+/** @import { HtmlPath, HtmlParseOptions } from "../lib/html/syntax-parser.js" */
 
 // An app shell, whose weight is inline critical CSS and form markup: without
 // it no fixture carries a `<style>`, a `srcset` or a boolean attribute.
@@ -494,13 +494,15 @@ const fixtures = async () => {
 	]);
 	return out;
 };
-/** @import { HtmlPrintOptions } from "../lib/html/syntax-printer" */
+/** @import { HtmlPrintOptions, HtmlProcessOptions } from "../lib/html/syntax-printer.js" */
 
-/** @import { BuiltinEmbeddedRendererOptions as CssOptions } from "../lib/html/builtinEmbeddedRenderer" */
+/** @import { BuiltinEmbeddedRendererOptions as CssOptions } from "../lib/html/builtinEmbeddedRenderer.js" */
+/** @import { Tool, TreeReader, Expected } from "./compare-tools-harness.js" */
+/** @import { Report } from "../test/helpers/syntaxInvariants/relations.js" */
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
-/** @type {import("./compare-tools-harness").Tool[]} */
+/** @type {Tool[]} */
 const TOOLS = [
 	{
 		// `process` with no mode walks the whole document and prints nothing,
@@ -1112,20 +1114,15 @@ const webpackTree = (html, scripting = false) => {
 		}
 	};
 	// A walk hands its options to `parseHtml`, which reads `scripting`.
-	/** @type {import("../lib/html/syntax-parser").HtmlParseOptions} */
+	/** @type {HtmlParseOptions} */
 	const options = { scripting };
 	new SourceProcessor()
 		.use(visitors)
-		.process(
-			html,
-			/** @type {import("../lib/html/syntax-printer").HtmlProcessOptions} */ (
-				options
-			)
-		);
+		.process(html, /** @type {HtmlProcessOptions} */ (options));
 	return events;
 };
 
-/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+/** @type {Map<string, TreeReader>} */
 const TREE_READERS = new Map([
 	["webpack", webpackTree],
 	[REFERENCE_PARSER, parse5Tree]
@@ -1184,7 +1181,7 @@ const wantedPreset = filterFrom("PRESET");
  * @param {HtmlPrintOptions} options the preset's printer options
  * @param {CssOptions} cssOptions the preset's CSS options
  * @param {boolean=} respell whether to ask the respellings, which the sweep asks under its first preset alone
- * @returns {import("../test/helpers/syntaxInvariants/relations").Report[]} what moved, and the smallest repro found for each
+ * @returns {Report[]} what moved, and the smallest repro found for each
  */
 const sweepDocument = (minify, html, options, cssOptions, respell = true) => {
 	const { printed, reports } = wantedRelation("idempotence")
@@ -1266,7 +1263,7 @@ const TEMPLATE_DELIMITER_REFERENCES =
  * What the sweep reports that the printer owes nothing for. Each entry states
  * the reason, since a divergence with no reason beside it is one nobody can
  * tell from a defect later.
- * @type {readonly import("./compare-tools-harness").Expected[]}
+ * @type {readonly Expected[]}
  */
 const EXPECTED = [
 	{

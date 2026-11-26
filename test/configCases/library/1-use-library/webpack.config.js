@@ -1,12 +1,12 @@
 "use strict";
 
-/** @import { Compiler, Compilation } from "../../../../" */
+/** @import { Compiler, Compilation, Configuration } from "../../../../" */
 
 const path = require("path");
 const webpack = require("../../../../");
 const supportsAsync = require("../../../helpers/supportsAsync");
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+/** @type {(env: Env, options: TestOptions) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
 		entry: "./default-test-modern-module.js",

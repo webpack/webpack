@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} token token the loader replaces
  * @param {string} value its replacement
@@ -18,7 +20,7 @@ const tokenLoader = (token, value) => ({
  * A rule can pick the `<style module>` bodies by their dependency, alone or
  * with a `mimetype` for one `lang`, and its loader runs before the body is
  * scoped, so the names it writes are the page's too.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	target: "web",

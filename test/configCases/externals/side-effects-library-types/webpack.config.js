@@ -2,11 +2,14 @@
 
 const assertIncludedExternals = require("../../../helpers/assertIncludedExternals");
 
+/** @import { Configuration } from "../../../../" */
+/** @import { LibraryType, ExternalsType } from "../../../../declarations/WebpackOptions.js" */
+
 /**
  * @param {string} type externals type
  * @param {string} libraryType matching library type
  * @param {string=} libraryName library name, when the library type needs one
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (type, libraryType, libraryName) => ({
 	name: type,
@@ -14,9 +17,7 @@ const config = (type, libraryType, libraryName) => ({
 	entry: `./${type}.js`,
 	output: {
 		library: {
-			type: /** @type {import("../../../../declarations/WebpackOptions").LibraryType} */ (
-				libraryType
-			),
+			type: /** @type {LibraryType} */ (libraryType),
 			name: libraryName
 		},
 		uniqueName: type
@@ -27,10 +28,7 @@ const config = (type, libraryType, libraryName) => ({
 		// external into the entry would hide
 		concatenateModules: false
 	},
-	externalsType:
-		/** @type {import("../../../../declarations/WebpackOptions").ExternalsType} */ (
-			type
-		),
+	externalsType: /** @type {ExternalsType} */ (type),
 	externals: {
 		[`${type}-free`]: { external: `${type}-free`, sideEffects: false },
 		[`${type}-keep`]: `${type}-keep`
@@ -43,7 +41,7 @@ const config = (type, libraryType, libraryName) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("amd", "amd"),
 	config("amd-require", "amd"),

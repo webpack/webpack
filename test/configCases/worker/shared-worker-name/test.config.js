@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 module.exports = {
 	/**
 	 * @param {Record<string, unknown>} scope module scope
-	 * @param {import("../../../../").Configuration} options webpack options
+	 * @param {Configuration} options webpack options
 	 */
 	moduleScope(scope, options) {
 		scope.URL = URL;

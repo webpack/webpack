@@ -2,6 +2,8 @@
 
 const { RuntimeModule } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "ThrowingNonErrorRuntimeModulePlugin";
 
 class ThrowingNonErrorRuntimeModule extends RuntimeModule {
@@ -19,7 +21,7 @@ class ThrowingNonErrorRuntimeModule extends RuntimeModule {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		{

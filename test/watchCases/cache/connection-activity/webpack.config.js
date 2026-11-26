@@ -3,7 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("../../../..").Configuration} */
+/** @import { Configuration } from "../../../.." */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: { main: "./index.js", trigger: "./tick.js" },
 	experiments: { cacheUnaffected: true },

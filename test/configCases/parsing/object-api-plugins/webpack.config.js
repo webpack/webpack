@@ -4,10 +4,11 @@ const AMDDefineDependencyParserPlugin = require("../../../../lib/dependencies/am
 const AMDRequireDependenciesBlockParserPlugin = require("../../../../lib/dependencies/amd/AMDRequireDependenciesBlockParserPlugin");
 const CommonJsImportsParserPlugin = require("../../../../lib/dependencies/commonjs/CommonJsImportsParserPlugin");
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
-/** @import { JavascriptParserOptions } from "../../../../declarations/WebpackOptions" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { JavascriptParserOptions } from "../../../../declarations/WebpackOptions.js" */
 /** @import { CallExpression } from "estree" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "object-api-plugins";
 
@@ -99,7 +100,7 @@ const plugin = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [plugin]
 };

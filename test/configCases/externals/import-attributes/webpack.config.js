@@ -7,7 +7,9 @@ const {
 	sources: { RawSource }
 } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		module: true,

@@ -2,7 +2,9 @@
 
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	target: "web",

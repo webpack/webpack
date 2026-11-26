@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Stats } from "../../../" */
+
 /**
  * @param {string} name name of the chunk group and of its one asset
  * @returns {Record<string, unknown>} the group as `chunkGroups: true` reports it
@@ -38,7 +40,7 @@ const asset = (name) => ({
 
 module.exports = {
 	/**
-	 * @param {import("../../../").Stats} stats stats
+	 * @param {Stats} stats stats
 	 */
 	validate(stats) {
 		for (const value of [false, "none"]) {

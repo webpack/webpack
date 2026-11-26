@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /**
- * @this {import("../../../../").Compiler} the compiler
+ * @this {Compiler} the compiler
  */
 function testPlugin() {
 	this.hooks.compilation.tap("TestPlugin", (compilation) => {
@@ -14,7 +16,7 @@ function testPlugin() {
 	});
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [testPlugin]
 };

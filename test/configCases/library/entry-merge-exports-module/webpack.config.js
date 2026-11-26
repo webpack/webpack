@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compilation, Compiler } from "../../../../" */
+/** @import { Compilation, Compiler, Configuration } from "../../../../" */
 
 // A `module` library names its exports in an `export { … }` clause, so merging
 // has to widen that clause and not only the runtime exports object.
@@ -31,7 +31,7 @@ function expectExportNames() {
 	this.hooks.compilation.tap("testcase", handler);
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: ["./a.js", "./b.js"]

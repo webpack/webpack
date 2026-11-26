@@ -18,7 +18,7 @@ const {
  * 	Compiler,
  * 	Asset,
  * 	AssetInfo,
- * 	ChunkGroup as Entrypoint
+ * 	ChunkGroup as Entrypoint, Configuration
  * } from "../../../../"
  */
 
@@ -255,7 +255,7 @@ class HtmlMinimizePlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: {

@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A `webpackPrefetch` / `webpackPreload` hint must not force the runtime form: the
 // `<link>` is emitted at chunk startup, independent of the `new URL(...)` call site,
 // so the call site can still be the analyzable literal.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "web",

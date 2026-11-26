@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [true, false].map((usedExports) => ({
 	output: {
 		library: { type: "system", name: `defaults-${usedExports}` }

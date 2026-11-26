@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// A browserslist target, so the whole option flow runs rather than the
 	// serializer alone. Exact versions keep the snapshot stable as caniuse moves.

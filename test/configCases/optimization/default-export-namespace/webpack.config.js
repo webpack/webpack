@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name config name
  * @param {boolean} concatenateModules whether to enable module concatenation
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const config = (name, concatenateModules) => ({
 	name,
@@ -14,7 +16,7 @@ const config = (name, concatenateModules) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("default-export-namespace without module concatenation", false),
 	config("default-export-namespace with module concatenation", true)

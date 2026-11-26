@@ -3,7 +3,7 @@
 const path = require("path");
 const { WebpackError } = require("../../../../");
 
-/** @import { Compilation } from "../../../../" */
+/** @import { Compilation, Configuration } from "../../../../" */
 
 /**
  * @param {Compilation} compilation the compilation
@@ -34,7 +34,7 @@ const expectations = [
 	["d", "d.js", true]
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: "./index.js",

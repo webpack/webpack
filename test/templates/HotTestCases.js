@@ -1,5 +1,8 @@
 "use strict";
 
+/** @import { Configuration, Compiler, Stats } from "../../" */
+/** @import { TestConfig } from "../harness/runner/index.js" */
+
 require("../helpers/warmup-webpack");
 
 /** @typedef {{ name: string, tests: string[] }} Category */
@@ -10,8 +13,8 @@ require("../helpers/warmup-webpack");
  */
 /**
  * @typedef {object} HotTestConfig
- * @property {((scope: EXPECTED_ANY, options: import("../../").Configuration) => void)=} moduleScope
- * @property {import("../harness/runner").TestConfig["setupDocument"]=} setupDocument prepare the page once per run, before any bundle executes
+ * @property {((scope: EXPECTED_ANY, options: Configuration) => void)=} moduleScope
+ * @property {TestConfig["setupDocument"]=} setupDocument prepare the page once per run, before any bundle executes
  */
 
 const path = require("path");
@@ -72,7 +75,7 @@ const describeCases = (config) => {
 					}
 
 					describe(testName, () => {
-						/** @type {import("../../").Compiler} */
+						/** @type {Compiler} */
 						let compiler;
 
 						afterAll((/** @type {EXPECTED_ANY} */ callback) => {
@@ -100,8 +103,8 @@ const describeCases = (config) => {
 							/** @type {number | undefined} */
 							let lastActivation;
 							const configPath = path.join(testDirectory, "webpack.config.js");
-							/** @type {import("../../").Configuration} */
-							let options = /** @type {import("../../").Configuration} */ ({});
+							/** @type {Configuration} */
+							let options = /** @type {Configuration} */ ({});
 							if (fs.existsSync(configPath)) options = require(configPath);
 							if (
 								typeof (/** @type {EXPECTED_ANY} */ (options)) === "function"
@@ -194,7 +197,7 @@ const describeCases = (config) => {
 
 							const onCompiled = (
 								/** @type {Error | null} */ err,
-								/** @type {import("../../").Stats} */ stats
+								/** @type {Stats} */ stats
 							) => {
 								const deprecations = deprecationTracker();
 								if (err) return done(err);
@@ -245,7 +248,7 @@ const describeCases = (config) => {
 									lastActivation = undefined;
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err, _stats) => {
-										const stats = /** @type {import("../../").Stats} */ (_stats);
+										const stats = /** @type {Stats} */ (_stats);
 										const deprecations = deprecationTracker();
 										if (err) return callback(err);
 										const jsonStats = stats.toJson({

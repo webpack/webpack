@@ -1,10 +1,10 @@
 "use strict";
 
-/** @import { Compiler, FileCacheOptions } from "../../../../" */
+/** @import { Compiler, FileCacheOptions, Configuration } from "../../../../" */
 
 // with explicit cache names
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		mode: "production",

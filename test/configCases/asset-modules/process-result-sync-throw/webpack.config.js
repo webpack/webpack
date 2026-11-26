@@ -2,11 +2,14 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
+
 // The sync hook runs inside the async one's callback, where a throw would be
 // an unhandled rejection rather than this module's build error.
 class ThrowingSyncTap {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("ThrowingSyncTap", (compilation) => {
@@ -24,7 +27,7 @@ class ThrowingSyncTap {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

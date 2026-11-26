@@ -6,11 +6,14 @@ const {
 	CSS_TYPE
 } = require("../../../../lib/module/ModuleSourceTypeConstants");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
+
 // A tap that always maps, whatever `devtool` says — webpack must not ship the
 // map (and the original sources with it) into a bundle that asked for none.
 class AlwaysMappedMinifier {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -39,7 +42,7 @@ class AlwaysMappedMinifier {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	experiments: { css: true },

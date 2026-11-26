@@ -4,7 +4,9 @@ const os = require("os");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	node: {
 		__dirname: false,

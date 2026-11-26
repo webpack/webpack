@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A chunk carrying CSS stays analyzable: the stylesheet is loaded by `.f.css`, which
 // `.ei` dispatches alongside the literal `import()` of the JS half.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

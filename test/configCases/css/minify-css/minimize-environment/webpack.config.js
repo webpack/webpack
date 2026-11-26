@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// Chrome 50 predates every CSS ability, so the selection alone holds each
 	// spelling back — through the default minimizer, so the whole flow is driven.

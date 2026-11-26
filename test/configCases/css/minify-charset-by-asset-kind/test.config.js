@@ -3,9 +3,11 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 module.exports = {
 	afterExecute(options) {
-		const [{ output }] = /** @type {import("../../../../").Configuration[]} */ (
+		const [{ output }] = /** @type {Configuration[]} */ (
 			/** @type {unknown} */ (options)
 		);
 		const read = (/** @type {string} */ name) =>

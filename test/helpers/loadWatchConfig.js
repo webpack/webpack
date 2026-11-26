@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { ConfigModule } from "./prepareOptions.js" */
+
 const casesDirectory = `${path.join(__dirname, "../watchCases")}${path.sep}`;
 
 /** @typedef {(require: NodeRequire, module: { exports: unknown }, exports: unknown, filename: string, directory: string) => void} ModuleFunction */
@@ -10,7 +12,7 @@ const casesDirectory = `${path.join(__dirname, "../watchCases")}${path.sep}`;
 /**
  * Re-evaluates fixture modules while sharing webpack and the watch-step helper.
  * @param {string} filename configuration path
- * @returns {import("./prepareOptions").ConfigModule} independent configuration
+ * @returns {ConfigModule} independent configuration
  */
 const loadWatchConfig = (filename) => {
 	/** @type {Map<string, { exports: unknown }>} */
@@ -67,9 +69,7 @@ const loadWatchConfig = (filename) => {
 		}
 		return module.exports;
 	};
-	return /** @type {import("./prepareOptions").ConfigModule} */ (
-		load(filename)
-	);
+	return /** @type {ConfigModule} */ (load(filename));
 };
 
 module.exports = loadWatchConfig;

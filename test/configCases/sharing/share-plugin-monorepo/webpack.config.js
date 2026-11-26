@@ -3,7 +3,9 @@
 const path = require("path");
 const { SharePlugin } = require("../../../../").sharing;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	context: path.resolve(__dirname, "./app1"),
 	plugins: [

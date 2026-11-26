@@ -7,7 +7,9 @@ const webpack = require("../../../../");
 const htmlMinify = require("../../../../lib/html/htmlMinify");
 const xmlMinify = require("../../../../lib/html/xmlMinify");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -42,7 +44,7 @@ failingCssMinify.filter = (/** @type {string} */ name) => name.endsWith(".css");
 /**
  * @param {((...args: EXPECTED_ANY[]) => EXPECTED_ANY)[]} minify the minify functions
  * @param {EXPECTED_OBJECT[]} minimizerOptions their options
- * @returns {import("../../../../").WebpackPluginInstance} the minimizer
+ * @returns {WebpackPluginInstance} the minimizer
  */
 const inProcess = (minify, minimizerOptions) => ({
 	apply: (compiler) => {
@@ -57,7 +59,7 @@ const inProcess = (minify, minimizerOptions) => ({
 	}
 });
 
-/** @type {(suffix: string, minimizer: import("../../../../").WebpackPluginInstance) => import("../../../../").Configuration} */
+/** @type {(suffix: string, minimizer: WebpackPluginInstance) => Configuration} */
 const config = (suffix, minimizer) => ({
 	target: "web",
 	mode: "production",
@@ -80,7 +82,7 @@ const config = (suffix, minimizer) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// The caller's CSS minifier fails, so webpack's own does not get a try.
 	config("-caller", inProcess([htmlMinify, failingCssMinify], [{}, {}])),

@@ -3,9 +3,9 @@
 const { CachedSource } = require("webpack-sources");
 const { AsyncWebAssemblyModulesPlugin } = require("../../../../").wasm;
 
-/** @import { Compiler } from "../../../../" */
+/** @import { Compiler, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

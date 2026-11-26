@@ -5,11 +5,13 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so an entry finds its own stats
  * @param {string} name output prefix keeping the emitted files of each config apart
  * @param {boolean} baked whether the href is expected to be written out
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name, baked) => ({
 	name,
@@ -35,7 +37,7 @@ const base = (index, name, baked) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// The plain case: one lazy stylesheet under an `auto` public path.
 	base(0, "auto", true),
@@ -56,7 +58,7 @@ module.exports = [
 	{
 		...base(3, "hmr", true),
 		plugins: [
-			.../** @type {NonNullable<import("../../../../").Configuration["plugins"]>} */ (
+			.../** @type {NonNullable<Configuration["plugins"]>} */ (
 				base(3, "hmr", true).plugins
 			),
 			new webpack.HotModuleReplacementPlugin()

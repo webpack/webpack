@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One module in a chunk the host fetched and one the loader fetched through a public
 // path with depth — two urls a directory apart, so each asset gets its own literal.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

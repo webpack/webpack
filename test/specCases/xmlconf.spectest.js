@@ -23,6 +23,8 @@ const {
 	parseHtml
 } = require("../../lib/html/syntax-parser");
 
+/** @import { HtmlNodeRef } from "../../lib/html/syntax-parser.js" */
+
 const suiteDir = path.resolve(
 	__dirname,
 	"../external/xml-conformance-suite/packages/test-data/xmlconf"
@@ -43,7 +45,7 @@ const hasCorpus = fs.existsSync(path.join(suiteDir, "xmlconf.xml"));
 /** @typedef {Record<string, string>} AttributeMap */
 
 /**
- * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node an element
+ * @param {HtmlNodeRef} node an element
  * @returns {AttributeMap} its attributes by name, values normalized
  */
 const attributesOf = (node) => {
@@ -71,7 +73,7 @@ const readTests = () => {
 		const file = path.join(suiteDir, catalog);
 		const doc = parseHtml(fs.readFileSync(file, "utf8"), 0, { xml: true });
 		/**
-		 * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node node
+		 * @param {HtmlNodeRef} node node
 		 * @param {string} base directory its references resolve against
 		 */
 		const walk = (node, base) => {
@@ -140,7 +142,7 @@ const escapeCanonical = (value) =>
 /**
  * Write a parsed node in James Clark's canonical form: attributes sorted, empty
  * elements paired, comments, the XML declaration and the DOCTYPE left out.
- * @param {import("../../lib/html/syntax-parser").HtmlNodeRef} node node
+ * @param {HtmlNodeRef} node node
  * @returns {string} its canonical form
  */
 const canonical = (node) => {

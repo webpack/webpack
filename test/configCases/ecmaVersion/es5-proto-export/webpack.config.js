@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {boolean} concatenateModules concatenate modules
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const variant = (concatenateModules) => ({
 	name: concatenateModules ? "concatenated" : "separate",
@@ -30,5 +32,5 @@ const variant = (concatenateModules) => ({
 
 // An object literal key `__proto__` needs a computed key to be an own property,
 // which an es5 target cannot parse.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [variant(false), variant(true)];

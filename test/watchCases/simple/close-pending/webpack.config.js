@@ -5,10 +5,12 @@ const fs = require("fs");
 const path = require("path");
 const createWatchLoaderBarrier = require("../../../helpers/createWatchLoaderBarrier");
 
+/** @import { Configuration, Compiler } from "../../../.." */
+
 /**
  * @param {Record<string, unknown> | undefined} _env environment
  * @param {{ srcPath: string }} paths fixture paths
- * @returns {import("../../../..").Configuration[]} watch configurations
+ * @returns {Configuration[]} watch configurations
  */
 module.exports = (_env, { srcPath }) =>
 	["development", "production"].map((mode, index) => {
@@ -20,7 +22,7 @@ module.exports = (_env, { srcPath }) =>
 			/** @type {(() => Promise<void>) | undefined} */
 			run: undefined,
 			/**
-			 * @param {import("../../../..").Compiler} compiler watched compiler
+			 * @param {Compiler} compiler watched compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {

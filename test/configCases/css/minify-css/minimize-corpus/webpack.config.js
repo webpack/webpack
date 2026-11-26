@@ -4,7 +4,9 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const cssMinify = require("../../../../../lib/css/cssMinify");
 const jsMinify = require("../../../../../lib/javascript/jsMinify");
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// one entry per corpus, so each is minified as its own stylesheet
 	entry: {

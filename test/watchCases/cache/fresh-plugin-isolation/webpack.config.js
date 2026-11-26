@@ -2,12 +2,14 @@
 
 const plugin = require("./plugin");
 
+/** @import { Compiler, Configuration } from "../../../.." */
+
 expect(require("./plugin")).toBe(plugin);
 
 const localPlugin = {
 	applications: 0,
 	/**
-	 * @param {import("../../../..").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -18,7 +20,7 @@ const localPlugin = {
 	}
 };
 
-/** @type {import("../../../..").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	plugins: [plugin, localPlugin]

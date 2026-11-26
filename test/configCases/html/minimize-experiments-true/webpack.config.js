@@ -2,12 +2,14 @@
 
 const { sources } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 // Stands in for the plugins that emit HTML webpack never rendered itself, such as
 // html-webpack-plugin. `already.html` arrives flagged `minimized`, the way every
 // minimizer built on `minimizer-webpack-plugin` marks what it has handled.
 class EmitOtherHtmlAssetsPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.thisCompilation.tap(
@@ -47,7 +49,7 @@ class EmitOtherHtmlAssetsPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

@@ -11,7 +11,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// `target: "web"` makes the default CSS generator emit `.css` files
 	// (with `target: "async-node"`, `exportsOnly` defaults to `true` and

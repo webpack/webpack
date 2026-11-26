@@ -3,10 +3,12 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Compiler, MultiCompiler, Watching } from "webpack" */
+
 module.exports = {
 	/**
 	 * @param {Error} error fatal watch error
-	 * @param {import("webpack").Compiler | import("webpack").MultiCompiler} compiler watched compiler
+	 * @param {Compiler | MultiCompiler} compiler watched compiler
 	 * @returns {Promise<void>} recovery without another edit
 	 */
 	watchError(error, compiler) {
@@ -23,9 +25,7 @@ module.exports = {
 		expect(fs.readFileSync(path.join(outside, "new.txt"), "utf8")).toBe(
 			"emitted"
 		);
-		const watching = /** @type {import("webpack").Watching} */ (
-			compiler.watching
-		);
+		const watching = /** @type {Watching} */ (compiler.watching);
 		return new Promise((resolve, reject) => {
 			process.nextTick(() => {
 				watching.invalidate((recoveryError) => {

@@ -2,7 +2,7 @@
 
 const { WebpackError } = require("../../../../");
 
-/** @import { Compilation } from "../../../../" */
+/** @import { Compilation, Configuration } from "../../../../" */
 
 /**
  * @param {Compilation} compilation the compilation
@@ -16,7 +16,7 @@ const hasParent = (compilation, childName, parentName) => {
 	return group.getParents().some((parent) => parent.name === parentName);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "web",

@@ -2,7 +2,9 @@
 
 const { DefinePlugin, EnvironmentPlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// Test 1: NODE_ENV from mode (WebpackOptionsApply)
 	mode: "production",

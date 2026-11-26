@@ -4,9 +4,11 @@ const fs = require("fs");
 const path = require("path");
 const { RawSource } = require("webpack-sources");
 
+/** @import { Configuration } from "../../../../" */
+
 const SIBLING = "asset-outside-unset-sibling";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		(compiler) => {

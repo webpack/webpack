@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: ["web", "es2015"],

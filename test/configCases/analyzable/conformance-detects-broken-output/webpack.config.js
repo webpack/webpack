@@ -2,12 +2,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 // Renaming an emitted chunk without rewriting what points at it is the shape the
 // conformance walk exists to catch, so this case builds one on purpose.
 class RenameLazyChunk {
 	/**
 	 * Applies this plugin to the compiler.
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -27,7 +29,7 @@ class RenameLazyChunk {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 const common = {
 	module: {
 		rules: [
@@ -51,7 +53,7 @@ const common = {
 
 /**
  * @param {number} i index
- * @returns {import("../../../../").Configuration | undefined} configuration
+ * @returns {Configuration | undefined} configuration
  */
 const entry = (i) => {
 	switch (i % 4) {
@@ -89,7 +91,7 @@ const entry = (i) => {
 
 /**
  * @param {number} i index
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const esm = (i) => ({
 	...common,
@@ -109,7 +111,7 @@ const esm = (i) => ({
 
 /**
  * @param {number} i index
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const node = (i) => ({
 	...common,
@@ -126,7 +128,7 @@ const node = (i) => ({
 
 /**
  * @param {number} i index
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const web = (i) => ({
 	...common,
@@ -141,7 +143,7 @@ const web = (i) => ({
 	target: "web"
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// web
 	...[0, 1, 2, 3].map((i) => web(i)),

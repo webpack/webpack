@@ -1,18 +1,20 @@
 "use strict";
 
+/** @import { WebpackPluginInstance, Compiler, Compilation, Configuration } from "../../../../" */
+
 // Holds `make` open without running any code of its own: wall time would call
 // it the build's slowest plugin, self time tells waiting from working.
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const waiting = {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
 		compiler.hooks.make.tapAsync(
 			"WaitingPlugin",
 			/**
-			 * @param {import("../../../../").Compilation} compilation the compilation
+			 * @param {Compilation} compilation the compilation
 			 * @param {(err?: Error) => void} callback signals this tap is done
 			 * @returns {void}
 			 */
@@ -23,7 +25,7 @@ const waiting = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

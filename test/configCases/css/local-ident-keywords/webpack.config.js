@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, GeneratorOptionsByModuleTypeKnown } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	node: { __dirname: false, __filename: false },
@@ -10,7 +12,7 @@ module.exports = {
 			{
 				test: /\.module\.css$/,
 				type: "css/module",
-				/** @type {import("../../../../").GeneratorOptionsByModuleTypeKnown["css/module"]} */
+				/** @type {GeneratorOptionsByModuleTypeKnown["css/module"]} */
 				generator: { localIdentName: "_[local]" }
 			}
 		]

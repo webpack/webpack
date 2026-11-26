@@ -2,11 +2,14 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
+
 // A loader failure arrives with a result object beside it, so the async hook
 // must not run and must not replace the error with its own result.
 class PassThroughTap {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("PassThroughTap", (compilation) => {
@@ -18,7 +21,7 @@ class PassThroughTap {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

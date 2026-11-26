@@ -2,17 +2,19 @@
 
 const { Compilation, optimize, sources } = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "RelatedMovesAwayPlugin";
 // The text asset's new name is the one the other asset's related file leaves.
 /** @type {Record<string, string>} */
 const NEW_HASHES = { aaaaaaaa: "bbbbbbbb", bbbbbbbb: "cccccccc" };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: { realContentHash: true },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

@@ -2,13 +2,15 @@
 
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration } from "../../../../" */
+
 // steps 2 and 5 restore the sources of step 0, so they must hash the same
 const SAME_AS_FIRST = ["2", "5"];
 
 /** @type {Map<string, string>} */
 const hashes = new Map();
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: {

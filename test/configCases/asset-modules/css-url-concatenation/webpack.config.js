@@ -6,10 +6,12 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // Needle built here so it is not a source string literal the search would find.
 const wrapper = "module.exports = __webpack_require__.p + ";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

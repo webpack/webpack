@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "PackageAlternativePlugin";
 const ALTERNATIVE = "package/a.js";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	externalsType: "commonjs",
 	externals: [

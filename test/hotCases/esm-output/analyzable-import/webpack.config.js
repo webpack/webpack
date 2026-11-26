@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The analyzable `import()` is emitted under HMR too: the hot require wraps `.ei`
 // exactly as it wraps `.e`, so an update still blocks on an in-flight chunk load.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

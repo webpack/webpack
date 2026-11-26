@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Every library type reads the merged exports object the bootstrap built, so
 // what this builds is one library per type for `1-use` to read back.
 /** @type {{ entryExports: "all" }} */
@@ -8,7 +10,7 @@ const LIBRARY = { entryExports: "all" };
 /**
  * @param {string} type library type
  * @param {string=} name library name, where the type needs one
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const script = (type, name) => ({
 	entry: ["./a.js", "./b.js"],
@@ -22,7 +24,7 @@ const script = (type, name) => ({
 
 /**
  * @param {string} type library type
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const esm = (type) => ({
 	entry: ["./a.js", "./b.js"],
@@ -35,7 +37,7 @@ const esm = (type) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	script("var", "MergedLib"),
 	script("assign", "MergedLib"),

@@ -2,13 +2,16 @@
 
 const meriyah = require("meriyah");
 
+/** @import { Program, Comment as EstreeComment } from "estree" */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 /**
  * @param {string} sourceCode source code
  * @param {{ sourceType: "module" | "script", comments: boolean }} options options
- * @returns {{ ast: import("estree").Program, comments: import("estree").Comment[] }} parsed source code
+ * @returns {{ ast: Program, comments: EstreeComment[] }} parsed source code
  */
 const parse = (sourceCode, options) => {
-	/** @type {import("estree").Comment[]} */
+	/** @type {EstreeComment[]} */
 	const comments = [];
 	const ast = meriyah.parse(sourceCode, {
 		module: options.sourceType === "module",
@@ -20,7 +23,7 @@ const parse = (sourceCode, options) => {
 	return { ast, comments };
 };
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		parser: {

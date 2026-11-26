@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = ["development", "production"].map((mode, index) => ({
 	mode: /** @type {"development" | "production"} */ (mode),
 	cache: { type: index === 0 ? "memory" : "filesystem" },

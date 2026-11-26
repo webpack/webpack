@@ -1,6 +1,6 @@
-/** @import Webpack, { WebpackPluginInstance } from "../../.." */
+/** @import Webpack, { WebpackPluginInstance, Configuration } from "../../.." */
 
-/** @type {import("../../..").Configuration} */
+/** @type {Configuration} */
 export default {
 	entry: "./index",
 	target: "web"

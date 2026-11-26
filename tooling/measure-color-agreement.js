@@ -40,6 +40,8 @@ const {
 } = require("../lib/css/data");
 const launchBrowser = require("../test/helpers/launchBrowser");
 
+/** @import { Page, Browser } from "playwright-core" */
+
 /**
  * @param {string} name the flag
  * @param {number} fallback what it is worth when the flag is not there
@@ -86,7 +88,7 @@ const decode = (c) => {
 
 /**
  * Ask the browser for its own conversion of each color into sRGB.
- * @param {import("playwright-core").Page} page the page to read from
+ * @param {Page} page the page to read from
  * @param {string[]} colors the colors as written
  * @returns {Promise<(number[] | null)[]>} each color's sRGB components, or null where it read none
  */
@@ -194,7 +196,7 @@ const polarSample = (space, random) => {
  * disagreement does is scale every value by about one factor; what a different
  * transfer does is bend the bottom of the range away from the top, so the spread
  * of the ratio is what names them.
- * @param {import("playwright-core").Page} page the page to read from
+ * @param {Page} page the page to read from
  * @param {string[]} spaces the spaces to sweep
  * @returns {Promise<string[]>} the spaces whose transfer the engine reads differently
  */
@@ -247,7 +249,7 @@ const readTransfers = async (page, spaces) => {
 	return out.sort();
 };
 
-/** @type {import("playwright-core").Browser | undefined} the run's browser */
+/** @type {Browser | undefined} the run's browser */
 let browser;
 
 const main = async () => {

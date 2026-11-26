@@ -3,7 +3,10 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const jsMinify = require("../../../../../lib/javascript/jsMinify");
 
-/** @type {import("../../../../../lib/javascript/syntax-printer").MinifyOptions[]} */
+/** @import { MinifyOptions } from "../../../../../lib/javascript/syntax-printer.js" */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {MinifyOptions[]} */
 const minimizerOptions = [
 	{ compress: { passes: 2 }, mangle: false },
 	{},
@@ -11,7 +14,7 @@ const minimizerOptions = [
 	{ compress: { side_effects: false } }
 ];
 
-/** @type {import("../../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = minimizerOptions.map((options, index) => ({
 	mode: "production",
 	target: ["web", "es2022"],

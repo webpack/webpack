@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// '.min.js' ends with '.js', so both have to be tried when naming an entry.
 	resolve: { extensions: [".js", ".min.js"] }

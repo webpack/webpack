@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(name: string, xml: Record<string, boolean> | undefined) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(name: string, xml: Record<string, boolean> | undefined) => Configuration} */
 const config = (name, xml) => ({
 	target: "web",
 	mode: "production",

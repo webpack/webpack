@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// The sheet and target of `minimize-lower-unsupported` with the switch off:
 	// what the target cannot read stays written, the rest of the minifier runs.

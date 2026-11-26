@@ -7,6 +7,8 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 // Built here so the needles are not source literals the search would find.
 const CALL = "__webpack_require__.tu(";
 const DEFINE = "__webpack_require__.tu =";
@@ -14,7 +16,7 @@ const DEFINE = "__webpack_require__.tu =";
 /**
  * @param {number} index position of this config, so it finds its own bundle
  * @param {string} target compilation target
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, target) => {
 	const filename = `bundle${index}.js`;
@@ -42,5 +44,5 @@ const base = (index, target) => {
 	};
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [base(0, "webworker")];

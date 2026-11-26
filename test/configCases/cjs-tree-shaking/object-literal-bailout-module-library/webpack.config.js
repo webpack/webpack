@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /**
  * @param {string} assetName emitted asset to assert on
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const assertHasDefaultExport = (assetName) =>
 	function apply() {
@@ -14,7 +16,7 @@ const assertHasDefaultExport = (assetName) =>
 		});
 	};
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./lib.js",

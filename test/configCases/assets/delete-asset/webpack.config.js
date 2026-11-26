@@ -4,7 +4,9 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const { BannerPlugin, Compilation } = require("../../../../");
 const jsMinify = require("../../../../lib/javascript/jsMinify");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	optimization: {
 		minimize: true,

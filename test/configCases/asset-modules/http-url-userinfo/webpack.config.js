@@ -7,7 +7,9 @@ const {
 	}
 } = require("../../../../");
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: Env, options: TestOptions) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
 		name: "regexp",

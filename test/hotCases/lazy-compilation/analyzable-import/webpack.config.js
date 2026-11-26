@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The proxy a lazily-compiled `import()` is routed through loads the real chunk
 // itself, so it bakes the analyzable form the same way the original import would.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

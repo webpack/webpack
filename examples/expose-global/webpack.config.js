@@ -2,7 +2,7 @@
 
 const { NormalModule } = require("../../");
 
-/** @import { Compiler } from "../../" */
+/** @import { Compiler, Configuration } from "../../" */
 
 const PLUGIN_NAME = "ExposeGlobalPlugin";
 
@@ -46,7 +46,7 @@ class ExposeGlobalPlugin {
 	}
 }
 
-/** @type {import("../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		new ExposeGlobalPlugin([

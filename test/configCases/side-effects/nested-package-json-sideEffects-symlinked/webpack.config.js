@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // a workspace package: installed as a symlink, so its own files resolve to a
 // real path outside node_modules while the package request resolves through it
 const modulesDirectory = path.resolve(
@@ -22,7 +24,7 @@ try {
 	if (/** @type {NodeJS.ErrnoException} */ (err).code !== "EEXIST") throw err;
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	resolve: {

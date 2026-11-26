@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A css consumer leaves an `asset-url` value built from a placeholder only css and
 // html are rendered with, so the javascript literal comes from the name instead.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

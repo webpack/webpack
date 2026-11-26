@@ -2,9 +2,11 @@
 
 const { Compilation } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /** A module worklet must add its entry chunk directly: no bootstrap, no shim. */
 class AssertNoBootstrapPlugin {
-	/** @param {import("../../../../").Compiler} compiler compiler */
+	/** @param {Compiler} compiler compiler */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("AssertNoBootstrap", (compilation) => {
 			compilation.hooks.processAssets.tap(
@@ -36,7 +38,7 @@ class AssertNoBootstrapPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	output: {

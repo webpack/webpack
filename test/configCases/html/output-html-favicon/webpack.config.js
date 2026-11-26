@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -30,7 +32,7 @@ const copyTest = {
 /** @typedef {string | FaviconIcon | (string | FaviconIcon)[]} FaviconValue */
 /** @typedef {boolean | string | Record<string, FaviconValue> | ((name: string) => boolean | string | Record<string, FaviconValue>)} Favicon */
 
-/** @type {(name: string, favicon?: Favicon) => import("../../../../").Configuration} */
+/** @type {(name: string, favicon?: Favicon) => Configuration} */
 const config = (name, favicon) => ({
 	name,
 	target: "web",
@@ -44,7 +46,7 @@ const config = (name, favicon) => ({
 	plugins: [copyTest]
 });
 
-/** @type {(name: string, entry: string) => import("../../../../").Configuration} */
+/** @type {(name: string, entry: string) => Configuration} */
 const authored = (name, entry) => ({
 	name,
 	target: "web",
@@ -60,7 +62,7 @@ const authored = (name, entry) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// default (html: true, favicon unspecified) — nothing injected
 	config("default", undefined),

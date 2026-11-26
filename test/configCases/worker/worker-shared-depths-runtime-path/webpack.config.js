@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A stand-in may only be written into an asset not named by its own content. Here the
 // entry is, and the chunks holding the reference — the ones rewritten — are not.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node14",
 	mode: "development",

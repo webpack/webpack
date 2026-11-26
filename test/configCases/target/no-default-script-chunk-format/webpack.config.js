@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	// `es2020` reports ES modules but neither `document` nor node builtins, so a
 	// classic-output build has no script chunk format left to default to

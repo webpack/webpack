@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Writes a module into a directory named `directoryName`, so its path in the
  * module header comment and its module id spell that name.
@@ -29,7 +31,7 @@ const writeModule = (root, directoryName, name) => {
 
 // The fill pass of ESM output scans every asset, module header comments
 // included: a directory name spelling a reserved name must keep them closed.
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => {
 	// The output directory is emptied before the build, so the modules sit beside it.
 	const root = `${testPath}-src`;

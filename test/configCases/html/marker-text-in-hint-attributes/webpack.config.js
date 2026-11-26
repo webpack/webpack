@@ -5,7 +5,9 @@ const path = require("path");
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -30,7 +32,7 @@ const copyTest = {
 /**
  * @param {"development" | "production"} mode build mode
  * @param {string} testPath the case's output directory
- * @returns {import("../../../../").Configuration} the build
+ * @returns {Configuration} the build
  */
 const config = (mode, testPath) => ({
 	name: mode,
@@ -73,7 +75,7 @@ const config = (mode, testPath) => ({
 // Text from a stylesheet's comment lands in a resource hint's attributes; one
 // spelled like the page's own integrity or inline markers stays text, also
 // once the page is minified.
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration[]} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	config("development", testPath),
 	config("production", testPath)

@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	resolve: {
 		modules: ["node_modules", path.resolve(__dirname, "./node_modules")]

@@ -2,12 +2,14 @@
 
 const { EntryPlugin } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "ChildCompilationPlugin";
 
 /** Builds the same modules again in a child compilation, like html plugins do. */
 class ChildCompilationPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -26,7 +28,7 @@ class ChildCompilationPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	performance: {
 		hints: "warning",

@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "SnapshotBundlePlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	devtool: false,
@@ -17,7 +19,7 @@ module.exports = {
 		/**
 		 * The CommonJS exports templates render the same code inside the lazy
 		 * concatenation wrapper as they do for a standalone module.
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

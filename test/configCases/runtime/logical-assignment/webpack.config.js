@@ -2,9 +2,11 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {"web" | "node" | "async-node" | "webworker"} target target
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 function config(target) {
 	return {

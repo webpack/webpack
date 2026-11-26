@@ -6,7 +6,7 @@ const path = require("path");
 const webpack = require("../..");
 const assertModuleGraph = require("./assertModuleGraph");
 
-/** @import { Compilation, Compiler, Configuration, MultiCompiler, MultiStats, Stats } from "../../" */
+/** @import { Compilation, Compiler, Configuration, MultiCompiler, MultiStats, Stats, StatsError } from "../../" */
 /** @typedef {{ name: string, content: Buffer }[]} Assets */
 
 /**
@@ -35,7 +35,7 @@ const captureAssets = (compiler) => {
 
 /**
  * @param {Stats} stats build result
- * @returns {{ errors: import("../../").StatsError[] | undefined, warnings: import("../../").StatsError[] | undefined }} comparable diagnostics
+ * @returns {{ errors: StatsError[] | undefined, warnings: StatsError[] | undefined }} comparable diagnostics
  */
 const getDiagnostics = (stats) => {
 	const { errors, warnings } = stats.toJson({

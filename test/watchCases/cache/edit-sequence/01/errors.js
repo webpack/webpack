@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../.." */
+
 /**
- * @param {import("../../../../..").Configuration[]} options compiler options
+ * @param {Configuration[]} options compiler options
  * @returns {RegExp[]} expected errors for each configuration
  */
 module.exports = (options) =>

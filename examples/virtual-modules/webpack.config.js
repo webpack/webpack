@@ -4,11 +4,13 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../");
 
+/** @import { Configuration, LoaderContext } from "webpack" */
+
 const routesPath = path.join(__dirname, "./routes");
 
 const VERSION = "1.0.0";
 
-/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+/** @type {(env: "development" | "production") => Configuration} */
 const config = (env = "development") => ({
 	mode: env,
 	// Just for examples, you can use any target
@@ -63,9 +65,7 @@ const value: string = "value-from-typescript";
 export default value;`
 				},
 				routes: {
-					source(
-						/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
-					) {
+					source(/** @type {LoaderContext<unknown>} */ loaderContext) {
 						// Use `loaderContext.addContextDependency` to monitor the addition or removal of subdirectories in routesPath to trigger the rebuilding of virtual modules.
 						// See more - https://webpack.js.org/api/loaders/#the-loader-context
 						loaderContext.addContextDependency(routesPath);
@@ -81,9 +81,7 @@ export default value;`
 					}
 				},
 				"code-from-file": {
-					async source(
-						/** @type {import("webpack").LoaderContext<unknown>} */ loaderContext
-					) {
+					async source(/** @type {LoaderContext<unknown>} */ loaderContext) {
 						const pathToFile = path.resolve(__dirname, "./code.js");
 
 						// Will trigger rebuild on changes in the file

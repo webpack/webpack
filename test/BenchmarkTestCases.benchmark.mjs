@@ -14,7 +14,8 @@ import { simpleGit } from "simple-git";
  * 	BenchmarkWorkerMethods
  * } from "./harness/benchmark/benchmark.worker.mjs"
  */
-/** @typedef {import("jest-worker").JestWorkerFarm<BenchmarkWorkerMethods>} BenchmarkWorker */
+/** @import { JestWorkerFarm } from "jest-worker" */
+/** @typedef {JestWorkerFarm<BenchmarkWorkerMethods>} BenchmarkWorker */
 
 /**
  * @typedef {object} Baseline

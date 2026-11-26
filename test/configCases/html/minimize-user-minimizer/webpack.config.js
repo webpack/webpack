@@ -3,9 +3,11 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const { sources } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 class EmitCopiedHtmlPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.thisCompilation.tap(
@@ -30,7 +32,7 @@ class EmitCopiedHtmlPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

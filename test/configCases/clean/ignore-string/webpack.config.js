@@ -4,10 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const readDir = require("../enabled/readdir");
 
+/** @import { Configuration } from "../../../../" */
+
 const IGNORED_DIR = "ignored/dir";
 const CUSTOM_DIR = "this/dir/should/be/removed";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: {

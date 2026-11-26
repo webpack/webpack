@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// `es2016` supports generators but not `async`/`await`, so async modules are
 	// lowered to generator functions instead of emitting `async`/`await`.

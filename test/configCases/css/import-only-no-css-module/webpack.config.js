@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // No css module anywhere: the only stylesheet in the build is an `@import` external,
 // so nothing requires `hasCssModules` and the loading runtime has to be asked for here.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

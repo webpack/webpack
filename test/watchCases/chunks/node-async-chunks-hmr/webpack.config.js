@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Entrypoint } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	mode: "development",
@@ -21,7 +23,7 @@ module.exports = {
 		},
 		runtimeChunk: {
 			/**
-			 * @param {import("../../../../").Entrypoint} entrypoint The entrypoint to generate runtime chunk name for
+			 * @param {Entrypoint} entrypoint The entrypoint to generate runtime chunk name for
 			 * @returns {string} The generated runtime chunk name
 			 */
 			name: (entrypoint) => `runtime-${entrypoint.name}`

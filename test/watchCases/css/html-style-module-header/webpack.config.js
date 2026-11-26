@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.pathinfo` is what development turns on, and what the harness sets —
 // the header it writes above an inline sheet is what this case watches.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Source-phase wasm (`import source`) with an explicit full-hash length
 // (`[fullhash:16]`) so the compile runtime module and the fetch/read-file
 // compile plugins request `getFullHash` — the regressed `[fullhash]` path.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "web",

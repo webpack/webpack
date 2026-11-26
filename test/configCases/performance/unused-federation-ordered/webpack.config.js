@@ -3,7 +3,9 @@
 const { ContainerReferencePlugin } = require("../../../../").container;
 const { ConsumeSharedPlugin } = require("../../../../").sharing;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "node",

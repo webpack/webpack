@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 const configurations = [];
 for (const target of ["node", "async-node", "web", "webworker"]) {
 	for (const mode of /** @type {const} */ (["development", "production"])) {

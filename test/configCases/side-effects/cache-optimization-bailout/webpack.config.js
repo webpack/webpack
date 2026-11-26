@@ -2,9 +2,11 @@
 
 const path = require("path");
 
+/** @import { Configuration, Module } from "../../../../" */
+
 const PLUGIN_NAME = "SideEffectsFlagPluginCacheTest";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: {
@@ -22,9 +24,7 @@ module.exports = {
 					);
 					expect(module).toBeDefined();
 					const bailouts = compilation.moduleGraph
-						.getOptimizationBailout(
-							/** @type {import("../../../../").Module} */ (module)
-						)
+						.getOptimizationBailout(/** @type {Module} */ (module))
 						.map((bailout) =>
 							typeof bailout === "function"
 								? bailout(compilation.requestShortener)

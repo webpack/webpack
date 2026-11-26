@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compiler, EntryOptions } from "../../../../" */
+/** @import { Compiler, EntryOptions, Configuration } from "../../../../" */
 
 class AssertWorkerEntryOptionsPlugin {
 	/**
@@ -41,7 +41,7 @@ class AssertWorkerEntryOptionsPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [new AssertWorkerEntryOptionsPlugin()]
 };

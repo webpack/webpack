@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Same CSS-only hinted assets as `url-prefetch-preload-css`, but under
 // `publicPath: "auto"`. The asset's own url is still a placeholder at this point,
 // so the startup hint falls back to the runtime `__webpack_require__.p` form.
@@ -9,7 +11,7 @@ const rules = [
 	{ test: /\.woff2$/, preload: true }
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "web",

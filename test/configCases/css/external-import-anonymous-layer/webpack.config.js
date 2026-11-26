@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 const base = {
 	target: "web",
 	mode: "development",
@@ -9,7 +11,7 @@ const base = {
 	experiments: { css: true }
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base,
 	{

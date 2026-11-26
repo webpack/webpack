@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	...require("../../harmony/defer-import-added/webpack.config"),
 	context: path.resolve(__dirname, "../../harmony/defer-import-added")

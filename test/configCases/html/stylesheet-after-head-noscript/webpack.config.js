@@ -8,7 +8,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -30,7 +32,7 @@ const copyTest = {
 	}
 };
 
-/** @type {(name: string, page: string, inline: boolean) => import("../../../../").Configuration} */
+/** @type {(name: string, page: string, inline: boolean) => Configuration} */
 const config = (name, page, inline) => ({
 	name: `${name}-${page}`,
 	target: "web",
@@ -46,7 +48,7 @@ const config = (name, page, inline) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("linked", "closed", false),
 	config("linked", "implied", false),

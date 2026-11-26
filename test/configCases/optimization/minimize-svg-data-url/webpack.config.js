@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(name: string, options: import("../../../../").Configuration) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(name: string, options: Configuration) => Configuration} */
 const config = (name, options) => ({
 	target: "web",
 	mode: "production",

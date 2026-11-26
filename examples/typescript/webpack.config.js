@@ -2,6 +2,8 @@
 
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
+/** @import { Configuration } from "webpack" */
+
 // `experiments.typescript: true` enables webpack's built-in TypeScript
 // support. Internally it wires up `module.stripTypeScriptTypes` (Node.js
 // >= 22.7) to strip type annotations from `.ts`, `.cts`, `.mts` files at
@@ -22,7 +24,7 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 // `ts-loader` or `swc-loader` (see the `typescript-non-erasable`
 // example).
 
-/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+/** @type {(env: "development" | "production") => Configuration} */
 const config = (env = "development") => ({
 	mode: env,
 	experiments: {

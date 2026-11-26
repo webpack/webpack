@@ -4,6 +4,8 @@ const AssetModule = require("../../../../lib/asset/AssetModule");
 const JavascriptModule = require("../../../../lib/javascript/JavascriptModule");
 const JsonModule = require("../../../../lib/json/JsonModule");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */
 const expectedClasses = new Map([
 	["javascript/auto", JavascriptModule],
@@ -16,7 +18,7 @@ const expectedClasses = new Map([
 	["asset/source", AssetModule]
 ]);
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

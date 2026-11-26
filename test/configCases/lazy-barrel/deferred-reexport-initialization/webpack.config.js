@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} entry the entry module
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (entry) => ({
 	entry,
@@ -17,5 +19,5 @@ const config = (entry) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config("./index.js"), config("./early.js")];

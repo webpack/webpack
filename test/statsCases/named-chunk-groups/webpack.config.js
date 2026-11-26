@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../" */
+
 const stats = {
 	hash: false,
 	timings: false,
@@ -30,7 +32,7 @@ const config = {
 	}
 };
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		stats: { entrypoints: false, chunkGroups: true, ...stats },

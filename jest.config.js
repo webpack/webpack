@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Config } from "jest" */
+
 // coverage instrumentation slows every build; test/helpers/testTimeout.js
 // reads this as a global, not from the environment the builds can expose
 const coverage = process.argv.some((arg) =>
 	/^--(coverage|collectCoverage|collect-coverage)(=true)?$/.test(arg)
 );
 
-/** @type {import("jest").Config} */
+/** @type {Config} */
 const config = {
 	testTimeout: coverage ? 90000 : 30000,
 	globals: { __WEBPACK_TEST_COVERAGE__: coverage },

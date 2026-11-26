@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Nothing reads the wrapper, so it is not emitted: the two depths here are named by
 // their content, and the reference still bakes, repaired after the fill.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

@@ -5,11 +5,13 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so the entry finds its own stats
  * @param {string} name output prefix keeping the emitted files of each config apart
  * @param {string} chunkDirectory directory the chunks are emitted under
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name, chunkDirectory) => ({
 	name,
@@ -42,7 +44,7 @@ const base = (index, name, chunkDirectory) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Flat output: every name is settled during code generation.
 	base(0, "flat", ""),

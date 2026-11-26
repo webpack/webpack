@@ -55,7 +55,7 @@ const common = (i, options) => ({
 	...options
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	common(0, {
 		entry: "../_images/file.png"

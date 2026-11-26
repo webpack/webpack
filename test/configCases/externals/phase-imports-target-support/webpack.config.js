@@ -2,12 +2,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 // No config sets `output.environment`: the target version alone decides. `import
 // source` is Node >= 24.5 / Deno >= 2.6, `import defer` is Deno >= 2.8 and nothing else.
 
 /**
  * Exposes the environment webpack resolved, which is settled after plugins apply.
- * @param {import("../../../../").Compiler} compiler the compiler
+ * @param {Compiler} compiler the compiler
  * @returns {void}
  */
 const defineResolvedEnvironment = (compiler) => {
@@ -20,7 +22,7 @@ const defineResolvedEnvironment = (compiler) => {
 	});
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "deno",

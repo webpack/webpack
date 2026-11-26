@@ -2,7 +2,9 @@
 
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = ["resource", "fresh", "retained"].map((identity) => ({
 	mode: "development",
 	entry: {},

@@ -1,6 +1,8 @@
 import fs from "fs";
 import { createRequire } from "module";
 
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
 const jsMinify = require("../../../lib/javascript/jsMinify.js");
@@ -8,7 +10,7 @@ const jsMinify = require("../../../lib/javascript/jsMinify.js");
 const source = fs.readFileSync(require.resolve("lodash/lodash.js"), "utf8");
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

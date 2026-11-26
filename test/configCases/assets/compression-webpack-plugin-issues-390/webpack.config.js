@@ -2,7 +2,9 @@
 
 const { Compilation } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Asset } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		(compiler) => {
@@ -40,7 +42,7 @@ module.exports = {
 					},
 					async (assets) => {
 						for (const name of Object.keys(assets)) {
-							const { info } = /** @type {import("../../../../").Asset} */ (
+							const { info } = /** @type {Asset} */ (
 								compilation.getAsset(name)
 							);
 							if (info && name === "asset-manifest.json") {
@@ -61,7 +63,7 @@ module.exports = {
 					},
 					async (assets) => {
 						for (const name of Object.keys(assets)) {
-							const { info } = /** @type {import("../../../../").Asset} */ (
+							const { info } = /** @type {Asset} */ (
 								compilation.getAsset(name)
 							);
 							if (info && name === "asset-manifest.json") {

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name config name
  * @param {boolean} concatenateModules whether to enable module concatenation
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const config = (name, concatenateModules) => ({
 	name,
@@ -13,7 +15,7 @@ const config = (name, concatenateModules) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("require-interop without module concatenation", false),
 	config("require-interop with module concatenation", true)

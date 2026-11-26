@@ -1819,17 +1819,7 @@ declare interface CallbackNormalErrorCache<T> {
 /**
  * Creates a multi compiler.
  */
-declare interface CallbackWebpackFunction_1<T> {
-	/**
-	 * Creates a multi compiler.
-	 */
-	(err: null | Error, result?: T): void;
-}
-
-/**
- * Creates a multi compiler.
- */
-declare interface CallbackWebpackFunction_2<T, R = void> {
+declare interface CallbackWebpack<T, R = void> {
 	/**
 	 * Creates a multi compiler.
 	 */
@@ -5206,13 +5196,13 @@ declare class Compiler {
 	 */
 	watch(
 		watchOptions: WatchOptions,
-		handler: CallbackWebpackFunction_2<Stats, void>
+		handler: CallbackWebpack<Stats, void>
 	): undefined | Watching;
 
 	/**
 	 * Processes the provided stat.
 	 */
-	run(callback: CallbackWebpackFunction_2<Stats, void>): void;
+	run(callback: CallbackWebpack<Stats, void>): void;
 
 	/**
 	 * Processes the provided run as child callback.
@@ -5283,7 +5273,7 @@ declare class Compiler {
 	/**
 	 * Processes the provided compilation.
 	 */
-	compile(callback: CallbackWebpackFunction_2<Compilation, void>): void;
+	compile(callback: CallbackWebpack<Compilation, void>): void;
 
 	/**
 	 * Returns a worker bound to `workerPath`. The pool behind it is shared by the compiler and ended on close. Without `experiments.threads`, calls run directly on the main thread unless `options.numWorkers` asks for threads; without `worker_threads`, they always do.
@@ -13387,10 +13377,10 @@ declare interface GotHandler<T> {
 /**
  * Defines the group config type used by this module.
  */
-declare interface GroupConfig<T, R> {
-	getKeys: (item: T) => undefined | string[];
-	getOptions?: (name: string, items: T[]) => GroupOptionsSmartGrouping;
-	createGroup: (key: string, children: T[], items: T[]) => R;
+declare interface GroupConfig<I, G> {
+	getKeys: (item: I) => undefined | string[];
+	getOptions?: (name: string, items: I[]) => GroupOptionsSmartGrouping;
+	createGroup: (key: string, children: I[], items: I[]) => G;
 }
 declare interface GroupNames {
 	[index: string]: true | BranchID[];
@@ -19857,9 +19847,7 @@ declare class JavascriptSourceProcessor<
 	PrintOptions,
 	AnyParts,
 	TState,
-	VisitorMapSourceProcessorObject_2<
-		JavascriptSyntaxPath & { readonly state: TState }
-	>
+	VisitorMap<JavascriptSyntaxPath & { readonly state: TState }>
 > {
 	constructor();
 	static PrintContext: typeof PrintContext;
@@ -24479,9 +24467,7 @@ declare class MultiCompiler {
 	/**
 	 * Validate dependencies.
 	 */
-	validateDependencies(
-		callback: CallbackWebpackFunction_2<MultiStats, void>
-	): boolean;
+	validateDependencies(callback: CallbackWebpack<MultiStats, void>): boolean;
 
 	/**
 	 * Run with dependencies.
@@ -24491,9 +24477,9 @@ declare class MultiCompiler {
 		compilers: Compiler[],
 		fn: (
 			compiler: Compiler,
-			callback: CallbackWebpackFunction_2<MultiStats, void>
+			callback: CallbackWebpack<MultiStats, void>
 		) => void,
-		callback: CallbackWebpackFunction_2<Stats[], void>
+		callback: CallbackWebpack<Stats[], void>
 	): void;
 
 	/**
@@ -24501,13 +24487,13 @@ declare class MultiCompiler {
 	 */
 	watch(
 		watchOptions: WatchOptions | WatchOptions[],
-		handler: CallbackWebpackFunction_2<MultiStats, void>
+		handler: CallbackWebpack<MultiStats, void>
 	): undefined | MultiWatching;
 
 	/**
 	 * Processes the provided multi stat.
 	 */
-	run(callback: CallbackWebpackFunction_2<MultiStats, void>): void;
+	run(callback: CallbackWebpack<MultiStats, void>): void;
 	purgeInputFileSystem(): void;
 
 	/**
@@ -25676,7 +25662,7 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		array: LoaderItem[],
 		resolver: ResolverWithOptions,
 		resolveContext: ResolveContext,
-		callback: CallbackWebpackFunction_1<LoaderItem[]>
+		callback: CallbackWebpack<LoaderItem[]>
 	): void;
 
 	/**
@@ -33946,13 +33932,13 @@ type ScopeType =
 	| "function"
 	| "module"
 	| "global"
+	| "catch"
+	| "for"
+	| "switch"
+	| "with"
+	| "class"
 	| "function-expression-name"
 	| "block"
-	| "switch"
-	| "catch"
-	| "with"
-	| "for"
-	| "class"
 	| "class-field-initializer"
 	| "class-static-block";
 
@@ -34641,7 +34627,7 @@ declare interface SourceMapDevToolPluginOptions {
 	/**
 	 * Appends the given value to the original asset. Usually the #sourceMappingURL comment. [url] is replaced with a URL to the source map file. false disables the appending.
 	 */
-	append?: null | string | false | TemplatePathFn<PathData>;
+	append?: null | string | false | TemplatePathFn;
 
 	/**
 	 * Indicates whether column mappings should be used (defaults to true).
@@ -34795,7 +34781,7 @@ declare abstract class SourceProcessor<
 	TPrintOptions = PrintOptions,
 	TParts extends NodeParts = AnyParts,
 	TState = undefined,
-	TVisitors = VisitorMapSourceProcessorObject_1<TPath>
+	TVisitors = VisitorMap<TPath>
 > {
 	/**
 	 * Register one bucket for several node types, as a map naming each would;
@@ -34837,7 +34823,7 @@ declare abstract class SourceProcessor<
 	 * Register a visitor map built at runtime, keyed by any node type.
 	 */
 	use(
-		map: VisitorMapSourceProcessorObject_1<TPath>
+		map: VisitorMap<TPath>
 	): SourceProcessor<
 		TPath,
 		TNode,
@@ -37802,7 +37788,7 @@ declare interface VirtualModule {
 	 * The source function that provides the virtual content.
 	 */
 	source: (
-		loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
+		loaderContext: LoaderContextNormalModule<Record<string, any>>
 	) => string | Buffer | Promise<string | Buffer>;
 
 	/**
@@ -37818,7 +37804,7 @@ declare interface VirtualModule {
 type VirtualModuleContent =
 	| string
 	| ((
-			loaderContext: LoaderContextNormalModule<Record<string, any>, LoaderData>
+			loaderContext: LoaderContextNormalModule<Record<string, any>>
 	  ) => string | Buffer | Promise<string | Buffer>)
 	| VirtualModule;
 declare interface VirtualModules {
@@ -37890,11 +37876,8 @@ type VisitorBucket<TPath> =
 declare interface VisitorFn<TPath> {
 	(path: TPath): void;
 }
-declare interface VisitorMapSourceProcessorObject_1<TPath> {
+declare interface VisitorMap<TPath> {
 	[index: number]: VisitorBucket<TPath>;
-}
-declare interface VisitorMapSourceProcessorObject_2<T> {
-	[index: number]: VisitorBucket<T>;
 }
 type WarningFilterItemTypes =
 	string | RegExp | ((warning: StatsError, warningString: string) => boolean);
@@ -38075,7 +38058,7 @@ declare interface WatcherInfo {
 declare abstract class Watching {
 	startTime: null | number;
 	invalid: boolean;
-	handler: CallbackWebpackFunction_2<Stats, void>;
+	handler: CallbackWebpack<Stats, void>;
 	callbacks: ((err: null | Error, result?: void) => void)[];
 	closed: boolean;
 	suspended: boolean;
@@ -39157,7 +39140,7 @@ declare interface _functionWebpack {
 	 */
 	(
 		options: Configuration,
-		callback: CallbackWebpackFunction_2<Stats, void>
+		callback: CallbackWebpack<Stats, void>
 	): null | Compiler;
 
 	/**
@@ -39170,7 +39153,7 @@ declare interface _functionWebpack {
 	 */
 	(
 		options: MultiConfiguration,
-		callback: CallbackWebpackFunction_2<MultiStats, void>
+		callback: CallbackWebpack<MultiStats, void>
 	): null | MultiCompiler;
 
 	/**
@@ -39188,12 +39171,12 @@ declare interface chunkModuleHashMap {
 }
 declare function exports(
 	options: Configuration,
-	callback: CallbackWebpackFunction_2<Stats, void>
+	callback: CallbackWebpack<Stats, void>
 ): null | Compiler;
 declare function exports(options: Configuration): Compiler;
 declare function exports(
 	options: MultiConfiguration,
-	callback: CallbackWebpackFunction_2<MultiStats, void>
+	callback: CallbackWebpack<MultiStats, void>
 ): null | MultiCompiler;
 declare function exports(options: MultiConfiguration): MultiCompiler;
 declare namespace exports {

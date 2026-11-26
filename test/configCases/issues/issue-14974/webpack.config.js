@@ -2,7 +2,9 @@
 
 const { HotModuleReplacementPlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	devtool: false,
 	optimization: { usedExports: false, sideEffects: false },

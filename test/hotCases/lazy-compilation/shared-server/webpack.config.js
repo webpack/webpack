@@ -4,6 +4,11 @@ const http = require("http");
 // eslint-disable-next-line import-x/no-extraneous-dependencies -- webpack self-reference
 const webpack = require("webpack");
 
+/** @import { Compiler } from "../../../../" */
+/** @import { AddressInfo } from "net" */
+/** @import { LazyCompilationBackendOptions } from "../../../../lib/hmr/LazyCompilationPlugin.js" */
+/** @import { Configuration } from "webpack" */
+
 const {
 	hmr: { LazyCompilationPlugin }
 } = webpack;
@@ -14,7 +19,7 @@ const {
  */
 class SharedServerPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -27,13 +32,9 @@ class SharedServerPlugin {
 				new Promise((resolve, reject) => {
 					server.once("error", reject);
 					server.listen(0, "127.0.0.1", () => {
-						const { port } = /** @type {import("net").AddressInfo} */ (
-							server.address()
-						);
+						const { port } = /** @type {AddressInfo} */ (server.address());
 						resolve({
-							.../** @type {import("../../../../lib/hmr/LazyCompilationPlugin").LazyCompilationBackendOptions} */ (
-								transport
-							),
+							.../** @type {LazyCompilationBackendOptions} */ (transport),
 							server,
 							urlBase: `http://127.0.0.1:${port}/`
 						});
@@ -54,7 +55,7 @@ class SharedServerPlugin {
 	}
 }
 
-/** @returns {import("webpack").Configuration} configuration with a shared server */
+/** @returns {Configuration} configuration with a shared server */
 module.exports = () => ({
 	experiments: {
 		lazyCompilation: {

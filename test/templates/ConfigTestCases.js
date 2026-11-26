@@ -1,5 +1,10 @@
 "use strict";
 
+/** @import { FileCacheOptions, Configuration, Compiler, Stats, StatsModule } from "../../" */
+/** @import { TestConfig as RunnerTestConfig } from "../harness/runner/index.js" */
+/** @import { Subject } from "../helpers/ecmaConformance.js" */
+/** @import { Subject as AnalyzableConformanceSubject } from "../helpers/analyzableConformance.js" */
+
 require("../helpers/warmup-webpack");
 
 /** @typedef {Record<string, EXPECTED_ANY>} Env */
@@ -7,11 +12,11 @@ require("../helpers/warmup-webpack");
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
- * @property {import("../../").FileCacheOptions=} cache filesystem cache options
+ * @property {FileCacheOptions=} cache filesystem cache options
  */
 /**
  * @typedef {object} TestConfig
- * @property {((i: number, options: import("../../").Configuration) => string | undefined)=} findBundle
+ * @property {((i: number, options: Configuration) => string | undefined)=} findBundle
  * @property {number=} timeout
  * @property {number=} compileTimeout the least time each compile of the case gets, for a case a slow runtime takes past the defaults
  * @property {boolean=} noTests
@@ -20,9 +25,9 @@ require("../helpers/warmup-webpack");
  * @property {RegExp[]=} analyzableConformanceExpected ESM output a foreign bundler cannot follow that the case declares deliberate, each with the reason next to it; an entry that stops matching fails the case
  * @property {boolean=} restrictEnvironment run the bundle in a realm that really lacks what `output.environment` says the target lacks
  * @property {(() => void)=} beforeExecute
- * @property {((options: import("../../").Configuration) => void)=} afterExecute
- * @property {((scope: EXPECTED_ANY, options: import("../../").Configuration, target: EXPECTED_ANY) => void)=} moduleScope
- * @property {import("../harness/runner").TestConfig["setupDocument"]=} setupDocument prepare the page once per run, before any bundle executes
+ * @property {((options: Configuration) => void)=} afterExecute
+ * @property {((scope: EXPECTED_ANY, options: Configuration, target: EXPECTED_ANY) => void)=} moduleScope
+ * @property {RunnerTestConfig["setupDocument"]=} setupDocument prepare the page once per run, before any bundle executes
  */
 
 const path = require("path");
@@ -157,19 +162,19 @@ const describeCases = (config) => {
 						const testSubPath = path.join(config.name, category.name, testName);
 						const outputDirectory = path.join(outBaseDir, testSubPath);
 						const cacheDirectory = path.join(outBaseDir, ".cache", testSubPath);
-						/** @type {import("../../").Configuration} */
+						/** @type {Configuration} */
 						let options;
-						/** @type {import("../../").Configuration[]} */
+						/** @type {Configuration[]} */
 						let optionsArr;
 						/** @type {TestConfig} */
 						let testConfig;
-						/** @type {Map<string, import("../helpers/ecmaConformance").Subject>} */
+						/** @type {Map<string, Subject>} */
 						let generatedCode;
 
 						registerPerCaseSnapshotHooks(testDirectory, config.name);
 
 						beforeAll(async () => {
-							options = /** @type {import("../../").Configuration} */ (
+							options = /** @type {Configuration} */ (
 								await prepareOptions(
 									require(path.join(testDirectory, "webpack.config.js")),
 									{ testPath: outputDirectory }
@@ -259,7 +264,7 @@ const describeCases = (config) => {
 										cacheDirectory,
 										name:
 											options.cache && options.cache !== true
-												? /** @type {import("../../").FileCacheOptions} */ (
+												? /** @type {FileCacheOptions} */ (
 														options.cache
 													).name
 												: `config-${idx}`,
@@ -371,7 +376,7 @@ const describeCases = (config) => {
 						 * filesystem cache still stores the pack once idle, after the test is
 						 * over and at the same time as the next compiler on the same cache
 						 * directory, and one store then renames a file away from the other.
-						 * @param {import("../../").Compiler} compiler compiler that failed
+						 * @param {Compiler} compiler compiler that failed
 						 * @param {Error} err the fatal error
 						 * @param {(err?: Error) => void} done done callback
 						 */
@@ -385,8 +390,8 @@ const describeCases = (config) => {
 						/**
 						 * Runs the compiler, reporting a synchronous throw from a hook
 						 * (e.g. a `compilation` tap) to the callback like a failed run.
-						 * @param {import("../../").Compiler} compiler compiler
-						 * @param {(err: Error | null, stats?: import("../../").Stats) => void} callback run callback
+						 * @param {Compiler} compiler compiler
+						 * @param {(err: Error | null, stats?: Stats) => void} callback run callback
 						 * @returns {void}
 						 */
 						const runCompiler = (compiler, callback) => {
@@ -471,7 +476,7 @@ const describeCases = (config) => {
 										);
 									}
 									const { modules, children, errorsCount } =
-										/** @type {import("../../").Stats} */ (stats).toJson({
+										/** @type {Stats} */ (stats).toJson({
 											all: false,
 											modules: true,
 											errorsCount: true
@@ -481,24 +486,24 @@ const describeCases = (config) => {
 											? children.reduce(
 													(all, { modules }) => [
 														...all,
-														.../** @type {import("../../").StatsModule[]} */ (
+														.../** @type {StatsModule[]} */ (
 															modules || []
 														)
 													],
-													/** @type {import("../../").StatsModule[]} */ (
+													/** @type {StatsModule[]} */ (
 														modules || []
 													)
 												)
 											: modules;
 										if (
-											/** @type {import("../../").StatsModule[]} */ (
+											/** @type {StatsModule[]} */ (
 												allModules
 											).some((m) => m.type !== "cached modules" && !m.cached)
 										) {
 											return done(
 												new Error(
 													`Some modules were not cached:\n${
-														/** @type {import("../../").Stats} */ (stats).toString(
+														/** @type {Stats} */ (stats).toString(
 															{
 																all: false,
 																modules: true,
@@ -558,7 +563,7 @@ const describeCases = (config) => {
 							const deprecationTracker = deprecationTracking.start();
 							const onCompiled = (
 								/** @type {Error | null} */ err,
-								/** @type {import("../../").Stats} */ stats
+								/** @type {Stats} */ stats
 							) => {
 								const deprecations = deprecationTracker();
 								// a build that ends after its test timed out finds the suite cleaned up
@@ -660,9 +665,9 @@ const describeCases = (config) => {
 								}
 
 								const children =
-									/** @type {{ stats?: import("../../").Stats[] }} */ (stats)
+									/** @type {{ stats?: Stats[] }} */ (stats)
 										.stats || [stats];
-								/** @type {import("../helpers/analyzableConformance").Subject[]} */
+								/** @type {AnalyzableConformanceSubject[]} */
 								const subjects = [];
 								/**
 								 * A child compiler emits its own assets, so the walk has to
@@ -775,7 +780,7 @@ const describeCases = (config) => {
 												}
 												onCompiled(
 													/** @type {Error | null} */ (error),
-													/** @type {import("../../").Stats} */ (stats)
+													/** @type {Stats} */ (stats)
 												);
 											});
 										});

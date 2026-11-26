@@ -2,12 +2,14 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name config name
  * @param {object} options options
  * @param {string=} options.devtoolModuleFilenameTemplate custom template under test
  * @param {string=} options.loader a loader reporting its own map, relative to this directory
- * @returns {import("../../../../").Configuration} webpack configuration
+ * @returns {Configuration} webpack configuration
  */
 const makeConfig = (name, options = {}) => ({
 	name,

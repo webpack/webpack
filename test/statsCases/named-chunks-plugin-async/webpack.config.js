@@ -4,7 +4,9 @@ const {
 	ids: { NamedChunkIdsPlugin }
 } = require("../../../");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: { chunkIds: false },

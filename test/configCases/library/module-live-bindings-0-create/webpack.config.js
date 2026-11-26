@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 /**
  * Asserts the emitted entry keeps live ESM bindings (direct top-level
  * declarations) instead of snapshotting them through `__webpack_exports__`.
@@ -7,7 +9,7 @@
  * call site — including where a separate runtime chunk is what carries them.
  * @param {string} assetName emitted entry asset to assert on
  * @param {string} runtimeAsset asset the runtime modules land in
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const assertLiveBindings = (assetName, runtimeAsset) =>
 	function apply() {
@@ -29,7 +31,7 @@ const assertLiveBindings = (assetName, runtimeAsset) =>
  * @param {string} entryAsset emitted entry asset to assert on
  * @param {"development" | "production"} mode mode
  * @param {false | "single"} runtimeChunk runtime chunk option
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const variant = (name, entryAsset, mode, runtimeChunk) => ({
 	mode,
@@ -50,7 +52,7 @@ const variant = (name, entryAsset, mode, runtimeChunk) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	variant("single", "lib.mjs", "development", false),
 	variant("single-prod", "lib.mjs", "production", false),

@@ -1,8 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+/** @import { RuntimeModule } from "../../../../" */
+
 const PLUGIN_NAME = "AddLazyRuntimeModuleErrorTestPlugin";
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		{
@@ -14,9 +17,7 @@ module.exports = {
 							compilation.addLazyRuntimeModule(
 								chunk,
 								() => Promise.reject(new Error("runtime module load failed")),
-								(
-									/** @type {new () => import("../../../../").RuntimeModule} */ Ctor
-								) => new Ctor()
+								(/** @type {new () => RuntimeModule} */ Ctor) => new Ctor()
 							);
 						}
 					);

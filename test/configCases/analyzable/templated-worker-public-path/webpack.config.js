@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.workerPublicPath` wins over the global one for a worker's chunks, and
 // carries the same `[fullhash]` — resolved the same way.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node14",
 	mode: "development",

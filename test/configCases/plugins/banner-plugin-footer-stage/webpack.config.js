@@ -2,6 +2,8 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const base = {
 	mode: /** @type {const} */ ("production"),
 	node: {
@@ -13,7 +15,7 @@ const base = {
 	}
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

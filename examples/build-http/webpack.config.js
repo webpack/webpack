@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	// enable debug logging to see network requests!
 	// stats: {

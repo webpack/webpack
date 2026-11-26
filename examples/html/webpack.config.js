@@ -6,6 +6,8 @@ const {
 	html: { HtmlModulesPlugin }
 } = require("../../");
 
+/** @import { Compiler, Configuration } from "../../" */
+
 // The modern icon set a web app ships: a legacy `favicon.ico`, an
 // `apple-touch-icon`, two manifest icons, and a theme color.
 const APPLE_TOUCH_SIZE = 180;
@@ -40,7 +42,7 @@ const pngToIco = (png) => {
 // and injects all the `<link>`/`<meta>` tags via the `injectTags` hook.
 class GenerateFaviconPlugin {
 	/**
-	 * @param {import("../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 */
 	apply(compiler) {
 		const NAME = "GenerateFaviconPlugin";
@@ -125,7 +127,7 @@ class GenerateFaviconPlugin {
 	}
 }
 
-/** @type {import("../../").Configuration} */
+/** @type {Configuration} */
 const config = {
 	// `target: "web"` makes the CSS generator emit `.css` chunks (for the
 	// `<link rel="stylesheet">` and the inline `<style>`).

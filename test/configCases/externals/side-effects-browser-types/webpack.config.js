@@ -2,6 +2,9 @@
 
 const assertIncludedExternals = require("../../../helpers/assertIncludedExternals");
 
+/** @import { Configuration } from "../../../../" */
+/** @import { ExternalsType } from "../../../../declarations/WebpackOptions.js" */
+
 // a `script` external is requested as `<global>@<url>`
 const scriptRequest = (/** @type {string} */ name) =>
 	`${name.replace(/-/g, "_")}@https://test.cases/path/${name}.js`;
@@ -9,7 +12,7 @@ const scriptRequest = (/** @type {string} */ name) =>
 /**
  * @param {string} type externals type
  * @param {(name: string) => string} request the external target for a name
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (type, request = (name) => name) => ({
 	name: type,
@@ -22,10 +25,7 @@ const config = (type, request = (name) => name) => ({
 		// external into the entry would hide
 		concatenateModules: false
 	},
-	externalsType:
-		/** @type {import("../../../../declarations/WebpackOptions").ExternalsType} */ (
-			type
-		),
+	externalsType: /** @type {ExternalsType} */ (type),
 	externals: {
 		[`${type}-free`]: {
 			external: request(`${type}-free`),
@@ -41,7 +41,7 @@ const config = (type, request = (name) => name) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("window"),
 	config("self"),

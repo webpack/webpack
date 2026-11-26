@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index config index
  * @param {"development" | "production"} mode mode
- * @param {import("../../../../").Configuration["optimization"]} optimization optimization options
- * @returns {import("../../../../").Configuration} configuration
+ * @param {Configuration["optimization"]} optimization optimization options
+ * @returns {Configuration} configuration
  */
 const createConfig = (index, mode, optimization) => ({
 	mode,
@@ -23,7 +25,7 @@ const createConfig = (index, mode, optimization) => ({
 	optimization: { minimize: false, ...optimization }
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	createConfig(0, "development", {}),
 	createConfig(1, "production", { concatenateModules: true }),

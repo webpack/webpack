@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration, Module } from "../../../../" */
+
 const PLUGIN_NAME = "ForeignModuleTestPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "web",
@@ -24,7 +26,7 @@ module.exports = {
 							if (!module.type.startsWith("css/")) continue;
 							// A module built against an older webpack extends a base class
 							// predating this, so looking it up on the instance finds nothing.
-							/** @type {Partial<import("../../../../").Module>} */
+							/** @type {Partial<Module>} */
 							(module).canBeWrappedInConcatenation = undefined;
 						}
 					});

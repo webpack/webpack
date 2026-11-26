@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const optimization = {
 	sideEffects: true,
 	usedExports: true,
@@ -7,7 +9,7 @@ const optimization = {
 	minimize: false
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		mode: "production",

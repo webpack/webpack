@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A custom minimizer that declares the type it handles with `include` instead of
 // `test` — webpack must still recognize it and leave CSS alone.
 class IncludeOnlyCssMinimizer {
@@ -13,7 +15,7 @@ class IncludeOnlyCssMinimizer {
 	apply() {}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

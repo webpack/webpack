@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name config name
  * @param {"web" | "node"} target target
  * @param {string} uniqueName output unique name
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const config = (name, target, uniqueName) => ({
 	name,
@@ -41,7 +43,7 @@ const config = (name, target, uniqueName) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	config("web", "web", "app"),
 	config("node", "node", "app"),

@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Compiler } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "node",
@@ -21,7 +23,7 @@ module.exports = {
 	plugins: [
 		/**
 		 * Requests another seal after chunk splitting and runtime generation.
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap("test", (compilation) => {

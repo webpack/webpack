@@ -3,7 +3,9 @@
 const NoEmitOnErrorsPlugin = require("../../../").NoEmitOnErrorsPlugin;
 const TestChildCompilationFailurePlugin = require("./TestChildCompilationFailurePlugin");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index",
 	output: {

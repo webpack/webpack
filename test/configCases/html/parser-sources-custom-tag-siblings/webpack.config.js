@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Regression test for sibling-tag emission when a custom (non-`<script>`)
 // element is mapped to a `script` / `script-module` source type. With
 // `runtimeChunk` splitting a runtime chunk out of each synthetic html entry,
@@ -7,7 +9,7 @@
 // cloning the custom element and appending `</script>` would produce invalid,
 // non-executing markup like `<my-script …></script>`.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	output: {

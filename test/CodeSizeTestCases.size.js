@@ -34,8 +34,8 @@ const prepareOptions = require("./helpers/prepareOptions");
  * } from ".."
  */
 
-/** @import LibCompilation from "../lib/Compilation" */
-/** @import LibModule from "../lib/module/Module" */
+/** @import LibCompilation from "../lib/Compilation.js" */
+/** @import LibModule from "../lib/module/Module.js" */
 
 /** @typedef {"raw" | "gzip" | "brotli" | "zstd"} Metric */
 /** @typedef {Record<Metric, number>} Metrics */

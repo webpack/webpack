@@ -2,9 +2,10 @@
 
 const path = require("path");
 
-/** @import { InputFileSystem, ReadFileSync } from "../../../../lib/fs/fs" */
+/** @import { InputFileSystem, ReadFileSync } from "../../../../lib/fs/fs.js" */
+/** @import { Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

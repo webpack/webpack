@@ -5,6 +5,8 @@ const path = require("path");
 const { RawSource } = require("webpack-sources");
 const readDir = require("./readdir");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "CleanNestedDirectoriesPlugin";
 
 // Assets living in sibling directory trees: every directory on the way to an
@@ -21,14 +23,14 @@ const STALE = [
 	"unrelated/file.txt"
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			let planted = false;

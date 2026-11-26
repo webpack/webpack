@@ -3,7 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = ["memory", "filesystem"].map((type) => ({
 	mode: "development",
 	entry: { main: "./index.js", trigger: "./tick.js" },

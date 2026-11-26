@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { Compiler, Compilation, Chunk, Module } from "../../../../" */
+/** @import { Compiler, Compilation, Chunk, Module, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		app: { import: "./app.js", dependOn: "react-vendors" },

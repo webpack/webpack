@@ -1,7 +1,8 @@
 "use strict";
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Configuration } from "../../../../" */
 
 const BasicEvaluatedExpression = require("../../../../lib/javascript/BasicEvaluatedExpression");
 
@@ -32,7 +33,7 @@ const evaluateDefinedFlag = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: {

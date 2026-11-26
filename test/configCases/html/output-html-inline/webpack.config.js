@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -26,7 +28,7 @@ const copyTest = {
 	}
 };
 
-/** @type {(name: string, inline: boolean | RegExp[] | "script" | "style") => import("../../../../").Configuration} */
+/** @type {(name: string, inline: boolean | RegExp[] | "script" | "style") => Configuration} */
 const config = (name, inline) => ({
 	name,
 	target: "web",
@@ -40,7 +42,7 @@ const config = (name, inline) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// inline: true — all chunks inlined, no <script src> or <link href>
 	config("bool", true),

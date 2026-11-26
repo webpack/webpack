@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // no cache names
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		mode: "production",

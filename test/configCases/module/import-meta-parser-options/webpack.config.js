@@ -3,7 +3,9 @@
 const { DefinePlugin, EnvironmentPlugin } = require("../../../../");
 const { version } = require("../../../../package.json");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 // Regression test for https://github.com/webpack/webpack/issues/21459:
 // `output.module` with jsonp/array-push must emit a plain-JSON hot-update
 // manifest (fetched via `fetch().json()`), not an `export default` ES module.
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {

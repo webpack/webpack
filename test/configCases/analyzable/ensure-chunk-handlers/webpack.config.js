@@ -6,13 +6,15 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // Needle built here so it is not a source string literal the search would find.
 const handlers = "__webpack_require__.f";
 
 /**
  * @param {number} index position of this config, so it finds its own bundle
  * @param {string} entry the entry module
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, entry) => ({
 	target: "web",
@@ -42,7 +44,7 @@ const base = (index, entry) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// An asset rides its own file, and the javascript handler still loads the chunk.
 	base(0, "./index.js"),

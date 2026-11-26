@@ -4,10 +4,12 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 const xmlStyleMinify = require("./xmlStyleMinify");
 
+/** @import { Configuration } from "../../../../" */
+
 const { cssMinify } = webpack.css;
 const { htmlMinify } = webpack.html;
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "web",

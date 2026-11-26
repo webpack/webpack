@@ -3,8 +3,10 @@
 const path = require("path");
 const { DefinePlugin } = require("../../../../");
 
-/** @typedef {import("../../../../lib/worker/Worker")<{ threadId: () => number }>} ThreadIdWorker */
-/** @import WorkerPool from "../../../../lib/worker/WorkerPool" */
+/** @typedef {WorkerModule<{ threadId: () => number }>} ThreadIdWorker */
+/** @import WorkerPool from "../../../../lib/worker/WorkerPool.js" */
+/** @import WorkerModule from "../../../../lib/worker/Worker.js" */
+/** @import { Configuration } from "../../../../" */
 
 const WORKER = path.resolve(__dirname, "worker.js");
 
@@ -24,7 +26,7 @@ const waitForWorkers = async (pool, count) => {
 	return false;
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	experiments: { threads: { max: 2 } },
 	// Node 10 has no worker_threads: the case still runs, inline

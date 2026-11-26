@@ -2,11 +2,13 @@
 
 const webpack = require("../../../");
 
+/** @import { Configuration, Compiler } from "../../../" */
+
 const PLUGIN_NAME = "AddWarningsPlugin";
 
 // Emits warnings without an `ignoreWarnings`/`warningsFilter`, so `warningsCount`
 // is computed from the raw warnings; details are hidden to assert the count alone.
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./index.js",
@@ -18,7 +20,7 @@ module.exports = {
 	plugins: [
 		{
 			/**
-			 * @param {import("../../../").Compiler} compiler the compiler
+			 * @param {Compiler} compiler the compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {

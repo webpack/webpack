@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {"text" | "css-style-sheet"} exportType the CSS parser exportType
- * @returns {import("../../../../").Configuration} webpack configuration
+ * @returns {Configuration} webpack configuration
  */
 const makeConfig = (exportType) => ({
 	name: exportType,
@@ -23,5 +25,5 @@ const makeConfig = (exportType) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [makeConfig("text"), makeConfig("css-style-sheet")];

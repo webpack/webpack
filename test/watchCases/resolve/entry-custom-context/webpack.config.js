@@ -4,11 +4,13 @@ const path = require("path");
 const { EntryPlugin } = require("../../../../");
 const EntryDependency = require("../../../../lib/entry/EntryDependency");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "EntryCustomContextTest";
 
 /**
  * Registers a fresh entry dependency with its own context on every make.
- * @param {import("../../../../").Compiler} compiler compiler
+ * @param {Compiler} compiler compiler
  * @returns {void}
  */
 const addEntryWithOwnContext = (compiler) => {
@@ -34,7 +36,7 @@ const addEntryWithOwnContext = (compiler) => {
 	});
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {},

@@ -6,6 +6,8 @@
 // eslint-disable-next-line n/no-unsupported-features/node-builtins
 const { constants, enableCompileCache } = require("module");
 
+/** @import moduleModule from "module" */
+
 if (enableCompileCache) {
 	try {
 		const { status, directory } = enableCompileCache();
@@ -80,7 +82,7 @@ const isInstalled = (packageName) => {
 
 	// https://github.com/nodejs/node/blob/v18.9.1/lib/internal/modules/cjs/loader.js#L1274
 	const { globalPaths } =
-		/** @type {typeof import("module") & { globalPaths: string[] }} */
+		/** @type {typeof moduleModule & { globalPaths: string[] }} */
 		(require("module"));
 
 	for (const internalPath of globalPaths) {

@@ -7,8 +7,9 @@ const JavascriptParser = require("../../../../lib/javascript/JavascriptParser");
  * @import {
  * 	ParseOptions,
  * 	ParseResult
- * } from "../../../../lib/javascript/JavascriptParser"
+ * } from "../../../../lib/javascript/JavascriptParser.js"
  */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
 
 /**
  * A custom parser, so the collision check also runs on an AST it did not build.
@@ -33,7 +34,7 @@ const customParse = (code, options) => {
 
 /**
  * @param {number} expectedParses number of entries requiring scope analysis
- * @returns {import("../../../../").WebpackPluginInstance} counting plugin
+ * @returns {WebpackPluginInstance} counting plugin
  */
 const createCountEntryParsesPlugin = (expectedParses) => ({
 	apply(compiler) {
@@ -78,7 +79,7 @@ const createCountEntryParsesPlugin = (expectedParses) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 const base = {
 	entry: ["./first.js", "./second.js"],
 	output: {
@@ -90,7 +91,7 @@ const base = {
 	target: "es2020"
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

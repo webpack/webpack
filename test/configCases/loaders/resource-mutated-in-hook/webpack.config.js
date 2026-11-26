@@ -3,11 +3,13 @@
 const path = require("path");
 const { NormalModule } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN = "MutateResourcePlugin";
 
 class MutateResourcePlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap(PLUGIN, (compilation) => {
@@ -25,7 +27,7 @@ class MutateResourcePlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [new MutateResourcePlugin()],
 	module: {

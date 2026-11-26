@@ -1,11 +1,13 @@
 "use strict";
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 // Emulates real plugin usage of the HTML compilation hooks, reached through the
 // public `webpack.html.HtmlModulesPlugin` export:
 //  - two `transformHtml` taps prove the waterfall (the 2nd sees the 1st's output),
 //  - `transformHtml` injects a CSP `<meta>` (a common real transform),
 //  - `htmlEmitted` records each finalized page (a manifest-style side effect).
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const hooksPlugin = {
 	apply(compiler) {
 		const { RawSource } = compiler.webpack.sources;
@@ -35,7 +37,7 @@ const hooksPlugin = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		generator: {

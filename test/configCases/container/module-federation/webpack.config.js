@@ -2,8 +2,10 @@
 
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @import { Configuration } from "../../../../" */
+
 /**
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 function createConfig() {
 	return {

@@ -4,15 +4,17 @@ const assert = require("assert");
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @returns {import("../../../..").Configuration} watch configuration */
+/** @import { Configuration, WebpackPluginInstance, Compiler } from "../../../.." */
+
+/** @returns {Configuration} watch configuration */
 module.exports = () => ({
 	output: { copy: [{ from: "static", to: "copied" }] },
 	plugins: [
-		/** @type {import("../../../..").WebpackPluginInstance & { reported: boolean }} */ ({
+		/** @type {WebpackPluginInstance & { reported: boolean }} */ ({
 			reported: false,
 			/**
 			 * @this {{ reported: boolean }}
-			 * @param {import("../../../..").Compiler} compiler watched compiler
+			 * @param {Compiler} compiler watched compiler
 			 * @returns {void}
 			 */
 			apply(compiler) {

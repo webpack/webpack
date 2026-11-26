@@ -10,9 +10,12 @@ import fs from "fs";
 import { createRequire } from "module";
 import { fileURLToPath } from "url";
 
+/** @import syntax from "../../../lib/javascript/syntax.js" */
+/** @import { Bench } from "tinybench" */
+
 const require = createRequire(import.meta.url);
 
-/** @type {typeof import("../../../lib/javascript/syntax")} */
+/** @type {typeof syntax} */
 const { SourceProcessor } = require("../../../lib/javascript/syntax.js");
 
 /** @type {[string, string, boolean][]} name, source, whether it is a module */
@@ -38,7 +41,7 @@ const MODES = [
 ];
 
 /**
- * @param {import("tinybench").Bench} bench bench
+ * @param {Bench} bench bench
  * @returns {void}
  */
 export default (bench) => {

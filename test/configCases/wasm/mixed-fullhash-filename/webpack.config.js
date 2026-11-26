@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // One `[fullhash]` read at runtime next to one re-encoded by a digest: the digest is
 // inlined, but the plain placeholder still calls `getFullHash`, so it must be defined.
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 const configurations = [];
 
 for (const [target, phases] of [

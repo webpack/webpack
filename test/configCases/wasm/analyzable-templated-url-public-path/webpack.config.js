@@ -5,13 +5,15 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} name prefix keeping the emitted files of each config apart
  * @param {string} hashPart the `[fullhash]` form under test
  * @param {boolean} digest whether that form re-encodes the hash
- * @param {{ baked?: boolean, chunkSuffix?: string, workerChunkFilename?: string, realContentHash?: boolean, publicPath?: NonNullable<import("../../../../").Configuration["output"]>["publicPath"] }=} extra per-case overrides
- * @returns {import("../../../../").Configuration} configuration
+ * @param {{ baked?: boolean, chunkSuffix?: string, workerChunkFilename?: string, realContentHash?: boolean, publicPath?: NonNullable<Configuration["output"]>["publicPath"] }=} extra per-case overrides
+ * @returns {Configuration} configuration
  */
 const base = (index, name, hashPart, digest, extra = {}) => ({
 	target: "node",
@@ -47,7 +49,7 @@ const base = (index, name, hashPart, digest, extra = {}) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, "plain", "[fullhash]", false),
 	base(1, "sliced", "[fullhash:8]", false),

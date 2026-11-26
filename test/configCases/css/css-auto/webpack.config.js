@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 // Bun aborts in its node:vm SourceTextModule.link() and Deno hard-panics
 // ("Module not found") on less-loader's `import("less")`; on both load the CJS
 // less so it skips the dynamic import.
@@ -8,7 +10,7 @@ const lessLoader =
 		? { loader: "less-loader", options: { implementation: require("less") } }
 		: "less-loader";
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

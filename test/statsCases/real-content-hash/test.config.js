@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const createHash = require("../../../lib/util/createHash");
 
+/** @import { MultiStats } from "../../../" */
+
 const hashedFiles = {
 	"file.jpg": (a) => a.name.endsWith(".jpg"),
 	"file.png": (a) => a.name.endsWith(".png")
@@ -11,7 +13,7 @@ const hashedFiles = {
 
 module.exports = {
 	/**
-	 * @param {import("../../../").MultiStats} stats stats
+	 * @param {MultiStats} stats stats
 	 */
 	validate(stats) {
 		for (let i = 0; i < 4; i += 2) {

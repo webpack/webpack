@@ -6,14 +6,16 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} dir subdirectory keeping the emitted chunks of each config apart
- * @param {NonNullable<import("../../../../").Configuration["output"]>["publicPath"]} publicPath the shape under test
+ * @param {NonNullable<Configuration["output"]>["publicPath"]} publicPath the shape under test
  * @param {string} root what the chunk one directory down is expected to bake
  * @param {string} deep what the chunk a directory down is expected to bake
  * @param {string} own what the entry the host loads is expected to bake
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, dir, publicPath, root, deep, own) => ({
 	target: "node",
@@ -40,7 +42,7 @@ const base = (index, dir, publicPath, root, deep, own) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Chunk-relative already: the `../` path back to the root is the whole prefix.
 	base(0, "a", "auto", "../asset.txt", "../../asset.txt", "./asset.txt"),

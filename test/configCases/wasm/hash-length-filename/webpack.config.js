@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `webassemblyModuleFilename` with an explicit full-hash length (`[fullhash:16]`)
 // exercises the runtime `hashWithLength` branch of the wasm loaders, which
 // previously emitted a stray `}` producing invalid runtime code.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "node",

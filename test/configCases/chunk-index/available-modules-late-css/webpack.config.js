@@ -6,7 +6,9 @@ const {
 	WebpackError
 } = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Chunk } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((late, index) => ({
 	mode: "production",
 	target: "web",
@@ -53,7 +55,7 @@ module.exports = [false, true].map((late, index) => ({
 								);
 							}
 							const child =
-								/** @type {import("../../../../").Chunk} */
+								/** @type {Chunk} */
 								(compilation.namedChunks.get("child"));
 							const hasX = [
 								...compilation.chunkGraph.getChunkModulesIterable(child)

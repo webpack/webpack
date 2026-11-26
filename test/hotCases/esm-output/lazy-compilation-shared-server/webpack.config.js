@@ -2,7 +2,9 @@
 
 const sharedServer = require("../../lazy-compilation/shared-server/webpack.config");
 
-/** @returns {import("webpack").Configuration} shared server with module output */
+/** @import { Configuration } from "webpack" */
+
+/** @returns {Configuration} shared server with module output */
 module.exports = () => ({
 	...sharedServer(),
 	output: {

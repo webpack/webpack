@@ -2,7 +2,7 @@
 
 const { RuntimeGlobals, RuntimeModule, Template } = require("../../../../");
 
-/** @import { Compilation } from "../../../../" */
+/** @import { Compilation, Configuration } from "../../../../" */
 
 class ReactRefreshRuntimeModule extends RuntimeModule {
 	constructor() {
@@ -41,7 +41,7 @@ class ReactRefreshRuntimeModule extends RuntimeModule {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	output: {

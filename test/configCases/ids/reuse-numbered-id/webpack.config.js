@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { WebpackPluginInstance, NormalModule, Configuration } from "../../../../" */
+
 /**
  * Mimics ids restored from records: pins `./third.js` to the id `./mod.js`
  * (so `./mod.js` needs a numbered id) and `./other.js` to `./mod.js0`.
- * @type {import("../../../../").WebpackPluginInstance}
+ * @type {WebpackPluginInstance}
  */
 const reserveIds = {
 	apply(compiler) {
@@ -13,9 +15,7 @@ const reserveIds = {
 				() => {
 					const { chunkGraph } = compilation;
 					for (const module of compilation.modules) {
-						const resource =
-							/** @type {import("../../../../").NormalModule} */ (module)
-								.resource;
+						const resource = /** @type {NormalModule} */ (module).resource;
 						if (!resource) continue;
 						const base = resource.replace(/\?.*$/, "");
 						if (base.endsWith("other.js")) {
@@ -30,7 +30,7 @@ const reserveIds = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: {
 		moduleIds: "named"

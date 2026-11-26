@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Stats } from "../../../" */
+
 const IMPORT_MAP = "chunkImports = {";
 const BAILOUT = "Analyzable ESM bailout:";
 
@@ -125,12 +127,12 @@ const CASES = {
 
 module.exports = {
 	/**
-	 * @param {import("../../../").Stats} stats stats
+	 * @param {Stats} stats stats
 	 */
 	validate(stats) {
-		const children = /** @type {{ stats?: import("../../../").Stats[] }} */ (
+		const children = /** @type {{ stats?: Stats[] }} */ (stats).stats || [
 			stats
-		).stats || [stats];
+		];
 		for (const child of children) {
 			const { compilation } = child;
 			const name = /** @type {string} */ (compilation.name);

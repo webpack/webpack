@@ -1,9 +1,9 @@
 "use strict";
 
 /** @import { ResolveRequest } from "enhanced-resolve" */
-/** @import { ExternalItemFunctionData } from "../../../../" */
+/** @import { ExternalItemFunctionData, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	optimization: {
 		concatenateModules: true

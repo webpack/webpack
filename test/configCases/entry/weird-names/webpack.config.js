@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const entry = {
 	"././../entry/point/./../": "./index.js",
 	"/////": "./index.js",
 	"../entry": "./index.js"
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		target: "async-node",

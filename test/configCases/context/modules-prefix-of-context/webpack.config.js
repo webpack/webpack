@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	resolve: {
 		// a directory whose path is a prefix of the context's, but not its parent

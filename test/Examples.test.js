@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration, Stats, StatsOptions } from "../" */
+
 require("./helpers/warmup-webpack");
 
 const path = require("path");
@@ -137,7 +139,7 @@ describe("Examples", () => {
 				}
 
 				/**
-				 * @param {import("../").Configuration} options options
+				 * @param {Configuration} options options
 				 */
 				function processOptions(options) {
 					options.context = examplePath;
@@ -173,11 +175,11 @@ describe("Examples", () => {
 								reject(err);
 								return;
 							}
-							if (/** @type {import("../").Stats} */ (stats).hasErrors()) {
+							if (/** @type {Stats} */ (stats).hasErrors()) {
 								reject(
 									new Error(
-										/** @type {import("../").Stats} */ (stats).toString(
-											/** @type {import("../").StatsOptions} */ ({
+										/** @type {Stats} */ (stats).toString(
+											/** @type {StatsOptions} */ ({
 												all: false,
 												errors: true,
 												errorDetails: true,

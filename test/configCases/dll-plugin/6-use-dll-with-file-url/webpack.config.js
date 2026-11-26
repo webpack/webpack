@@ -4,6 +4,8 @@ const path = require("path");
 const { pathToFileURL } = require("url");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Builds the file URL of a path, the form `import.meta.resolve()` returns.
  * @param {string} absolutePath an absolute path
@@ -11,7 +13,7 @@ const webpack = require("../../../../");
  */
 const fileUrl = (absolutePath) => pathToFileURL(absolutePath).href;
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

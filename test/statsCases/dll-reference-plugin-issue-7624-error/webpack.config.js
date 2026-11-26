@@ -3,7 +3,9 @@
 const path = require("path");
 const webpack = require("../../../");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	entry: "./entry.js",

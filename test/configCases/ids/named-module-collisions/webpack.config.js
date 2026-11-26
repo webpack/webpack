@@ -2,7 +2,10 @@
 
 const { getLongModuleName } = require("../../../../lib/ids/IdHelpers");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Module as WebpackModule } from "../../../../" */
+/** @import Module from "../../../../lib/module/Module.js" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((reverse) => ({
 	mode: "development",
 	optimization: { moduleIds: "named" },
@@ -17,9 +20,7 @@ module.exports = [false, true].map((reverse) => ({
 					const [first, second, third] = modules;
 					const longName = getLongModuleName(
 						"shared",
-						/** @type {import("../../../../lib/module/Module") & import("../../../../").Module} */ (
-							first
-						),
+						/** @type {Module & WebpackModule} */ (first),
 						compiler.context,
 						compilation.outputOptions.hashFunction,
 						compiler.root

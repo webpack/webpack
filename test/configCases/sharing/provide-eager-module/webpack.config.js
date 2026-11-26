@@ -2,7 +2,9 @@
 
 const { ProvideSharedPlugin } = require("../../../../").sharing;
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	plugins: [

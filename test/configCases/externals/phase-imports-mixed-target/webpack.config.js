@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Deno reads `import defer` and web does not, so a bundle for both must not
 // inherit deno's answer for the whole set.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["web", "deno2.8"],
 	entry: "./index.js",

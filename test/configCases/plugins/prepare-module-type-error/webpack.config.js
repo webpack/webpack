@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 const PLUGIN_NAME = "PrepareModuleTypeErrorTestPlugin";
 
-/** @type {import("../../../../types").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [{ test: /\.custom$/, type: "asset/source" }]

@@ -3,14 +3,16 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 module.exports = {
 	findBundle() {
 		return ["bundle0.mjs"];
 	},
 	afterExecute(options) {
 		const dir = /** @type {string} */ (
-			/** @type {NonNullable<import("../../../../").Configuration["output"]>} */ (
-				/** @type {import("../../../../").Configuration} */ (options).output
+			/** @type {NonNullable<Configuration["output"]>} */ (
+				/** @type {Configuration} */ (options).output
 			).path
 		);
 		const shared = fs.readFileSync(path.join(dir, "shared.chunk.js"), "utf8");

@@ -5,12 +5,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own bundle
  * @param {boolean} wrapper whether the asset module is expected to keep its wrapper
- * @param {import("../../../../").Configuration} extra per-case overrides
+ * @param {Configuration} extra per-case overrides
  * @param {boolean=} inline whether the call site is expected to name the file itself
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, wrapper, extra = {}, inline = false) => ({
 	target: "node",
@@ -36,7 +38,7 @@ const base = (index, wrapper, extra = {}, inline = false) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Only `new URL()` consumers — nothing reads the wrapper.
 	base(0, false),

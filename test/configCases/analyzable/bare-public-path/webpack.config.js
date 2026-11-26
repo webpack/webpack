@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.publicPath: ""` leaves the chunk specifier bare, which `import()` resolves
 // as a package name. The ESM chunk loader has to make it explicitly relative.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

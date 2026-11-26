@@ -2,7 +2,9 @@
 
 const SampleEmbeddedMinifyPlugin = require("../../../helpers/SampleEmbeddedMinifyPlugin");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	devtool: "source-map",
 	// Without this the path comment webpack prefixes makes the two stylesheets

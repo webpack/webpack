@@ -4,6 +4,8 @@ import { fileURLToPath } from "url";
 import createTree from "../../harness/benchmark/create-tree.mjs";
 import memoryScaledCount from "../../harness/benchmark/scale.mjs";
 
+/** @import { Configuration } from "../../.." */
+
 export async function setup() {
 	const __dirname = dirname(fileURLToPath(import.meta.url));
 	const generated = resolve(__dirname, "./generated");
@@ -14,7 +16,7 @@ export async function setup() {
 
 /**
  * Drops the pack so each iteration measures the store path, not the restore one.
- * @param {import("../../..").Configuration} config built configuration
+ * @param {Configuration} config built configuration
  * @returns {Promise<void>}
  */
 export async function beforeEachIteration(config) {

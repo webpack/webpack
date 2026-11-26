@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index config index
  * @param {boolean} concatenateModules whether to enable module concatenation
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const config = (index, concatenateModules) => ({
 	mode: "production",
@@ -19,5 +21,5 @@ const config = (index, concatenateModules) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config(0, false), config(1, true)];

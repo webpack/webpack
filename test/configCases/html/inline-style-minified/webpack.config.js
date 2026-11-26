@@ -6,7 +6,9 @@ const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../");
 const htmlMinify = require("../../../../lib/html/htmlMinify");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -28,7 +30,7 @@ const copyTest = {
 	}
 };
 
-/** @type {(suffix: string, minimizer: NonNullable<import("../../../../").Configuration["optimization"]>["minimizer"]) => import("../../../../").Configuration} */
+/** @type {(suffix: string, minimizer: NonNullable<Configuration["optimization"]>["minimizer"]) => Configuration} */
 const config = (suffix, minimizer) => ({
 	target: ["web", "es2020"],
 	mode: "production",
@@ -51,7 +53,7 @@ const config = (suffix, minimizer) => ({
 	plugins: [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// The default minimizers, which hand the HTML minifier a renderer.
 	config("", ["..."]),

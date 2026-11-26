@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // #6522: universal (web + node) UMD/global libraries must use `globalThis`, not `self`.
 /**
  * @param {"umd" | "global"} type library type that embeds the global object
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (type) => ({
 	name: type,
@@ -20,5 +22,5 @@ const config = (type) => ({
 	optimization: { minimize: false }
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config("umd"), config("global")];

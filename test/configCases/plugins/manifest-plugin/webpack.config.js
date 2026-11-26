@@ -3,7 +3,8 @@
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
-/** @import Compiler from "../../../../lib/Compiler" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
 
 class CopyPlugin {
 	/**
@@ -26,7 +27,7 @@ class CopyPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		entry: "./index-1.js",

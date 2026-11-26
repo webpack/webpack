@@ -3,10 +3,12 @@
 const path = require("path");
 const { SourceMapDevToolPlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {undefined} env test environment
  * @param {{ testPath: string }} options test options
- * @returns {import("../../../../").Configuration[]} configurations
+ * @returns {Configuration[]} configurations
  */
 module.exports = (env, { testPath }) =>
 	["a", "b"].map((directory) => ({

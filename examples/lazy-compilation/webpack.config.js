@@ -2,7 +2,9 @@
 
 const { HotModuleReplacementPlugin } = require("../../");
 
-/** @type {import("webpack").Configuration & { devServer: Record<string, EXPECTED_ANY> }} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration & { devServer: Record<string, EXPECTED_ANY> }} */
 const config = {
 	mode: "development",
 	cache: {

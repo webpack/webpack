@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 const configurations = [];
 for (const target of ["node14", "web", "universal"]) {
 	for (const sharedRuntime of [false, true]) {

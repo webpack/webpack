@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Configuration } from "../../../../types" */
+/** @import { Configuration } from "../../../../types.d.ts" */
 
 /**
  * Returns the configuration for one option under test.

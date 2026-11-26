@@ -5,6 +5,8 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} name prefix keeping the emitted files of each config apart
@@ -12,7 +14,7 @@ const webpack = require("../../../../");
  * @param {boolean} baked whether the specifier is expected to be a literal
  * @param {string=} chunkSuffix what follows the chunk's name in its filename
  * @param {boolean=} realContentHash whether the deferred pass may run at all
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (
 	index,
@@ -41,7 +43,7 @@ const base = (
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, "plain", "[fullhash]", true),
 	base(1, "sliced", "[fullhash:8]", true),

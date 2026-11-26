@@ -2,7 +2,9 @@
 
 const { SplitChunksPlugin } = require("../../../../").optimize;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		vendor: ["./a"],

@@ -2,8 +2,11 @@
 
 const http = require("http");
 
+/** @import { Configuration, Compiler } from "webpack" */
+/** @import { AddressInfo } from "net" */
+
 /**
- * @returns {import("webpack").Configuration} watch configuration
+ * @returns {Configuration} watch configuration
  */
 module.exports = () => {
 	let port = 0;
@@ -11,7 +14,7 @@ module.exports = () => {
 		/** @type {(() => Promise<void>) | undefined} */
 		run: undefined,
 		/**
-		 * @param {import("webpack").Compiler} compiler watched compiler
+		 * @param {Compiler} compiler watched compiler
 		 * @returns {void}
 		 */
 		apply(compiler) {
@@ -49,8 +52,7 @@ module.exports = () => {
 						server.once("error", reject);
 						server.listen(0, "127.0.0.1", () => resolve(undefined));
 					});
-					port = /** @type {import("net").AddressInfo} */ (server.address())
-						.port;
+					port = /** @type {AddressInfo} */ (server.address()).port;
 					return {
 						module: () => ({ client: "", data: "", active: false }),
 						dispose: (/** @type {(error?: Error | null) => void} */ done) => {

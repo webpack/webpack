@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { PathData } from "../../../../" */
+/** @import { PathData, Configuration } from "../../../../" */
 
 const publicPaths = [
 	"auto",
@@ -28,7 +28,7 @@ const publicPaths = [
 	() => "https://webpack.js.org/[fullhash:8]/"
 ];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = publicPaths.map((item, idx) => ({
 	name: String(idx),
 	target: "web",

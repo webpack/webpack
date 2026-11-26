@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `b` is the only runtime that reaches `shared` lazily, so its `import()`
 // genuinely splits even though `a` carries the module up front.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: {

@@ -5,10 +5,12 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so an entry finds its own stats
  * @param {string} name output prefix keeping the emitted files of each config apart
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name) => ({
 	name,
@@ -31,7 +33,7 @@ const base = (index, name) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// The plain case. Both children hint at one shared chunk, so the same id is named
 	// twice and has to be written out once.
@@ -53,7 +55,7 @@ module.exports = [
 	{
 		...base(3, "hmr"),
 		plugins: [
-			.../** @type {NonNullable<import("../../../../").Configuration["plugins"]>} */ (
+			.../** @type {NonNullable<Configuration["plugins"]>} */ (
 				base(3, "hmr").plugins
 			),
 			new webpack.HotModuleReplacementPlugin()

@@ -15,6 +15,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Token } from "acorn" */
+
 const ABOVE_LATIN1_REGEXP = /[^\0-\u00FF]/;
 
 /** @type {Record<string, string>} */
@@ -71,7 +73,7 @@ const TAG_ENDS = new Set([
 /**
  * The source ranges of every tagged template's text, whose raw spelling the
  * tag reads, so a `\u` escape would change what it gets.
- * @param {import("acorn").Token[]} tokens the script's tokens, in source order
+ * @param {Token[]} tokens the script's tokens, in source order
  * @returns {[number, number][]} the ranges, in source order
  */
 const taggedTemplateText = (tokens) => {
@@ -137,7 +139,7 @@ const toLatin1Source = (source) => {
 	const comments = [];
 	/** @type {[number, number][]} */
 	const jsdocTypes = [];
-	/** @type {import("acorn").Token[]} */
+	/** @type {Token[]} */
 	const tokens = [];
 	parse(source, {
 		ecmaVersion: "latest",

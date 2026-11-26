@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { GeneratorOptionsByModuleTypeKnown } from "../../../../" */
+/** @import { GeneratorOptionsByModuleTypeKnown, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

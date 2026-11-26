@@ -5,9 +5,10 @@ const path = require("path");
 const webpack = require("../../../../");
 const HtmlModulesPlugin = require("../../../../lib/html/HtmlModulesPlugin");
 
-/** @import { HtmlMutableTag } from "../../../../lib/html/HtmlModulesPlugin" */
+/** @import { HtmlMutableTag } from "../../../../lib/html/HtmlModulesPlugin.js" */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const copyTest = {
 	apply(compiler) {
 		compiler.hooks.compilation.tap("Test", (compilation) => {
@@ -29,7 +30,7 @@ const copyTest = {
 	}
 };
 
-/** @type {(mutate: (tags: HtmlMutableTag[]) => void) => import("../../../../").WebpackPluginInstance} */
+/** @type {(mutate: (tags: HtmlMutableTag[]) => void) => WebpackPluginInstance} */
 const alterPlugin = (mutate) => ({
 	apply(compiler) {
 		compiler.hooks.compilation.tap("AlterPlugin", (compilation) => {
@@ -40,7 +41,7 @@ const alterPlugin = (mutate) => ({
 	}
 });
 
-/** @type {(name: string, plugin?: import("../../../../").WebpackPluginInstance) => import("../../../../").Configuration} */
+/** @type {(name: string, plugin?: WebpackPluginInstance) => Configuration} */
 const config = (name, plugin) => ({
 	name,
 	target: "web",
@@ -51,7 +52,7 @@ const config = (name, plugin) => ({
 	plugins: plugin ? [copyTest, plugin] : [copyTest]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// no transformTags tap — tags untouched
 	config("default"),

@@ -3,7 +3,9 @@
 const path = require("path");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration, NormalModule } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = [false, true].map((concatenateModules, index) => ({
 	mode: "development",
 	entry: {},
@@ -44,9 +46,7 @@ module.exports = [false, true].map((concatenateModules, index) => ({
 				const entries = [...compilation.modules].filter(
 					(module) =>
 						module.is("normal") &&
-						entryPaths.includes(
-							/** @type {import("webpack").NormalModule} */ (module).resource
-						)
+						entryPaths.includes(/** @type {NormalModule} */ (module).resource)
 				);
 				expect(entries).toHaveLength(1);
 				expect(entries[0]).toHaveProperty(

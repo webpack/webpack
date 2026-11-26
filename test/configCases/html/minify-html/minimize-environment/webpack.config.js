@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// An inline `<style>` and a `style=""` run through the CSS minifier, so it
 	// needs the same selection a `.css` asset gets.

@@ -2,7 +2,9 @@
 
 const TestApplyEntryOptionPlugin = require("./TestApplyEntryOptionPlugin");
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		parent: "./parent"

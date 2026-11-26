@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {(name: string, target: string) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(name: string, target: string) => Configuration} */
 const config = (name, target) => ({
 	name,
 	target,

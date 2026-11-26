@@ -1,12 +1,14 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const rootPath = "../../../../";
 
 const webpack = require(rootPath);
 const path = require("path");
 const { pathToFileURL } = require("url");
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration} */
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = (env, { testPath }) => ({
 	plugins: [
 		new webpack.debug.ProfilingPlugin({

@@ -2,9 +2,11 @@
 
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const targets = ["node", "async-node", "webworker"];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = targets.map((target) => ({
 	target,
 	mode: "development",

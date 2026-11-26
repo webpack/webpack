@@ -3,7 +3,9 @@
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	resolve: {
 		modules: ["...", path.resolve(__dirname, "new-context/modules")]

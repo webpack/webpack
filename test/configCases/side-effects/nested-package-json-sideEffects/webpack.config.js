@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {...string} segments directory segments below the case's node_modules
  * @returns {string} absolute path of that directory's package.json
@@ -9,7 +11,7 @@ const path = require("path");
 const packageJson = (...segments) =>
 	path.join(__dirname, "node_modules", ...segments, "package.json");
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	module: {

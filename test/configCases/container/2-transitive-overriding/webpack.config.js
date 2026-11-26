@@ -2,7 +2,9 @@
 
 const { ModuleFederationPlugin } = require("../../../../").container;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	optimization: {
 		chunkIds: "named",

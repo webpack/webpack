@@ -2,10 +2,12 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 // A custom loader is attached to the resource behind the built-in `<img src>`
 // attribute, so developers can override its default logic and generate any
 // custom content for that reference.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		assetModuleFilename: "[name][ext]"

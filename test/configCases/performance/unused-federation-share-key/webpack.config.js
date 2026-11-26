@@ -2,9 +2,11 @@
 
 const { ConsumeSharedPlugin } = require("../../../../").sharing;
 
+/** @import { Configuration } from "../../../../" */
+
 // Both entries carry a `shareKey` other than their config key: the used one must
 // still count, and the unused one must be named as the config spells it.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	target: "node",

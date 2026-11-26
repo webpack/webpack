@@ -2,6 +2,8 @@
 
 const { getBuildDiagnostics } = require("../../../lib/util/buildDiagnostics");
 
+/** @import { Configuration, NormalModule, NormalModuleBuildInfo } from "../../../" */
+
 // Reasons a plugin attaches directly, unlike the loader below which is
 // attributed automatically. `f.js` states none at all.
 /** @type {[string, string[] | undefined][]} */
@@ -12,7 +14,7 @@ const REASONS = [
 	["f.js", undefined]
 ];
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: "./index",
@@ -30,17 +32,14 @@ module.exports = {
 			apply(compiler) {
 				compiler.hooks.compilation.tap("Test", (compilation) => {
 					compilation.hooks.succeedModule.tap("Test", (module) => {
-						const resource = /** @type {import("../../../").NormalModule} */ (
-							module
-						).resource;
+						const resource = /** @type {NormalModule} */ (module).resource;
 
 						for (const [name, reasons] of REASONS) {
 							if (!resource || !resource.endsWith(name)) continue;
 
-							const buildInfo =
-								/** @type {import("../../../").NormalModuleBuildInfo} */ (
-									module.buildInfo
-								);
+							const buildInfo = /** @type {NormalModuleBuildInfo} */ (
+								module.buildInfo
+							);
 
 							buildInfo.cacheable = false;
 							getBuildDiagnostics(buildInfo).notCacheableReasons = reasons;

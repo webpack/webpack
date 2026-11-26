@@ -3,7 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.js",
 	output: {

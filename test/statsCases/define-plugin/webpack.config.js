@@ -4,6 +4,8 @@ const fs = require("fs");
 const join = require("path").join;
 const webpack = require("../../../");
 
+/** @import { Configuration } from "../../../" */
+
 /**
  * @param {string} path path
  * @returns {string} JSON content of a file
@@ -14,7 +16,7 @@ function read(path) {
 	);
 }
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		mode: "production",

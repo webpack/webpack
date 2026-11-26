@@ -1,15 +1,14 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Chunk } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		(compiler) => {
 			compiler.hooks.done.tap("Test", ({ compilation }) => {
 				for (const c of compilation.chunks) {
-					const chunk =
-						/** @type {{ files: string[] } & import("../../../../").Chunk} */ (
-							c
-						);
+					const chunk = /** @type {{ files: string[] } & Chunk} */ (c);
 					expect(chunk.files).toHaveLength(chunk.files.size);
 					expect(chunk.files[0]).toBe([...chunk.files][0]);
 					expect(chunk.files.join(",")).toBe([...chunk.files].join(","));

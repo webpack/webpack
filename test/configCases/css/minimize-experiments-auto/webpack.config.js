@@ -2,12 +2,14 @@
 
 const { sources } = require("../../../../");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 // Stands in for the plugins that emit CSS webpack never rendered itself, such as
 // copy-webpack-plugin. `already.css` arrives flagged `minimized`, the way every
 // minimizer built on `minimizer-webpack-plugin` marks what it has handled.
 class EmitOtherCssAssetsPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.thisCompilation.tap(
@@ -43,7 +45,7 @@ class EmitOtherCssAssetsPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

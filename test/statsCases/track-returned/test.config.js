@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Stats } from "../../../" */
+
 module.exports = {
 	/**
-	 * @param {import("../../../").Stats} stats stats
+	 * @param {Stats} stats stats
 	 */
 	validate(stats) {
 		expect(stats.compilation.modules.size).toBe(247);

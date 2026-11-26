@@ -2,7 +2,9 @@
 
 const { sharing } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		entry1: "./entry1.js",

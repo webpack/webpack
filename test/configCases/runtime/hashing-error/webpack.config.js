@@ -2,6 +2,8 @@
 
 const { RuntimeModule } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "ThrowingRuntimeModulePlugin";
 
 class ThrowingRuntimeModule extends RuntimeModule {
@@ -18,7 +20,7 @@ class ThrowingRuntimeModule extends RuntimeModule {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		{

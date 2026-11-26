@@ -10,7 +10,7 @@
  */
 
 /** @type {Configuration} */
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry() {
 		return Promise.resolve({

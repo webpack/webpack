@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name variant name
- * @param {NonNullable<import("../../../../").Configuration["experiments"]>} experiments which wasm support to enable
- * @returns {import("../../../../").Configuration} configuration
+ * @param {NonNullable<Configuration["experiments"]>} experiments which wasm support to enable
+ * @returns {Configuration} configuration
  */
 const variant = (name, experiments) => ({
 	name,
@@ -29,7 +31,7 @@ const variant = (name, experiments) => ({
 
 // The wasm loaders read `fs` and build a fake fetch response. Sync and async are
 // separate plugins writing the same shape, so both are read.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	variant("async", { asyncWebAssembly: true }),
 	variant("sync", { syncWebAssembly: true })

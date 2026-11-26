@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Combines `extract: true` with `optimization.runtimeChunk` targeting only
 // the synthetic entries that HtmlModulesPlugin creates for `<script src>`
 // references. The extracted HTML must reference both the split-out runtime
@@ -8,7 +10,7 @@
 // The test bundle's own runtime is left in-place so the harness can still
 // load `bundle0.js` directly.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		filename: "[name].js",

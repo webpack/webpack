@@ -3,7 +3,8 @@
 const { RawSource } = require("webpack-sources");
 const webpack = require("../../../../");
 
-/** @import Compiler from "../../../../lib/Compiler" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { Configuration } from "../../../../" */
 
 class EmitHashedAssetPlugin {
 	/**
@@ -45,7 +46,7 @@ class EmitHashedAssetPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		output: {

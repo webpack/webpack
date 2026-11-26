@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Compiler, Configuration, MultiConfiguration } from "../../../../" */
+
 /** @type {string[]} */
 const events = [];
 
 /**
- * @param {import("../../../../").Compiler} compiler a child compiler
+ * @param {Compiler} compiler a child compiler
  * @returns {void}
  */
 const recordEvents = (compiler) => {
@@ -20,7 +22,7 @@ const recordEvents = (compiler) => {
  * @param {string} name compiler name
  * @param {string} entry entry module
  * @param {string} filename emitted bundle
- * @returns {import("../../../../").Configuration} a child configuration
+ * @returns {Configuration} a child configuration
  */
 const child = (name, entry, filename) => ({
 	name,
@@ -29,7 +31,7 @@ const child = (name, entry, filename) => ({
 	plugins: [recordEvents]
 });
 
-/** @type {import("../../../../").MultiConfiguration} */
+/** @type {MultiConfiguration} */
 module.exports = Object.assign(
 	[
 		{ ...child("a", "./index.js", "bundle.js"), dependencies: ["b", "c"] },

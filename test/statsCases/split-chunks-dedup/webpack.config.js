@@ -3,12 +3,14 @@
 const webpack = require("../../../");
 const ProvideSharedModule = require("../../../lib/sharing/ProvideSharedModule");
 
+/** @import { Configuration } from "../../../" */
+
 const { ModuleFederationPlugin } = webpack.container;
 
 const chunkIdChunkNameMap = new Map();
 const usedSharedModuleNames = new Set();
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: "./"

@@ -5,15 +5,17 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const INSTANTIATE = "__webpack_require__.v(exports, ";
 const COMPILE = "__webpack_require__.vs(";
 
 /**
  * @param {string} name prefix keeping the emitted files of each config apart
- * @param {NonNullable<import("../../../../").Configuration["output"]>["wasmLoading"]} wasmLoading how the binary is loaded
+ * @param {NonNullable<Configuration["output"]>["wasmLoading"]} wasmLoading how the binary is loaded
  * @param {string} wasmChunk chunk holding the wasm module under test
  * @param {string} wasmRef expected start of the baked url expression
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (name, wasmLoading, wasmChunk, wasmRef) => ({
 	target: "node",
@@ -44,7 +46,7 @@ const base = (name, wasmLoading, wasmChunk, wasmRef) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(
 		"fetch",

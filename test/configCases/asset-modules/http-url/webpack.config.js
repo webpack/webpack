@@ -7,7 +7,9 @@ const {
 	}
 } = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 const base = {
 	mode: "development",
 	module: {
@@ -37,7 +39,7 @@ const base = {
 const frozen = true;
 const allowedUris = ["http://localhost:9990/"];
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+/** @type {(env: Env, options: TestOptions) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
 		name: "frozen-verify",

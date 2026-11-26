@@ -2,12 +2,14 @@
 
 const acorn = require("acorn");
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser, { ParseOptions, ParseResult } from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Node as EstreeNode, CallExpression, Expression } from "estree" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "custom-parser-original-nodes";
 
-/** @type {WeakSet<import("estree").Node>} */
+/** @type {WeakSet<EstreeNode>} */
 const built = new WeakSet();
 
 /**
@@ -24,7 +26,7 @@ const tag = (value) => {
 	const node = /** @type {Record<string, unknown>} */ (value);
 	if (typeof node.type !== "string") return;
 	node.webpackTag = "tagged";
-	built.add(/** @type {import("estree").Node} */ (value));
+	built.add(/** @type {EstreeNode} */ (value));
 	for (const key of Object.keys(node)) tag(node[key]);
 };
 
@@ -45,17 +47,13 @@ const originalNodes = (compiler) => {
 					const parser = /** @type {JavascriptParser} */ (moduleParser);
 					parser.hooks.call.for("probe").tap(PLUGIN_NAME, (expression) => {
 						probed++;
-						const call = /** @type {import("estree").CallExpression} */ (
-							expression
-						);
+						const call = /** @type {CallExpression} */ (expression);
 						// the custom parser's object, its own fields and identity kept
 						expect(built.has(call)).toBe(true);
 						expect(
 							/** @type {{ webpackTag?: string }} */ (call).webpackTag
 						).toBe("tagged");
-						const argument = /** @type {import("estree").Expression} */ (
-							call.arguments[0]
-						);
+						const argument = /** @type {Expression} */ (call.arguments[0]);
 						expect(built.has(argument)).toBe(true);
 						// handed back, it is read as its own node, not written again
 						parser.walkExpression(argument);
@@ -63,7 +61,7 @@ const originalNodes = (compiler) => {
 							argument
 						);
 						expect(
-							/** @type {{ _appendedNodes?: WeakMap<import("estree").Node, number> }} */ (
+							/** @type {{ _appendedNodes?: WeakMap<EstreeNode, number> }} */ (
 								/** @type {unknown} */ (parser)
 							)._appendedNodes
 						).toBeUndefined();
@@ -82,7 +80,7 @@ const originalNodes = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

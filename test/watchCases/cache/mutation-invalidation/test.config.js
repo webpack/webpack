@@ -3,7 +3,10 @@
 const assert = require("assert");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
-/** @typedef {ReturnType<typeof import("../../../helpers/createWatchMutation")>} Mutation */
+/** @import createWatchMutation from "../../../helpers/createWatchMutation.js" */
+/** @import { Compiler, MultiCompiler } from "webpack" */
+
+/** @typedef {ReturnType<typeof createWatchMutation>} Mutation */
 
 module.exports = {
 	/**
@@ -16,7 +19,7 @@ module.exports = {
 	},
 	/**
 	 * @param {Error} error detected regression
-	 * @param {import("webpack").Compiler | import("webpack").MultiCompiler} compiler watched compiler
+	 * @param {Compiler | MultiCompiler} compiler watched compiler
 	 * @returns {Promise<void>} recovery with the original implementation
 	 */
 	async watchError(error, compiler) {

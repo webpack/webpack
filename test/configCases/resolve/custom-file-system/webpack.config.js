@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @typedef {{ calls: number }} CallCounter */
 
 /**
@@ -30,7 +32,7 @@ const moduleCounter = { calls: 0 };
 /** @type {CallCounter} */
 const loaderCounter = { calls: 0 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

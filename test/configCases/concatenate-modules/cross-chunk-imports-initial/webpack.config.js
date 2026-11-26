@@ -2,12 +2,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 /**
  * Returns the configuration for one runtime placement.
  * @param {number} index the configuration index
  * @param {boolean} runtimeChunk whether the runtime gets a chunk of its own
  * @param {string=} secondEntry a second entry sharing the chunk
- * @returns {import("../../../../types").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (index, runtimeChunk, secondEntry) => ({
 	mode: "production",

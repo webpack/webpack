@@ -1,7 +1,9 @@
 "use strict";
 
+/** @import { Configuration } from "../../../" */
+
 // `mode` is left unset so each child reports exactly one warning
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		entry: "./index",

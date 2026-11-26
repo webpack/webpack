@@ -1,7 +1,9 @@
 "use strict";
 
-/** @import Compiler from "../../../../lib/Compiler" */
-/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser" */
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import JavascriptParser from "../../../../lib/javascript/JavascriptParser.js" */
+/** @import { Identifier } from "estree" */
+/** @import { Configuration } from "../../../../" */
 
 const PLUGIN_NAME = "hook-path-taps";
 
@@ -125,7 +127,7 @@ const hookPathTaps = (compiler) => {
 						name = path.name(identifier);
 					});
 				parser.hooks.evaluateIdentifier.for("outside").call(
-					/** @type {import("estree").Identifier} */ ({
+					/** @type {Identifier} */ ({
 						type: "Identifier",
 						name: "outside",
 						start: 0,
@@ -138,7 +140,7 @@ const hookPathTaps = (compiler) => {
 	);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [hookPathTaps]
 };

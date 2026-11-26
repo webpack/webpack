@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const identityLoader = require.resolve("./identity-loader.js");
 const addCommentLoader = require.resolve("./add-comment-loader.js");
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

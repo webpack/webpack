@@ -5,18 +5,20 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const INSTANTIATE = "__webpack_require__.v(exports, ";
 
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} name prefix keeping the emitted files of each config apart
- * @param {NonNullable<import("../../../../").Configuration["output"]>["wasmLoading"]} wasmLoading how the binary is loaded
+ * @param {NonNullable<Configuration["output"]>["wasmLoading"]} wasmLoading how the binary is loaded
  * @param {string} wasmRef expected start of the binary's reference
  * @param {boolean} runs whether the harness can load the binary that way
  * @param {string} publicPath the relative public path under test
  * @param {string=} chunkDir directory the chunk is emitted under, so the path back to
  * the output root is more than the `./` a flat name gives
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (
 	index,
@@ -54,7 +56,7 @@ const base = (
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// Not loaded: the harness cannot resolve an `import()` of a `/assets/` specifier.
 	base(0, "node", "async-node", 'new URL("./', false, "/assets/"),

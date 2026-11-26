@@ -2,10 +2,13 @@
 
 const { RawSource } = require("webpack-sources");
 
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+/** @import { Compiler } from "../../../../types.d.ts" */
+
+/** @type {WebpackPluginInstance} */
 const minifyJson = {
 	/**
-	 * @param {import("../../../../types").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -26,7 +29,7 @@ const minifyJson = {
 	}
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// ESM output copies the asset's url into `new URL(…, import.meta.url)`, so
 	// the module holding that call has to be generated again once it is rendered.

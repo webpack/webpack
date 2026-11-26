@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A chunk with prefetch children stays analyzable: `.ei` runs every `ensureChunk`
 // handler except the JS loader, so `.f.prefetch` still injects the `<link>`.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

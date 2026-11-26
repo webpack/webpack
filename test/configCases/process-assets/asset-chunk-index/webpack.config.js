@@ -2,9 +2,11 @@
 
 const { Compilation, sources } = require("../../../../");
 
+/** @import { Configuration, Compiler, Chunk } from "../../../../" */
+
 const PLUGIN_NAME = "AssetToChunkIndexPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		main: "./index.js",
@@ -17,7 +19,7 @@ module.exports = {
 		/**
 		 * Drives `deleteAsset` / `renameAsset` over the lazily-built asset -> chunks
 		 * reverse index, including its stale and unknown-file paths.
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {
@@ -28,10 +30,10 @@ module.exports = {
 					},
 					() => {
 						const main =
-							/** @type {import("../../../../").Chunk} */
+							/** @type {Chunk} */
 							(compilation.namedChunks.get("main"));
 						const other =
-							/** @type {import("../../../../").Chunk} */
+							/** @type {Chunk} */
 							(compilation.namedChunks.get("other"));
 						/**
 						 * @param {string} name asset name

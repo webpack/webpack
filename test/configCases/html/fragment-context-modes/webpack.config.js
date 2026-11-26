@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Tests the tokenizer's `getContentModeForTag()` switch for fragment contexts
 // that start in RCDATA, RAWTEXT, script-data, and plaintext states.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "rcdata",

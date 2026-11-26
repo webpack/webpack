@@ -6,8 +6,8 @@ const {
 	_SyntaxTree: SyntaxTree
 } = require("../../../../lib/javascript/syntax-parser");
 
-/** @import { Compiler } from "../../../../" */
-/** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
+/** @import { Compiler, javascript, Configuration } from "../../../../" */
+/** @typedef {javascript.JavascriptParser} JavascriptParser */
 
 const PLUGIN_NAME = "no-estree-objects";
 
@@ -109,7 +109,7 @@ const noEstreeObjects = (compiler) => {
 	compiler.hooks.failed.tap(PLUGIN_NAME, restore);
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

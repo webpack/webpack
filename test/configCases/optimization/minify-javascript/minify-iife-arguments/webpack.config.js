@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = ["es5", "eval", "let", "names"].map((name) => ({
 	mode: "production",
 	target: ["web", name === "es5" ? "es5" : "es2015"],

@@ -2,7 +2,9 @@
 
 const assertCircular = require("../../../helpers/assertCircularModules");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: {

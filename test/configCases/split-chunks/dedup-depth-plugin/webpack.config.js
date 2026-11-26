@@ -10,6 +10,8 @@ const fs = require("fs");
 const path = require("path");
 const { optimize } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const { SplitChunksPlugin } = optimize;
 
 const context = path.resolve(__dirname, "../intersections-min-size");
@@ -42,7 +44,7 @@ for (const { futureDefaults, defaultDepth } of [
 	}
 }
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = variants.map(
 	({ futureDefaults, dedupDepth, expectedDepth }, index) => ({
 		name: `dedup-depth-plugin-${index}`,

@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "InjectFreeNamePlugin";
 
 // A render hook may add free names the code generation data never reported, so
 // the entry-IIFE rename has to analyse the source the hooks left behind.
-/** @type {import("../../../../").WebpackPluginInstance} */
+/** @type {WebpackPluginInstance} */
 const injectFreeNamePlugin = {
 	apply(compiler) {
 		const { ConcatSource } = compiler.webpack.sources;
@@ -25,7 +27,7 @@ const injectFreeNamePlugin = {
 	}
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["es2020", "node"],
 	output: {

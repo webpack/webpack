@@ -1,6 +1,8 @@
 "use strict";
 
-/** @returns {import("../../../..").Configuration[]} watch configurations */
+/** @import { Configuration } from "../../../.." */
+
+/** @returns {Configuration[]} watch configurations */
 module.exports = () =>
 	["development", "production"].map((mode, index) => ({
 		mode: /** @type {"development" | "production"} */ (mode),

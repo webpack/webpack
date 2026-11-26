@@ -2,6 +2,8 @@
 
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @import { Configuration } from "../../../../types.d.ts" */
+
 const common = {
 	entry: {
 		main: "./index.js"
@@ -22,7 +24,7 @@ const commonMF = {
 	shareScope: "test-scope"
 };
 
-/** @type {import("../../../../types").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...common,

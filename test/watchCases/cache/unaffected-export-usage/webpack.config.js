@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("webpack").Configuration[]} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration[]} */
 module.exports = ["memory", "filesystem"].map((type) => ({
 	mode: "development",
 	cache: { type: type === "memory" ? "memory" : "filesystem" },

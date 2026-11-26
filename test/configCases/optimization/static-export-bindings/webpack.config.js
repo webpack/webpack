@@ -1,6 +1,10 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+/** @import { Compilation } from "../../../../types.d.ts" */
+/** @import { Source } from "webpack-sources" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	optimization: {
@@ -12,14 +16,10 @@ module.exports = {
 		(compiler) => {
 			compiler.hooks.compilation.tap(
 				"test",
-				(
-					/** @type {import("../../../../types").Compilation} */ compilation
-				) => {
+				(/** @type {Compilation} */ compilation) => {
 					compilation.hooks.afterProcessAssets.tap(
 						"test",
-						(
-							/** @type {Record<string, import("webpack-sources").Source>} */ assets
-						) => {
+						(/** @type {Record<string, Source>} */ assets) => {
 							const source = assets["bundle0.js"].source();
 							expect(source).toMatchSnapshot();
 						}

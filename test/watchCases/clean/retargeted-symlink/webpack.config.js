@@ -5,12 +5,15 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Argv } from "../../../helpers/prepareOptions.js" */
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "RetargetedSymlinkCleanPlugin";
 
 /**
- * @param {import("../../../helpers/prepareOptions").Argv["env"]} env environment
+ * @param {Argv["env"]} env environment
  * @param {{ testPath: string }} options test paths
- * @returns {import("../../../../").Configuration[]} configurations
+ * @returns {Configuration[]} configurations
  */
 module.exports = (env, { testPath }) =>
 	[false, true].map((dry) => ({
@@ -21,7 +24,7 @@ module.exports = (env, { testPath }) =>
 		},
 		plugins: [
 			/**
-			 * @param {import("../../../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 */
 			(compiler) => {
 				compiler.hooks.initialize.tap(PLUGIN_NAME, () => {

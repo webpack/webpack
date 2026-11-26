@@ -4,9 +4,10 @@ const meriyah = require("meriyah");
 
 let parses = 0;
 
-/** @import { SourceLocation } from "estree" */
-/** @typedef {import("estree").Program & { start: number, end: number, loc: SourceLocation }} Program */
-/** @typedef {import("estree").Comment & { start: number, end: number, loc: SourceLocation }} Comment */
+/** @import { SourceLocation, Program as GenericProgram, Comment as GenericComment } from "estree" */
+/** @import { Configuration } from "../../../../" */
+/** @typedef {GenericProgram & { start: number, end: number, loc: SourceLocation }} Program */
+/** @typedef {GenericComment & { start: number, end: number, loc: SourceLocation }} Comment */
 
 /**
  * Counts every parse webpack asks for: at build, for concatenation and at render.
@@ -31,7 +32,7 @@ const parse = (sourceCode, options) => {
 	return { ast, comments };
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: ["es2020", "node"],

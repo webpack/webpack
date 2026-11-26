@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `[chunkhash]` reads only this chunk's own modules, which a change to the child does
 // not touch — so the name it bakes has to reach that hash first.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	devtool: false,

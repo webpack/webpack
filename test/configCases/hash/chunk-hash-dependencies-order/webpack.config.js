@@ -2,19 +2,23 @@
 
 const { sources } = require("../../../../");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import Chunk from "../../../../lib/graph/Chunk.js" */
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "ChunkHashOrderPlugin";
 
 // Declares a -> c -> b and runtime~a -> runtime~c against id order, then
 // records the order `createHash` hashes chunks in.
 class ChunkHashOrderPlugin {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		/** @type {Record<string, string>} */
 		const declared = { a: "c", c: "b", "runtime~a": "runtime~c" };
 		compiler.hooks.thisCompilation.tap(PLUGIN_NAME, (compilation) => {
-			/** @type {import("../../../../lib/graph/Chunk")[]} */
+			/** @type {Chunk[]} */
 			const hashed = [];
 			compilation.hooks.chunkHashDependencies.tap(
 				PLUGIN_NAME,
@@ -22,9 +26,7 @@ class ChunkHashOrderPlugin {
 					const name = chunk.name && declared[chunk.name];
 					if (name) {
 						dependencies.add(
-							/** @type {import("../../../../lib/graph/Chunk")} */ (
-								compilation.namedChunks.get(name)
-							)
+							/** @type {Chunk} */ (compilation.namedChunks.get(name))
 						);
 					}
 				}
@@ -42,9 +44,8 @@ class ChunkHashOrderPlugin {
 						if (chunk === target || chunk.hasRuntime() || target.hasRuntime()) {
 							continue;
 						}
-						const round = (
-							/** @type {import("../../../../lib/graph/Chunk")} */ c
-						) => chunkGraph.getNumberOfEntryModules(c) > 0;
+						const round = (/** @type {Chunk} */ c) =>
+							chunkGraph.getNumberOfEntryModules(c) > 0;
 						if (round(chunk) !== round(target)) continue;
 						compared++;
 						const before = hashed.indexOf(chunk) < hashed.indexOf(target);
@@ -53,9 +54,7 @@ class ChunkHashOrderPlugin {
 						}
 					}
 				}
-				const a = /** @type {import("../../../../lib/graph/Chunk")} */ (
-					compilation.namedChunks.get("a")
-				);
+				const a = /** @type {Chunk} */ (compilation.namedChunks.get("a"));
 				const order = {
 					hashed: hashed.map((chunk) => chunk.name),
 					mismatches,
@@ -74,7 +73,7 @@ class ChunkHashOrderPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	target: "node",

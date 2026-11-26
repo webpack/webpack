@@ -1,8 +1,11 @@
 "use strict";
 
+/** @import { LibraryType } from "../../../../declarations/WebpackOptions.js" */
+/** @import { Configuration } from "../../../../" */
+
 /**
- * @param {import("../../../../declarations/WebpackOptions").LibraryType} type library type
- * @returns {import("../../../../").Configuration} configuration
+ * @param {LibraryType} type library type
+ * @returns {Configuration} configuration
  */
 const variant = (type) => ({
 	name: type,
@@ -16,5 +19,5 @@ const variant = (type) => ({
 
 // `amd` needs `define` and `system` needs `System`, neither of which the
 // harness has, so these are compiled and read but not executed.
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [variant("amd"), variant("system")];

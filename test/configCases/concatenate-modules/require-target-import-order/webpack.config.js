@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {string} name the entry name
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (name) => ({
 	name,
@@ -14,5 +16,5 @@ const config = (name) => ({
 	optimization: { concatenateModules: true, minimize: false }
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [config("deferred"), config("nested")];

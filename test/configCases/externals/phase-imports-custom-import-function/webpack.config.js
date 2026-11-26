@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `import.defer(…)` / `import.source(…)` are forms of the native `import(…)`, so a
 // custom import function has no phase form — reported rather than dropped.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "deno2.8",
 	entry: "./index.js",

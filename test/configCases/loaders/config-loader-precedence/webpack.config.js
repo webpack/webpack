@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// custom loader-context values; must not clobber the runner's own fields
 	loader: { context: "OVERRIDDEN" },

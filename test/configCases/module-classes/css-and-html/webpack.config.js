@@ -3,6 +3,8 @@
 const CssModule = require("../../../../lib/css/CssModule");
 const HtmlModule = require("../../../../lib/html/HtmlModule");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {Map<string, { new (...args: EXPECTED_ANY[]): EXPECTED_ANY }>} */
 const expectedClasses = new Map([
 	["css", CssModule],
@@ -12,7 +14,7 @@ const expectedClasses = new Map([
 	["html", HtmlModule]
 ]);
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "development",

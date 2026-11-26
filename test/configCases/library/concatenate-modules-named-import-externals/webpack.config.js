@@ -1,6 +1,9 @@
 "use strict";
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration, Compilation } from "../../../../types.d.ts" */
+/** @import { Source } from "webpack-sources" */
+
+/** @type {Configuration} */
 module.exports = {
 	cache: {
 		type: "memory" // Enable memory cache to test serialization
@@ -34,14 +37,10 @@ module.exports = {
 		(compiler) => {
 			compiler.hooks.compilation.tap(
 				"testcase",
-				(
-					/** @type {import("../../../../types").Compilation} */ compilation
-				) => {
+				(/** @type {Compilation} */ compilation) => {
 					compilation.hooks.afterProcessAssets.tap(
 						"testcase",
-						(
-							/** @type {Record<string, import("webpack-sources").Source>} */ assets
-						) => {
+						(/** @type {Record<string, Source>} */ assets) => {
 							const source = assets["test.js"].source();
 							expect(source).toMatchSnapshot();
 						}

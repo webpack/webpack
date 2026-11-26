@@ -3,7 +3,7 @@
 const ConcatenatedModule = require("../../../../lib/optimize/ConcatenatedModule");
 const createHash = require("../../../../lib/util/createHash");
 
-/** @import { Compilation } from "../../../../types" */
+/** @import { Compilation, Configuration } from "../../../../types.d.ts" */
 
 /**
  * UMD externals can't be concatenated (see
@@ -11,7 +11,7 @@ const createHash = require("../../../../lib/util/createHash");
  * "external" infos in the concat list — that's the code path
  * `ConcatenatedModule#updateHash` needs to incorporate `runtimeCondition`
  * for.
- * @type {import("../../../../types").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	mode: "production",

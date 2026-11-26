@@ -5,10 +5,12 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position in this array, and so the entry's emitted name
- * @param {NonNullable<import("../../../../").Configuration["output"]>["chunkFilename"]} chunkFilename filename
- * @returns {import("../../../../").Configuration} configuration
+ * @param {NonNullable<Configuration["output"]>["chunkFilename"]} chunkFilename filename
+ * @returns {Configuration} configuration
  */
 const base = (index, chunkFilename) => ({
 	target: "node",
@@ -29,7 +31,7 @@ const base = (index, chunkFilename) => ({
 	module: { rules: [{ test: /\.txt$/, type: "asset/resource" }] }
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// The answer holds no hash, so the name is settled before the fill rewrites it.
 	base(0, (pathData) => `${pathData.chunk.name}-0.mjs`),

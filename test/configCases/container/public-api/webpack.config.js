@@ -1,13 +1,15 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Compiler } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		filename: "[name].js"
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			const {

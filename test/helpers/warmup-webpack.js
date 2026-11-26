@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import webpackModule from "../../" */
+
 describe("warmup", () => {
 	it("should warmup webpack", (done) => {
-		/** @type {typeof import("../../") | undefined} */
+		/** @type {typeof webpackModule | undefined} */
 		let webpack = require("../../");
 
 		const END = new Error("end warmup");

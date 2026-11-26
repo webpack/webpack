@@ -2,6 +2,8 @@
 
 const { RuntimeModule } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "ThrowingFullHashRuntimeModulePlugin";
 
 class ThrowingFullHashRuntimeModule extends RuntimeModule {
@@ -22,7 +24,7 @@ class ThrowingFullHashRuntimeModule extends RuntimeModule {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		{

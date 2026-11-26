@@ -2,10 +2,12 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {(boolean | "warn-mock" | "mock" | "node-module" | "eval-only")[]} */
 const values = [true, "warn-mock", "mock", "node-module", "eval-only"];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 const config = [];
 
 // CommonJS

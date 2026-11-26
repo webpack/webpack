@@ -2,7 +2,9 @@
 
 const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
-/** @type {(concatenateModules: boolean) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(concatenateModules: boolean) => Configuration} */
 const config = (concatenateModules) => ({
 	mode: "production",
 	optimization: {
@@ -34,5 +36,5 @@ const config = (concatenateModules) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = createLazyMakeTest([], [config(true), config(false)]);

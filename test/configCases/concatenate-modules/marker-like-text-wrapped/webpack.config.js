@@ -2,12 +2,12 @@
 
 const PLUGIN_NAME = "ModuleReferencePlugin";
 
-/** @import { Compiler, Module, ModuleGraph } from "../../../../" */
+/** @import { Compiler, Module, ModuleGraph, javascript, optimize, Configuration } from "../../../../" */
 /** @import { ReplaceSource } from "webpack-sources" */
 
 /** @typedef {Compiler["webpack"]} WebpackApi */
-/** @typedef {import("../../../../").javascript.JavascriptParser} JavascriptParser */
-/** @typedef {import("../../../../").optimize.ConcatenationScope} ConcatenationScope */
+/** @typedef {javascript.JavascriptParser} JavascriptParser */
+/** @typedef {optimize.ConcatenationScope} ConcatenationScope */
 
 /** @type {undefined | EXPECTED_ANY} */
 let cached;
@@ -159,7 +159,7 @@ class ModuleReferencePlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "production",
 	devtool: false,

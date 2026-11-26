@@ -82,7 +82,8 @@ const {
 	wantedExpectations
 } = require("./compare-tools-harness");
 
-/** @import { HtmlPath } from "../lib/html/syntax-parser" */
+/** @import { HtmlPath } from "../lib/html/syntax-parser.js" */
+/** @import { Tool, TreeReader, Expected } from "./compare-tools-harness.js" */
 
 const ROOT = path.resolve(__dirname, "..");
 const CACHE_NAME = "xml-tool-comparison";
@@ -287,7 +288,7 @@ const fixtures = async () => {
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
-/** @type {import("./compare-tools-harness").Tool[]} */
+/** @type {Tool[]} */
 const TOOLS = [
 	{
 		name: "webpack",
@@ -454,7 +455,7 @@ const TOOLS = [
 	},
 	...[false, true].map(
 		(collapseWhitespace) =>
-			/** @type {import("./compare-tools-harness").Tool} */ ({
+			/** @type {Tool} */ ({
 				name: collapseWhitespace
 					? "webpack (SVG whitespace cleanup)"
 					: "webpack (SVG attribute cleanup)",
@@ -656,7 +657,7 @@ const wantedPreset = filterFrom("PRESET");
  * Select tools for the document's root vocabulary, skipping SVG optimizers for other XML.
  * @param {string} stage comparison stage
  * @param {string} xml input document
- * @returns {import("./compare-tools-harness").Tool[]} the eligible tools
+ * @returns {Tool[]} the eligible tools
  */
 const toolsFor = (stage, xml) => {
 	/** @type {string | undefined} */
@@ -1005,9 +1006,9 @@ const htmlparser2Tree = (xml) => {
 	return events;
 };
 
-/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+/** @type {Map<string, TreeReader>} */
 const TREE_READERS = new Map(
-	/** @type {[string, import("./compare-tools-harness").TreeReader][]} */ ([
+	/** @type {[string, TreeReader][]} */ ([
 		["webpack", webpackTree],
 		["@xmldom/xmldom", xmldomTree],
 		[REFERENCE_PARSER, parseXmlTree],
@@ -1059,7 +1060,7 @@ const invariantFixtures = () => {
 /**
  * What the sweep reports that the printer owes nothing for, each with the
  * reason. None today: an entry is added with its reason or not at all.
- * @type {readonly import("./compare-tools-harness").Expected[]}
+ * @type {readonly Expected[]}
  */
 const EXPECTED = [];
 

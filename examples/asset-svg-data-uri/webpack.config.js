@@ -2,7 +2,9 @@
 
 const svgToMiniDataURI = require("mini-svg-data-uri");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {Configuration} */
 const config = {
 	output: {
 		assetModuleFilename: "images/[hash][ext]"

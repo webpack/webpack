@@ -5,9 +5,11 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const MIXED = "[fullhash:8].[fullhash:base64url:8]";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "js chunk",

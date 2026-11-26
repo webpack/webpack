@@ -1,12 +1,15 @@
 "use strict";
 
+/** @import { Environment } from "../../../../declarations/WebpackOptions.js" */
+/** @import { Configuration } from "../../../../" */
+
 // ESM output has its own chunk header and analyzable `import()`. Nothing below
 // es2020 is asked for: `import.meta` is es2020.
 /**
  * @param {string} name variant name
- * @param {import("../../../../declarations/WebpackOptions").Environment} environment what the target lacks
- * @param {import("../../../../").Configuration["target"]=} target build target
- * @returns {import("../../../../").Configuration} configuration
+ * @param {Environment} environment what the target lacks
+ * @param {Configuration["target"]=} target build target
+ * @returns {Configuration} configuration
  */
 const variant = (name, environment, target = "web") => ({
 	name,
@@ -23,7 +26,7 @@ const variant = (name, environment, target = "web") => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	variant("es2020", {}, ["web", "es2020"]),
 	variant("es2022", {}, ["web", "es2022"]),

@@ -2,12 +2,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * A configuration whose module ids only the hashed module ids plugin assigns.
  * @param {string} name the config's name, which keeps its files apart
- * @param {import("../../../../").Configuration} options more options
+ * @param {Configuration} options more options
  * @param {ConstructorParameters<typeof webpack.ids.HashedModuleIdsPlugin>[0]=} pluginOptions the plugin's options
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const hashedIds = (name, options, pluginOptions) => ({
 	...options,
@@ -19,7 +21,7 @@ const hashedIds = (name, options, pluginOptions) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// another compiler with other defaults does not change the ones that follow
 	hashedIds("future", { experiments: { futureDefaults: true } }),

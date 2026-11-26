@@ -2,10 +2,12 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 module.exports = {
 	/**
 	 * @param {number} i index of the build
-	 * @param {import("../../../../").Configuration} options options of the build
+	 * @param {Configuration} options options of the build
 	 * @returns {string} the bundle, which each build emits to a directory of its own
 	 */
 	findBundle(i, options) {

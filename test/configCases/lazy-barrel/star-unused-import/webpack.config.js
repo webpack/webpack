@@ -3,12 +3,12 @@
 const path = require("path");
 const createLazyMakeTest = require("../_helpers/createLazyMakeTest");
 
-/** @import { NormalModule } from "../../../../" */
+/** @import { NormalModule, Configuration } from "../../../../" */
 
 /**
  * @param {boolean} sideEffects whether to honor the package's sideEffects flag
  * @param {boolean} concatenateModules whether to concatenate modules
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (sideEffects, concatenateModules) => ({
 	name: `side-effects-${sideEffects}-concatenation-${concatenateModules}`,

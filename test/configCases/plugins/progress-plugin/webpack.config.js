@@ -4,9 +4,9 @@ const path = require("path");
 const webpack = require("../../../../");
 const data = require("./data");
 
-/** @import { ProgressPlugin } from "../../../../" */
+/** @import { ProgressPlugin, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	externals: {
 		data: `commonjs ${path.resolve(__dirname, "data.js")}`

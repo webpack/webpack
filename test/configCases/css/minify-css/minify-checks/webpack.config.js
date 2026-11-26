@@ -3,7 +3,9 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const cssMinify = require("../../../../../lib/css/cssMinify");
 
-/** @type {import("../../../../../").Configuration} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// one entry per case, so each is minified as its own asset
 	entry: {

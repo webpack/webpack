@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 const base = {
 	entry: ["./first.js", "./second.js"],
 	output: {
@@ -12,7 +14,7 @@ const base = {
 	target: "es2020"
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

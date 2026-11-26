@@ -2,7 +2,9 @@
 
 const Compiler = require("../../../../").Compiler;
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	optimization: {
 		minimize: true,

@@ -3,6 +3,8 @@
 const path = require("path");
 const webpack = require("../../");
 
+/** @import { Configuration } from "webpack" */
+
 const jsx = {
 	test: /\.js$/,
 	include: [path.resolve(__dirname, ".")],
@@ -12,7 +14,7 @@ const jsx = {
 	}
 };
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const client = {
 	name: "client",
 	target: "web",
@@ -35,7 +37,7 @@ const client = {
 	]
 };
 
-/** @type {import("webpack").Configuration} */
+/** @type {Configuration} */
 const server = {
 	name: "server",
 	// a node target has no DOM, so `import.meta.env.SSR` is `true` here and the

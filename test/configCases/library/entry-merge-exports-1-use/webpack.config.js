@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const TYPES = [
 	["commonjs", "commonjs.js"],
 	["commonjs2", "commonjs2.js"],
@@ -13,7 +15,7 @@ const TYPES = [
 	["modern-module", "modern-module.mjs"]
 ];
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+/** @type {(env: Env, options: TestOptions) => Configuration[]} */
 module.exports = (env, { testPath }) =>
 	TYPES.map(([type, file]) => ({
 		entry: "./index.js",
@@ -29,7 +31,7 @@ module.exports = (env, { testPath }) =>
 		},
 		plugins: [
 			/**
-			 * @this {import("../../../../").Compiler} compiler
+			 * @this {Compiler} compiler
 			 */
 			function apply() {
 				new (require("../../../../").DefinePlugin)({

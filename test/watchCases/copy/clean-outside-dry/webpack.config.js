@@ -4,7 +4,9 @@ const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration, Compiler } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: { dry: true },
@@ -12,7 +14,7 @@ module.exports = {
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			// output.path is known once the options are applied

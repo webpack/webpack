@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => ({
 	output: {
 		allowOutside: [path.join(testPath, "..", "allow-outside-copy-allowed")],

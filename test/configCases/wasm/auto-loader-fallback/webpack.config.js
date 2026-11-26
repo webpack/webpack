@@ -2,13 +2,15 @@
 
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "InjectLoaderPlugin";
 
 /**
  * `experiments.asyncWebAssembly` stays at its "auto" default, with no `.wasm`
  * rule in `module.rules`, yet loaders still reach `.wasm` modules through an
  * inline request or a plugin hook. Those modules must fall back to javascript.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	plugins: [

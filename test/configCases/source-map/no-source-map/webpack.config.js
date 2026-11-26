@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { WebpackPluginFunction } from "../../../../" */
+/** @import { WebpackPluginFunction, Configuration } from "../../../../" */
 
 /** @type {WebpackPluginFunction[]} */
 const plugins = [
@@ -20,7 +20,7 @@ const plugins = [
 	}
 ];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = [
 	{
 		mode: "development",

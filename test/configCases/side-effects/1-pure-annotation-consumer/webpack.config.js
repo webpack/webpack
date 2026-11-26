@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../types").Configuration} */
+/** @import { Configuration } from "../../../../types.d.ts" */
+
+/** @type {(env: Env, options: TestOptions) => Configuration} */
 module.exports = (env, { testPath }) => ({
 	target: "node",
 	mode: "production",

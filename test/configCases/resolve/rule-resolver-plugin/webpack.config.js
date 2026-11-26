@@ -1,6 +1,7 @@
 "use strict";
 
 /** @import { Resolver } from "enhanced-resolve" */
+/** @import { Configuration } from "../../../../" */
 
 class RedirectResolverPlugin {
 	/**
@@ -26,7 +27,7 @@ class RedirectResolverPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

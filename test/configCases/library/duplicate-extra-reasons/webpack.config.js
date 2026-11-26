@@ -4,7 +4,9 @@ const assert = require("assert");
 const fs = require("fs");
 const path = require("path");
 
-/** @type {import("../../../../types").Configuration} */
+/** @import { Configuration, ModuleGraphConnection } from "../../../../types.d.ts" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,
@@ -48,7 +50,7 @@ module.exports = {
 				const incoming = moduleGraph.getIncomingConnections(module);
 				const iterate = incoming[Symbol.iterator];
 				let visits = 0;
-				/** @returns {Generator<import("../../../../types").ModuleGraphConnection>} counted connections */
+				/** @returns {Generator<ModuleGraphConnection>} counted connections */
 				function* countConnections() {
 					const iterator = iterate.call(incoming);
 					for (let item = iterator.next(); !item.done; item = iterator.next()) {

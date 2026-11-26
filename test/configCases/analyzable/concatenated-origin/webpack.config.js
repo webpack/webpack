@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Concatenation replaces the module that wrote the reference, so the chunk graph no
 // longer places that module — but the analyzable form still depends on where it lands.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

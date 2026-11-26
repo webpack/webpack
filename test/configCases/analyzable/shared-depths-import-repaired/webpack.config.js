@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Two depths need a stand-in, and with `realContentHash` off the chunks holding the
 // reference are named by their content — so the stand-in is marked for repair.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

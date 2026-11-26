@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { PathLike } from "fs" */
+
 /** @type {Map<string, () => void>} */
 const pending = new Map();
 
@@ -17,7 +19,7 @@ module.exports = {
 	modules: {
 		fs: {
 			/**
-			 * @param {import("fs").PathLike} filename stylesheet path
+			 * @param {PathLike} filename stylesheet path
 			 * @param {BufferEncoding} encoding file encoding
 			 * @param {(error: NodeJS.ErrnoException | null, content: string) => void} callback read callback
 			 * @returns {void}

@@ -1,8 +1,10 @@
 "use strict";
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "SnapshotBundlePlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: { module: true },
 	mode: "production",
@@ -18,7 +20,7 @@ module.exports = {
 	plugins: [
 		/**
 		 * What this case checks is printed code, so review the bundle as a whole.
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

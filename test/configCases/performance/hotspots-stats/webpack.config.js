@@ -2,10 +2,12 @@
 
 const holdMainThread = require("../../../helpers/holdMainThread");
 
+/** @import { WebpackPluginInstance, Configuration } from "../../../../" */
+
 /**
  * Holds the main thread for a known stretch, which is what the hint measures.
  * @param {number} ms how long to burn
- * @returns {import("../../../../").WebpackPluginInstance} the plugin
+ * @returns {WebpackPluginInstance} the plugin
  */
 const burn = (ms) => ({
 	apply(compiler) {
@@ -17,7 +19,7 @@ const burn = (ms) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	performance: {

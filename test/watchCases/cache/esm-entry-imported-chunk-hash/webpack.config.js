@@ -2,7 +2,9 @@
 
 const { DefinePlugin } = require("../../../../");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = [
 	{ runtimeChunk: "single", realContentHash: true, hash: "contenthash" },
 	{ runtimeChunk: "single", realContentHash: false, hash: "contenthash" },

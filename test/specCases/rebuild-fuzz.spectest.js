@@ -22,8 +22,8 @@ const {
 } = require("../helpers/rebuildFuzzProject");
 const { isInPart } = require("../helpers/testParts");
 
-/** @import { Project, Edit } from "../helpers/rebuildFuzzProject" */
-/** @import { Stats, Compilation, InputFileSystem, Compiler, Configuration } from "../../" */
+/** @import { Project, Edit } from "../helpers/rebuildFuzzProject.js" */
+/** @import { Stats, Compilation, InputFileSystem, Compiler, Configuration, Watching } from "../../" */
 /** @import { IFs } from "memfs" */
 /** @typedef {{ mode: "production" | "development", splitChunks?: boolean, watchCache?: "filesystem", cacheUnaffected?: boolean, concatenateModules?: boolean, hot?: boolean }} Variant */
 /** @typedef {{ assets: Record<string, string>, hash: string, entry: string | undefined, errors: string[], warnings: string[] }} Result */
@@ -585,7 +585,7 @@ const runSequence = async (steps, variant) => {
 	let waiting;
 	/** @type {Compiler | undefined} */
 	let compiler;
-	/** @type {import("../../").Watching | undefined} */
+	/** @type {Watching | undefined} */
 	let watching;
 	/** @type {Runtime | undefined} */
 	let runtime;

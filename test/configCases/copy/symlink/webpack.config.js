@@ -3,6 +3,9 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Stats } from "fs" */
+/** @import { Configuration } from "../../../../" */
+
 const PLUGIN_NAME = "BuildSymlinkedTreePlugin";
 
 /**
@@ -12,7 +15,7 @@ const PLUGIN_NAME = "BuildSymlinkedTreePlugin";
  * @returns {void}
  */
 const removeTree = (target) => {
-	/** @type {import("fs").Stats} */
+	/** @type {Stats} */
 	let stats;
 	try {
 		stats = fs.lstatSync(target);
@@ -61,7 +64,7 @@ const buildTree = (source) => {
 /**
  * The tree carries symlinks, so it is built outside the repository, next to the
  * suite's own output: two suites rebuild it while the other may be copying it.
- * @type {(env: unknown, argv: { testPath: string }) => import("../../../../").Configuration}
+ * @type {(env: unknown, argv: { testPath: string }) => Configuration}
  */
 module.exports = (env, { testPath }) => {
 	const source = `${testPath}-source`;

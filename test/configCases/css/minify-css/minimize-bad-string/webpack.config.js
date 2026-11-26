@@ -3,9 +3,11 @@
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 const webpack = require("../../../../../");
 
+/** @import { Configuration } from "../../../../../" */
+
 const { cssMinify } = webpack.css;
 
-/** @type {import("../../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

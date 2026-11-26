@@ -5,16 +5,18 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "LinkedFileRewritePlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		allowOutside: false
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			/** @type {string} */

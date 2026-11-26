@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {("warning" | "error" | "stats")[]} */
 const hints = ["warning", "error", "stats"];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = hints.map((hints) => ({
 	mode: "development",
 	target: "node",

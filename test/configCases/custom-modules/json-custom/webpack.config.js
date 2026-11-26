@@ -2,9 +2,9 @@
 
 const toml = require("toml");
 
-/** @import { ParserOptionsByModuleTypeKnown } from "../../../../" */
+/** @import { ParserOptionsByModuleTypeKnown, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		mode: "development",

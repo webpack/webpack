@@ -1,10 +1,12 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Verifies the `byLayer.default` fallback path: the lazy module sits in
 // `other-layer`, which is not a key on `byLayer`, so `resolveByProperty`
 // merges `byLayer.default` over the base. Both `fs` (base) and `path` (from
 // `default`) must be reserved.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	output: {

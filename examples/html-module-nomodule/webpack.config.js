@@ -4,6 +4,8 @@ const {
 	html: { HtmlModulesPlugin }
 } = require("../../");
 
+/** @import { Compiler, Configuration } from "../../" */
+
 // Safari 10.1 (and a few old Edge/Firefox builds) support ES modules but not
 // the `nomodule` attribute, so they run *both* scripts. This standard one-liner
 // marks such engines so the `nomodule` classic bundle doesn't double-execute.
@@ -20,7 +22,7 @@ const LEGACY_FILE = "app.legacy.js";
 // skip it and run the `nomodule` bundle instead.
 class NoModuleFallbackPlugin {
 	/**
-	 * @param {import("../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("NoModuleFallbackPlugin", (compilation) => {
@@ -42,7 +44,7 @@ class NoModuleFallbackPlugin {
 	}
 }
 
-/** @type {import("../../").Configuration[]} */
+/** @type {Configuration[]} */
 const config = [
 	{
 		name: "modern",

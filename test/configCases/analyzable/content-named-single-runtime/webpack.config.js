@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The entry reaches an initial chunk carrying a runtime, whose hash may never be read.
 // A filename function names the lazy chunk, resolving only once the hashes exist.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",

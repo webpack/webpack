@@ -3,7 +3,9 @@
 const path = require("path");
 const webpack = require("../../../../");
 
-/** @type {(env: Env, options: TestOptions) => import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {(env: Env, options: TestOptions) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	{
 		entry: "./system-external-esm.js",

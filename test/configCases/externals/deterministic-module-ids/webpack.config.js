@@ -2,7 +2,11 @@
 
 const { getShortModuleName } = require("../../../../lib/ids/IdHelpers");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration, Module as WebpackModule } from "../../../../" */
+/** @import { RawSourceMap } from "webpack-sources" */
+/** @import Module from "../../../../lib/module/Module.js" */
+
+/** @type {Configuration[]} */
 const configs = [];
 
 for (const { entry, external } of [
@@ -11,7 +15,7 @@ for (const { entry, external } of [
 	{ entry: "./index.js", external: { commonjs: "path" } },
 	{ entry: "./async.js", external: "path" }
 ]) {
-	/** @type {{ source: string, map: import("webpack-sources").RawSourceMap }[]} */
+	/** @type {{ source: string, map: RawSourceMap }[]} */
 	const results = [];
 	for (const firstRequest of ["./shared", "../shared"]) {
 		const filename = `${configs.length}/bundle.js`;
@@ -50,9 +54,7 @@ for (const { entry, external } of [
 								) {
 									expect(
 										getShortModuleName(
-											/** @type {import("../../../../lib/module/Module") & import("../../../../").Module} */ (
-												module
-											),
+											/** @type {Module & WebpackModule} */ (module),
 											compiler.context
 										)
 									).toBe(firstRequest);

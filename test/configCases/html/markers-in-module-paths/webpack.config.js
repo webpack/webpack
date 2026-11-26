@@ -3,6 +3,8 @@
 const fs = require("fs");
 const path = require("path");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Writes a module into a directory whose name ends in `*` and a marker, so
  * its path in the module header comment spells `*` + marker + `/`.
@@ -29,7 +31,7 @@ const writeModule = (root, marker, name) => {
 
 // A chunk holding an html module resolves the html markers; a module header
 // comment naming a marker directory has to stay closed.
-/** @type {(env: unknown, options: { testPath: string }) => import("../../../../").Configuration} */
+/** @type {(env: unknown, options: { testPath: string }) => Configuration} */
 module.exports = (env, { testPath }) => {
 	// The output directory is emptied before the build, so the modules sit beside it.
 	const root = `${testPath}-src`;

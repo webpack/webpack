@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // The runtime sits in `js/` while its hot update lands at the output root: the map a
 // re-shipped runtime module holds is read from there, so its depth is spelled per asset.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

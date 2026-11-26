@@ -2,7 +2,9 @@
 
 const RuntimeGlobals = require("../../../../lib/runtime/RuntimeGlobals");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.mjs",
 	experiments: {

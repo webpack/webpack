@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {import("webpack").Configuration} */
+/** @import { Configuration, NormalModule } from "webpack" */
+
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	entry: { main: "./index.js", other: "./other.js" },
@@ -16,8 +18,8 @@ module.exports = {
 						for (const module of modules) {
 							if (
 								module.is("normal") &&
-								/** @type {import("webpack").NormalModule} */ (module)
-									.resource === path.join(compiler.context, "index.js")
+								/** @type {NormalModule} */ (module).resource ===
+									path.join(compiler.context, "index.js")
 							) {
 								compilation.moduleGraph.addExtraReason(
 									module,

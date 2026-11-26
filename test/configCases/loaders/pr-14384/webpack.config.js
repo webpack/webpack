@@ -2,7 +2,9 @@
 
 const PluginWithLoader = require("./PluginWithLoader");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	plugins: [new PluginWithLoader()]
 };

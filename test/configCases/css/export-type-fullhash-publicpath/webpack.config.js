@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 const rules = [
 	{
 		test: /text\.css$/,
@@ -18,7 +20,7 @@ const rules = [
 	}
 ];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "full-hash",

@@ -2,6 +2,8 @@
 
 const { ExternalModule } = require("../../../../");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "AssertAssetExternalSourceTypesPlugin";
 
 // a css `url()` reads the url out of the external, a javascript `new URL()`
@@ -15,7 +17,7 @@ const EXPECTED_SOURCE_TYPES = {
 	"js-css-url": ["javascript"]
 };
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	experiments: {
@@ -35,7 +37,7 @@ module.exports = {
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			compiler.hooks.compilation.tap(PLUGIN_NAME, (compilation) => {

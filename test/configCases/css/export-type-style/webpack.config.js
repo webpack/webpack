@@ -2,12 +2,14 @@
 
 const webpack = require("../../../../");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 /**
  * Create a webpack configuration for a given target.
  * @param {"node" | "web"} target target environment
  * @param {boolean} concatenateModules whether to concatenate modules
- * @returns {import("../../../../").Configuration} webpack configuration
+ * @returns {Configuration} webpack configuration
  */
 function createConfig(target, concatenateModules) {
 	return {

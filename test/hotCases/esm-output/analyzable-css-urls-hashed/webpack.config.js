@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // A hashed stylesheet name settles before the runtime chunk is hashed, so the map
 // spells it and an update that moves the name re-ships the runtime module with it.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	devtool: false,

@@ -27,11 +27,11 @@
 const fs = require("fs");
 const path = require("path");
 
-/** @import { SimpleSupportStatement as BcdSupport, CompatStatement as BcdCompat, Identifier as BcdNode, BrowserName as BcdBrowser } from "@mdn/browser-compat-data" */
+/** @import { SimpleSupportStatement as BcdSupport, CompatStatement as BcdCompat, Identifier as BcdNode, BrowserName as BcdBrowser, CompatData } from "@mdn/browser-compat-data" */
 
 // `require()` returns the package's `data.json` itself, while its `require.d.ts`
 // declares that table as a default export, so it is read as the JSON it is.
-/** @type {import("@mdn/browser-compat-data").CompatData} */
+/** @type {CompatData} */
 const bcd = JSON.parse(
 	fs.readFileSync(require.resolve("@mdn/browser-compat-data"), "utf8")
 );

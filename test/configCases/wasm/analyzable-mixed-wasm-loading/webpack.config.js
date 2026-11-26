@@ -5,6 +5,8 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 const INSTANTIATE = "__webpack_require__.v(exports, ";
 
 /**
@@ -12,7 +14,7 @@ const INSTANTIATE = "__webpack_require__.v(exports, ";
  * @param {string} name output prefix keeping the emitted files of each config apart
  * @param {string} second the second entry, reaching a binary of its own or the `node` entry's
  * @param {string} nodeRef expected start of the binary's reference in the `node` entry
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, name, second, nodeRef) => ({
 	name,
@@ -55,7 +57,7 @@ const base = (index, name, second, nodeRef) => ({
 
 // Two entries reaching ONE async chunk, so its runtime is a set of keys -- the shape
 // the group lookup answers key by key. Neither fetches, so no chunk cuts the scan.
-/** @type {(index: number, name: string) => import("../../../../").Configuration} */
+/** @type {(index: number, name: string) => Configuration} */
 const multi = (index, name) => ({
 	...base(index, name, "./web-entry.js", 'new URL("./'),
 	entry: {
@@ -66,7 +68,7 @@ const multi = (index, name) => ({
 
 // The same shared chunk, but every entry fetches under a public path needing a base:
 // the group answers key by key, and each key has to say the climb is knowable.
-/** @type {(index: number, name: string) => import("../../../../").Configuration} */
+/** @type {(index: number, name: string) => Configuration} */
 const multiFetch = (index, name) => ({
 	...base(index, name, "./web-entry.js", 'new URL("./'),
 	entry: {
@@ -75,7 +77,7 @@ const multiFetch = (index, name) => ({
 	}
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// A binary each: the runtimes are told apart, so both bake the url their own
 	// loader reads.

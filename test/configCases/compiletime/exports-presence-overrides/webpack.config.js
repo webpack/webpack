@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Tests that importExportsPresence / reexportExportsPresence correctly override
  * exportsPresence and strictExportPresence via resolveFromOptions.
- * @type {import("../../../../").Configuration}
+ * @type {Configuration}
  */
 module.exports = {
 	mode: "production",

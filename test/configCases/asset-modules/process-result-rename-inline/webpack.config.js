@@ -2,11 +2,15 @@
 
 const NormalModule = require("../../../../lib/module/NormalModule");
 
+/** @import Compiler from "../../../../lib/Compiler.js" */
+/** @import { AssetModuleBuildInfo } from "../../../../lib/asset/AssetModule.js" */
+/** @import { Configuration } from "../../../../" */
+
 // The inline half: there is no file name to change, but the media type makes
 // the same claim about the bytes, so it has to follow too.
 class RenameOnProcessResult {
 	/**
-	 * @param {import("../../../../lib/Compiler")} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		compiler.hooks.compilation.tap("RenameOnProcessResult", (compilation) => {
@@ -15,7 +19,7 @@ class RenameOnProcessResult {
 				async (result, module) => {
 					if (!/\.png$/.test(module.resource)) return result;
 					await Promise.resolve();
-					/** @type {import("../../../../lib/asset/AssetModule").AssetModuleBuildInfo} */
+					/** @type {AssetModuleBuildInfo} */
 					(module.buildInfo).assetResource = module.resource.replace(
 						/\.png$/,
 						".webp"
@@ -27,7 +31,7 @@ class RenameOnProcessResult {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	module: {

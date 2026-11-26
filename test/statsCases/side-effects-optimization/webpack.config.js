@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../").Configuration} */
+/** @import { Configuration } from "../../../" */
+
+/** @type {Configuration} */
 const baseConfig = {
 	mode: "production",
 	entry: "./index",

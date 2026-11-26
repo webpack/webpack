@@ -2,7 +2,9 @@
 
 const MiniCssPlugin = require("mini-css-extract-plugin");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	entry: {
 		a: "./a.js",

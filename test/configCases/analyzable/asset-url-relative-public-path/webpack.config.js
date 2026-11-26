@@ -5,12 +5,14 @@
 
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index position of this config, so `index.js` finds its own stats
  * @param {string} dir subdirectory keeping the emitted chunks of each config apart
  * @param {string} publicPath the public path under test
  * @param {boolean=} digest whether the public path re-encodes the compilation hash
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (index, dir, publicPath, digest = false) => ({
 	target: "node",
@@ -35,7 +37,7 @@ const base = (index, dir, publicPath, digest = false) => ({
 	]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	base(0, "a", "./"),
 	// An empty one names the output root just the same.

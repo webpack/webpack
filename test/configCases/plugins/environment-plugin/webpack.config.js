@@ -2,6 +2,8 @@
 
 const EnvironmentPlugin = require("../../../../").EnvironmentPlugin;
 
+/** @import { Configuration } from "../../../../" */
+
 process.env.AAA = "aaa";
 process.env.BBB = "bbb";
 process.env.CCC = "ccc";
@@ -10,7 +12,7 @@ process.env.FFF = "fff";
 process.env.GGG = "ggg";
 process.env.III = "";
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		name: "aaa",

@@ -3,6 +3,8 @@
 const path = require("path");
 const { pathToFileURL } = require("url");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * Builds the file URL of a path below this directory.
  * @param {string} relativePath path relative to this directory
@@ -19,7 +21,7 @@ const fileUrl = (relativePath) =>
 const shortFileUrl = (relativePath) =>
 	`file:${fileUrl(relativePath).slice("file://".length)}`;
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

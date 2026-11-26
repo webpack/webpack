@@ -2,9 +2,11 @@
 
 const path = require("path");
 
+/** @import { ModuleOptions, Configuration } from "../../../../" */
+
 const nodeMajor = process.versions.node.split(".", 1)[0];
 
-/** @type {import("../../../../").ModuleOptions["rules"]} */
+/** @type {ModuleOptions["rules"]} */
 const rules = [
 	{ test: /\.txt$/, type: "asset/source" },
 	{ test: /\.svg$/, type: "asset/inline" },
@@ -25,7 +27,7 @@ const rules = [
 	{ test: /\.global\.css$/, type: "css/global" }
 ];
 
-/** @type {NonNullable<import("../../../../").Configuration["experiments"]>} */
+/** @type {NonNullable<Configuration["experiments"]>} */
 const experiments = {
 	asyncWebAssembly: true,
 	deferImport: true,
@@ -34,7 +36,7 @@ const experiments = {
 	html: true
 };
 
-/** @type {import("../../../../").Configuration["externals"]} */
+/** @type {Configuration["externals"]} */
 const externals = {
 	// resolvable on both web and node so the universal bundle runs everywhere
 	"ext-var": "var (40 + 2)",
@@ -47,7 +49,7 @@ const externals = {
  * @param {string} name config name
  * @param {string | string[]} target target
  * @param {string} testPath output base path
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const config = (name, target, testPath) => ({
 	name,
@@ -67,7 +69,7 @@ const config = (name, target, testPath) => ({
 	externals
 });
 
-/** @type {(env: EXPECTED_ANY, options: { testPath: string }) => import("../../../../").Configuration[]} */
+/** @type {(env: EXPECTED_ANY, options: { testPath: string }) => Configuration[]} */
 module.exports = (env, { testPath }) => [
 	config("node", `node${nodeMajor}`, testPath),
 	config("web", ["web", "es2020"], testPath),

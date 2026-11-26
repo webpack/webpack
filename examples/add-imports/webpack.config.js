@@ -2,7 +2,7 @@
 
 const { NormalModule } = require("../../");
 
-/** @import { Compiler } from "../../" */
+/** @import { Compiler, Configuration } from "../../" */
 
 const PLUGIN_NAME = "AddImportsPlugin";
 
@@ -61,7 +61,7 @@ class AddImportsPlugin {
 	}
 }
 
-/** @type {import("../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	plugins: [
 		new AddImportsPlugin([

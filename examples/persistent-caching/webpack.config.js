@@ -2,7 +2,9 @@
 
 const path = require("path");
 
-/** @type {(env: "development" | "production") => import("webpack").Configuration} */
+/** @import { Configuration } from "webpack" */
+
+/** @type {(env: "development" | "production") => Configuration} */
 const config = (env = "development") => ({
 	mode: env,
 	infrastructureLogging: {

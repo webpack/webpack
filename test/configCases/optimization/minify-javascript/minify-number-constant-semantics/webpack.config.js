@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../../" */
+
+/** @type {Configuration[]} */
 module.exports = ["reassigned", "patterns"].map((name, index) => ({
 	mode: "production",
 	target: ["web", "es2018"],

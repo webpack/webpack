@@ -3,11 +3,13 @@
 const path = require("path");
 const url = require("url");
 
+/** @import { Configuration } from "../../../../" */
+
 const pathToLoader = url
 	.pathToFileURL(path.resolve(__dirname, "./loader.js"))
 	.toString();
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	module: {
 		rules: [

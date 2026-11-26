@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 // `baseUri` is hashed only where a baked url actually reads it; elsewhere the code is
 // the same under every base, so hashing it would throw away every `[contenthash]`.
 
@@ -12,7 +14,7 @@ const hashes = new Map();
 
 /**
  * @param {string} key what this variant is called in the report below
- * @returns {(this: import("../../../../").Compiler) => void} plugin
+ * @returns {(this: Compiler) => void} plugin
  */
 const recordModuleHash = (key) =>
 	function apply() {
@@ -36,7 +38,7 @@ const recordModuleHash = (key) =>
  * @param {string} publicPath the public path under test
  * @param {boolean=} relative whether the reference keeps the runtime form
  * @param {string=} baseUri the base the entry sets, when not `BASE`
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const base = (
 	name,
@@ -65,7 +67,7 @@ const base = (
 	plugins: [recordModuleHash(`${name}:${withBase ? "base" : "none"}`)]
 });
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	// `auto` resolves to an absolute url of its own, so nothing reads the base.
 	base("auto", 0, false, "auto"),

@@ -2,9 +2,11 @@
 
 const { HtmlModulesPlugin } = require("../../../../").html;
 
+/** @import { Configuration } from "../../../../" */
+
 const SITE = "(window.__sites = window.__sites || []).push(((s) => s)`日`);";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	entry: {

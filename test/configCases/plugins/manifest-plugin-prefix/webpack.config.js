@@ -2,6 +2,8 @@
 
 const { DefinePlugin, ManifestPlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {{ prefix?: string, publicPath: string, expectedPrefix: string }[]} */
 const cases = [
 	{ prefix: "", publicPath: "/cdn/", expectedPrefix: "" },
@@ -17,7 +19,7 @@ const cases = [
 	{ publicPath: "", expectedPrefix: "" }
 ];
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = cases.map(({ prefix, publicPath, expectedPrefix }, index) => ({
 	output: {
 		publicPath

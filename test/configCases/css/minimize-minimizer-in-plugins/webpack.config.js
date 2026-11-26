@@ -2,7 +2,9 @@
 
 const MinimizerPlugin = require("minimizer-webpack-plugin");
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	mode: "production",

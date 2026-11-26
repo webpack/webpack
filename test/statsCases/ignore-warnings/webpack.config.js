@@ -1,6 +1,6 @@
 "use strict";
 
-/** @import { Compiler, WebpackError } from "../../../" */
+/** @import { Compiler, WebpackError, Configuration } from "../../../" */
 
 class FileWarningsPlugin {
 	/**
@@ -20,7 +20,7 @@ class FileWarningsPlugin {
 	}
 }
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	entry: "./index.js",
 	plugins: [new FileWarningsPlugin()],

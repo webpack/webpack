@@ -1,8 +1,8 @@
 "use strict";
 
-/** @import { Chunk } from "../../../../" */
+/** @import { Chunk, Configuration } from "../../../../" */
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		publicPath: "/public/"

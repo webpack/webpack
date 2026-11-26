@@ -3,10 +3,12 @@
 const path = require("path");
 const { DefinePlugin } = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * @param {number} index config index
  * @param {boolean} cssAndHtml whether native CSS and HTML are enabled
- * @returns {import("../../../../").Configuration} config
+ * @returns {Configuration} config
  */
 const config = (index, cssAndHtml) => ({
 	target: "web",

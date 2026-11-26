@@ -3,9 +3,11 @@
 const path = require("path");
 const { HotModuleReplacementPlugin } = require("../../");
 
+/** @import { Configuration } from "../../" */
+
 // `webpack` resolves to this repo only because the example lives inside it;
 // real projects can drop this alias and import `webpack/hot/*` directly.
-/** @type {import("../../").Configuration} */
+/** @type {Configuration} */
 const base = {
 	mode: "development",
 	context: __dirname,
@@ -14,7 +16,7 @@ const base = {
 	plugins: [new HotModuleReplacementPlugin()]
 };
 
-/** @type {import("../../").Configuration[]} */
+/** @type {Configuration[]} */
 const config = [
 	// Web — driven by webpack-dev-server (`webpack serve`).
 	{

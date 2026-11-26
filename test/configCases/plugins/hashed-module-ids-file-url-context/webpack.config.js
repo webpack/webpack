@@ -3,11 +3,13 @@
 const { pathToFileURL } = require("url");
 const webpack = require("../../../../");
 
+/** @import { Configuration } from "../../../../" */
+
 /**
  * A configuration hashing module ids against the context it is given.
  * @param {string} suffix keeping the emitted files of each config apart
  * @param {string} context the plugin's `context` option
- * @returns {import("../../../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 const hashedIds = (suffix, context) => ({
 	output: {
@@ -22,7 +24,7 @@ const hashedIds = (suffix, context) => ({
 
 const url = pathToFileURL(__dirname).href;
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	hashedIds("path", __dirname),
 	hashedIds("url", url),

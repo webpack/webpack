@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `output.filename` and `output.cssFilename` name no chunk here, so the page's
 // `<script>`/`<link>` entries take a `[name]`, filled in from each tag's url.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	node: {

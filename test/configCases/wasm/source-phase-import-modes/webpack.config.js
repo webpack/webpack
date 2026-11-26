@@ -2,7 +2,9 @@
 
 const supportsResponse = require("../../../helpers/supportsResponse");
 
-/** @type {import("../../../../").Configuration[]} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration[]} */
 const configurations = [
 	{ target: "node", output: { module: false } },
 	{ target: "node", output: { module: true } },

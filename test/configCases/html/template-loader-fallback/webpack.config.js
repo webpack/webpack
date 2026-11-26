@@ -2,6 +2,8 @@
 
 const path = require("path");
 
+/** @import { Compiler, Configuration } from "../../../../" */
+
 const PLUGIN = "MiniHtmlWebpackPlugin";
 const CHILD = "MiniHtmlWebpackCompiler";
 
@@ -19,7 +21,7 @@ class MiniHtmlWebpackPlugin {
 	}
 
 	/**
-	 * @param {import("../../../../").Compiler} compiler compiler
+	 * @param {Compiler} compiler compiler
 	 */
 	apply(compiler) {
 		const {
@@ -104,7 +106,7 @@ class MiniHtmlWebpackPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	mode: "development",
 	plugins: [

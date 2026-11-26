@@ -1,6 +1,7 @@
 "use strict";
 
 /** @import { Compilation, Compiler, Configuration } from "../../../../" */
+/** @import { LibraryType } from "../../../../declarations/WebpackOptions.js" */
 
 /**
  * A library type read out of a script says the output is not an ECMAScript
@@ -20,7 +21,7 @@ function expectScriptOutput() {
 }
 
 /**
- * @param {import("../../../../declarations/WebpackOptions").LibraryType} type library type declared on `output`
+ * @param {LibraryType} type library type declared on `output`
  * @returns {Configuration} configuration
  */
 const outputLibrary = (type) => ({

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // Source-phase wasm with an explicit *module*-hash length (`[hash:6]`). A non-`auto`
 // public path keeps the runtime form, so the compile runtime module slices the hash
 // it is handed rather than reading a baked literal.
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "async-node",
 	module: {

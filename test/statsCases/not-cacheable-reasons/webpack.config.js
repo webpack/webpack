@@ -2,7 +2,9 @@
 
 const webpack = require("../../../");
 
-/** @type {import("../../../").WebpackPluginFunction} */
+/** @import { WebpackPluginFunction, Configuration } from "../../../" */
+
+/** @type {WebpackPluginFunction} */
 const markHostFlaggedPlugin = (compiler) => {
 	compiler.hooks.compilation.tap("Test", (compilation) => {
 		webpack.NormalModule.getCompilationHooks(compilation).beforeLoaders.tap(
@@ -16,7 +18,7 @@ const markHostFlaggedPlugin = (compiler) => {
 	});
 };
 
-/** @type {import("../../../").Configuration} */
+/** @type {Configuration} */
 const base = {
 	entry: "./index",
 	module: {
@@ -43,7 +45,7 @@ const base = {
 	]
 };
 
-/** @type {import("../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		...base,

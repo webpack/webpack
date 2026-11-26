@@ -5,16 +5,18 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler, OutputFileSystem } from "../../../../" */
+
 const PLUGIN_NAME = "AllowOutsideLinkKeptReadlinkCleanPlugin";
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		clean: true
 	},
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			// links are told by readlink
@@ -27,7 +29,7 @@ module.exports = {
 				if (!["lstat"].includes(key)) outputFileSystem[key] = base[key];
 			}
 			compiler.outputFileSystem =
-				/** @type {import("../../../../").OutputFileSystem} */
+				/** @type {OutputFileSystem} */
 				(/** @type {unknown} */ (outputFileSystem));
 			/** @type {string} */
 			let outside;

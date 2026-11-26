@@ -2,9 +2,10 @@
 
 const { Compilation } = require("../../../../");
 
-/** @import { StatsCallback, ReaddirDirentCallback } from "../../../../lib/fs/fs" */
+/** @import { StatsCallback, ReaddirDirentCallback } from "../../../../lib/fs/fs.js" */
+/** @import { Compiler, Configuration } from "../../../../" */
 
-/** @typedef {NonNullable<import("../../../../").Compiler["inputFileSystem"]>} InputFileSystem */
+/** @typedef {NonNullable<Compiler["inputFileSystem"]>} InputFileSystem */
 
 const PLUGIN_NAME = "DenyReadingPlugin";
 
@@ -28,7 +29,7 @@ const denied = (operation, target) => {
  */
 class DenyReadingPlugin {
 	/**
-	 * @param {import("../../../../").Compiler} compiler the compiler
+	 * @param {Compiler} compiler the compiler
 	 * @returns {void}
 	 */
 	apply(compiler) {
@@ -87,7 +88,7 @@ class DenyReadingPlugin {
 	}
 }
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	output: {
 		copy: [

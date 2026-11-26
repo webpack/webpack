@@ -3,6 +3,8 @@
 const path = require("path");
 const { ModuleFederationPlugin } = require("../../").container;
 
+/** @import { Configuration } from "webpack" */
+
 const rules = [
 	{
 		test: /\.js$/,
@@ -16,7 +18,7 @@ const rules = [
 	}
 ];
 
-/** @type {import("webpack").Configuration["optimization"]} */
+/** @type {Configuration["optimization"]} */
 const optimization = {
 	chunkIds: "named", // for this example only: readable filenames in production too
 	nodeEnv: "production" // for this example only: always production version of react
@@ -28,7 +30,7 @@ const stats = {
 	chunkOrigins: true
 };
 
-/** @type {(env: "development" | "production") => import("webpack").Configuration[]} */
+/** @type {(env: "development" | "production") => Configuration[]} */
 const config = (env = "development") => [
 	// For this example we have 3 configs in a single file
 	// In practice you probably would have separate config

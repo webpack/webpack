@@ -334,11 +334,12 @@ const fixtures = () => [
 	)
 ];
 
-/** @import { CssPath } from "../lib/css/syntax-parser" */
+/** @import { CssPath } from "../lib/css/syntax-parser.js" */
+/** @import { Tool, TreeReader } from "./compare-tools-harness.js" */
 
 // Each entry builds its callable on demand, so the measuring worker loads only
 // the one tool it measures — anything else would land in that tool's peak RSS.
-/** @type {import("./compare-tools-harness").Tool[]} */
+/** @type {Tool[]} */
 const TOOLS = [
 	{
 		// `process` with no mode walks the whole stylesheet and prints nothing,
@@ -1045,7 +1046,7 @@ const postcssTree = (css) => {
 	return events;
 };
 
-/** @type {Map<string, import("./compare-tools-harness").TreeReader>} */
+/** @type {Map<string, TreeReader>} */
 const TREE_READERS = new Map([
 	["webpack", webpackTree],
 	["postcss", postcssTree],

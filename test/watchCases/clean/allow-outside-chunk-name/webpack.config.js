@@ -5,13 +5,15 @@ const path = require("path");
 const rimraf = require("rimraf");
 const currentWatchStep = require("../../../helpers/currentWatchStep");
 
+/** @import { Configuration, Compiler } from "../../../../" */
+
 const PLUGIN_NAME = "AllowOutsideChunkNamePlugin";
 
 // the chunk name each step's comment gives, its CSS following it
 /** @type {string[]} */
 const NAMES = ["a", "b", "a"];
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "web",
 	devtool: false,
@@ -23,7 +25,7 @@ module.exports = {
 	experiments: { css: true },
 	plugins: [
 		/**
-		 * @param {import("../../../../").Compiler} compiler compiler
+		 * @param {Compiler} compiler compiler
 		 */
 		(compiler) => {
 			/** @type {string} */

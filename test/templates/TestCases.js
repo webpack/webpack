@@ -1,5 +1,7 @@
 "use strict";
 
+/** @import { Configuration, Compiler, Stats } from "../../" */
+
 require("../helpers/warmup-webpack");
 
 /** @typedef {{ name: string, tests: string[] }} Category */
@@ -170,8 +172,8 @@ const describeCases = (config) => {
 							minify: require("../../lib/javascript/jsMinify"),
 							parallel: false
 						});
-						/** @type {import("../../").Configuration} */
-						let options = /** @type {import("../../").Configuration} */ ({
+						/** @type {Configuration} */
+						let options = /** @type {Configuration} */ ({
 							context: casesPath,
 							entry: `./${category.name}/${testName}/`,
 							target: config.target || "async-node",
@@ -271,7 +273,7 @@ const describeCases = (config) => {
 							},
 							plugins: [
 								...(config.plugins || []),
-								/** @this {import("../../").Compiler} */
+								/** @this {Compiler} */
 								function testCasesTest() {
 									this.hooks.compilation.tap(
 										"TestCasesTest",
@@ -429,7 +431,7 @@ const describeCases = (config) => {
 								const run = () => {
 									const deprecationTracker = deprecationTracking.start();
 									compiler.run((err, _stats) => {
-										const stats = /** @type {import("../../").Stats} */ (_stats);
+										const stats = /** @type {Stats} */ (_stats);
 										const deprecations = deprecationTracker();
 										// closed so its cache does not store after the test, see ConfigTestCases
 										if (err) {

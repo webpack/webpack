@@ -1,6 +1,8 @@
 "use strict";
 
-/** @type {import("../../../../").Configuration} */
+/** @import { Configuration } from "../../../../" */
+
+/** @type {Configuration} */
 module.exports = {
 	// Opt out of the `asyncWebAssembly: "auto"` default so this case keeps
 	// exercising the "WebAssembly not enabled" error it is meant to verify.

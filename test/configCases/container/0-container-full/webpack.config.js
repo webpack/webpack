@@ -2,6 +2,8 @@
 
 const { ModuleFederationPlugin } = require("../../../../").container;
 
+/** @import { Configuration } from "../../../../" */
+
 /** @type {ConstructorParameters<typeof ModuleFederationPlugin>[0]} */
 const common = {
 	name: "container",
@@ -18,7 +20,7 @@ const common = {
 	}
 };
 
-/** @type {import("../../../../").Configuration[]} */
+/** @type {Configuration[]} */
 module.exports = [
 	{
 		output: {

@@ -1,12 +1,15 @@
 "use strict";
 
+/** @import { ExternalItemValueTarget, ExternalItemValueWithOptions } from "../../../../declarations/WebpackOptions.js" */
+/** @import { Configuration } from "../../../../" */
+
 /**
- * @param {import("../../../../declarations/WebpackOptions").ExternalItemValueTarget} external the target of the external
- * @returns {import("../../../../declarations/WebpackOptions").ExternalItemValueWithOptions} a side-effect-free external
+ * @param {ExternalItemValueTarget} external the target of the external
+ * @returns {ExternalItemValueWithOptions} a side-effect-free external
  */
 const free = (external) => ({ external, sideEffects: false });
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: ["node", "es2020"],
 	output: {

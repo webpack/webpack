@@ -4,6 +4,8 @@ const fs = require("fs");
 const path = require("path");
 const rimraf = require("rimraf");
 
+/** @import { Configuration, Compiler } from "../../" */
+
 // every way a file name can lead outside of output.path, each into "routes-out"
 const OUT = "../routes-out";
 
@@ -34,7 +36,7 @@ const missingRoutes = (files) =>
  * A configuration whose every output file name leads outside of output.path.
  * @param {string} testPath the case's output directory
  * @param {Mode} mode how `output.allowOutside` is set
- * @returns {import("../../").Configuration} configuration
+ * @returns {Configuration} configuration
  */
 module.exports = (testPath, mode) => {
 	const outside = path.join(testPath, OUT);
@@ -80,7 +82,7 @@ module.exports = (testPath, mode) => {
 		},
 		plugins: [
 			/**
-			 * @param {import("../../").Compiler} compiler compiler
+			 * @param {Compiler} compiler compiler
 			 */
 			(compiler) => {
 				compiler.hooks.environment.tap("OutsideRoutes", () => {

@@ -1,9 +1,11 @@
 "use strict";
 
+/** @import { Configuration } from "../../../../" */
+
 // `optimization.realContentHash` normally brings a rewritten `[contenthash]` name back
 // in line with its bytes. Without it, baking is accounted for in the hash instead.
 
-/** @type {import("../../../../").Configuration} */
+/** @type {Configuration} */
 module.exports = {
 	target: "node",
 	mode: "development",
