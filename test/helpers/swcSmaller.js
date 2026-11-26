@@ -187,7 +187,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/8718/4/input.js",
 			"swc minifier: fixture/issues/8806/input.js",
 			"swc minifier: fixture/issues/8841/input.js",
-			"swc minifier: fixture/issues/8919/input.js",
 			"swc minifier: fixture/issues/8953/input.js",
 			"swc minifier: fixture/issues/d3-time-format/3/input.js",
 			"swc minifier: fixture/issues/emotion/react/1/input.js",
@@ -309,8 +308,7 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: collapse_vars/collapse_vars_lvalues_drop_assign",
 			"terser compress: collapse_vars/issue_1631_1",
 			"terser compress: collapse_vars/issue_2436_4",
-			"terser compress: collapse_vars/issue_2436_8",
-			"terser compress: collapse_vars/issue_2436_14"
+			"terser compress: collapse_vars/issue_2436_8"
 		]
 	],
 	[
@@ -561,7 +559,6 @@ const SWC_SMALLER_BY_REASON = [
 			"terser compress: hoist_props/direct_access_2",
 			"swc minifier: fixture/issues/10721/input.js",
 			"swc minifier: fixture/issues/12208/non-optional-continuation/input.js",
-			"swc minifier: fixture/issues/8737/input.js",
 			"swc minifier: fixture/projects/wmr/archive-1/chunks/index.bf24abaa/input.js"
 		]
 	],
@@ -592,7 +589,6 @@ const SWC_SMALLER_BY_REASON = [
 		"swc goes further than webpack on what terser's `pure_funcs` tests cover",
 		[
 			"terser compress: pure_funcs/issue_2705_1",
-			"terser compress: pure_funcs/issue_2705_6",
 			"terser compress: pure_funcs/issue_3065_3",
 			"terser compress: pure_funcs/issue_3065_4"
 		]
