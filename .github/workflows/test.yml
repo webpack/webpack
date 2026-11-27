@@ -566,7 +566,8 @@ jobs:
       matrix:
         runtime: [deno, bun]
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # The expanded JavaScript fixture corpus can exceed the old Deno budget.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
