@@ -61,6 +61,20 @@ function branch(value, c) {
 		}
 	else run("other");
 }
+// A later test reading a global the match leaves unread keeps the `switch`.
+function unbound(value) {
+	switch (value) {
+		case run("matched"):
+			run("unbound");
+			break;
+		case missing:
+			run("unbound");
+			break;
+		default:
+			run("unbound");
+	}
+}
+unbound(void 0);
 names(1);
 called(void 0);
 calls(void 0);

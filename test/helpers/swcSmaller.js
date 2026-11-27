@@ -845,6 +845,13 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/issues/12669/parameter-scope/input.js",
 			"swc minifier: fixture/issues/12669/setter-default/input.js"
 		]
+	],
+	[
+		"swc reads a later case test of a `switch` whose cases run nothing unconditionally, which may throw where the `switch` matched an earlier case and never read it: webpack keeps the `switch`",
+		[
+			"terser compress: switch/issue_441_1",
+			"terser compress: switch/issue_441_2"
+		]
 	]
 ];
 
