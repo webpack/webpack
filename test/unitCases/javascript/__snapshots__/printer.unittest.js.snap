@@ -225,7 +225,7 @@ exports[`one-pass minify of reads and calls on literals should merge the calls a
 
 exports[`one-pass minify of reads and calls on literals should merge the calls of a conditional differing in what one spread spreads 1`] = `"let x=g(),b=h();b(...x?c:d),b(...x||c),b(1,...x?c:d,2),new b(...x?c:d),x?b(...c):b(d),x?b(1,2):b(...d);"`;
 
-exports[`one-pass minify of reads and calls on literals should print a kept global constant's value where it reads shorter 1`] = `"const foo=1;log(1,{foo:foo});const many=2;log(many,many,many);"`;
+exports[`one-pass minify of reads and calls on literals should print a kept global constant's value where it reads shorter 1`] = `"const foo=1;log(1,{foo:1});const many=2;log(many,many,many);"`;
 
 exports[`one-pass minify of reads and calls on literals should print a number constant where a member reads it, as a name would print 1`] = `"var zero=0,early=0,log=[];1..foo+=\\"\\",log.push(1..foo,1..bar,\\"0.5\\",\\"0.0\\",0,1e21.foo,early.toFixed(1)),log.push((1..foo,1)),console.log(log.join());"`;
 

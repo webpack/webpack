@@ -2857,7 +2857,7 @@ describe("one-pass minify of reads and calls on literals", () => {
 			"javascript",
 			"one-pass-minify-of-reads-and-calls-on-literals-should-print-a-kept-global"
 		);
-		// A shorthand keeps the name it keys, and a name read three times stays, as it measured smaller once gzipped.
+		// A shorthand printed as one keeps the name it keys, and a name read three times stays, as it measured smaller once gzipped.
 		expect(
 			minifyOnePass(source, { compress: {}, mangle: false }).code
 		).toMatchSnapshot();

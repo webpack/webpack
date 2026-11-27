@@ -492,7 +492,6 @@ const SWC_SMALLER_BY_REASON = [
 		[
 			"terser compress: identity/inline_identity_extra_params",
 			"terser compress: identity/inline_identity_inline_function",
-			"terser compress: identity/inline_identity_inner_ref",
 			"terser compress: identity/inline_identity_async"
 		]
 	],
@@ -519,7 +518,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `dead-code` tests cover",
 		[
-			"terser compress: dead-code/try_catch_finally",
 			"terser compress: dead-code/collapse_vars_assignment",
 			"terser compress: dead-code/throw_assignment"
 		]
@@ -588,7 +586,6 @@ const SWC_SMALLER_BY_REASON = [
 	[
 		"swc goes further than webpack on what terser's `pure_funcs` tests cover",
 		[
-			"terser compress: pure_funcs/issue_2705_1",
 			"terser compress: pure_funcs/issue_3065_3",
 			"terser compress: pure_funcs/issue_3065_4"
 		]

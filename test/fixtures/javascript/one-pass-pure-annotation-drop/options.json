@@ -1,0 +1,1 @@
+[{"mode":"minify","compress":{"defaults":false,"side_effects":true},"mangle":false,"format":{"preserve_annotations":true},"behavior":true},{"mode":"minify","compress":{},"mangle":false,"format":{"preserve_annotations":true}},{"mode":"minify","compress":{"toplevel":true},"mangle":{"toplevel":true},"format":{"preserve_annotations":true,"comments":"all"}}]
