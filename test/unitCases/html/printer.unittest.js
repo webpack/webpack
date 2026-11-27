@@ -1566,6 +1566,16 @@ describe("htmlMinify — what a second reader sees", () => {
 		}
 	});
 
+	it("keeps a foreign body ending in a lone end-tag opener as text", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name = "keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text";
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			const { code } = new SourceProcessor().process(source(name), { mode });
+			expect(code).toContain("&lt;/</style></svg>");
+			expect(tree(code)).toBe(tree(source(name)));
+		}
+	});
+
 	it("closes a CDATA section a foreign style leaves open", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
 		const name = "closes-a-cdata-section-a-foreign-style-leaves-open";

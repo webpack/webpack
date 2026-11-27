@@ -118,3 +118,9 @@ it("should read a foreign sheet holding an element and keep the element", () => 
 	expect(html).toMatch(/circle\{fill:url\([0-9a-f]+\.svg\)\}/);
 	expect(html).toMatch(/<g id=inside/);
 });
+
+it("should keep text spelling a marker right after `<` as text", () => {
+	const html = read("text");
+	expect(html).toMatch(/<p id=angle>(?:<|&lt;)__WEBPACK_TEXT__>/);
+	expect(html).not.toMatch(/__webpack_text__/);
+});
