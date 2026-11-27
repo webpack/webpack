@@ -3957,3 +3957,72 @@ describe("CssSyntax minify — a namespace after a url or an escaped brace", () 
 		).toBe('.a{}@import u\\72 l(a{b);@namespace "urn:x";div{color:red}');
 	});
 });
+
+describe("CssSyntax minify — text inside a token stays inside it", () => {
+	/**
+	 * @param {string} name the fixture's name
+	 * @returns {string} its minified serialization
+	 */
+	const minified = (name) => minifyFor(fixture("css", name));
+
+	it.each([
+		["", '.tip{margin:a\\"url(x ")" ";color:red}body{display:none;x:");top:0}'],
+		[
+			"-2",
+			'.tip{margin:a\\(url(x ")" ";color:red}body{display:none;x:");top:0}'
+		],
+		[
+			"-3",
+			'.tip{margin:a\\"url(x ")" ";color:red}body{display:none;x:");top:0}'
+		]
+	])(
+		"reads an escaped code point before `url(` as part of a function's name (%s)",
+		(suffix, out) => {
+			expect(
+				minified(
+					`css-syntax-minify-an-escaped-code-point-before-url-names-a-function${suffix}`
+				)
+			).toBe(out);
+		}
+	);
+
+	it("lets a stray closer in a call close nothing", () => {
+		const name = "css-syntax-minify-a-stray-closer-in-a-call-closes-nothing";
+		expect(minified(name)).toBe(
+			".a{margin:f(];color:red}body{display:none}.c{y:z});top:0}"
+		);
+		expect(minified(`${name}-2`)).toBe(
+			".a{margin:f(];color:red);top:0}.b{top:1}.c{top:2}"
+		);
+	});
+
+	it("ends a selector's string at a newline", () => {
+		expect(
+			minified("css-syntax-minify-a-newline-ends-a-string-in-a-selector-list")
+		).toBe('"a,.a{}body{display:none}.c{",.b,.z"x\n{top:0}.q{top:3}');
+	});
+
+	it("keeps a bad url apart from a folded call before it", () => {
+		expect(
+			minified("css-syntax-minify-a-bad-url-stands-apart-from-a-folded-call")
+		).toBe(
+			".a{margin:1px url(a b}body{display:none)0 1px url(a b}body{display:none)0}"
+		);
+	});
+
+	it("reads no layer name out of a url holding a brace", () => {
+		expect(
+			minified("css-syntax-minify-a-layer-named-by-a-url-holding-a-brace")
+		).toBe(
+			"@layer url(data:,x{y){.a{top:0}}.m{top:1}@layer url(data:,x{z){.b{top:1}}.next{top:2}"
+		);
+	});
+
+	it("keeps the comment parting a unicode range's `/` and `*`", () => {
+		const name = "css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens";
+		expect(minified(name)).toBe(".a{unicode-range:U+0//**/*x}.next{top:0}");
+		expect(minified(`${name}-2`)).toBe(
+			"@font-face{unicode-range:U+0//**/*x}.next{top:0}"
+		);
+	});
+});
