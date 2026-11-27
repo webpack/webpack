@@ -1,0 +1,3 @@
+@import "./part8.css" screen;
+@import "./part8.css" print;
+.p7 { color: red; }

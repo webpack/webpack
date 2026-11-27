@@ -1,0 +1,3 @@
+@import "./self.css" screen;
+@import "./loop-a.css" print;
+.style { color: red; }
