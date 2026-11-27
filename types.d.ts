@@ -33592,6 +33592,7 @@ type SerializableClassConstructor<T extends SerializingInstance> =
 						context: ObjectDeserializerContextObjectMiddlewareObject_3
 					): void;
 				};
+			deserialize?: undefined;
 	  }
 	| {
 			new (...params: never[]): T;
