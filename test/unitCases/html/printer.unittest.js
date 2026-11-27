@@ -1526,7 +1526,7 @@ describe("htmlMinify — what a second reader sees", () => {
 		"keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written"
 	])("%s", (name) => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
-		// a renderer dropping comments, and the escaped delimiter in one with them
+		// a renderer dropping the leading comment, and the escaped delimiter in it
 		const { code } = new SourceProcessor().process(source(name), {
 			mode: "minify",
 			renderEmbeddedSource: (
@@ -1534,9 +1534,9 @@ describe("htmlMinify — what a second reader sees", () => {
 				/** @type {{ type: string }} */ { type }
 			) =>
 				type === "css"
-					? body.replace(/\/\*[\s\S]*?\*\//g, "")
+					? body.slice(body.indexOf("*/") + 2)
 					: type === "html"
-						? body.replace(/<!--[\s\S]*?-->/g, "")
+						? body.slice(body.indexOf("-->") + 3)
 						: undefined
 		});
 		expect(code).toBe(source(name));
