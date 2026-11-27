@@ -15,3 +15,8 @@ it("should keep the statement end when non-ASCII whitespace starts the next line
 	expect(spaced).toBe(3);
 	expect(global.deadBranchAsiSpace).toBeUndefined();
 });
+
+it("should keep the statement end when a script's HTML comment comes first", () => {
+	expect(require("./script")).toBe(4);
+	expect(global.deadBranchAsiHtmlComment).toBeUndefined();
+});
