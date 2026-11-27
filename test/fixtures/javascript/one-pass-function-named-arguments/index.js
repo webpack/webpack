@@ -28,4 +28,10 @@ function nested() {
 	}
 	return typeof arguments;
 }
+// A default reads the object its own scope holds.
+function defaulted(a = arguments) {
+	function arguments() {}
+	return a.length;
+}
 console.log(declared(), read(1), param(1), set(), redeclared(), nested());
+console.log(defaulted(), defaulted(void 0, 2));
