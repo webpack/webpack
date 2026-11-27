@@ -4167,6 +4167,21 @@ describe("CssSyntax minify — work bounded by the input's size", () => {
 		expect(warnings).toEqual([expect.stringContaining("left nested")]);
 	});
 
+	it("leaves the nested rules past the size bound in one copy of their parent", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound"
+			),
+			{ environment: { browsers: ["chrome 100"] } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain("{.c0{top:0}.c1{top:1px}");
+		expect(code).toContain(" .c1023{top:1023px}");
+		expect(warnings).toEqual([expect.stringContaining("left nested")]);
+	});
+
 	it("writes no prefixed copy of a nested at-rule past the size bound, and says so", () => {
 		const { code, seconds, warnings } = timed(
 			fixture(

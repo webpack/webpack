@@ -8287,6 +8287,29 @@ exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-posit
 
 exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,30] string[30,835] function[835,837] right-parenthesis[837,838] comma[838,839] ident[839,842] comma[842,843] ident[843,847] right-parenthesis[847,848] right-curly-bracket[848,849] end=849"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound parses 1`] = `
+"length 105255, sha256 ad712fd4510b0597
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+…
+,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c1022\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"1022\\",1022,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c1023\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"1023\\",1023,\\"integer\\",\\"px\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound prints {"mode":"minify"} 1`] = `
+"length 32597, sha256 889bf38534a027bc
+.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+…
+}.c1013{top:1013px}.c1014{top:1014px}.c1015{top:1015px}.c1016{top:1016px}.c1017{top:1017px}.c1018{top:1018px}.c1019{top:1019px}.c1020{top:1020px}.c1021{top:1021px}.c1022{top:1022px}.c1023{top:1023px}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound tokenizes 1`] = `
+"length 180324, sha256 1756dd300c856a6a
+delim[0,1] ident[1,16385] left-curly-bracket[16385,16386] delim[16386,16387] ident[16387,16389] left-curly-bracket[16389,16390] ident[16390,16393] colon[16393,16394] dimension[16394,16397|16395,16397]
+…
+ ident[32581,32586] left-curly-bracket[32586,32587] ident[32587,32590] colon[32590,32591] dimension[32591,32597|32595,32597] right-curly-bracket[32597,32598] right-curly-bracket[32598,32599] end=32599"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nesting-that-doubles-per-level parses 1`] = `
 "length 545, sha256 a9e050d69d8088a3
 [[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"x\\"]],[\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}
