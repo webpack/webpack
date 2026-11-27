@@ -1,0 +1,3 @@
+{
+  declare using {}! = {};
+}

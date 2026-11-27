@@ -1,0 +1,1 @@
+<A aa={aa.bb.cc} bb={bb.cc.dd}><div>{aa.b}</div></A>

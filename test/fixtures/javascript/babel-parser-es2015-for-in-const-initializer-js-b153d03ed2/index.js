@@ -1,0 +1,1 @@
+for (const a = 0 in {});

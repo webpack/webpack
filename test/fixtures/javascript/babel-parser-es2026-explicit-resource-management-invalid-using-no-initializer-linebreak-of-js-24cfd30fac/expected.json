@@ -1,0 +1,14 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "Missing initializer in using declaration",
+		"presets": ["default", "format", "beautify"],
+		"why": "This fixture exercises invalid using syntax and parser recovery; its recovered tree cannot be required to print as valid JavaScript."
+	},
+	{
+		"relation": "meaning",
+		"contains": "Program body",
+		"presets": ["format", "beautify"],
+		"why": "This fixture exercises invalid using syntax and parser recovery; its recovered tree cannot be required to print as valid JavaScript."
+	}
+]

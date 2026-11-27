@@ -1,0 +1,3 @@
+{
+  for (await of [of]);
+}

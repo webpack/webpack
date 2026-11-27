@@ -1,0 +1,1 @@
+<div><br />7x invalid-js-identifier</div>

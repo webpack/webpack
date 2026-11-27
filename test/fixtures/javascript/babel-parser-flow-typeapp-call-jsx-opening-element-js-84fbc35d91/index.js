@@ -1,0 +1,2 @@
+// @flow
+<Component<T>/>

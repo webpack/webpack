@@ -1,0 +1,3 @@
+try {
+} catch ([foo, foo]) {
+}

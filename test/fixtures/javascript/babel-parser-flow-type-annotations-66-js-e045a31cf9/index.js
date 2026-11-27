@@ -1,0 +1,1 @@
+(function (...rest: Array<number>) {})

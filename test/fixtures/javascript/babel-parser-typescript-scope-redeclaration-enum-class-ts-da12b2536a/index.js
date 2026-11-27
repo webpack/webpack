@@ -1,0 +1,2 @@
+enum X {}
+class X {}

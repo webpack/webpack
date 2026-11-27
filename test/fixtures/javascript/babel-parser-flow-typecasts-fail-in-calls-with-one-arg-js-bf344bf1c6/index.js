@@ -1,0 +1,1 @@
+funccall(b: string);

@@ -1,0 +1,5 @@
+// @flow
+
+({
+    constructor(this: number){}
+})

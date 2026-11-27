@@ -1,0 +1,1 @@
+a::import.defer("foo")

@@ -1,0 +1,1 @@
+opaque type string = number;

@@ -1,0 +1,1 @@
+type A = number[] => boolean;

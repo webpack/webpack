@@ -1,0 +1,1 @@
+var {propName = defaultValue} = obj

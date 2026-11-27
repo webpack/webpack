@@ -1,0 +1,2 @@
+type A = {};
+type A = {};

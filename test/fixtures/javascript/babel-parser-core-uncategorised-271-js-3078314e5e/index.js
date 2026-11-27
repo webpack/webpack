@@ -1,0 +1,1 @@
+start: for (;;) break start

@@ -1,0 +1,1 @@
+for (let x = 42 of list) process(x);

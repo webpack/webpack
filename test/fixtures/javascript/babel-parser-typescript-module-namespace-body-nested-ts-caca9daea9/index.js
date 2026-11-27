@@ -1,0 +1,4 @@
+namespace A {
+    namespace B {
+    }
+}

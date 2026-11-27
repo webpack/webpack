@@ -1,0 +1,2 @@
+@foo()()
+class Baz {}

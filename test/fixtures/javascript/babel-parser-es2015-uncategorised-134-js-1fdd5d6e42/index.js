@@ -1,0 +1,1 @@
+class A { static get foo() {} static get bar() {} }

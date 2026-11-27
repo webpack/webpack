@@ -1,0 +1,2 @@
+namespace as {}
+namespace satisfies {}

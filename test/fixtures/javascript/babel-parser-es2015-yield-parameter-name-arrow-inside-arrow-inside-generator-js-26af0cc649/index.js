@@ -1,0 +1,3 @@
+function* fn() {
+  () => (yield) => {};
+}

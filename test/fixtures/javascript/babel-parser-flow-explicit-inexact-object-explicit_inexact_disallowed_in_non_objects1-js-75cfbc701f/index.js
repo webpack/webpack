@@ -1,0 +1,4 @@
+//@flow
+declare class A {
+  ...;
+}

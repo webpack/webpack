@@ -1,0 +1,2 @@
+enum Foo {}
+enum Foo {}

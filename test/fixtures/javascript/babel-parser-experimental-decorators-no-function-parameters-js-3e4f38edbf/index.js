@@ -1,0 +1,1 @@
+function func(@foo x) {}

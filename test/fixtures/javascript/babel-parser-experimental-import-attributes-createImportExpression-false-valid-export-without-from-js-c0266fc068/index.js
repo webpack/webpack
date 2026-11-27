@@ -1,0 +1,3 @@
+const foo = "";
+
+export { foo };

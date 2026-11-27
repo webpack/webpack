@@ -1,0 +1,1 @@
+"use strict";function foo(){"use strict";}function bar(){var v = 015}

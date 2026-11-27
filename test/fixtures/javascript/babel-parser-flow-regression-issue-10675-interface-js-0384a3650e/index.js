@@ -1,0 +1,2 @@
+interface of<T> {}
+

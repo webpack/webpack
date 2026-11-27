@@ -1,0 +1,1 @@
+var ok = async(x)

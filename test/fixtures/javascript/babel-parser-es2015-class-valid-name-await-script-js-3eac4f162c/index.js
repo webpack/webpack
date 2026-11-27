@@ -1,0 +1,2 @@
+class await {}
+(class await {});

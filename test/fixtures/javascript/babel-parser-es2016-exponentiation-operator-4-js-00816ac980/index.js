@@ -1,0 +1,1 @@
+var squared = 2 ** 2;

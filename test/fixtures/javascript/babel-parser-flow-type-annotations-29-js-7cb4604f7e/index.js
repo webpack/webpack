@@ -1,0 +1,1 @@
+class Foo {get fooProp():number{}}

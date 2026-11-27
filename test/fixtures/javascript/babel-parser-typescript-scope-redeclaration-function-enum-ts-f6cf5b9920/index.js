@@ -1,0 +1,2 @@
+function Foo() {}
+enum Foo {}

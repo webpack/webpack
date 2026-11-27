@@ -1,0 +1,1 @@
+declare await using basic;

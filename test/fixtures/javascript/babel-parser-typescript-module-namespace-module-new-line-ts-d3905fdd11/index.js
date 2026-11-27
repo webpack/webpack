@@ -1,0 +1,7 @@
+module
+Foo
+{}
+
+module
+'m'
+{}

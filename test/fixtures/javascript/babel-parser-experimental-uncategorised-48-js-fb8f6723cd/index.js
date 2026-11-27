@@ -1,0 +1,1 @@
+class Foo { @bar static foo = "bar"; }

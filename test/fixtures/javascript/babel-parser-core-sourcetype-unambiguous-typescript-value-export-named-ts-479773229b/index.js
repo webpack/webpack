@@ -1,0 +1,1 @@
+export { Foo } from "bar";

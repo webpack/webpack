@@ -1,0 +1,2 @@
+function A() {}
+interface A {}

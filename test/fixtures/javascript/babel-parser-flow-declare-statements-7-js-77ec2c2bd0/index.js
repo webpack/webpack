@@ -1,0 +1,1 @@
+declare class IViewFactory { didAnimate(view:Object, prop:string) :void; }

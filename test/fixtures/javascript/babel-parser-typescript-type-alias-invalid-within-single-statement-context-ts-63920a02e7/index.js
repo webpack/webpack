@@ -1,0 +1,2 @@
+for (;;)
+  type T = number;

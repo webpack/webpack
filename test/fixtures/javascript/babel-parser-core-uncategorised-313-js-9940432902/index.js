@@ -1,0 +1,2 @@
+{ throw error
+error; }

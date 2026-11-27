@@ -1,0 +1,1 @@
+import { Foo } from "bar";

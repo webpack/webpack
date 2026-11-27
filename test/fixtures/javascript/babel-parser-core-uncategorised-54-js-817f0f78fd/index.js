@@ -1,0 +1,2 @@
+// line comment
+42

@@ -1,0 +1,1 @@
+delete async () => 3;

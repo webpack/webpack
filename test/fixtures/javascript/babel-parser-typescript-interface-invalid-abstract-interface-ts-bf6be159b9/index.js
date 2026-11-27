@@ -1,0 +1,2 @@
+abstract interface
+Foo {}

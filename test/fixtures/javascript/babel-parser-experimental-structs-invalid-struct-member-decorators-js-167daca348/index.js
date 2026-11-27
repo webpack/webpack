@@ -1,0 +1,3 @@
+struct S {
+  @f property;
+}

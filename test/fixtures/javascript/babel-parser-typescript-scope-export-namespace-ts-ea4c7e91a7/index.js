@@ -1,0 +1,3 @@
+namespace N {}
+
+export { N };

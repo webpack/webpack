@@ -1,0 +1,1 @@
+import A = B.C;

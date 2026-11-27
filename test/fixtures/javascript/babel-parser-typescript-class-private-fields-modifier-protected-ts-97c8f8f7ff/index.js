@@ -1,0 +1,3 @@
+class A {
+  protected #a;
+}

@@ -1,0 +1,14 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "Missing initializer in await using declaration",
+		"presets": ["format", "beautify"],
+		"why": "This fixture exercises invalid await using syntax and parser recovery; its recovered tree cannot be required to print as valid JavaScript."
+	},
+	{
+		"relation": "meaning",
+		"contains": "Program body",
+		"presets": ["format", "beautify"],
+		"why": "This fixture exercises invalid await using syntax and parser recovery; its recovered tree cannot be required to print as valid JavaScript."
+	}
+]

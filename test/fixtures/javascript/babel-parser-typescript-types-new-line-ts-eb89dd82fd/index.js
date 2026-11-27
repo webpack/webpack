@@ -1,0 +1,2 @@
+type
+Foo = string;

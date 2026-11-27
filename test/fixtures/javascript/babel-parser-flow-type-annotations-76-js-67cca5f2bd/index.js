@@ -1,0 +1,1 @@
+var foo = (async (bar): number => bar);

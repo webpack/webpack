@@ -1,0 +1,1 @@
+declare module A { declare class B { foo(): number; } }

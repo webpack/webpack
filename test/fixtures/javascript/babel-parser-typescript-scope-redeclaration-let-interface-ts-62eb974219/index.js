@@ -1,0 +1,2 @@
+let A;
+interface A {}

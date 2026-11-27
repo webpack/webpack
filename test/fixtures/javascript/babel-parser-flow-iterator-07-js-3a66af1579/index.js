@@ -1,0 +1,1 @@
+type @@iterator = number

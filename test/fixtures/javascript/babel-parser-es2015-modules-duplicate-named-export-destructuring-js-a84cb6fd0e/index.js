@@ -1,0 +1,12 @@
+export const { foo } = bar;
+export const { foo: foo2 } = bar;
+export const { foo: { baz } } = bar;
+export const { foo: { baz:  { qux } } } = bar;
+export const { foo: { baz:  { qux2 } }, foo3 } = bar;
+export const [foo4] = bar;
+export const [[baz2]] = bar;
+export const [{ foo: [baz3] }, { foo2: [baz4] }] = bar;
+export const { foo: { baz: { qux3 } }, foo2: { baz2: [qux4]} } = bar;
+export const { foo: { baz: { qux5 } }, foo2: { baz2: [{qux6}]} } = bar;
+export const { Foo } = bar;
+export const { foo: [ ,, qux7 ] } = bar;

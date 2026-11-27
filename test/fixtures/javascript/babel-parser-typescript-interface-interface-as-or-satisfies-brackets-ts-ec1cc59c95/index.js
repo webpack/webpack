@@ -1,0 +1,2 @@
+interface as {}
+interface satisfies {}

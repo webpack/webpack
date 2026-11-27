@@ -1,0 +1,1 @@
+var a: {add(x:number, ...y:Array<string>): void}

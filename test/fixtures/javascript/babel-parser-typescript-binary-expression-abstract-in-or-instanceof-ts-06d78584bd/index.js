@@ -1,0 +1,1 @@
+abstract instanceof abstract in {};

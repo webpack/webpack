@@ -1,0 +1,1 @@
+let yield = 42;

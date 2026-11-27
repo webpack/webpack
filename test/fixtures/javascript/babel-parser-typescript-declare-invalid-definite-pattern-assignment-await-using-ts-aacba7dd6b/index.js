@@ -1,0 +1,3 @@
+{
+  declare await using {}! = {};
+}

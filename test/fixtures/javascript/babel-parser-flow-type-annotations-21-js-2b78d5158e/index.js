@@ -1,0 +1,1 @@
+a={set fooProp(value:number):void{}}

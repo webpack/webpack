@@ -1,0 +1,2 @@
+// This must not take exponential time.
+a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (a ? (b) : c => (d)))))))))))))))))))))))));

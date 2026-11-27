@@ -1,0 +1,1 @@
+async({ __proto__: x, __proto__: y })

@@ -1,0 +1,2 @@
+enum as {}
+enum satisfies {}

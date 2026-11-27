@@ -1,0 +1,5 @@
+{
+  await
+  using
+  using = h();
+}

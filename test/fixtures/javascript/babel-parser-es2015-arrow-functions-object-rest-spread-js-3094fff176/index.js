@@ -1,0 +1,3 @@
+var foo = ( { title, ...other } ) => {
+  
+};

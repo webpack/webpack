@@ -1,0 +1,1 @@
+((...rest: Array<number>) => rest)
