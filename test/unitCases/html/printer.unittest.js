@@ -1521,6 +1521,17 @@ describe("htmlMinify — what a second reader sees", () => {
 		}
 	});
 
+	it("keeps overlapping escaped template delimiters in an attribute escaped", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const { code } = new SourceProcessor().process(
+			source(
+				"keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped"
+			),
+			{ mode: "minify" }
+		);
+		expect(code).not.toMatch(/\{[{%]/);
+	});
+
 	it("keeps an escaped template delimiter escaped when collapsing whitespace", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
 		const name =

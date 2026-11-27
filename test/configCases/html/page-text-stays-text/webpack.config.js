@@ -46,7 +46,8 @@ module.exports = {
 		foreign: "./foreign.html",
 		markup: "./markup.html",
 		frame: "./frame.html",
-		inline: "./inline.html"
+		inline: "./inline.html",
+		split: "./split.html"
 	},
 	output: {
 		filename: "[name].js"

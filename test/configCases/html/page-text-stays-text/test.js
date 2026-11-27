@@ -100,3 +100,9 @@ it("should keep a frame's live template delimiter live and its escaped one escap
 it("should keep a foreign script asked to be inlined external", () => {
 	expect(read("inline")).toContain("<svg><script href=inline.js></script></svg>");
 });
+
+it("should keep `</noscript>` escaped in a sheet inlined after page text spelling a marker", () => {
+	const html = read("split");
+	expect(html).toContain('content:"<\\/noscript><b>bold</b>"');
+	expect(html.match(/<\/noscript/gi)).toHaveLength(1);
+});
