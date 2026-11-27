@@ -691,17 +691,24 @@ const holdsQuirksTable = (runs, at) => {
  * rebuilt formatting element took in: the list of active formatting elements
  * decided where that one went, and no fragment context carries that list.
  * @param {readonly NodeRun[]} runs every node in post-order
- * @param {readonly number[]} rebuilt the index of every node inside a rebuilt element
+ * @param {readonly number[]} rebuilt every node inside a rebuilt element, by start
  * @param {number} at the node
  * @returns {boolean} whether a node in its range went where the list put it
  */
 const holdsRebuiltContent = (runs, rebuilt, at) => {
 	const node = runs[at];
 	const first = at - node.size + 1;
-	for (const index of rebuilt) {
-		if (index >= first && index <= at) continue;
-		const start = runs[index].start;
-		if (start >= node.start && start < node.end) return true;
+	let lo = 0;
+	let hi = rebuilt.length;
+	while (lo < hi) {
+		const mid = (lo + hi) >>> 1;
+		if (runs[rebuilt[mid]].start < node.start) lo = mid + 1;
+		else hi = mid;
+	}
+	for (let i = lo; i < rebuilt.length; i++) {
+		const index = rebuilt[i];
+		if (runs[index].start >= node.end) break;
+		if (index < first || index > at) return true;
 	}
 	return false;
 };
@@ -733,6 +740,7 @@ const htmlSlices = (html) => {
 	for (let at = 0; at < runs.length; at++) {
 		if (runs[at].rebuilt && runs[at].end > runs[at].start) rebuilt.push(at);
 	}
+	rebuilt.sort((a, b) => runs[a].start - runs[b].start);
 	/** @type {import("./relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = html.length * SLICE_BUDGET_FACTOR;
