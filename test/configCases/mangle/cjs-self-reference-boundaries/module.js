@@ -1,5 +1,5 @@
 // prettier-ignore
-/1;globalThis.selfReferenceRegExpRan=true;1/g;
+/1;global.selfReferenceRegExpRan=true;1/g;
 
 exports.settings = {
 	reload() {

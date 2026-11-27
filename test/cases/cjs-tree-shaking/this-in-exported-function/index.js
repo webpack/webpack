@@ -75,5 +75,5 @@ it("should keep this as written in a function an ES module exports through expor
 	const holder = { receiver: m.receiver };
 	expect(holder.receiver()).toBe(holder);
 	expect(m.deadBranch()).toBe(1);
-	expect(globalThis.thisInDeadBranchRan).toBeUndefined();
+	expect(global.thisInDeadBranchRan).toBeUndefined();
 });

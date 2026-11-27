@@ -12,7 +12,7 @@ Object.defineProperty(exports, "deadBranch", {
 			this;
 		}
 		// prettier-ignore
-		/1;globalThis.thisInDeadBranchRan=true;1/g;
+		/1;global.thisInDeadBranchRan=true;1/g;
 		return 1;
 	}
 });

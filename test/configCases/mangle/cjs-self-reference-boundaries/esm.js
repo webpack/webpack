@@ -1,5 +1,5 @@
 // prettier-ignore
-/1;globalThis.importRegExpRan=true;1/g;
+/1;global.importRegExpRan=true;1/g;
 
 import * as values from "./values";
 

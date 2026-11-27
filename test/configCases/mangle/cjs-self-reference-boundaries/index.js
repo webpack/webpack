@@ -12,12 +12,12 @@ it("should keep a renamed self-reference apart from a following keyword", () => 
 });
 
 it("should rename a self-reference a callee only evaluates to in place", () => {
-	expect(globalThis.selfReferenceRegExpRan).toBeUndefined();
+	expect(global.selfReferenceRegExpRan).toBeUndefined();
 	expect(reloadNullish()).toBe("reloaded");
 	expect(reloadConditional()).toBe("reloaded");
 });
 
 it("should rename an imported binding a callee only evaluates to in place", () => {
-	expect(globalThis.importRegExpRan).toBeUndefined();
+	expect(global.importRegExpRan).toBeUndefined();
 	expect(reloadImported()).toBe("reloaded");
 });

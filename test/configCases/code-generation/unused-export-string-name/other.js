@@ -1,3 +1,3 @@
 const a = 1;
 
-export { a as "*/ globalThis.unusedExportRan = true; /*" };
+export { a as "*/ global.unusedExportRan = true; /*" };

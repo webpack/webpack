@@ -1,6 +1,6 @@
 // prettier-ignore
 export let current
-/1;globalThis.liveAsiRegExpRan=true;1/g
+/1;global.liveAsiRegExpRan=true;1/g
 
 // prettier-ignore
 export let handler = () => {}
