@@ -501,8 +501,8 @@ declare interface AssetInlineGeneratorOptions {
 }
 type AssetModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownAssetModuleBuildInfo;
+	exports.KnownNormalModuleBuildInfo &
+	exports.KnownAssetModuleBuildInfo;
 declare class AssetModulesPlugin {
 	/**
 	 * Creates an instance of AssetModulesPlugin.
@@ -5509,7 +5509,7 @@ declare interface ConcatenateModulesOptions {
 }
 type ConcatenatedModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownConcatenatedModuleBuildInfo;
+	exports.KnownConcatenatedModuleBuildInfo;
 declare interface ConcatenatedModuleInfo {
 	type: "concatenated";
 
@@ -6318,7 +6318,7 @@ type ContextMode =
 	"eager" | "weak" | "lazy" | "lazy-once" | "sync" | "async-weak";
 type ContextModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownContextModuleBuildInfo;
+	exports.KnownContextModuleBuildInfo;
 declare abstract class ContextModuleFactory extends ModuleFactory {
 	hooks: Readonly<{
 		beforeResolve: AsyncSeriesWaterfallHook<
@@ -6663,7 +6663,7 @@ declare interface CreateReadStreamFSImplementation {
 	close?: (...args: any[]) => any;
 	read: (...args: any[]) => any;
 }
-type CreateStatsOptionsContext = KnownCreateStatsOptionsContext &
+type CreateStatsOptionsContext = exports.KnownCreateStatsOptionsContext &
 	Record<string, any>;
 
 /**
@@ -6969,11 +6969,11 @@ declare abstract class CssModule extends NormalModule {
 }
 type CssModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownCssModuleBuildInfo;
+	exports.KnownNormalModuleBuildInfo &
+	exports.KnownCssModuleBuildInfo;
 type CssModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
-	KnownCssModuleBuildMeta;
+	exports.KnownCssModuleBuildMeta;
 
 /**
  * Generator options for css/module modules.
@@ -12179,7 +12179,7 @@ declare class ExternalModule extends Module {
 }
 type ExternalModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownExternalModuleBuildInfo;
+	exports.KnownExternalModuleBuildInfo;
 declare interface ExternalModuleInfo {
 	type: "external";
 
@@ -13930,8 +13930,8 @@ declare interface HtmlInjectTagsContext {
 }
 type HtmlModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownHtmlModuleBuildInfo;
+	exports.KnownNormalModuleBuildInfo &
+	exports.KnownHtmlModuleBuildInfo;
 declare class HtmlModulesPlugin {
 	constructor();
 
@@ -16217,11 +16217,11 @@ declare abstract class JavascriptGenerator extends Generator<JavascriptNormalMod
 }
 type JavascriptModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownJavascriptModuleBuildInfo;
+	exports.KnownNormalModuleBuildInfo &
+	exports.KnownJavascriptModuleBuildInfo;
 type JavascriptModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
-	KnownJavascriptModuleBuildMeta;
+	exports.KnownJavascriptModuleBuildMeta;
 declare class JavascriptModulesPlugin {
 	constructor(options?: object);
 	options: object;
@@ -19823,9 +19823,10 @@ declare interface JavascriptParserOptions {
 	 */
 	wrappedContextRegExp?: RegExp;
 }
-type JavascriptParserState = ParserStateBase<BuiltJavascriptModule> &
-	Record<string, any> &
-	KnownJavascriptParserState;
+type JavascriptParserState = exports.KnownParserState & {
+	module: BuiltJavascriptModule;
+} & Record<string, any> &
+	exports.KnownJavascriptParserState;
 type JavascriptParserTag<T = TagData> = symbol & { readonly __tagData?: T };
 type JavascriptProcessOptions = JavascriptReadOptions &
 	Omit<MinifyOptions, "format" | "output" | "sourceMap" | "sourceType">;
@@ -20155,8 +20156,8 @@ declare interface JsonGeneratorOptions {
 }
 type JsonModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownNormalModuleBuildInfo &
-	KnownJsonModuleBuildInfo;
+	exports.KnownNormalModuleBuildInfo &
+	exports.KnownJsonModuleBuildInfo;
 
 /**
  * The JsonModulesPlugin is the entrypoint plugin for the json modules feature.
@@ -20295,45 +20296,6 @@ declare interface KeptComment {
 	nlb: boolean;
 	file?: string;
 }
-
-/**
- * Defines the build info properties specific to asset modules.
- */
-declare interface KnownAssetModuleBuildInfo {
-	/**
-	 * whether the asset is inlined as a data url
-	 */
-	dataUrl?: boolean;
-	filename?: string;
-	assetInfo?: AssetInfo;
-	fullContentHash?: string;
-
-	/**
-	 * the resource this asset is named after, when
-	 * something re-encoded it. Unlike `matchResource` this is serialized, so a
-	 * rename set while building survives the persistent cache
-	 */
-	assetResource?: string;
-}
-
-/**
- * Defines the build info properties specific to concatenated modules.
- */
-declare interface KnownConcatenatedModuleBuildInfo {
-	fileDependencies?: LazySet<string>;
-	contextDependencies?: LazySet<string>;
-	missingDependencies?: LazySet<string>;
-
-	/**
-	 * collected from the inner modules
-	 */
-	needCreateRequire?: boolean;
-
-	/**
-	 * taken over from the root module
-	 */
-	inlineExports?: boolean;
-}
 declare interface KnownContext {
 	/**
 	 * environments
@@ -20344,59 +20306,6 @@ declare interface KnownContext {
 	 * package id of the importing file in the package map, propagated from a previous result to disambiguate package entries that share a location (`@experimental`, see the `packageMap` option)
 	 */
 	packageId?: string;
-}
-
-/**
- * Defines the build info properties specific to context modules.
- */
-declare interface KnownContextModuleBuildInfo {
-	snapshot?: null | Snapshot;
-}
-
-/**
- * Defines the known create stats options context type used by this module.
- */
-declare interface KnownCreateStatsOptionsContext {
-	forToString?: boolean;
-}
-
-/**
- * Defines the build info properties specific to css modules.
- */
-declare interface KnownCssModuleBuildInfo {
-	cssData?: CssData;
-
-	/**
-	 * charset at-rule
-	 */
-	charset?: string;
-
-	/**
-	 * the source ends inside a comment, string or block
-	 */
-	openAtEnd?: true;
-}
-
-/**
- * Defines the build meta properties specific to css modules.
- */
-declare interface KnownCssModuleBuildMeta {
-	isCssModule?: boolean;
-}
-
-/**
- * Defines the build info properties specific to external modules.
- */
-declare interface KnownExternalModuleBuildInfo {
-	/**
-	 * true when emitting an ESM external (`output.module`)
-	 */
-	javascriptModule?: boolean;
-
-	/**
-	 * true when a node core module is read through `process.getBuiltinModule()`
-	 */
-	builtinGetter?: boolean;
 }
 declare interface KnownHooks {
 	/**
@@ -20429,131 +20338,6 @@ declare interface KnownHooks {
 	 * result hook
 	 */
 	result: AsyncSeriesHook<[ResolveRequest, ResolveContext]>;
-}
-
-/**
- * Defines the build info properties specific to html modules.
- */
-declare interface KnownHtmlModuleBuildInfo {
-	/**
-	 * entries collected from the document, grouped by kind
-	 */
-	htmlEntries?: Record<string, HtmlEntryInfo[]>;
-
-	/**
-	 * the page's encoding when not UTF-8, which its emitted file is written in (see `documentEncoding`)
-	 */
-	encoding?: string;
-
-	/**
-	 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
-	 */
-	baseUrlPrefix?: string;
-}
-
-/**
- * Defines the build info properties specific to javascript modules.
- */
-declare interface KnownJavascriptModuleBuildInfo {
-	/**
-	 * using in CommonJs
-	 */
-	moduleConcatenationBailout?: string;
-
-	/**
-	 * what rules the module out as a concatenation root, while it may still be an inner module
-	 */
-	moduleConcatenationRootBailout?: string;
-
-	/**
-	 * using in APIPlugin
-	 */
-	needCreateRequire?: boolean;
-
-	/**
-	 * module reassigns `__webpack_public_path__` at runtime, using in APIPlugin
-	 */
-	usingPublicPathOverride?: boolean;
-
-	/**
-	 * names of locally declared functions known to be free of side effects
-	 */
-	pureFunctions?: Set<string>;
-
-	/**
-	 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
-	 */
-	inlineExports?: boolean;
-
-	/**
-	 * what a TypeScript module's parse skipped, as the syntax parser's `typeRanges`, which its generated code blanks
-	 */
-	typeScriptRanges?: number[];
-}
-
-/**
- * Defines the build meta properties specific to javascript modules.
- */
-declare interface KnownJavascriptModuleBuildMeta {
-	strictHarmonyModule?: boolean;
-	treatAsCommonJs?: boolean;
-}
-
-/**
- * Defines the known javascript parser state type used by this module.
- * The `harmony*` properties forward to their `esm*` namesake.
- */
-declare interface KnownJavascriptParserState {
-	esmNamedExports?: Set<string>;
-	esmStarExports?: ESMStarExportsList;
-	lastESMImportOrder?: number;
-	localModules?: LocalModule[];
-
-	/**
-	 * deprecated, use `esmNamedExports`
-	 */
-	harmonyNamedExports?: Set<string>;
-
-	/**
-	 * deprecated, use `esmStarExports`
-	 */
-	harmonyStarExports?: ESMStarExportsList;
-
-	/**
-	 * deprecated, use `lastESMImportOrder`
-	 */
-	lastHarmonyImportOrder?: number;
-
-	/**
-	 * the guard frames of the branches being walked, innermost last
-	 */
-	guardStack?: GuardFrame[];
-}
-
-/**
- * Defines the build info properties specific to json modules.
- */
-declare interface KnownJsonModuleBuildInfo {
-	jsonData?: JsonData;
-}
-
-/**
- * Defines the build info properties of normal modules (filesystem-backed, loader-processed).
- */
-declare interface KnownNormalModuleBuildInfo {
-	parsed?: boolean;
-	hash?: string;
-	fileDependencies?: LazySet<string>;
-	contextDependencies?: LazySet<string>;
-	missingDependencies?: LazySet<string>;
-	buildDependencies?: LazySet<string>;
-	valueDependencies?: Map<string, ValueCacheVersion>;
-	snapshot?: null | Snapshot;
-
-	/**
-	 * using in HttpUriPlugin
-	 */
-	resourceIntegrity?: string;
 }
 
 /**
@@ -20726,30 +20510,6 @@ declare interface KnownStatsPrinterPrintHookMap {
 		[exports.StatsPrinterPrintKeys[K], StatsPrinterContext],
 		undefined | string | void
 	>;
-}
-
-/**
- * Defines the build meta properties specific to sync wasm modules.
- */
-declare interface KnownSyncWasmModuleBuildMeta {
-	jsIncompatibleExports?: Record<string, string>;
-}
-
-/**
- * Defines the known unsafe cache data type used by this module.
- */
-declare interface KnownUnsafeCacheData {
-	/**
-	 * factory meta
-	 */
-	factoryMeta?: FactoryMeta;
-
-	/**
-	 * resolve options
-	 */
-	resolveOptions?: ResolveOptionsWebpackOptions;
-	parserOptions?: ParserOptions;
-	generatorOptions?: GeneratorOptions;
 }
 declare const LEGACY_ASSERT_ATTRIBUTES: unique symbol;
 
@@ -25409,7 +25169,7 @@ declare class NormalModule extends Module {
 }
 type NormalModuleBuildInfo = exports.KnownBuildInfo &
 	Record<string, any> &
-	KnownNormalModuleBuildInfo;
+	exports.KnownNormalModuleBuildInfo;
 declare interface NormalModuleCreateData<T extends string = string> {
 	/**
 	 * an optional layer in which the module is
@@ -29165,22 +28925,7 @@ declare class ParserSourceLocation {
 	source?: string;
 }
 type ParserState<TModule extends NormalModule = NormalModule> =
-	ParserStateBase<TModule> & Record<string, any>;
-
-/**
- * Defines the parser state base type used by this module.
- */
-declare interface ParserStateBase<TModule extends NormalModule = NormalModule> {
-	source: string | Buffer;
-	current: NormalModule;
-
-	/**
-	 * the module being parsed
-	 */
-	module: TModule;
-	compilation: Compilation;
-	options: WebpackOptionsNormalizedWithDefaults;
-}
+	exports.KnownParserState & { module: TModule } & Record<string, any>;
 type PartOf<R, M extends Record<number, number>, D> = number extends (R & {
 	readonly __nodeType: number;
 })["__nodeType"]
@@ -35841,7 +35586,7 @@ type StatsFactoryGetItemNameHookMap = KnownStatsFactoryGetItemNameHookMap & {
 type StatsFactoryGroup<K extends keyof exports.StatsFactoryItemKeys> =
 	K extends keyof exports.StatsFactoryGroupKeys
 		? exports.StatsFactoryGroupKeys[K]
-		: object;
+		: StatsGroup<exports.StatsFactoryItemKeys[K][1]>;
 type StatsFactoryGroupResultsHookMap = KnownStatsFactoryGroupResultsHookMap & {
 	for(
 		key: string
@@ -35910,6 +35655,9 @@ type StatsFactoryResultSortHookMap = KnownStatsFactoryResultSortHookMap & {
 		key: string
 	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
 } & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
+type StatsGroup<Item> = exports.KnownStatsGroup & {
+	children?: Item[];
+} & Record<string, StatsJsonValue>;
 type StatsJsonValue =
 	| undefined
 	| null
@@ -36587,7 +36335,7 @@ declare interface SyncModuleIdsPluginOptions {
 }
 type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
-	KnownSyncWasmModuleBuildMeta;
+	exports.KnownSyncWasmModuleBuildMeta;
 
 /**
  * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
@@ -37561,7 +37309,7 @@ declare interface UnicodePropertyTables {
 declare interface UnsafeCache {
 	[index: string]: undefined | ResolveRequest | ResolveRequest[];
 }
-type UnsafeCacheData = KnownUnsafeCacheData & Record<string, any>;
+type UnsafeCacheData = exports.KnownUnsafeCacheData & Record<string, any>;
 
 /**
  * Specifiers the module declares but never reads, with the presence level to
@@ -39312,6 +39060,27 @@ declare namespace exports {
 	}
 
 	/**
+	 * Defines the build info properties specific to asset modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownAssetModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownAssetModuleBuildInfo {
+		/**
+		 * whether the asset is inlined as a data url
+		 */
+		dataUrl?: boolean;
+		filename?: string;
+		assetInfo?: AssetInfo;
+		fullContentHash?: string;
+
+		/**
+		 * the resource this asset is named after, when
+		 * something re-encoded it. Unlike `matchResource` this is serialized, so a
+		 * rename set while building survives the persistent cache
+		 */
+		assetResource?: string;
+	}
+
+	/**
 	 * Defines the build info properties common to all module types.
 	 * Module type specific properties live in the `Known*BuildInfo` typedef of the dedicated module class.
 	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownBuildInfo { myField?: MyType } }`.
@@ -39376,6 +39145,195 @@ declare namespace exports {
 	}
 
 	/**
+	 * Defines the build info properties specific to concatenated modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownConcatenatedModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownConcatenatedModuleBuildInfo {
+		fileDependencies?: LazySet<string>;
+		contextDependencies?: LazySet<string>;
+		missingDependencies?: LazySet<string>;
+
+		/**
+		 * collected from the inner modules
+		 */
+		needCreateRequire?: boolean;
+
+		/**
+		 * taken over from the root module
+		 */
+		inlineExports?: boolean;
+	}
+
+	/**
+	 * Defines the build info properties specific to context modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownContextModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownContextModuleBuildInfo {
+		snapshot?: null | Snapshot;
+	}
+
+	/**
+	 * Defines the known create stats options context type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownCreateStatsOptionsContext { myField?: MyType } }`.
+	 */
+	export interface KnownCreateStatsOptionsContext {
+		forToString?: boolean;
+	}
+
+	/**
+	 * Defines the build info properties specific to css modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownCssModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownCssModuleBuildInfo {
+		cssData?: CssData;
+
+		/**
+		 * charset at-rule
+		 */
+		charset?: string;
+
+		/**
+		 * the source ends inside a comment, string or block
+		 */
+		openAtEnd?: true;
+	}
+
+	/**
+	 * Defines the build meta properties specific to css modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownCssModuleBuildMeta { myField?: MyType } }`.
+	 */
+	export interface KnownCssModuleBuildMeta {
+		isCssModule?: boolean;
+	}
+
+	/**
+	 * Defines the build info properties specific to external modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownExternalModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownExternalModuleBuildInfo {
+		/**
+		 * true when emitting an ESM external (`output.module`)
+		 */
+		javascriptModule?: boolean;
+
+		/**
+		 * true when a node core module is read through `process.getBuiltinModule()`
+		 */
+		builtinGetter?: boolean;
+	}
+
+	/**
+	 * Defines the build info properties specific to html modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownHtmlModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownHtmlModuleBuildInfo {
+		/**
+		 * entries collected from the document, grouped by kind
+		 */
+		htmlEntries?: Record<string, HtmlEntryInfo[]>;
+
+		/**
+		 * the page's encoding when not UTF-8, which its emitted file is written in (see `documentEncoding`)
+		 */
+		encoding?: string;
+
+		/**
+		 * `../` per `<base href>` path segment, prepended to the auto-public-path undo path so a relative base doesn't misdirect bundled URLs
+		 */
+		baseUrlPrefix?: string;
+	}
+
+	/**
+	 * Defines the build info properties specific to javascript modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownJavascriptModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownJavascriptModuleBuildInfo {
+		/**
+		 * using in CommonJs
+		 */
+		moduleConcatenationBailout?: string;
+
+		/**
+		 * what rules the module out as a concatenation root, while it may still be an inner module
+		 */
+		moduleConcatenationRootBailout?: string;
+
+		/**
+		 * using in APIPlugin
+		 */
+		needCreateRequire?: boolean;
+
+		/**
+		 * module reassigns `__webpack_public_path__` at runtime, using in APIPlugin
+		 */
+		usingPublicPathOverride?: boolean;
+
+		/**
+		 * names of locally declared functions known to be free of side effects
+		 */
+		pureFunctions?: Set<string>;
+
+		/**
+		 * whether this module was parsed with `optimization.inlineExports` enabled (gates inlining of its exports)
+		 */
+		inlineExports?: boolean;
+
+		/**
+		 * what a TypeScript module's parse skipped, as the syntax parser's `typeRanges`, which its generated code blanks
+		 */
+		typeScriptRanges?: number[];
+	}
+
+	/**
+	 * Defines the build meta properties specific to javascript modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownJavascriptModuleBuildMeta { myField?: MyType } }`.
+	 */
+	export interface KnownJavascriptModuleBuildMeta {
+		strictHarmonyModule?: boolean;
+		treatAsCommonJs?: boolean;
+	}
+
+	/**
+	 * Defines the known javascript parser state type used by this module.
+	 * The `harmony*` properties forward to their `esm*` namesake.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownJavascriptParserState { myField?: MyType } }`.
+	 */
+	export interface KnownJavascriptParserState {
+		esmNamedExports?: Set<string>;
+		esmStarExports?: ESMStarExportsList;
+		lastESMImportOrder?: number;
+		localModules?: LocalModule[];
+
+		/**
+		 * deprecated, use `esmNamedExports`
+		 */
+		harmonyNamedExports?: Set<string>;
+
+		/**
+		 * deprecated, use `esmStarExports`
+		 */
+		harmonyStarExports?: ESMStarExportsList;
+
+		/**
+		 * deprecated, use `lastESMImportOrder`
+		 */
+		lastHarmonyImportOrder?: number;
+
+		/**
+		 * the guard frames of the branches being walked, innermost last
+		 */
+		guardStack?: GuardFrame[];
+	}
+
+	/**
+	 * Defines the build info properties specific to json modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownJsonModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownJsonModuleBuildInfo {
+		jsonData?: JsonData;
+	}
+
+	/**
 	 * Defines the known meta type used by this module.
 	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownMeta { myField?: MyType } }`.
 	 */
@@ -39407,6 +39365,26 @@ declare namespace exports {
 		 * the module is rendered at its chunk's top level with native exports instead of in the registry
 		 */
 		linkedScope?: boolean;
+	}
+
+	/**
+	 * Defines the build info properties of normal modules (filesystem-backed, loader-processed).
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownNormalModuleBuildInfo { myField?: MyType } }`.
+	 */
+	export interface KnownNormalModuleBuildInfo {
+		parsed?: boolean;
+		hash?: string;
+		fileDependencies?: LazySet<string>;
+		contextDependencies?: LazySet<string>;
+		missingDependencies?: LazySet<string>;
+		buildDependencies?: LazySet<string>;
+		valueDependencies?: Map<string, ValueCacheVersion>;
+		snapshot?: null | Snapshot;
+
+		/**
+		 * using in HttpUriPlugin
+		 */
+		resourceIntegrity?: string;
 	}
 
 	/**
@@ -39455,6 +39433,17 @@ declare namespace exports {
 		logging: false | "none" | "verbose" | "error" | "warn" | "info" | "log";
 		loggingDebug: ((value: string) => boolean)[];
 		loggingTrace: boolean;
+	}
+
+	/**
+	 * The fields of every parser's state, besides the module it parses.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownParserState { myField?: MyType } }`.
+	 */
+	export interface KnownParserState {
+		source: string | Buffer;
+		current: NormalModule;
+		compilation: Compilation;
+		options: WebpackOptionsNormalizedWithDefaults;
 	}
 
 	/**
@@ -39646,6 +39635,22 @@ declare namespace exports {
 	}
 
 	/**
+	 * The fields of a group that a `groupResults` tap creates for an array path without a `StatsFactoryGroupKeys` entry, besides the `children` it lists.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownStatsGroup { myField?: MyType } }`.
+	 */
+	export interface KnownStatsGroup {
+		/**
+		 * what kind of group it is
+		 */
+		type?: string;
+
+		/**
+		 * how many items it hides instead of listing them
+		 */
+		filteredChildren?: number;
+	}
+
+	/**
 	 * Defines the known stats logging type used by this module.
 	 * A plugin types its own stats fields by declaration merging: `declare module "webpack" { interface KnownStatsLogging { myField?: MyType } }`.
 	 */
@@ -39834,6 +39839,32 @@ declare namespace exports {
 		additionalIntegration: number;
 		factory: number;
 		dependencies: number;
+	}
+
+	/**
+	 * Defines the build meta properties specific to sync wasm modules.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownSyncWasmModuleBuildMeta { myField?: MyType } }`.
+	 */
+	export interface KnownSyncWasmModuleBuildMeta {
+		jsIncompatibleExports?: Record<string, string>;
+	}
+
+	/**
+	 * Defines the known unsafe cache data type used by this module.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownUnsafeCacheData { myField?: MyType } }`.
+	 */
+	export interface KnownUnsafeCacheData {
+		/**
+		 * factory meta
+		 */
+		factoryMeta?: FactoryMeta;
+
+		/**
+		 * resolve options
+		 */
+		resolveOptions?: ResolveOptionsWebpackOptions;
+		parserOptions?: ParserOptions;
+		generatorOptions?: GeneratorOptions;
 	}
 
 	/**
