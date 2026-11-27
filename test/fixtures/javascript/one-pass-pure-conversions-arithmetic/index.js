@@ -1,0 +1,44 @@
+// Unless `pure_conversions` is false no `valueOf` or `toString` runs, as
+// terser and swc assume, so an unread operation drops; a bigint mix may throw.
+function unread(a, b) {
+	a + b;
+	a < b;
+	a == b;
+	return 1;
+}
+function bigint(a) {
+	a + 1n;
+	return 2;
+}
+console.log(unread(1, 2), bigint(1n));
+// Its values collapse into the `return`, which then pairs with the `if`.
+function wheel(e) {
+	var x = e.x;
+	var y = e.y;
+	if (x == null || y == null) return 0;
+	var delta = y !== 0 ? Math.abs(y) : Math.abs(x);
+	var sign = y > 0 ? -1 : 1;
+	return 3 * delta * sign;
+}
+console.log(wheel({ x: 1, y: 0 }), wheel({ x: 1, y: 2 }), wheel({ y: 1 }));
+// `new` constructs what the merged call returns, so it stays in parentheses.
+function make(t, f, a, b) {
+	var x = t ? f(a) : f(b);
+	return new x();
+}
+class Made {
+	constructor() {
+		this.k = 1;
+	}
+}
+console.log(make(1, () => Made, 1, 2).k);
+// The last `return` reads what collapsed into it, so the exits differ.
+function nine() {
+	return 9;
+}
+function keep(t, x) {
+	if (t) return x;
+	x = nine();
+	return x;
+}
+console.log(keep(1, 5), keep(0, 5));

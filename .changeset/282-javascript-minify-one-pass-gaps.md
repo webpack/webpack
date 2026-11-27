@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Fold more values, calls, loops and dead code when minifying, and fix wrong output.
+Fold more code when minifying, drop unread arithmetic, and fix wrong output.

@@ -1,5 +1,13 @@
 [
 	{
+		"relation": "behavior",
+		"contains": "-> PASS! 3 1",
+		"presets": [
+			"default"
+		],
+		"why": "the compressor's `pure_conversions`, on by default as terser and swc assume, takes `object ^ 1` to run no `valueOf`, so the count the fixture's own `valueOf` adds is dropped by contract; the option set with it off keeps it"
+	},
+	{
 		"relation": "idempotence",
 		"contains": "rename-only",
 		"presets": [

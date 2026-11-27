@@ -367,8 +367,6 @@ const SWC_SMALLER_BY_REASON = [
 			"swc minifier: fixture/next/outstatic/1/input.js",
 			"terser compress: collapse_vars/conditional_2",
 			"terser compress: collapse_vars/issue_2364_5",
-			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more",
-			"terser compress: dead-code/dead_code_constant_boolean_should_warn_more_strict",
 			"terser compress: drop-unused/global_var",
 			"terser compress: drop-unused/issue_2226_1",
 			"terser compress: pure_funcs/arithmetic",
@@ -806,11 +804,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"webpack keeps a call behind a read of a script's global, which a function of another script the call runs may set; swc moves the call past the read",
-		[
-			"terser compress: collapse_vars/var_side_effects_1",
-			"terser compress: collapse_vars/var_side_effects_2",
-			"terser compress: collapse_vars/var_side_effects_3"
-		]
+		["terser compress: collapse_vars/var_side_effects_2"]
 	],
 	[
 		"swc goes further than webpack on what terser's `class-properties` tests cover",

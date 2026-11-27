@@ -1,7 +1,9 @@
 [
 	{
 		"mode": "minify",
-		"compress": {},
+		"compress": {
+			"pure_conversions": false
+		},
 		"ecma": 2020,
 		"mangle": false,
 		"behavior": true
