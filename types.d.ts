@@ -19149,6 +19149,13 @@ declare class JavascriptParser extends Parser<BuiltJavascriptModule> {
 	): boolean;
 
 	/**
+	 * Whether the token after an expression ending at `pos` both starts a
+	 * statement and could continue other code put in its place: a bare `yield`
+	 * or a block-bodied arrow function ends a statement before `(`, `[` or `/`.
+	 */
+	isFollowedByContinuableToken(pos: number): boolean;
+
+	/**
 	 * How many statements the walk is in, as `statementPath.length` counts them
 	 * without making their objects: `1` at a top-level statement.
 	 */
