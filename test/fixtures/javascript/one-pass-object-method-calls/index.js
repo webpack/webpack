@@ -24,11 +24,12 @@ function movedObject() {
 }
 console.log(movedObject());
 console.log(log.join());
-// A function reading `this`, a value that runs, a getter, a method or the
-// prototype a literal sets keeps the call.
+// A getter of another key, defined without running, leaves the call bare.
+console.log({ p: () => 1, get q() { log.push("getter"); return 2; } }.p());
+// A function reading `this`, a value that runs, a method or the prototype a
+// literal sets keeps the call.
 console.log({ p: function () { return this.q; }, q: 1 }.p());
 console.log({ q: log.push("value"), p: function () { return 1; } }.p());
-console.log({ p: () => 1, get q() { log.push("getter"); return 2; } }.p());
 console.log({ p() { return 3; } }.p());
 console.log({ __proto__: { p: function () { return 4; } } }.p());
 console.log({ p: function () { return arguments.length; } }.p(1, 2));
