@@ -1058,11 +1058,6 @@ describe("Parser.tokenizer", () => {
 	describe("parser-decided contexts", () => {
 		it("should report the same tokens as acorn when the parser overrides a context", () => {
 			const sources = [
-				// `async function` reads as a statement until the parser says otherwise
-				fixture(
-					"javascript",
-					"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn"
-				),
 				fixture(
 					"javascript",
 					"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn-3"
@@ -1107,6 +1102,42 @@ describe("Parser.tokenizer", () => {
 				"}",
 				"/",
 				"num",
+				"eof"
+			]);
+		});
+
+		it("should read division after an async function expression, unlike acorn", () => {
+			const source = fixture(
+				"javascript",
+				"parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn"
+			);
+			expect(() => new (require("vm").Script)(source)).not.toThrow();
+			expect(() =>
+				acorn.Parser.parse(source, { ecmaVersion: "latest" })
+			).toThrow(/Invalid regular expression flag/);
+			const tokens = /** @type {{ type: { label: string } }[]} */ (
+				parsedTokens(source, { ecmaVersion: "latest" })
+			);
+			expect(tokens.map((token) => token.type.label)).toEqual([
+				"name",
+				"=",
+				"name",
+				"function",
+				"(",
+				")",
+				"{",
+				"}",
+				"/",
+				"num",
+				";",
+				"name",
+				"function",
+				"name",
+				"(",
+				")",
+				"{",
+				"}",
+				"regexp",
 				"eof"
 			]);
 		});

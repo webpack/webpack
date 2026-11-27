@@ -125962,13 +125962,13 @@ exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contex
 
 exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-read-a-regexp-after-yield-in-a tokenizes 1`] = `"class[0,5] name[6,7] {[8,9] *[10,11] name[11,12] ([12,13] )[13,14] {[15,16] name[17,22] /[23,24] name[24,26] /[26,27] name[27,28] ;[28,29] }[30,31] }[32,33] eof[33,33]"`;
 
-exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn parses 1`] = `"throws: Invalid regular expression flag (1:26)"`;
+exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn parses 1`] = `"Program[0,56](body=[ExpressionStatement[0,29](expression=AssignmentExpression[0,28](operator=\\"=\\" left=Identifier[0,1](name=\\"x\\") right=BinaryExpression[4,28](left=FunctionExpression[4,24](id=null expression=false generator=false async=true params=[] body=BlockStatement[22,24](body=[])) operator=\\"/\\" right=Literal[27,28](value=2 raw=\\"2\\")))),FunctionDeclaration[30,51](id=Identifier[45,46](name=\\"f\\") expression=false generator=false async=true params=[] body=BlockStatement[49,51](body=[])),ExpressionStatement[52,56](expression=Literal[52,56](raw=\\"/re/\\" regex={\\"pattern\\":\\"re\\",\\"flags\\":\\"\\"}))] sourceType=\\"module\\")"`;
 
-exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn parses 2`] = `"error[26,55]:malformed-reg-exp-flags"`;
+exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn parses 2`] = `""`;
 
-exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn parses 3`] = `"throws: Invalid regular expression flag (1:26)"`;
+exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn parses 3`] = `"as the module"`;
 
-exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn prints {"mode":"minify"} 1`] = `"throws: Invalid regular expression flag (1:26)"`;
+exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn prints {"mode":"minify"} 1`] = `"x=async function(){}/2;async function f(){}/re/;"`;
 
 exports[`JavaScript syntax — invariants parser-tokenizer-parser-decided-contexts-should-report-the-same-tokens-as-acorn tokenizes 1`] = `"name[0,1] =[2,3] name[4,9] function[10,18] ([19,20] )[20,21] {[22,23] }[23,24] throws: Invalid regular expression flag (1:26)"`;
 
