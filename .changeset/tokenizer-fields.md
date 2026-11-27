@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop redundant tokenizer fields and hold CSS target answers in one bit field.
+Drop unused syntax-tree fields; hold CSS and HTML print options in bit fields.
