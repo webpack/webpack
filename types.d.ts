@@ -28006,7 +28006,7 @@ declare interface OptionsSyntaxParser {
 	/**
 	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
 	 */
-	onTokenRead?: (parser: SyntaxParser) => void;
+	onTokenRead?: (parser: JavascriptTokenizer) => void;
 
 	/**
 	 * where comments are reported
@@ -31996,7 +31996,7 @@ declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * the parser itself at each token
 	 */
-	onTokenRead: null | ((parser: SyntaxParser) => void);
+	onTokenRead: null | ((parser: JavascriptTokenizer) => void);
 
 	/**
 	 * where comments are reported
@@ -37194,13 +37194,13 @@ declare class TokContext {
 		token: string,
 		isExpr: boolean,
 		preserveSpace?: boolean,
-		override?: (parser: SyntaxParser) => void,
+		override?: (parser: JavascriptTokenizer) => void,
 		generator?: boolean
 	);
 	token: string;
 	isExpr: boolean;
 	preserveSpace: boolean;
-	override?: (parser: SyntaxParser) => void;
+	override?: (parser: JavascriptTokenizer) => void;
 	generator: boolean;
 }
 
@@ -37211,7 +37211,7 @@ declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
 	preserveSpace?: boolean;
-	override?: (parser: SyntaxParser) => void;
+	override?: (parser: JavascriptTokenizer) => void;
 	generator?: boolean;
 }
 
