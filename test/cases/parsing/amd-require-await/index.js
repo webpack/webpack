@@ -36,3 +36,17 @@ it("should not move a yield of the caller into the AMD require wrapper", functio
 		load().next();
 	}).toThrow("Cannot find module");
 });
+
+it("should rewrite a nested require once when an AMD require array holds an await", function () {
+	async function load() {
+		require(["./a", require("./b"), await Promise.resolve(0)]);
+	}
+	return load().then(
+		function () {
+			throw new Error("should not resolve");
+		},
+		function (error) {
+			expect(error.code).toBe("MODULE_NOT_FOUND");
+		}
+	);
+});
