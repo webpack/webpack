@@ -1,0 +1,6 @@
+name: webpack CodeQL config
+
+# Test fixtures and examples are inputs to webpack, not code it ships.
+paths-ignore:
+  - test
+  - examples

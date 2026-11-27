@@ -23,10 +23,38 @@ permissions:
   contents: read
 
 jobs:
+  # The steps of nodejs/web-team's shared CodeQL workflow, inlined so `init`
+  # can read this repository's config file, which skips tests and examples.
   analyze:
     name: Analyze
-    uses: nodejs/web-team/.github/workflows/codeql.yml@bb854ae62671e06aeeb24e8ef45be1e3a404f89d
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
       security-events: write
+    strategy:
+      fail-fast: false
+      matrix:
+        language: ["javascript", "typescript"]
+    steps:
+      - name: Harden Runner
+        uses: step-security/harden-runner@bf7454d06d71f1098171f2acdf0cd4708d7b5920 # v2.20.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        with:
+          languages: ${{ matrix.language }}
+          config-file: ./.github/codeql/codeql-config.yml
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@e4fba868fa4b1b91e1fdab776edc8cfbe6e9fb81 # v4.37.3
+        with:
+          # the category the shared workflow used, so earlier alerts carry over
+          category: "/language:${{ matrix.language }}"
