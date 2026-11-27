@@ -2602,6 +2602,48 @@ exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embe
 
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] text[15,16] attr[22,26|28,30]\\" open[16,32|17,21] text[32,33] open[33,39|34,38] text[39,40] open[40,47|41,46] text[47,72] close[72,80|74,79] text[80,81] open[81,88|82,87] text[88,689] close[689,697|691,696] text[697,698] attr[706,710|712,728]\\" open[698,730|699,705] text[730,764] close[764,773|766,772] text[773,774] open[774,782|775,781] text[782,831] close[831,840|833,839] text[840,841] close[841,848|843,847] text[848,849] open[849,855|850,854] text[855,856] attr[859,864|866,917]\\" attr[919,926|928,960]\\" open[856,962|857,858] text[962,968] close[968,972|970,971] text[972,973] attr[978,985|987,994]\\" open[973,996|974,977] text[996,999] attr[1006,1010|1012,1015]\\" open[999,1020|1000,1004]/ text[1020,1023] close[1023,1029|1025,1028] text[1029,1030] attr[1038,1044|1046,1139]\\" open[1030,1141|1031,1037] close[1141,1150|1143,1149] text[1150,1151] attr[1159,1165|1166,1189] open[1151,1190|1152,1158] close[1190,1199|1192,1198] text[1199,1200] close[1200,1207|1202,1206] text[1207,1208] close[1208,1215|1210,1214] end=1215"`;
 
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"{\\"
+|       <!-- x -->
+|       \\"{value}}\\"
+|     \\"
+\\"
+|     <p>
+|       \\"{\\"
+|       <!-- x -->
+|       \\"%v%}\\"
+|     \\"
+\\"
+|     <p>
+|       \\"$\\"
+|       <!-- x -->
+|       \\"{v}\\"
+|     \\"
+\\"
+|     <p>
+|       \\"{{a}}\\"
+|       <!-- x -->
+|       \\"{b}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment prints {"mode":"minify"} 1`] = `
+"<p>&#123;{value}}</p>
+<p>&#123;%v%}</p>
+<p>&#36;{v}</p>
+<p>{{a}}{b}</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment tokenizes 1`] = `"open[0,3|1,2] text[3,4] comment[4,12|8,9] text[12,20] close[20,24|22,23] text[24,25] open[25,28|26,27] text[28,29] comment[29,37|33,34] text[37,41] close[41,45|43,44] text[45,46] open[46,49|47,48] text[49,50] comment[50,58|54,55] text[58,61] close[61,65|63,64] text[65,66] open[66,69|67,68] text[69,74] comment[74,82|78,79] text[82,85] close[85,89|87,88] text[89,90] end=90"`;
+
 exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 parses 1`] = `
 "| <!DOCTYPE html>
 | <html>

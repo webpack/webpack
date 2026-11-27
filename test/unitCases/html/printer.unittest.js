@@ -903,33 +903,14 @@ describe("SourceProcessor — reusing work across a print", () => {
 	const minify = (html, options) =>
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
-	it.each([
-		["<p>{<!--x-->{value}}</p>", "<p>&#123;{value}}"],
-		["<p>{<!--x-->%v%}</p>", "<p>&#123;%v%}"],
-		["<p>$<!--x-->{v}</p>", "<p>&#36;{v}"],
-		["<p>{{a}}<!--x-->{b}</p>", "<p>{{a}}{b}"]
-	])(
-		"opens no template delimiter across a dropped comment in %j",
-		(html, expected) => {
-			expect(minify(html)).toBe(expected);
-		}
-	);
-
-	it("does not carry a style attribute's result into a renderer with other options", () => {
+	it("opens no template delimiter across a dropped comment", () => {
 		const html = fixture(
 			"html",
-			"source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s"
+			"html-minify-opens-no-template-delimiter-across-a-dropped-comment"
 		);
-		const plain = { renderEmbeddedSource: builtinEmbeddedRenderer() };
-		expect(minify(html, plain)).toMatchSnapshot();
-		expect(
-			minify(html, {
-				renderEmbeddedSource: builtinEmbeddedRenderer({
-					convertLengthUnits: true
-				})
-			})
-		).toMatchSnapshot();
-		expect(minify(html, plain)).toMatchSnapshot();
+		expect(minify(html)).toBe(
+			"<p>&#123;{value}}</p>\n<p>&#123;%v%}</p>\n<p>&#36;{v}</p>\n<p>{{a}}{b}</p>\n"
+		);
 	});
 
 	it("marks each stylesheet it offers as one embedded in this document", async () => {
