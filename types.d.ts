@@ -9794,9 +9794,13 @@ declare abstract class ESMExportImportedSpecifierDependency extends ESMImportDep
 	ids: string[];
 	name: null | string;
 	activeExports: Set<string>;
-	otherStarExports: null | ReadonlyArray<ESMExportImportedSpecifierDependency>;
 	exportPresenceMode: ExportPresenceMode;
 	allStarExports: null | ESMStarExportsList;
+
+	/**
+	 * Earlier star exports, materialized only when a plugin reads the list.
+	 */
+	otherStarExports: null | ReadonlyArray<ESMExportImportedSpecifierDependency>;
 
 	/**
 	 * Returns id.

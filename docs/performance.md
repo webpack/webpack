@@ -58,3 +58,9 @@ Read the "emitted nothing" note first: a case whose build now errors contributes
 ## Keep instance shapes stable
 
 Initialize **every** instance field in the constructor — `undefined`/`null` for those first assigned later. A first assignment outside the constructor forces a V8 hidden-class (Shape) transition, splitting instances across shapes: inline caches go polymorphic/megamorphic (a hot read can cost ~2× at two shapes, more when megamorphic), and code optimized for the first shape deopts with `wrong map`. Never `delete` a field (dictionary mode); set it to `undefined`. One trailing field gains little, but the rule is uniform so reviewers needn't judge case by case — it's why `Dependency` sets all its `_loc*` slots up front. Deliberate symbol-keyed sparse slots are the documented exception.
+
+## Dependency graph allocations
+
+Read optional dependency metadata with `getMetaIfExisting`; reserve `getMeta` for writes. Import and reexport conditions share closures per module graph. A shared condition reads the dependency from its connection, which `ModuleGraph.setResolvedModule` pairs with that condition. Keep these caches weak so they do not retain finished compilations.
+
+Star reexports store a prefix length into the module's shared star list, not a copy of every preceding dependency. Reading `otherStarExports` materializes its array for compatibility; serialization preserves compact lengths and still accepts older arrays. A star-reexport check reuses its assignment calculation for both hidden and conflicting names without caching across graph changes.
