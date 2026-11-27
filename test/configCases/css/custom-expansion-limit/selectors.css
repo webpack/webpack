@@ -1,0 +1,23 @@
+@custom-selector :--ok .ok-a, .ok-b;
+@custom-selector :--s0 .x;
+@custom-selector :--s1 :--s0, :--s0;
+@custom-selector :--s2 :--s1, :--s1;
+@custom-selector :--s3 :--s2, :--s2;
+@custom-selector :--s4 :--s3, :--s3;
+@custom-selector :--s5 :--s4, :--s4;
+@custom-selector :--s6 :--s5, :--s5;
+@custom-selector :--s7 :--s6, :--s6;
+@custom-selector :--s8 :--s7, :--s7;
+@custom-selector :--s9 :--s8, :--s8;
+@custom-selector :--s10 :--s9, :--s9;
+@custom-selector :--s11 :--s10, :--s10;
+@custom-selector :--s12 :--s11, :--s11;
+@custom-selector :--s13 :--s12, :--s12;
+@custom-selector :--s14 :--s13, :--s13;
+@custom-selector :--s15 :--s14, :--s14;
+@custom-selector :--s16 :--s15, :--s15;
+@custom-selector :--s17 :--s16, :--s16;
+@custom-selector :--s18 :--s17, :--s17;
+:--ok { color: green; }
+:--s18 { color: red; }
+.after-selectors { color: blue; }

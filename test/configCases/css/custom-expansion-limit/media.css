@@ -1,0 +1,27 @@
+@custom-media --ok (min-width: 100px);
+@custom-media --m0 (min-width: 1px);
+@custom-media --m1 (--m0) and (--m0);
+@custom-media --m2 (--m1) and (--m1);
+@custom-media --m3 (--m2) and (--m2);
+@custom-media --m4 (--m3) and (--m3);
+@custom-media --m5 (--m4) and (--m4);
+@custom-media --m6 (--m5) and (--m5);
+@custom-media --m7 (--m6) and (--m6);
+@custom-media --m8 (--m7) and (--m7);
+@custom-media --m9 (--m8) and (--m8);
+@custom-media --m10 (--m9) and (--m9);
+@custom-media --m11 (--m10) and (--m10);
+@custom-media --m12 (--m11) and (--m11);
+@custom-media --m13 (--m12) and (--m12);
+@custom-media --m14 (--m13) and (--m13);
+@custom-media --m15 (--m14) and (--m14);
+@custom-media --m16 (--m15) and (--m15);
+@custom-media --m17 (--m16) and (--m16);
+@custom-media --m18 (--m17) and (--m17);
+@media (--ok) {
+	.ok-media { color: green; }
+}
+@media (--m18) {
+	.m { color: red; }
+}
+.after-media { color: blue; }
