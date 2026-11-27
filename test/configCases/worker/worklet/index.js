@@ -15,6 +15,12 @@ it("should register a processor via *context.audioWorklet syntax", async () => {
 	expect(await run(context.audioWorklet)).toBe("OK/DONE");
 });
 
+it("should register a processor via a parenthesized callee", async () => {
+	const context = new AudioContext();
+	await (context.audioWorklet.addModule)(new URL("./worklet.js", import.meta.url));
+	expect(await run(context.audioWorklet)).toBe("OK/DONE");
+});
+
 it("should register a processor via a bare *audioWorklet variable", async () => {
 	const audioWorklet = new AudioContext().audioWorklet;
 	await audioWorklet.addModule(new URL("./worklet.js", import.meta.url));

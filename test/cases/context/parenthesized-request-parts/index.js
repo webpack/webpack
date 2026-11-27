@@ -24,3 +24,17 @@ for (const name of Object.keys(tests)) {
 		expect(tests[name]()).toBe("hello");
 	});
 }
+
+it("should close a single-part String.raw request in a logical expression", () => {
+	expect(require(true && (String.raw`./dir/hello`))).toBe("hello");
+});
+
+it("should keep the text after a single-part String.raw request a string", () => {
+	let ran = false;
+	const load = () => {
+		// prettier-ignore
+		if (0, require(true && (String.raw`./dir/hello`)) / "/;ran = true;/[") {} / 1]/g;
+	};
+	load();
+	expect(ran).toBe(false);
+});

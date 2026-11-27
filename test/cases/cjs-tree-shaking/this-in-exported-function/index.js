@@ -69,3 +69,11 @@ it("should still tree-shake when the exported values contain no this", () => {
 	expect(m.a()).toBe("function");
 	expect(m.usedExports).toEqual(["a", "usedExports"]);
 });
+
+it("should keep this as written in a function an ES module exports through exports", () => {
+	const m = require("./module-esm-mixed");
+	const holder = { receiver: m.receiver };
+	expect(holder.receiver()).toBe(holder);
+	expect(m.deadBranch()).toBe(1);
+	expect(global.thisInDeadBranchRan).toBeUndefined();
+});
