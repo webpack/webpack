@@ -233,7 +233,6 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: peephole/remove_unused_expression.rs:test_template_literal_drop_walks_removed_element_refs:939506c1",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_array_spread_drop_walks_argument_refs:d0ea7ca1",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_object_literal:50888659",
-			"oxc minifier: peephole/remove_unused_expression.rs:test_fold_binary_expression:d89c7139",
 			"oxc minifier: peephole/remove_unused_expression.rs:test_fold_iife:b7551dcf",
 			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_assignment_expression:8afc5079",
 			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:466a2c39",
@@ -627,10 +626,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what oxc's `peephole/obscure_edge_cases.rs` tests cover",
-		[
-			"oxc minifier: peephole/obscure_edge_cases.rs:test_mathematical_expression_edge_cases:e7cb440a",
-			"oxc minifier: peephole/obscure_edge_cases.rs:test_mathematical_expression_edge_cases:cdc6a5ea"
-		]
+		[]
 	],
 	[
 		"oxc writes a variable's value at its one read and drops the variable, as oxc's `peephole/inline_single_use_variable.rs` tests show",
