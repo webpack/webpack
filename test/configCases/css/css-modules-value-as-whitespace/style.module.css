@@ -1,0 +1,5 @@
+@value primary as main, aSPACESb from "./colors.module.css";
+
+.text {
+	color: main;
+}
