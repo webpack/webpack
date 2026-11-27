@@ -1,6 +1,17 @@
 "use strict";
 
 const path = require("path");
+const {
+	CHILD_MESSAGE_CALL,
+	CHILD_MESSAGE_END,
+	CHILD_MESSAGE_PRELOAD,
+	CHILD_MESSAGE_RPC_RESULT,
+	PARENT_MESSAGE_CLIENT_ERROR,
+	PARENT_MESSAGE_OK,
+	PARENT_MESSAGE_PRELOADED,
+	PARENT_MESSAGE_RPC,
+	decodeError
+} = require("../../lib/worker/protocol");
 const Worker = require("../../lib/worker/Worker");
 const WorkerPool = require("../../lib/worker/WorkerPool");
 
@@ -528,6 +539,18 @@ describe("WorkerPool", () => {
 			);
 			expect(error.message).toBe("boom");
 			expect(error.code).toBe("E_BOOM");
+			const typeError = /** @type {TypeError & { type?: string }} */ (
+				await pool.run(TARGET, "failType", []).catch((err) => err)
+			);
+			expect(typeError).toBeInstanceOf(TypeError);
+			expect(typeError.type).toBe("TypeError");
+			if (typeof global.AggregateError === "function") {
+				const aggregate = /** @type {AggregateError} */ (
+					await pool.run(TARGET, "failAggregate", []).catch((err) => err)
+				);
+				expect(aggregate).toBeInstanceOf(global.AggregateError);
+				expect(aggregate.message).toBe("aggregate");
+			}
 			const partial = /** @type {Error & { code?: string }} */ (
 				await pool.run(TARGET, "failWithFunction", []).catch((err) => err)
 			);
@@ -544,6 +567,61 @@ describe("WorkerPool", () => {
 				/could not be cloned|can not be cloned/
 			);
 			expect(await pool.run(TARGET, "add", [2, 3])).toBe(5);
+		});
+
+		it("uses call id zero for no-wait RPC and reports RPC errors", async () => {
+			const pool = createThreadPool({ max: 1 });
+			/** @type {[string, unknown[]][]} */
+			const calls = [];
+
+			expect(
+				await pool.runJob(TARGET, "rpcNoWaitOk", [], {
+					rpc: (method, args) => {
+						calls.push([method, args]);
+					}
+				})
+			).toBe("done");
+			expect(calls).toEqual([["noWait", [1]]]);
+
+			const error = /** @type {TypeError & { type?: string }} */ (
+				await pool
+					.runJob(TARGET, "rpcThrow", [], {
+						rpc: () => {
+							throw new TypeError("rpc");
+						}
+					})
+					.catch((err) => err)
+			);
+			expect(error).toBeInstanceOf(TypeError);
+			expect(error.type).toBe("TypeError");
+			expect(error.message).toBe("rpc");
+			await pool.end();
+		});
+
+		it("decodes an error without writing a getter-only message", () => {
+			class MessageGetterError extends Error {
+				constructor() {
+					super();
+				}
+
+				get message() {
+					return "original";
+				}
+			}
+			/** @type {EXPECTED_ANY} */ (global).MessageGetterError =
+				MessageGetterError;
+			try {
+				const error = decodeError([
+					"MessageGetterError",
+					"decoded",
+					undefined,
+					undefined
+				]);
+				expect(error).toBeInstanceOf(MessageGetterError);
+				expect(error.message).toBe("original");
+			} finally {
+				delete (/** @type {EXPECTED_ANY} */ (global).MessageGetterError);
+			}
 		});
 
 		it("bounds concurrency and queues the rest", async () => {
@@ -871,142 +949,149 @@ describe("WorkerPool", () => {
 				port2.once("close", resolve);
 			});
 
+		it("keeps the documented numeric tags", () => {
+			expect([
+				CHILD_MESSAGE_CALL,
+				CHILD_MESSAGE_END,
+				CHILD_MESSAGE_PRELOAD,
+				CHILD_MESSAGE_RPC_RESULT,
+				PARENT_MESSAGE_OK,
+				PARENT_MESSAGE_CLIENT_ERROR,
+				PARENT_MESSAGE_PRELOADED,
+				PARENT_MESSAGE_RPC
+			]).toEqual([1, 2, 3, 4, 0, 1, 2, 3]);
+		});
+
 		it("answers preload and call messages over a port", async () => {
 			const { port2, next } = createChild();
 
-			port2.postMessage({ type: "preload", id: 1, modules: [TARGET] });
-			expect(await next()).toEqual({ type: "preloaded", id: 1, ok: true });
-			port2.postMessage({
-				type: "job",
-				id: 2,
-				module: TARGET,
-				method: "add",
-				args: [1, 2],
-				rpc: false
-			});
-			expect(await next()).toEqual({
-				type: "response",
-				id: 2,
-				ok: true,
-				value: 3
-			});
-			port2.postMessage({ type: "close" });
+			port2.postMessage([CHILD_MESSAGE_PRELOAD, 1, [TARGET]]);
+			expect(await next()).toEqual([PARENT_MESSAGE_PRELOADED, 1, true]);
+			port2.postMessage([CHILD_MESSAGE_CALL, 2, TARGET, "add", [1, 2], false]);
+			expect(await next()).toEqual([PARENT_MESSAGE_OK, 2, 3]);
+			port2.postMessage([CHILD_MESSAGE_END]);
 			await closed(port2);
 		});
 
 		it("routes rpc calls to the main thread", async () => {
 			const { port2, next } = createChild();
 
-			port2.postMessage({
-				type: "job",
-				id: 2,
-				module: TARGET,
-				method: "rpcAdd",
-				args: [2, 3],
-				rpc: true
-			});
+			port2.postMessage([
+				CHILD_MESSAGE_CALL,
+				2,
+				TARGET,
+				"rpcAdd",
+				[2, 3],
+				true
+			]);
 			const rpc = /** @type {RpcMessage} */ (await next());
-			expect(rpc).toMatchObject({
-				type: "rpc",
-				jobId: 2,
-				method: "add",
-				args: [2, 3]
-			});
-			port2.postMessage({
-				type: "rpc-result",
-				jobId: 2,
-				callId: rpc.callId,
-				ok: true,
-				value: 5
-			});
-			expect(await next()).toEqual({
-				type: "response",
-				id: 2,
-				ok: true,
-				value: 5
-			});
-			port2.postMessage({ type: "close" });
+			expect(rpc[0]).toBe(PARENT_MESSAGE_RPC);
+			expect(rpc[1]).toBe(2);
+			expect(rpc[3]).toBe("add");
+			expect(rpc[4]).toEqual([2, 3]);
+			port2.postMessage([CHILD_MESSAGE_RPC_RESULT, 2, rpc[2], true, 5]);
+			expect(await next()).toEqual([PARENT_MESSAGE_OK, 2, 5]);
+			port2.postMessage([CHILD_MESSAGE_END]);
 			await closed(port2);
+		});
+
+		it("routes a no-wait rpc with call id zero", async () => {
+			const { port2, next } = createChild();
+
+			port2.postMessage([
+				CHILD_MESSAGE_CALL,
+				2,
+				TARGET,
+				"rpcNoWaitOk",
+				[],
+				true
+			]);
+			expect(await next()).toEqual([PARENT_MESSAGE_RPC, 2, 0, "noWait", [1]]);
+			expect(await next()).toEqual([PARENT_MESSAGE_OK, 2, "done"]);
+			port2.postMessage([CHILD_MESSAGE_END]);
+			await closed(port2);
+		});
+
+		it("rejects malformed parent messages", async () => {
+			const { child, port2 } = createChild();
+
+			await expect(
+				child.receive(/** @type {EXPECTED_ANY} */ (null))
+			).rejects.toThrow("Unexpected request");
+			await expect(
+				child.receive(/** @type {EXPECTED_ANY} */ ([999]))
+			).rejects.toThrow(/Unexpected request/);
+			child.close();
+			port2.close();
 		});
 
 		it("drops a pending rpc when its arguments cannot be cloned", async () => {
 			const { child, port2, next } = createChild();
 
-			port2.postMessage({
-				type: "job",
-				id: 2,
-				module: TARGET,
-				method: "rpcCloneFail",
-				args: [],
-				rpc: true
-			});
+			port2.postMessage([
+				CHILD_MESSAGE_CALL,
+				2,
+				TARGET,
+				"rpcCloneFail",
+				[],
+				true
+			]);
 			const response = /** @type {ErrorResponseMessage} */ (await next());
-			expect(response).toMatchObject({ type: "response", id: 2, ok: false });
-			expect(response.error.message).toMatch(
-				/could not be cloned|can not be cloned/
-			);
 			expect(child._rpc.size).toBe(0);
-			port2.postMessage({ type: "close" });
+			port2.postMessage([CHILD_MESSAGE_END]);
 			await closed(port2);
+			expect(response[0]).toBe(PARENT_MESSAGE_CLIENT_ERROR);
+			expect(response[1]).toBe(2);
+			expect(typeof response[2]).toBe("string");
+			expect(response[3]).toMatch(/could not be cloned|can not be cloned/);
+			expect(typeof response[4]).toBe("string");
+			expect(response[4]).toContain("\n");
 		});
 
 		it("does not throw from a fire-and-forget rpc with cloned arguments", async () => {
 			const { child, port2, next } = createChild();
 
-			port2.postMessage({
-				type: "job",
-				id: 2,
-				module: TARGET,
-				method: "rpcNoWaitCloneFail",
-				args: [],
-				rpc: true
-			});
-			expect(await next()).toEqual({
-				type: "response",
-				id: 2,
-				ok: true,
-				value: "sent"
-			});
+			port2.postMessage([
+				CHILD_MESSAGE_CALL,
+				2,
+				TARGET,
+				"rpcNoWaitCloneFail",
+				[],
+				true
+			]);
+			expect(await next()).toEqual([PARENT_MESSAGE_OK, 2, "sent"]);
 			expect(child._rpc.size).toBe(0);
-			port2.postMessage({ type: "close" });
+			port2.postMessage([CHILD_MESSAGE_END]);
 			await closed(port2);
 		});
 
 		it("rejects pending rpc calls when the job finishes", async () => {
 			const { child, port2, next } = createChild();
 
-			port2.postMessage({
-				type: "job",
-				id: 2,
-				module: TARGET,
-				method: "rpcPending",
-				args: [],
-				rpc: true
-			});
-			expect(await next()).toMatchObject({ type: "rpc", jobId: 2 });
-			expect(await next()).toEqual({
-				type: "response",
-				id: 2,
-				ok: true,
-				value: "pending"
-			});
+			port2.postMessage([
+				CHILD_MESSAGE_CALL,
+				2,
+				TARGET,
+				"rpcPending",
+				[],
+				true
+			]);
+			const rpc = /** @type {RpcMessage} */ (await next());
+			expect(rpc[0]).toBe(PARENT_MESSAGE_RPC);
+			expect(rpc[1]).toBe(2);
+			expect(await next()).toEqual([PARENT_MESSAGE_OK, 2, "pending"]);
 			expect(child._rpc.size).toBe(0);
-			port2.postMessage({ type: "close" });
+			port2.postMessage([CHILD_MESSAGE_END]);
 			await closed(port2);
 		});
 
 		it("rejects pending rpc calls when the port closes", async () => {
 			const { child, port2, next } = createChild();
 
-			port2.postMessage({
-				type: "job",
-				id: 2,
-				module: TARGET,
-				method: "rpcHold",
-				args: [],
-				rpc: true
-			});
-			expect(await next()).toMatchObject({ type: "rpc", jobId: 2 });
+			port2.postMessage([CHILD_MESSAGE_CALL, 2, TARGET, "rpcHold", [], true]);
+			const rpc = /** @type {RpcMessage} */ (await next());
+			expect(rpc[0]).toBe(PARENT_MESSAGE_RPC);
+			expect(rpc[1]).toBe(2);
 			child.close();
 			expect(child._rpc.size).toBe(0);
 			await closed(port2);

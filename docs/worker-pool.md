@@ -159,24 +159,33 @@ A target module is CommonJS. Each export called through the pool has the shape `
 - A failed load stays failed on that thread for the pool's lifetime; a transient filesystem error is not retried.
 - A call whose arguments cannot be cloned rejects with `WorkerJobCloneError` before its thread runs.
 - Any call may run on any thread.
-- Errors cross as `EncodedError` (`name`, `message`, `stack`, own enumerable `fields`). `decodeError` rebuilds a plain `Error`.
+- Errors cross as `[constructorName, message, stack, fields?]`; the constructor name is rebuilt into a built-in `Error` subclass where possible, and `error.type` keeps the constructor name. Own enumerable fields are copied when they survive structured clone; a prototype `name` such as a `DOMException`'s `AbortError` is not preserved, matching jest-worker.
 
 ## Protocol
 
-| Direction     | Message     | Fields                                  |
-| ------------- | ----------- | --------------------------------------- |
-| main → thread | `preload`   | `id`, `modules`                         |
-| thread → main | `preloaded` | `id`, `ok`, `error?`                    |
-| main → thread | `job`       | `id`, `module`, `method`, `args`, `rpc` |
-| thread → main | `response`  | `id`, `ok`, `value` or `error`          |
-| main → thread | `close`     | none                                    |
+Messages are arrays; the first element is a numeric tag, following jest-worker's compact shape.
+
+| Tag | Direction     | Message      | Shape                                     |
+| --- | ------------- | ------------ | ----------------------------------------- |
+| `1` | main → thread | `job`        | `[1, id, module, method, args, rpc]`      |
+| `2` | main → thread | `close`      | `[2]`                                     |
+| `3` | main → thread | `preload`    | `[3, id, modules]`                        |
+| `4` | main → thread | `rpc-result` | `[4, jobId, callId, ok, ...valueOrError]` |
+| `0` | thread → main | `response`   | `[0, id, value]`                          |
+| `1` | thread → main | error        | `[1, id, ...error]`                       |
+| `2` | thread → main | `preloaded`  | `[2, id, ok, ...error?]`                  |
+| `3` | thread → main | `rpc`        | `[3, jobId, callId, method, args]`        |
+
+`callId` is `0` for a fire-and-forget RPC. `error` is `[constructorName, message, stack, fields?]`.
+
+Tags `1`/`2` and `0`/`1` are the same numbers as jest-worker's call/end and success/error. The other tags are webpack-specific and occupy numbers jest-worker assigns to memory usage, call setup, setup errors and custom messages; do not port a jest message without checking its direction and meaning.
 
 Ordering rules:
 
 - The port delivers in order, so a `preload` posted before a `job` is seen first.
 - The child requires modules on first use; a `job` does not wait for `preloaded`.
 - A job whose response cannot be posted falls back to an error response carrying the clone failure.
-- A loader job (`rpc: true`) may send `rpc` messages; the main thread answers with `rpc-result`.
+- A loader job (`rpc: true`) may send `rpc` messages; the main thread answers with `rpc-result` with tag `4`.
 
 ## Scheduling
 
