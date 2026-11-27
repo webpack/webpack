@@ -16221,6 +16221,14 @@ exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside
 
 exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-2 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,15] colon[15,16] ident[16,21] whitespace[21,22] ident[22,26] semicolon[26,27] ident[27,32] colon[32,33] function[33,44] ident[44,47] comma[47,48] ident[48,52] right-parenthesis[52,53] semicolon[53,54] ident[54,64] colon[64,65] url[65,99|69,98] right-curly-bracket[99,100] end=100"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"b\\"],\\"=\\",[\\"string\\",\\"x],.z,[\\"]],\\",\\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf prints {"mode":"minify"} 1`] = `"\\".b,[b=\\\\\\"x\\\\\\\\\\\\r\\\\n],.z,[\\\\\\"]{top:0}\\""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf tokenizes 1`] = `"left-square-bracket[0,1] ident[1,2] delim[2,3] string[3,15] right-square-bracket[15,16] comma[16,17] delim[17,18] ident[18,19] left-curly-bracket[19,20] ident[20,23] colon[23,24] number[24,25] right-curly-bracket[25,26] end=26"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",\\".\\",[\\"ident\\",\\"b \\"],\\" \\",[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the parses 2`] = `""`;

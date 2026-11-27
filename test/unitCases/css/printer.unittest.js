@@ -3135,6 +3135,14 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		);
 	});
 
+	it("reads an escaped CRLF in a string as one newline when ordering a list", () => {
+		const css = fixture(
+			"css",
+			"css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf"
+		);
+		expect(minifyFor(css)).toBe('.b,[b="x\\\r\n],.z,["]{top:0}');
+	});
+
 	it("does not decode a data url's percent-escape into the half of another", () => {
 		// Read once, `%%32%41` is the text `%2A`, which must not become `*`.
 		const name =
