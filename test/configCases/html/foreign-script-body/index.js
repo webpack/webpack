@@ -10,9 +10,9 @@ const pageContent = typeof page === "string" ? page : "";
 it("should read a foreign script body as character data", () => {
 	expect(pageContent).toMatchSnapshot();
 
-	// The chunk is found by the `src` the page carries rather than by matching
+	// The chunk is found by the `href` the page carries rather than by matching
 	// the tag around it, which reads as an HTML filter and is never one.
-	const match = /src="([^"]+\.js)"/.exec(pageContent);
+	const match = /href="([^"]+\.js)"/.exec(pageContent);
 	expect(match).not.toBe(null);
 	const chunk = fs.readFileSync(path.resolve(__dirname, match[1]), "utf-8");
 	// `<svg><script>` holds character data, so `&lt;` names the `<` the author

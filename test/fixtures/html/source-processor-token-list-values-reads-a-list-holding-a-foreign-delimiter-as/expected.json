@@ -1,0 +1,7 @@
+[
+	{
+		"relation": "respelling references",
+		"contains": "btn&#123;% if active %} btn-active&#123;% endif %}",
+		"why": "a template delimiter written escaped stays escaped, so a template engine reading the page next never runs one the source kept inert; written literally, it already is one"
+	}
+]

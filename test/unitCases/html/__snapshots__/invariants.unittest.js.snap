@@ -1,6 +1,14 @@
 // Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
 
-exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a\\\\u0000b>\\\\n|       \\\\\\"x\\\\\\"\\\\n|     <c\\\\u0000>\\\\n|       \\\\\\"y\\\\\\"\\""`;
+exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a�b>
+|       \\"x\\"
+|     <c�>
+|       \\"y\\""
+`;
 
 exports[`HTML syntax — invariants a-tag-whose-name-a-nul-interrupts-ends-at-the-the-tag-name-state-reads parses 2`] = `"warning[2,3]:unexpected-null-character warning[0,5]:expected-doctype-but-got-start-tag warning[9,10]:unexpected-null-character warning[14,15]:unexpected-null-character warning[17,17]:expected-closing-tag-but-got-eof"`;
 
@@ -849,6 +857,47 @@ exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unq
 exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet prints {"mode":"minify"} 1`] = `"\\"<a b=x\\\\\\"y'z<w=v\`u\\\\u0000t&amp;é c=1 d=2 e=3 f=4 g=&h i=\`></a>\\""`;
 
 exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet tokenizes 1`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character attr[3,4|5,24] attr[25,26|27,28] attr[29,30|31,32] attr[33,34|35,36] attr[37,38|39,40] attr[41,42|43,45] warning[48,49]:unexpected-character-in-unquoted-attribute-value attr[46,47|48,49] open[0,50|1,2] end=50"`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"Order\\"
+|     \\"
+\\"
+|     <script>
+|       \\"window.order = [\\"page\\"];\\"
+|     \\"
+\\"
+|   <body>
+|     <svg svg>
+|       <svg script>
+|         <!--  a note  -->
+|         \\"window.order.push(\\"comment\\");\\"
+|       <svg script>
+|         \\"window.order.push(\\"element\\");\\"
+|         <svg g>
+|           id=\\"kept\\"
+|       <svg script>
+|         \\"window.order.push(\\"plain\\");\\"
+|     \\"
+\\"
+|     <script>
+|       \\"window.order.push(\\"last\\");\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>Order</title><script>window.order = [\\"page\\"];</script><svg><script>window.order.push(\\"comment\\");</script><script>window.order.push(\\"element\\");<g id=kept></g></script><script>window.order.push(\\"plain\\");</script></svg>
+<script>window.order.push(\\"last\\");</script>
+"
+`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] text[15,16] open[16,23|17,22] text[23,28] close[28,36|30,35] text[36,37] open[37,45|38,44] text[45,69] close[69,78|71,77] text[78,79] open[79,84|80,83] open[84,92|85,91] text[92,136] close[136,145|138,144] open[145,153|146,152] text[153,199] close[199,208|201,207] open[208,216|209,215] text[216,243] close[243,252|245,251] close[252,258|254,257] text[258,259] open[259,267|260,266] text[267,293] close[293,302|295,301] text[302,303] end=303"`;
 
 exports[`HTML syntax — invariants html-minify-a-region-printed-as-written-respells-its-attributes parses 1`] = `
 "| <html>
@@ -2553,6 +2602,48 @@ exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embe
 
 exports[`HTML syntax — invariants html-minify-one-document-reaching-every-embedded-site-offers-every-body-to-a tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] text[15,16] attr[22,26|28,30]\\" open[16,32|17,21] text[32,33] open[33,39|34,38] text[39,40] open[40,47|41,46] text[47,72] close[72,80|74,79] text[80,81] open[81,88|82,87] text[88,689] close[689,697|691,696] text[697,698] attr[706,710|712,728]\\" open[698,730|699,705] text[730,764] close[764,773|766,772] text[773,774] open[774,782|775,781] text[782,831] close[831,840|833,839] text[840,841] close[841,848|843,847] text[848,849] open[849,855|850,854] text[855,856] attr[859,864|866,917]\\" attr[919,926|928,960]\\" open[856,962|857,858] text[962,968] close[968,972|970,971] text[972,973] attr[978,985|987,994]\\" open[973,996|974,977] text[996,999] attr[1006,1010|1012,1015]\\" open[999,1020|1000,1004]/ text[1020,1023] close[1023,1029|1025,1028] text[1029,1030] attr[1038,1044|1046,1139]\\" open[1030,1141|1031,1037] close[1141,1150|1143,1149] text[1150,1151] attr[1159,1165|1166,1189] open[1151,1190|1152,1158] close[1190,1199|1192,1198] text[1199,1200] close[1200,1207|1202,1206] text[1207,1208] close[1208,1215|1210,1214] end=1215"`;
 
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"{\\"
+|       <!-- x -->
+|       \\"{value}}\\"
+|     \\"
+\\"
+|     <p>
+|       \\"{\\"
+|       <!-- x -->
+|       \\"%v%}\\"
+|     \\"
+\\"
+|     <p>
+|       \\"$\\"
+|       <!-- x -->
+|       \\"{v}\\"
+|     \\"
+\\"
+|     <p>
+|       \\"{{a}}\\"
+|       <!-- x -->
+|       \\"{b}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment prints {"mode":"minify"} 1`] = `
+"<p>&#123;{value}}</p>
+<p>&#123;%v%}</p>
+<p>&#36;{v}</p>
+<p>{{a}}{b}</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-opens-no-template-delimiter-across-a-dropped-comment tokenizes 1`] = `"open[0,3|1,2] text[3,4] comment[4,12|8,9] text[12,20] close[20,24|22,23] text[24,25] open[25,28|26,27] text[28,29] comment[29,37|33,34] text[37,41] close[41,45|43,44] text[45,46] open[46,49|47,48] text[49,50] comment[50,58|54,55] text[58,61] close[61,65|63,64] text[65,66] open[66,69|67,68] text[69,74] comment[74,82|78,79] text[82,85] close[85,89|87,88] text[89,90] end=90"`;
+
 exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -2567,6 +2658,27 @@ exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-
 exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 prints {"mode":"minify"} 1`] = `"<!doctype html><iframe src=\\"data:text/html; base64,<!-- x -->PGI+aGk8L2I+\\"></iframe>"`;
 
 exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[23,26|28,73]\\" open[15,75|16,22] close[75,84|77,83] end=84"`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page parses 1`] = `
+"| <html>
+|   <head>
+|     <meta>
+|       charset=\\"windows-1252\\"
+|   <body>
+|     <p>
+|       \\"a & b\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page prints {"mode":"minify"} 1`] = `
+"<meta charset=windows-1252><p>a & b</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page tokenizes 1`] = `"attr[6,13|15,27]\\" open[0,29|1,5] open[29,32|30,31] text[32,41] close[41,45|43,44] text[45,46] end=46"`;
 
 exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content parses 1`] = `
 "| <html>
@@ -2730,6 +2842,312 @@ exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is
 exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is-asked-about-reports-what-a-renderer prints {"print":"htmlMinify","minimizer":{"asset":"page.html"},"renderEmbeddedSource":"throws"} 2`] = `"{\\"errors\\":[\\"Error: renderer throws\\"]}"`;
 
 exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is-asked-about-reports-what-a-renderer tokenizes 1`] = `"attr[3,10|12,25]\\" open[0,27|1,2] text[27,28] close[28,32|30,31] end=32"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"{{live{{literal rect{}\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag error[60,60]:eof-in-cdata warning[60,60]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open prints {"mode":"minify"} 1`] = `"<svg><style><![CDATA[{{live]]>&#123;{literal<![CDATA[ rect{}]]></style></svg>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,60] end=60"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"{{live}} {{literal}}</\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag warning[54,54]:eof-before-tag-name warning[54,54]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text prints {"mode":"minify"} 1`] = `"<svg><style>&#123;&#123;live&#125;&#125; {{literal}}&lt;/</style></svg>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,54] end=54"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"/*{{old}}*/.a{content:\\"{{value}}\\"}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered prints {"mode":"minify"} 1`] = `
+"<svg><style>/*&#123;&#123;old&#125;&#125;*/.a{content:\\"{{value}}\\"}</style></svg>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,66] close[66,74|68,73] close[74,80|76,79] text[80,81] end=81"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-heading-a-form-end-left-under-another parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         <h2>
+|           <form>
+|             <h2>
+|           <h2>
+|           <mglyph>
+|             <xmp>
+|               \\"&lt;b data-x&gt;\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-heading-a-form-end-left-under-another parses 2`] = `"warning[45,52]:end-tag-too-early-ignored warning[52,56]:unexpected-start-tag warning[96,96]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-heading-a-form-end-left-under-another prints {"mode":"minify"} 1`] = `"<!doctype html><body><math><mi><h2><form><h2></form><h2></h2><mglyph><xmp>&lt;b data-x&gt;</xmp>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-heading-a-form-end-left-under-another tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,27|22,26] open[27,31|28,30] open[31,35|32,34] open[35,41|36,40] open[41,45|42,44] close[45,52|47,51] open[52,56|53,55] close[56,61|58,60] open[61,69|62,68] open[69,74|70,73] text[74,90] close[90,96|92,95] end=96"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-name-ending-in-a-quote-apart-from-the-next parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <img>
+|       =\\"=\\"\\"
+|       a\\"=\\"\\"
+|       src=\\"x\\"
+|     \\"\\" data-x=\\"y\\">\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-name-ending-in-a-quote-apart-from-the-next parses 2`] = `"warning[33,34]:unexpected-character-in-attribute-name warning[36,37]:unexpected-solidus-in-tag warning[37,38]:unexpected-equals-sign-before-attribute-name warning[38,39]:unexpected-character-in-attribute-name"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-name-ending-in-a-quote-apart-from-the-next prints {"mode":"minify"} 1`] = `"<!doctype html><body><img src=x a\\"=\\"\\" =\\"=\\"\\">\\" data-x=\\"y\\"></body>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-name-ending-in-a-quote-apart-from-the-next tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[26,29|30,31] warning[33,34]:unexpected-character-in-attribute-name attr[32,34|-1,-1] warning[36,37]:unexpected-solidus-in-tag warning[37,38]:unexpected-equals-sign-before-attribute-name warning[38,39]:unexpected-character-in-attribute-name attr[37,39|-1,-1] open[21,40|22,25] text[40,53] end=53"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-padded-script-language parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <script>
+|       language=\\" javascript \\"
+|       \\"console.log(\\"ok\\")\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-padded-script-language parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-padded-script-language prints {"mode":"minify"} 1`] = `"<!doctype html><body><script language=\\" javascript \\">console.log(\\"ok\\")</script></body>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-padded-script-language tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,37|39,51]\\" open[21,53|22,28] text[53,70] close[70,79|72,78] end=79"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       srcdoc=\\"<!--{{old}}-->{{value}}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written parses 2`] = `"warning[0,61]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written prints {"mode":"minify"} 1`] = `
+"<iframe srcdoc=\\"<!--&#123;&#123;old&#125;&#125;-->{{value}}\\"></iframe>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written tokenizes 1`] = `"attr[8,14|16,59]\\" open[0,61|1,7] close[61,70|63,69] text[70,71] end=71"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-an-empty-unquoted-value-a-sort-moves-apart parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       a\\"=\\"\\"
+|       title=\\"<b data-x>\\"
+|       \\"x\\"
+|     <p>
+|       class=\\"\\"
+|       title=\\"<b data-x>\\"
+|       \\"y\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-an-empty-unquoted-value-a-sort-moves-apart parses 2`] = `"warning[50,51]:unexpected-character-in-attribute-name warning[52,53]:missing-attribute-value warning[92,93]:missing-attribute-value"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-an-empty-unquoted-value-a-sort-moves-apart prints {"mode":"minify"} 1`] = `"<!doctype html><body><p title=\\"<b data-x>\\" a\\"=\\"\\">x<p title=\\"<b data-x>\\" class>y</body>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-an-empty-unquoted-value-a-sort-moves-apart tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[24,29|31,47]\\" warning[50,51]:unexpected-character-in-attribute-name warning[52,53]:missing-attribute-value attr[49,51|52,52] open[21,53|22,23] text[53,54] close[54,58|56,57] attr[61,66|68,84]\\" warning[92,93]:missing-attribute-value attr[86,91|92,92] open[58,93|59,60] text[93,94] close[94,98|96,97] end=98"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <p>
+|       class=\\"\${y}\\"
+|       title=\\"{{x}}\\"
+|       \\"{{a}} {{b}} {{c}} \${d} {% e %}\\"
+|     <svg svg>
+|       <svg style>
+|         \\".b{content:\\"<%= 3 %>\\"}\\"
+|     <p>
+|       style=\\"content : \\"<%= 1 %>\\"\\"
+|       \\"s\\"
+|     <button>
+|       onclick=\\"f(\\"<%= 2 %>\\")  ;\\"
+|       \\"b\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped prints {"mode":"minify"} 1`] = `"<!doctype html><body><p title=&#123;{x}} class=&#36;{y}>&#123;{a}} &#123;{b}} &#123;{c}} &#36;{d} &#123;% e %}</p><svg><style>.b{content:\\"&lt;%= 3 %>\\"}</style></svg><p style='content : \\"&lt;%= 1 %>\\"'>s</p><button onclick='f(\\"&lt;%= 2 %>\\")  ;'>b</button></body>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[24,29|31,41]\\" attr[43,48|50,58]\\" open[21,60|22,23] text[60,116] close[116,120|118,119] open[120,125|121,124] open[125,132|126,131] text[132,160] close[160,168|162,167] close[168,174|170,173] attr[177,182|184,220]\\" open[174,222|175,176] text[222,223] close[223,227|225,226] attr[235,242|244,276]\\" open[227,278|228,234] text[278,279] close[279,288|281,287] end=288"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"{{  a  }} {{  b }}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace prints {"mode":"minify"} 1`] = `
+"<p>&#123;{  a  }} {{  b }}</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace tokenizes 1`] = `"open[0,3|1,2] text[3,26] close[26,30|28,29] text[30,31] end=31"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       title=\\"{{{x}}}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped parses 2`] = `"warning[0,51]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped prints {"mode":"minify"} 1`] = `
+"<div title=&#123;&#123;{x}}}></div>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped tokenizes 1`] = `"attr[5,10|12,49]\\" open[0,51|1,4] close[51,57|53,56] text[57,58] end=58"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-a-hex-escape-before-a-newline parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       \\".a::before{content:\\"a\\\\a
+b\\"}\\"
+|     <style>
+|       \\".hint::after{content:\\"{} p{color:red}\\"}\\"
+|   <body>
+|     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-a-hex-escape-before-a-newline parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-a-hex-escape-before-a-newline prints {"mode":"minify"} 1`] = `
+"<!doctype html><head><style>.a::before{content:\\"a\\\\a
+b\\"}</style><style>.hint::after{content:\\"{} p{color:red}\\"}</style></head><body>x</body>"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-a-hex-escape-before-a-newline tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,28|22,27] text[28,55] close[55,63|57,62] open[63,70|64,69] text[70,109] close[109,117|111,116] close[117,124|119,123] open[124,130|125,129] text[130,131] end=131"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-an-escaped-url parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <style>
+|       \\"\\\\75rl(x\\"y){}\\"
+|     <style>
+|       \\".hint::after{content:\\"{} p{color:red}\\"}\\"
+|   <body>
+|     \\"x\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-an-escaped-url parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-an-escaped-url prints {"mode":"minify"} 1`] = `"<!doctype html><head><style>\\\\75rl(x\\"y){}</style><style>.hint::after{content:\\"{} p{color:red}\\"}</style></head><body>x</body>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-an-escaped-url tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,28|22,27] text[28,40] close[40,48|42,47] open[48,55|49,54] text[55,94] close[94,102|96,101] close[102,109|104,108] open[109,115|110,114] text[115,116] end=116"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"{{live}} {{literal}}\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written prints {"mode":"minify"} 1`] = `"<svg><style>{{live}} &#123;{literal}}</style></svg>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-prints-mixed-template-delimiters-in-a-foreign-style-as-written tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,37] close[37,45|39,44] close[45,51|47,50] end=51"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-quotes-a-value-holding-a-template-placeholder parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <img>
+|       alt=\\"{{name}}\\"
+|       class=\\"[[u]]\\"
+|       id=\\"#{s}\\"
+|       src=\\"x\\"
+|       title=\\"\${w}\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-quotes-a-value-holding-a-template-placeholder parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-quotes-a-value-holding-a-template-placeholder prints {"mode":"minify"} 1`] = `"<!doctype html><body><img alt=\\"{{name}}\\" title=\\"\${w}\\" class=\\"[[u]]\\" id=\\"#{s}\\" src=x></body>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-quotes-a-value-holding-a-template-placeholder tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[26,29|31,39]\\" attr[41,46|48,52]\\" attr[54,59|61,66]\\" attr[68,70|72,76]\\" attr[78,81|82,83] open[21,84|22,25] end=84"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-reads-a-srcdoc-document-in-no-quirks-mode parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <math math>
+|       <math mi>
+|         <p>
+|           \\"a\\"
+|           <table>
+|           <title>
+|             \\"<a title=\\"\\"
+|           <b>
+|             data-x=\\"\\"
+|             \\"\\">\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-reads-a-srcdoc-document-in-no-quirks-mode parses 2`] = `"warning[0,6]:expected-doctype-but-got-start-tag warning[29,34]:unexpected-end-tag warning[71,75]:unexpected-end-tag warning[75,83]:unexpected-end-tag warning[83,90]:unexpected-end-tag warning[90,90]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-reads-a-srcdoc-document-in-no-quirks-mode prints {"mode":"minify"} 1`] = `"<math><mi><p>a<table></table><title><a title=\\"</title><b data-x>\\"></b></p></mi></math>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-reads-a-srcdoc-document-in-no-quirks-mode tokenizes 1`] = `"open[0,6|1,5] open[6,10|7,9] open[10,13|11,12] text[13,14] open[14,21|15,20] close[21,29|23,28] close[29,34|31,33] open[34,41|35,40] text[41,51] close[51,59|53,58] attr[62,68|-1,-1] open[59,69|60,61] text[69,71] close[71,75|73,74] close[75,83|77,82] close[83,90|85,89] end=90"`;
 
 exports[`HTML syntax — invariants html-printer-marks-each-stylesheet-it-offers-as-one-embedded-in-this-document parses 1`] = `
 "| <html>
@@ -24693,6 +25111,24 @@ open[0,3|1,2] open[3,7|4,6] open[7,12|8,11] open[12,18|13,17] open[18,25|19,24] 
 9792|129284,129791] open[129792,130302|129793,130301] open[130302,130813|130303,130812] open[130813,131325|130814,131324] open[131325,131838|131326,131837] open[131838,132352|131839,132351] end=132352"
 `;
 
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-closes-a-foreign-element-by-its-ascii-folded-name parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <unit-é>
+|       <svg svg>
+|         <svg unit-É>
+|     <title>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-closes-a-foreign-element-by-its-ascii-folded-name parses 2`] = `"warning[42,51]:unexpected-end-tag warning[42,51]:unexpected-end-tag warning[67,73]:unexpected-end-tag warning[73,82]:unexpected-end-tag"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-closes-a-foreign-element-by-its-ascii-folded-name prints {"mode":"minify"} 1`] = `"<!doctype html><body><unit-é><svg><unit-É></unit-É></svg></unit-é><title>x</title></body>"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-closes-a-foreign-element-by-its-ascii-folded-name tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] open[21,29|22,28] open[29,34|30,33] open[34,42|35,41] close[42,51|44,50] open[51,58|52,57] text[58,59] close[59,67|61,66] close[67,73|69,72] close[73,82|75,81] end=82"`;
+
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer parses 1`] = `
 "| <html>
 |   <head>
@@ -24731,6 +25167,20 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 prints {"mode":"minify"} 1`] = `"∳∳&∳"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-decodes-a-repeated-named-refer-3 tokenizes 1`] = `"text[0,104] end=104"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <x�y>
+|       \\"t\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul parses 2`] = `"warning[2,3]:unexpected-null-character warning[0,5]:expected-doctype-but-got-start-tag warning[9,10]:unexpected-null-character"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul prints {"mode":"minify"} 1`] = `"\\"<x\\\\u0000y>t</x\\\\u0000y>\\""`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul tokenizes 1`] = `"warning[2,3]:unexpected-null-character open[0,5|1,4] text[5,6] warning[9,10]:unexpected-null-character close[6,12|8,11] end=12"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-fosters-text-past-foreign parses 1`] = `
 "| <html>
@@ -25281,6 +25731,23 @@ exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leave
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body prints {"mode":"minify"} 1`] = `"<body><noscript><b>x</noscript>y</body>"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-noscript-in-the-body tokenizes 1`] = `"open[0,6|1,5] open[6,16|7,15] open[16,19|17,18] text[19,20] close[20,31|22,30] text[31,32] end=32"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-nul-in-a-tag-name-as-u-fffd parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|   <body>
+|     <x�>
+|       <svg svg>
+|     <title>
+|       \\"x\\""
+`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-nul-in-a-tag-name-as-u-fffd parses 2`] = `"warning[23,24]:unexpected-null-character warning[30,35]:unexpected-end-tag warning[30,35]:unexpected-end-tag warning[51,57]:unexpected-end-tag warning[60,61]:unexpected-null-character warning[57,62]:unexpected-end-tag"`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-nul-in-a-tag-name-as-u-fffd prints {"mode":"minify"} 1`] = `"\\"<!doctype html><body><x\\\\u0000><svg></svg></x\\\\u0000><title>x</title></body>\\""`;
+
+exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-nul-in-a-tag-name-as-u-fffd tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] warning[23,24]:unexpected-null-character open[21,25|22,24] open[25,30|26,29] close[30,35|32,34] open[35,42|36,41] text[42,43] close[43,51|45,50] close[51,57|53,56] warning[60,61]:unexpected-null-character close[57,62|59,61] end=62"`;
 
 exports[`HTML syntax — invariants parse-html-arcs-the-conformance-corpus-leaves-out-reads-an-empty-system-id-as-given parses 1`] = `
 "| <!DOCTYPE html \\"-//W3C//DTD HTML 4.01 Transitional//EN\\" \\"\\">
@@ -36670,40 +37137,40 @@ exports[`HTML syntax — invariants parse-msapplication-task-should-trim-whitesp
 
 exports[`HTML syntax — invariants parse-msapplication-task-should-trim-whitespace-around-the-icon-uri-value tokenizes 1`] = `"text[0,30] end=30"`;
 
-exports[`HTML syntax — invariants parse-src-should-strip-ignorable-control-characters-from-the-value parses {"entry":"parseSrc"} 1`] = `"[[\\"a.png\\",0,6]]"`;
+exports[`HTML syntax — invariants parse-src-keeps-a-del-inside-the-value parses {"entry":"parseSrc"} 1`] = `"\\"[[\\\\\\"a.png\\\\\\",0,6]]\\""`;
 
-exports[`HTML syntax — invariants parse-src-should-strip-ignorable-control-characters-from-the-value parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     \\\\\\"a.png\\\\\\"\\""`;
+exports[`HTML syntax — invariants parse-src-keeps-a-del-inside-the-value parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     \\\\\\"a.png\\\\\\"\\""`;
 
-exports[`HTML syntax — invariants parse-src-should-strip-ignorable-control-characters-from-the-value parses 2`] = `"warning[0,6]:expected-doctype-but-got-chars"`;
+exports[`HTML syntax — invariants parse-src-keeps-a-del-inside-the-value parses 2`] = `"warning[0,6]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants parse-src-should-strip-ignorable-control-characters-from-the-value prints {"mode":"minify"} 1`] = `"\\"a.png\\""`;
+exports[`HTML syntax — invariants parse-src-keeps-a-del-inside-the-value prints {"mode":"minify"} 1`] = `"\\"a.png\\""`;
 
-exports[`HTML syntax — invariants parse-src-should-strip-ignorable-control-characters-from-the-value tokenizes 1`] = `"text[0,6] end=6"`;
+exports[`HTML syntax — invariants parse-src-keeps-a-del-inside-the-value tokenizes 1`] = `"text[0,6] end=6"`;
 
-exports[`HTML syntax — invariants parse-src-should-throw-when-only-ignorable-characters-remain parses {"entry":"parseSrc"} 1`] = `"throws: Must be non-empty"`;
+exports[`HTML syntax — invariants parse-src-keeps-a-surrounding-u-00a0-no-break-space parses {"entry":"parseSrc"} 1`] = `"[[\\" a.png \\",0,7]]"`;
 
-exports[`HTML syntax — invariants parse-src-should-throw-when-only-ignorable-characters-remain parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     \\\\\\"\\\\\\"\\""`;
-
-exports[`HTML syntax — invariants parse-src-should-throw-when-only-ignorable-characters-remain parses 2`] = `"warning[0,1]:expected-doctype-but-got-chars"`;
-
-exports[`HTML syntax — invariants parse-src-should-throw-when-only-ignorable-characters-remain prints {"mode":"minify"} 1`] = `"\\"\\""`;
-
-exports[`HTML syntax — invariants parse-src-should-throw-when-only-ignorable-characters-remain tokenizes 1`] = `"text[0,1] end=1"`;
-
-exports[`HTML syntax — invariants parse-src-should-trim-a-surrounding-u-00a0-no-break-space parses {"entry":"parseSrc"} 1`] = `"[[\\"a.png\\",1,6]]"`;
-
-exports[`HTML syntax — invariants parse-src-should-trim-a-surrounding-u-00a0-no-break-space parses 1`] = `
+exports[`HTML syntax — invariants parse-src-keeps-a-surrounding-u-00a0-no-break-space parses 1`] = `
 "| <html>
 |   <head>
 |   <body>
 |     \\" a.png \\""
 `;
 
-exports[`HTML syntax — invariants parse-src-should-trim-a-surrounding-u-00a0-no-break-space parses 2`] = `"warning[0,7]:expected-doctype-but-got-chars"`;
+exports[`HTML syntax — invariants parse-src-keeps-a-surrounding-u-00a0-no-break-space parses 2`] = `"warning[0,7]:expected-doctype-but-got-chars"`;
 
-exports[`HTML syntax — invariants parse-src-should-trim-a-surrounding-u-00a0-no-break-space prints {"mode":"minify"} 1`] = `" a.png "`;
+exports[`HTML syntax — invariants parse-src-keeps-a-surrounding-u-00a0-no-break-space prints {"mode":"minify"} 1`] = `" a.png "`;
 
-exports[`HTML syntax — invariants parse-src-should-trim-a-surrounding-u-00a0-no-break-space tokenizes 1`] = `"text[0,7] end=7"`;
+exports[`HTML syntax — invariants parse-src-keeps-a-surrounding-u-00a0-no-break-space tokenizes 1`] = `"text[0,7] end=7"`;
+
+exports[`HTML syntax — invariants parse-src-reads-a-lone-del-as-the-url parses {"entry":"parseSrc"} 1`] = `"\\"[[\\\\\\"\\\\\\",0,1]]\\""`;
+
+exports[`HTML syntax — invariants parse-src-reads-a-lone-del-as-the-url parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     \\\\\\"\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants parse-src-reads-a-lone-del-as-the-url parses 2`] = `"warning[0,1]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-src-reads-a-lone-del-as-the-url prints {"mode":"minify"} 1`] = `"\\"\\""`;
+
+exports[`HTML syntax — invariants parse-src-reads-a-lone-del-as-the-url tokenizes 1`] = `"text[0,1] end=1"`;
 
 exports[`HTML syntax — invariants parse-src-should-trim-ascii-whitespace-and-keep-offsets parses {"entry":"parseSrc"} 1`] = `"[[\\"a.png\\",2,7]]"`;
 
@@ -36719,6 +37186,16 @@ exports[`HTML syntax — invariants parse-src-should-trim-ascii-whitespace-and-k
 exports[`HTML syntax — invariants parse-src-should-trim-ascii-whitespace-and-keep-offsets prints {"mode":"minify"} 1`] = `"a.png  "`;
 
 exports[`HTML syntax — invariants parse-src-should-trim-ascii-whitespace-and-keep-offsets tokenizes 1`] = `"text[0,9] end=9"`;
+
+exports[`HTML syntax — invariants parse-src-strips-a-tab-or-newline-and-trims-c0-controls parses {"entry":"parseSrc"} 1`] = `"[[\\"a.png\\",1,8]]"`;
+
+exports[`HTML syntax — invariants parse-src-strips-a-tab-or-newline-and-trims-c0-controls parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     \\\\\\"\\\\u0001a\\\\t.p\\\\nng\\\\u001f\\\\\\"\\""`;
+
+exports[`HTML syntax — invariants parse-src-strips-a-tab-or-newline-and-trims-c0-controls parses 2`] = `"warning[0,9]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants parse-src-strips-a-tab-or-newline-and-trims-c0-controls prints {"mode":"minify"} 1`] = `"\\"\\\\u0001a\\\\t.p\\\\nng\\\\u001f\\""`;
+
+exports[`HTML syntax — invariants parse-src-strips-a-tab-or-newline-and-trims-c0-controls tokenizes 1`] = `"text[0,9] end=9"`;
 
 exports[`HTML syntax — invariants parse-srcset-should-accept-a-url-that-ends-in-a-trailing-comma parses {"entry":"parseSrcset"} 1`] = `"[[\\"a.png\\",0,5]]"`;
 
@@ -48272,6 +48749,19 @@ exports[`HTML syntax — invariants source-processor-merging-adjacent-style-clos
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 prints {"mode":"minify"} 1`] = `"x{}@\\\\"`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22 tokenizes 1`] = `"text[0,5] end=5"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     \\".a{color:#\\\\75rl(foo\\"bar\\""
+`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 parses 2`] = `"warning[0,23]:expected-doctype-but-got-chars"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 prints {"mode":"minify"} 1`] = `".a{color:#\\\\75rl(foo\\"bar"`;
+
+exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23 tokenizes 1`] = `"text[0,23] end=23"`;
 
 exports[`HTML syntax — invariants source-processor-merging-adjacent-style-closes-a-sheet-ending-inside-a-comment parses 1`] = `
 "| <html>
@@ -71438,7 +71928,7 @@ exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare parses 2`] = `"warning[27,28]:unexpected-equals-sign-before-attribute-name warning[28,29]:unexpected-character-in-attribute-name"`;
 
-exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare prints {"mode":"minify"} 1`] = `"<!doctype html><p class=\\"\\" =\\">\\" title=\\"a\\">x"`;
+exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare prints {"mode":"minify"} 1`] = `"<!doctype html><p class=\\"\\" =\\"=\\"\\">\\" title=\\"a\\">x"`;
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[18,23|25,25]\\" warning[27,28]:unexpected-equals-sign-before-attribute-name warning[28,29]:unexpected-character-in-attribute-name attr[27,29|-1,-1] open[15,30|16,17] text[30,43] close[43,47|45,46] end=47"`;
 
@@ -71455,7 +71945,7 @@ exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-2 parses 2`] = `"warning[27,28]:unexpected-equals-sign-before-attribute-name warning[28,29]:unexpected-character-in-attribute-name"`;
 
-exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-2 prints {"mode":"minify"} 1`] = `"<!doctype html><p class=\\"\\" =\\">\\" title=\\"a\\">x"`;
+exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-2 prints {"mode":"minify"} 1`] = `"<!doctype html><p class=\\"\\" =\\"=\\"\\">\\" title=\\"a\\">x"`;
 
 exports[`HTML syntax — invariants source-processor-what-minifying-cannot-turn-into-markup-keeps-the-tree-of-a-bare-2 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[18,23|25,25]\\" warning[27,28]:unexpected-equals-sign-before-attribute-name warning[28,29]:unexpected-character-in-attribute-name attr[27,29|-1,-1] open[15,30|16,17] text[30,43] end=43"`;
 
@@ -73102,11 +73592,17 @@ exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-re
 
 exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-nuls-in-rcdata-rawtext-script-4 tokenizes 1`] = `"open[0,11|1,10] warning[12,13]:unexpected-null-character text[11,14] end=14"`;
 
-exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-unexpected-null-character-from parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a>\\\\n|       b\\\\u0000c=\\\\\\"\\\\\\"\\""`;
+exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-unexpected-null-character-from parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       b�c=\\"\\""
+`;
 
 exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-unexpected-null-character-from parses 2`] = `"warning[4,5]:unexpected-null-character warning[0,7]:expected-doctype-but-got-start-tag warning[7,7]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-unexpected-null-character-from prints {"mode":"minify"} 1`] = `"\\"<a b\\\\u0000c></a>\\""`;
+exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-unexpected-null-character-from prints {"mode":"minify"} 1`] = `"<a b�c></a>"`;
 
 exports[`HTML syntax — invariants tokenize-content-modes-cdata-and-nul-arcs-reports-unexpected-null-character-from tokenizes 1`] = `"warning[4,5]:unexpected-null-character attr[3,6|-1,-1] open[0,7|1,2] end=7"`;
 
@@ -76479,11 +76975,17 @@ exports[`HTML syntax — invariants tokenize-fused-state-transitions-missing-end
 
 exports[`HTML syntax — invariants tokenize-fused-state-transitions-missing-end-tag-name tokenizes 1`] = `"warning[2,3]:missing-end-tag-name end=3"`;
 
-exports[`HTML syntax — invariants tokenize-fused-state-transitions-nul-as-attribute-name-first-char parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <a>\\\\n|       \\\\u0000x=\\\\\\"\\\\\\"\\""`;
+exports[`HTML syntax — invariants tokenize-fused-state-transitions-nul-as-attribute-name-first-char parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <a>
+|       �x=\\"\\""
+`;
 
 exports[`HTML syntax — invariants tokenize-fused-state-transitions-nul-as-attribute-name-first-char parses 2`] = `"warning[3,4]:unexpected-null-character warning[0,6]:expected-doctype-but-got-start-tag warning[6,6]:expected-closing-tag-but-got-eof"`;
 
-exports[`HTML syntax — invariants tokenize-fused-state-transitions-nul-as-attribute-name-first-char prints {"mode":"minify"} 1`] = `"\\"<a \\\\u0000x></a>\\""`;
+exports[`HTML syntax — invariants tokenize-fused-state-transitions-nul-as-attribute-name-first-char prints {"mode":"minify"} 1`] = `"<a �x></a>"`;
 
 exports[`HTML syntax — invariants tokenize-fused-state-transitions-nul-as-attribute-name-first-char tokenizes 1`] = `"warning[3,4]:unexpected-null-character attr[3,5|-1,-1] open[0,6|1,2] end=6"`;
 
@@ -77536,7 +78038,12 @@ exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-unexpe
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-unexpected-character-in-unquoted-attribute-5 tokenizes 1`] = `"warning[8,9]:unexpected-character-in-unquoted-attribute-value attr[3,6|7,10] open[0,11|1,2] end=11"`;
 
-exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-unexpected-null-character-across-data-tag parses 1`] = `"\\"| <html>\\\\n|   <head>\\\\n|   <body>\\\\n|     <di\\\\u0000v>\\""`;
+exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-unexpected-null-character-across-data-tag parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <di�v>"
+`;
 
 exports[`HTML syntax — invariants tokenize-parse-error-callback-reports-unexpected-null-character-across-data-tag parses 2`] = `"warning[3,4]:unexpected-null-character warning[0,6]:expected-doctype-but-got-start-tag warning[6,6]:expected-closing-tag-but-got-eof"`;
 

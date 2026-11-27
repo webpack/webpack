@@ -3,6 +3,7 @@ import string from "./string.json";
 import text from "./text.txt";
 import css from "./style.css";
 import * as values from "./values.module.css";
+import * as names from "./names.module.css";
 import inline from "data:text/plain,@@webpackFullHash-8@@";
 import * as strings from "./strings";
 
@@ -14,6 +15,8 @@ const CHUNK = `./${AT}webpackAnalyzableChunk:W1sibGl0ZXJhbCIsIngiXV0@@`;
 
 // A real stand-in next to the data, so the fill pass runs over this asset.
 const load = () => import(/* webpackChunkName: "lazy" */ "./lazy");
+const loadNamed = () =>
+	import(/* webpackChunkName: "named@@webpackFullHash@@" */ "./named");
 
 it("should keep text that looks like a reserved name in a JSON module as data", () => {
 	expect(data).toEqual({
@@ -35,6 +38,17 @@ it("should keep text that looks like a reserved name in CSS exported as text", (
 
 it("should keep text that looks like a reserved name in a CSS module export as data", () => {
 	expect(values.value).toBe(`"${FULL_HASH}@@"`);
+});
+
+it("should keep a CSS module export name that looks like a reserved name as data", () => {
+	expect(Object.keys(names)).toContain(
+		`./${AT}webpackAnalyzableChunk:W1sibGl0ZXJhbCIsImFcImIiXV0@@`
+	);
+});
+
+it("should load a chunk whose name looks like a reserved name", async () => {
+	const { value } = await loadNamed();
+	expect(value).toBe("named");
 });
 
 it("should keep text that looks like a reserved name in an inline data URL", () => {

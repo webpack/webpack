@@ -1,0 +1,12 @@
+[
+	{
+		"relation": "respelling unquote",
+		"contains": "<img alt={{name}} title",
+		"why": "a placeholder is written quoted, so an engine escaping only `&<>\"'` cannot end the value with what it fills in; written bare, it is kept as written"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "<img alt=&#123;{name}}",
+		"why": "a template delimiter written escaped stays escaped, so a template engine reading the page next never runs one the source kept inert; written literally, it already is one"
+	}
+]

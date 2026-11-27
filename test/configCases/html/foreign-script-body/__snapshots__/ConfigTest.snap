@@ -3,6 +3,6 @@
 exports[`ConfigTestCases html foreign-script-body exported tests should read a foreign script body as character data 1`] = `
 "<!DOCTYPE html>
 <title>Foreign script body</title>
-<svg><script src=\\"page.js\\"></script></svg>
+<svg><script href=\\"page.js\\"></script></svg>
 "
 `;

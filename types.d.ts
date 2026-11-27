@@ -14317,11 +14317,11 @@ declare interface HtmlParserOptions {
 							| "css-url"
 							| "stylesheet"
 							| "script-module"
+							| "srcdoc"
 							| "src"
 							| "srcset"
 							| "stylesheet-style"
-							| "stylesheet-style-attribute"
-							| "srcdoc";
+							| "stylesheet-style-attribute";
 				  }
 		  )[];
 
@@ -35080,11 +35080,11 @@ type SourceType =
 	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "srcdoc"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
-	| "srcdoc"
 	| "msapplication-task";
 type SourceTypeOrResolver =
 	| "html"
@@ -35095,11 +35095,11 @@ type SourceTypeOrResolver =
 	| "preload"
 	| "script-module"
 	| "modulepreload"
+	| "srcdoc"
 	| "src"
 	| "srcset"
 	| "stylesheet-style"
 	| "stylesheet-style-attribute"
-	| "srcdoc"
 	| "msapplication-task"
 	| ((attrs: Map<string, string>, css: boolean) => SourceType);
 type SourceValue = string | Buffer;
@@ -39205,9 +39205,9 @@ declare namespace exports {
 		cssLocals: Map<string, string>;
 
 		/**
-		 * the stand-in for public path placeholder text an HTML module spells itself, put back once its page resolves the placeholders
+		 * the stand-in for marker text an HTML module spells itself, put back once its page resolves the markers
 		 */
-		htmlPublicPathText: string;
+		htmlMarkerText: string;
 
 		/**
 		 * the name each import binding prints as, for source map scopes
@@ -41395,6 +41395,7 @@ declare namespace exports {
 				HtmlPrintOptions,
 				"renderEmbeddedSource" | "deferEmbeddedSource"
 			> & {
+				as?: "srcdoc";
 				environment?: CssEnvironment;
 				css?: {
 					convertLengthUnits?: boolean;
@@ -41537,6 +41538,12 @@ declare namespace exports {
 				export let isAsciiAlphanumeric: (cc: number) => boolean;
 				export let isAsciiWhitespace: (cc: number) => boolean;
 				export let isXmlWellFormedText: (raw: string) => boolean;
+				export let keepTemplateOpenersEscaped: (
+					text: string,
+					source: string,
+					isAttribute: boolean,
+					dropsText?: boolean
+				) => string;
 				export let metaTag: (name: string, content: string) => string;
 				export let parseCssUrls: (input: string) => [string, number, number][];
 				export let parseHtml: (

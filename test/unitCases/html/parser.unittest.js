@@ -1023,6 +1023,47 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		).toBe(['| "x"', "| <plaintext>", '|   "&amp;"'].join("\n"));
 	});
 
+	it("closes a foreign element by its ASCII-folded name", () => {
+		// `É` folds to nothing, so `</unit-é>` closes the HTML element and the svg.
+		expect(
+			treeOf(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-closes-a-foreign-element-by-its-ascii-folded-name"
+				)
+			)
+		).toContain(
+			["|         <svg unit-É>", "|     <title>", '|       "x"'].join("\n")
+		);
+	});
+
+	it("reads a NUL in a tag name as U+FFFD", () => {
+		// So `</x\uFFFD>` closes `<x\0>`, and the svg with it.
+		expect(
+			treeOf(
+				fixture(
+					"html",
+					"parse-html-arcs-the-conformance-corpus-leaves-out-reads-a-nul-in-a-tag-name-as-u-fffd"
+				)
+			)
+		).toContain(
+			["|     <x\uFFFD>", "|       <svg svg>", "|     <title>"].join("\n")
+		);
+	});
+
+	it("finds the end tag of a name holding a NUL", () => {
+		const source = fixture(
+			"html",
+			"parse-html-arcs-the-conformance-corpus-leaves-out-finds-the-end-tag-of-a-name-holding-a-nul"
+		);
+		const element = A.child(
+			0,
+			A.child(1, A.child(0, parseHtmlRefs(source, 0)))
+		);
+		expect(A.name(element)).toBe("x\uFFFDy");
+		expect(A.rangeOf(Part.endTag, element)).toEqual([6, 12]);
+	});
+
 	it("clears the whole name memo once a document filled every slot", () => {
 		// 512 unknown names, one per memo slot (`z` repeated 1…512 times).
 		expect(
@@ -1144,5 +1185,53 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 			)
 		);
 		expect(nodes[0].attributes[0].value).toBe("c");
+	});
+});
+
+describe("keepTemplateOpenersEscaped", () => {
+	const {
+		keepTemplateOpenersEscaped
+	} = require("../../../lib/html/syntax-parser");
+
+	it.each([
+		// each delimiter keeps the spelling it had in the source
+		["<p>{{a}} {{b}}</p>", "&lt;p>{{a}} &#123;{b}}", "<p>{{a}} &#123;{b}}</p>"],
+		[
+			"<p>{{a}} {{b}}</p>",
+			"&#123;{a}} &#123;{b}}",
+			"<p>&#123;{a}} &#123;{b}}</p>"
+		],
+		["<p>{{a}}</p>", "&lt;p>{{a}}", "<p>{{a}}</p>"],
+		// overlapping delimiters keep each reference where the source had it
+		["${{", "&#36;{{", "&#36;{{"],
+		["{{{", "{{&#123;", "{{&#123;"],
+		// a pair spelling different delimiters is no pair, so every one is escaped
+		["{{x}}", "<!--&#35;", "&#123;{x}}"],
+		// one the written value adds out of order escapes every one
+		["{{a}} {{b}} ${c}", "{{a}} &#123;{b}}", "&#123;{a}} &#123;{b}} &#36;{c}"]
+	])("writes %j back from %j as %j", (text, source, expected) => {
+		expect(keepTemplateOpenersEscaped(text, source, true)).toBe(expected);
+	});
+	it.each([
+		// a comment dropped with its bare one leaves only the escaped one
+		["{{b}}", "&lt;!--{{a}}--&gt;&#123;{b}}", "&#123;{b}}"],
+		// with no escaped one in the source, nothing written is one
+		["{{b}}", "&lt;!--{{a}}--&gt;{{b}} &amp;", "{{b}}"],
+		["{{a}}", "{{a}}", "{{a}}"]
+	])(
+		"writes %j back from %j as %j when text may be dropped",
+		(text, source, expected) => {
+			expect(keepTemplateOpenersEscaped(text, source, true, true)).toBe(
+				expected
+			);
+		}
+	);
+});
+
+describe("parseSrc", () => {
+	const { parseSrc } = require("../../../lib/html/syntax-parser");
+
+	it("strips a tab or newline and trims C0 controls", () => {
+		expect(parseSrc("\u0001a\t.p\nng\u001F")).toEqual([["a.png", 1, 8]]);
 	});
 });

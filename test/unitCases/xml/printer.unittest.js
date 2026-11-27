@@ -19,6 +19,21 @@ describe("xmlMinify", () => {
 		expect(xmlMinify.getEmbeddedTypes()).toContain("javascript");
 	});
 
+	it("should read a namespace declaration after its whitespace is collapsed", async () => {
+		const { code } = await xmlMinify(
+			{
+				"a.svg": fixture(
+					"xml",
+					"xml-minify-reads-a-namespace-declaration-after-whitespace-is-collapsed"
+				)
+			},
+			undefined,
+			{ collapseAttributeWhitespace: true, removeUnknownElements: true }
+		);
+		expect(code).not.toContain("<unknown");
+		expect(code).toContain("<rect");
+	});
+
 	it("should offer scripts and event handlers to the caller's renderer first", async () => {
 		const source = fixture("xml", "xml-minify-offers-scripts-and-handlers");
 		/** @type {string[]} */
@@ -2201,5 +2216,35 @@ describe("xmlMinify — what it reads as written", () => {
 		const result = await xmlMinify({ "a.svg": source });
 		expect(result.code).toBe(source);
 		expect(result.warnings).toHaveLength(1);
+	});
+});
+
+describe("xmlMinify — what an inline HTML read sees", () => {
+	/**
+	 * @param {string} name the fixture's name past the shared prefix
+	 * @returns {Promise<string>} the minified document
+	 */
+	const minify = async (name) =>
+		(
+			await xmlMinify({
+				"a.svg": fixture(
+					"xml",
+					`xml-minify-what-an-inline-html-read-sees-${name}`
+				)
+			})
+		).code;
+
+	it("escapes the text an XHTML element holds rather than write CDATA", async () => {
+		// Inlined as HTML, a CDATA section there is a comment ending at its first `>`.
+		const code = await minify("escapes-text-an-xhtml-element-holds");
+		expect(code).not.toContain("<![CDATA[");
+		expect(code).toContain('content:"&lt;/style&gt;&lt;b data-x&gt;"');
+	});
+
+	it("closes an empty XHTML element with an end tag", async () => {
+		// `<i/>` stays open to an HTML parser; an SVG element still self-closes.
+		const code = await minify("closes-an-empty-xhtml-element-with-an-end-tag");
+		expect(code).toContain('<i xmlns="http://www.w3.org/1999/xhtml"></i>');
+		expect(code).toContain("<rect/>");
 	});
 });

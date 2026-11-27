@@ -1,0 +1,4 @@
+@charset "</__WEBPACK_CSS_PUBLIC_PATH_AUTO__STYLE><b>bold</b>";
+.charset { color: blue; }
+.overlap { content: "__WEBPACK_CSS_PUBLIC_PATH_AUTO__WEBPACK_CSS_PUBLIC_PATH_AUTO__"; }
+.escaped { content: "\__WEBPACK_CSS_PUBLIC_PATH_AUTO__"; }

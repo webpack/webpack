@@ -370,6 +370,14 @@ describe("SourceProcessor — merging adjacent <style>", () => {
 					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-22"
 				),
 				null
+			],
+			// After `#` the name is a hash token, so its `(` opens no url.
+			[
+				fixture(
+					"html",
+					"source-processor-merging-adjacent-style-closes-a-sheet-as-its-end-of-input-23"
+				),
+				'")}'
 			]
 		])) {
 			expect({ sheet, closing: _sheetClosing(sheet) }).toEqual({
@@ -895,6 +903,16 @@ describe("SourceProcessor — reusing work across a print", () => {
 	const minify = (html, options) =>
 		new SourceProcessor().process(html, { mode: "minify", ...options }).code;
 
+	it("opens no template delimiter across a dropped comment", () => {
+		const html = fixture(
+			"html",
+			"html-minify-opens-no-template-delimiter-across-a-dropped-comment"
+		);
+		expect(minify(html)).toBe(
+			"<p>&#123;{value}}</p>\n<p>&#123;%v%}</p>\n<p>&#36;{v}</p>\n<p>{{a}}{b}</p>\n"
+		);
+	});
+
 	it("does not carry a style attribute's result into a renderer with other options", () => {
 		const html = fixture(
 			"html",
@@ -999,6 +1017,25 @@ describe("SourceProcessor — reusing work across a print", () => {
 				)
 			)
 		).toBe("my-widget");
+	});
+});
+
+describe("htmlMinify — a srcdoc document", () => {
+	const htmlMinify = require("../../../lib/html/htmlMinify");
+
+	it("minifies one declaring another encoding, as it is text of its page", async () => {
+		const result = await htmlMinify(
+			{
+				"page.html": fixture(
+					"html",
+					"html-minify-reads-a-srcdoc-document-as-the-text-of-its-page"
+				)
+			},
+			undefined,
+			{ as: "srcdoc" }
+		);
+		expect(result.warnings).toBeUndefined();
+		expect(result.code).toContain("<p>a & b");
 	});
 });
 
@@ -1450,5 +1487,165 @@ describe("htmlMinify — what it reads as written", () => {
 		expect(code).toBe(
 			`<!doctype html>${source.slice(15, source.indexOf("<!-- c -->"))}\n`
 		);
+	});
+});
+
+describe("htmlMinify — what a second reader sees", () => {
+	const { htmlMinify } = require("../../..").html;
+
+	/**
+	 * @param {string} name the fixture's name past the shared prefix
+	 * @returns {string} its source
+	 */
+	const source = (name) =>
+		fixture("html", `html-minify-what-a-second-reader-sees-${name}`);
+
+	/**
+	 * @param {string} name the fixture's name past the shared prefix
+	 * @param {EXPECTED_OBJECT=} options the minifier's options
+	 * @returns {Promise<string>} the minified document
+	 */
+	const minify = async (name, options) =>
+		(await htmlMinify({ "a.html": source(name) }, undefined, options)).code;
+
+	/**
+	 * @param {string} html a document
+	 * @returns {string} the tree it parses to
+	 */
+	const tree = (html) => serializeHtmlTree(parseHtmlRefs(html));
+
+	it.each([
+		// A third `<h2>` printed under the outer one would close it.
+		["keeps-a-heading-a-form-end-left-under-another", {}],
+		// `a"` then `="`: written as `a" ="`, the second would be the first's value.
+		["keeps-a-name-ending-in-a-quote-apart-from-the-next", {}],
+		[
+			"keeps-an-empty-unquoted-value-a-sort-moves-apart",
+			{ sortAttributes: true }
+		],
+		[
+			"keeps-an-empty-unquoted-value-a-sort-moves-apart",
+			{ sortAttributes: true, normalizeAttributeQuotes: false }
+		]
+	])("prints %s so it parses to the same tree", async (name, options) => {
+		expect(tree(await minify(name, options))).toBe(tree(source(name)));
+	});
+
+	it.each([
+		"merges-a-sheet-ending-in-an-escaped-url",
+		"merges-a-sheet-ending-in-a-hex-escape-before-a-newline"
+	])("%s and keeps the next sheet's rule", async (name) => {
+		const code = await minify(name, { mergeStyles: true });
+		expect(code).toContain('.hint:after{content:"{} p{color:red}"}');
+	});
+
+	it("prints a foreign style's mixed template delimiters as written", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name =
+			"prints-mixed-template-delimiters-in-a-foreign-style-as-written";
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			expect(new SourceProcessor().process(source(name), { mode }).code).toBe(
+				source(name)
+			);
+		}
+	});
+
+	it.each([
+		"keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered",
+		"keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written"
+	])("%s", (name) => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		// a renderer dropping the leading comment, and the escaped delimiter in it
+		const { code } = new SourceProcessor().process(source(name), {
+			mode: "minify",
+			renderEmbeddedSource: (
+				/** @type {string} */ body,
+				/** @type {{ type: string }} */ { type }
+			) =>
+				type === "css"
+					? body.slice(body.indexOf("*/") + 2)
+					: type === "html"
+						? body.slice(body.indexOf("-->") + 3)
+						: undefined
+		});
+		expect(code).toBe(source(name));
+	});
+
+	it("keeps overlapping escaped template delimiters in an attribute escaped", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const { code } = new SourceProcessor().process(
+			source(
+				"keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped"
+			),
+			{ mode: "minify" }
+		);
+		expect(code).not.toMatch(/\{[{%]/);
+	});
+
+	it("keeps an escaped template delimiter escaped when collapsing whitespace", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name =
+			"keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace";
+		for (const collapseWhitespace of /** @type {const} */ ([true, "all"])) {
+			const { code } = new SourceProcessor().process(source(name), {
+				mode: "minify",
+				collapseWhitespace
+			});
+			expect(code).toContain("&#123;{ a }} {{ b }}");
+		}
+	});
+
+	it("keeps a foreign body ending in a lone end-tag opener as text", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name = "keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text";
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			const { code } = new SourceProcessor().process(source(name), { mode });
+			expect(code).toContain("&lt;/</style></svg>");
+			expect(tree(code)).toBe(tree(source(name)));
+		}
+	});
+
+	it("closes a CDATA section a foreign style leaves open", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name = "closes-a-cdata-section-a-foreign-style-leaves-open";
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			const { code } = new SourceProcessor().process(source(name), { mode });
+			expect(code).toContain("]]></style></svg>");
+			expect(tree(code)).toBe(tree(source(name)));
+		}
+	});
+
+	it("keeps a script language whose padding names no JavaScript type", async () => {
+		expect(
+			await minify("keeps-a-padded-script-language", {
+				removeRedundantAttributes: true
+			})
+		).toContain('<script language=" javascript ">');
+	});
+
+	it("keeps a template delimiter the source escaped escaped", async () => {
+		const code = await minify("keeps-escaped-template-delimiters-escaped", {
+			renderEmbeddedSource: (
+				/** @type {string} */ body,
+				/** @type {{ type: string }} */ { type }
+			) => (type === "javascript" ? body.replace(/\s+/g, "") : undefined)
+		});
+		expect(code).not.toMatch(/<%|\{\{|\{%|\$\{/);
+		expect(code).toContain("&lt;%= 3 %>");
+	});
+
+	it("quotes a value holding a template placeholder", async () => {
+		expect(
+			await minify("quotes-a-value-holding-a-template-placeholder")
+		).toContain('alt="{{name}}" title="${w}" class="[[u]]" id="#{s}"');
+	});
+
+	it("reads a srcdoc document in no-quirks mode", async () => {
+		// In quirks mode `<table>` stays inside the `<p>`, which moves the `</mi>`.
+		expect(
+			await minify("reads-a-srcdoc-document-in-no-quirks-mode", {
+				as: "srcdoc"
+			})
+		).toBe(source("reads-a-srcdoc-document-in-no-quirks-mode"));
 	});
 });
