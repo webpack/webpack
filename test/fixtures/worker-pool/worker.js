@@ -20,6 +20,17 @@ module.exports.fail = () => {
 	throw error;
 };
 
+module.exports.failType = () => {
+	throw new TypeError("typed");
+};
+
+module.exports.failAggregate = () => {
+	if (typeof global.AggregateError !== "function") {
+		throw new Error("AggregateError is unavailable");
+	}
+	throw new global.AggregateError([new Error("inner")], "aggregate");
+};
+
 module.exports.failWithFunction = () => {
 	const error = new Error("boom");
 	error.code = "E_BOOM";
@@ -56,6 +67,13 @@ module.exports.rpcNoWaitCloneFail = (context) => {
 	context.callMainNoWait("echo", [() => {}]);
 	return "sent";
 };
+
+module.exports.rpcNoWaitOk = (context) => {
+	context.callMainNoWait("noWait", [1]);
+	return "done";
+};
+
+module.exports.rpcThrow = (context) => context.callMain("rpcError", []);
 
 module.exports.rpcPending = (context) => {
 	context.callMain("never", []).catch(() => {});
