@@ -1,0 +1,3 @@
+@custom-media --long LONG;
+@media (--long) { .long { color: red; } }
+.after-long { color: blue; }
