@@ -33582,6 +33582,23 @@ declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
 type SemVerRangeItem = undefined | string | number;
+type SerializableClassConstructor<T extends SerializingInstance> =
+	| {
+			new (
+				...params: never[]
+			): T &
+				SerializingInstance & {
+					deserialize(
+						context: ObjectDeserializerContextObjectMiddlewareObject_3
+					): void;
+				};
+	  }
+	| {
+			new (...params: never[]): T;
+			deserialize(
+				context: ObjectDeserializerContextObjectMiddlewareObject_3
+			): T;
+	  };
 
 /**
  * Represents Serializer.
@@ -33631,6 +33648,14 @@ declare abstract class SerializerMiddleware<
 		data: SerializedType,
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
+}
+
+/**
+ * An instance that writes itself. Methods, so a class may narrow its context
+ * to the values it writes.
+ */
+declare interface SerializingInstance {
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
 }
 type ServerLazyCompilationBackend = ServerImportHttp | ServerImportHttps;
 declare interface SetIterator<T> extends IteratorObject<T, undefined> {
@@ -41640,9 +41665,9 @@ declare namespace exports {
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const makeSerializable: <
-			T extends { new (...params: never[]): object }
+			C extends SerializableClassConstructor<SerializingInstance>
 		>(
-			Constructor: T,
+			Constructor: C,
 			request: string | (string | [string, null | string])[],
 			name?: null | string
 		) => void;
