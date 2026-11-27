@@ -41541,7 +41541,8 @@ declare namespace exports {
 				export let keepTemplateOpenersEscaped: (
 					text: string,
 					source: string,
-					isAttribute: boolean
+					isAttribute: boolean,
+					dropsText?: boolean
 				) => string;
 				export let metaTag: (name: string, content: string) => string;
 				export let parseCssUrls: (input: string) => [string, number, number][];

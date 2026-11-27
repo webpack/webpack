@@ -1212,4 +1212,26 @@ describe("keepTemplateOpenersEscaped", () => {
 	])("writes %j back from %j as %j", (text, source, expected) => {
 		expect(keepTemplateOpenersEscaped(text, source, true)).toBe(expected);
 	});
+	it.each([
+		// a comment dropped with its bare one leaves only the escaped one
+		["{{b}}", "&lt;!--{{a}}--&gt;&#123;{b}}", "&#123;{b}}"],
+		// with no escaped one in the source, nothing written is one
+		["{{b}}", "&lt;!--{{a}}--&gt;{{b}} &amp;", "{{b}}"],
+		["{{a}}", "{{a}}", "{{a}}"]
+	])(
+		"writes %j back from %j as %j when text may be dropped",
+		(text, source, expected) => {
+			expect(keepTemplateOpenersEscaped(text, source, true, true)).toBe(
+				expected
+			);
+		}
+	);
+});
+
+describe("parseSrc", () => {
+	const { parseSrc } = require("../../../lib/html/syntax-parser");
+
+	it("strips a tab or newline and trims C0 controls", () => {
+		expect(parseSrc("\u0001a\t.p\nng\u001F")).toEqual([["a.png", 1, 8]]);
+	});
 });
