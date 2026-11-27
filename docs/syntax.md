@@ -146,6 +146,7 @@ Conventions every language keeps, and a new member follows:
 ## HTML
 
 - `syntax.js` mirrors `css`, publishing the parser, the printer and `SourceProcessor` only. `syntax-tokenizer.js` holds the tokenizers and the entity table: `HtmlTokenizer`, which `HtmlSyntaxTree` extends so each token reaches the tree builder as a method call: an HTML one through `tokenize` and the `on*` handlers, an XML one through `tokenizeXml` and the `onXml*` handlers. `syntax-parser.js` holds §13.2 tree construction.
+- `syntax-options.js` holds the `MINIFY_*` bits of `HtmlSyntaxTree#_minifyOptions`: the print's minifier options, resolved once per run, and read by the parser and the printer.
 
 ## XML
 
