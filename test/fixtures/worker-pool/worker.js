@@ -46,7 +46,22 @@ module.exports.throwPlain = () => {
 	throw { message: "plain", code: 7 };
 };
 
-module.exports.crash = () => {
+// Exits only on a thread: the pool's main-thread fallback must not end the test process.
+module.exports.crash = (ms = 0) => {
+	const { isMainThread } = require("worker_threads");
+
+	if (isMainThread) return "main thread";
+	return new Promise((resolve) => {
+		setTimeout(() => process.exit(3), ms);
+	});
+};
+
+// Exits the first time only, marked by `marker` existing.
+module.exports.crashOnce = (marker) => {
+	const fs = require("fs");
+
+	if (fs.existsSync(marker)) return "retried";
+	fs.writeFileSync(marker, "");
 	process.exit(3);
 };
 

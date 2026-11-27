@@ -36776,6 +36776,12 @@ declare interface ThreadsOptions {
 	 * @since 5.113.0
 	 */
 	max?: number;
+
+	/**
+	 * Times a call whose thread exits (out of memory, `process.exit`) is sent to another thread; after that it runs on the main thread and the error is logged, so the build does not fail. Defaults to `3`.
+	 * @since 5.114.0
+	 */
+	maxRetries?: number;
 }
 
 /**

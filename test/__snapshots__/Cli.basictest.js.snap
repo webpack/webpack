@@ -1131,6 +1131,19 @@ Object {
     "multiple": false,
     "simpleType": "number",
   },
+  "experiments-threads-max-retries": Object {
+    "configs": Array [
+      Object {
+        "description": "Times a call whose thread exits (out of memory, \`process.exit\`) is sent to another thread; after that it runs on the main thread and the error is logged, so the build does not fail. Defaults to \`3\`.",
+        "multiple": false,
+        "path": "experiments.threads.maxRetries",
+        "type": "number",
+      },
+    ],
+    "description": "Times a call whose thread exits (out of memory, \`process.exit\`) is sent to another thread; after that it runs on the main thread and the error is logged, so the build does not fail. Defaults to \`3\`.",
+    "multiple": false,
+    "simpleType": "number",
+  },
   "experiments-typescript": Object {
     "configs": Array [
       Object {
