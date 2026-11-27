@@ -36069,7 +36069,6 @@ declare class SyntaxParser extends JavascriptTokenizer {
 		startPos?: number
 	);
 	potentialArrowAt: number;
-	potentialArrowInForAwait: boolean;
 	awaitIdentPos: number;
 	awaitPos: number;
 	yieldPos: number;
