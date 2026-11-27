@@ -4127,7 +4127,13 @@ describe("CssSyntax minify — work bounded by the input's size", () => {
 			)
 		);
 		expect(seconds).toBeLessThan(SECONDS);
-		for (let i = 0; i < 16000; i++) expect(code).toContain(`--p${i}:1`);
+		const written = new Set(code.match(/--p\d+:1/g));
+		/** @type {number[]} */
+		const missing = [];
+		for (let i = 0; i < 16000; i++) {
+			if (!written.has(`--p${i}:1`)) missing.push(i);
+		}
+		expect(missing).toEqual([]);
 	});
 
 	it("reads a rule only against earlier ones declaring what it does", () => {
