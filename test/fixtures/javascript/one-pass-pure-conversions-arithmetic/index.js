@@ -32,3 +32,13 @@ class Made {
 	}
 }
 console.log(make(1, () => Made, 1, 2).k);
+// The last `return` reads what collapsed into it, so the exits differ.
+function nine() {
+	return 9;
+}
+function keep(t, x) {
+	if (t) return x;
+	x = nine();
+	return x;
+}
+console.log(keep(1, 5), keep(0, 5));
