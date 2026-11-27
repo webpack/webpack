@@ -1872,7 +1872,7 @@ declare class Chunk {
 	ids: null | ChunkId[];
 	debugId: number;
 	name?: null | string;
-	idNameHints: SortableSet<string>;
+	idNameHints: SortableSet<string, never>;
 	preventIntegration: boolean;
 	filenameTemplate?:
 		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
@@ -2059,7 +2059,7 @@ declare class Chunk {
 	/**
 	 * Gets groups iterable.
 	 */
-	get groupsIterable(): SortableSet<ChunkGroup>;
+	get groupsIterable(): SortableSet<ChunkGroup, never>;
 
 	/**
 	 * Disconnects from groups.
@@ -2773,7 +2773,7 @@ declare abstract class ChunkGroup {
 	 */
 	getChildren(): ChunkGroup[];
 	getNumberOfChildren(): number;
-	get childrenIterable(): SortableSet<ChunkGroup>;
+	get childrenIterable(): SortableSet<ChunkGroup, ChunkGroup[]>;
 
 	/**
 	 * Removes a child chunk group and clears the corresponding parent link on
@@ -2796,7 +2796,7 @@ declare abstract class ChunkGroup {
 	 * Checks whether the provided group is registered as a parent.
 	 */
 	hasParent(parent: ChunkGroup): boolean;
-	get parentsIterable(): SortableSet<ChunkGroup>;
+	get parentsIterable(): SortableSet<ChunkGroup, ChunkGroup[]>;
 
 	/**
 	 * Removes a parent chunk group and clears the reverse child relationship.
@@ -2807,7 +2807,7 @@ declare abstract class ChunkGroup {
 	 * Registers an async entrypoint that is rooted in this chunk group.
 	 */
 	addAsyncEntrypoint(entrypoint: Entrypoint): boolean;
-	get asyncEntrypointsIterable(): SortableSet<ChunkGroup>;
+	get asyncEntrypointsIterable(): SortableSet<ChunkGroup, never>;
 
 	/**
 	 * Returns the async dependency blocks that create or reference this group.
@@ -8652,13 +8652,6 @@ declare interface DecodedEntitiesWithMap {
 	text: string;
 	map?: number[];
 }
-type DecodedSegment =
-	| [number]
-	| [number, number, number, number]
-	| [number, number, number, number, number];
-type DecodedSourceMap = Omit<RawSourceMap, "mappings"> & {
-	mappings: DecodedSegment[][];
-};
 declare interface DefaultHandlerOptions {
 	progressBar?: false | Required<ProgressPluginOptionsProgressBarBranch3Object>;
 	estimatedTime?: boolean;
@@ -9765,41 +9758,6 @@ declare interface DriverMangleOptions {
 	toplevel: boolean;
 }
 
-/**
- * terser's `sourceMap` options, as terser's `minify` defaults them.
- */
-declare interface DriverSourceMapOptions {
-	/**
-	 * whether `map` is answered as an object rather than as JSON
-	 */
-	asObject: boolean;
-
-	/**
-	 * the input's map or its JSON, `"inline"` for the one the source ends in
-	 */
-	content: null | string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
-
-	/**
-	 * the minified file's name
-	 */
-	filename: null | string;
-
-	/**
-	 * whether the map holds the sources' content
-	 */
-	includeSources: boolean;
-
-	/**
-	 * the sources' root
-	 */
-	root: null | string;
-
-	/**
-	 * where the code says its map is, `"inline"` for the map itself
-	 */
-	url: null | string;
-}
-
 declare interface DualModeResolve {
 	(
 		context: string,
@@ -10028,7 +9986,7 @@ declare class ESMImportDependencyTemplate extends DependencyTemplate {
 	static getImportEmittedRuntime(
 		module: Module,
 		referencedModule: Module
-	): undefined | string | boolean | SortableSet<string>;
+	): undefined | string | boolean | SortableSet<string, string>;
 }
 declare abstract class ESMImportSideEffectDependency extends ESMImportDependency {
 	unusedSpecifiers?: UnusedSpecifiers;
@@ -11831,7 +11789,9 @@ declare abstract class ExportsInfo {
 	/**
 	 * Returns set of used exports, or true (when namespace object is used), or false (when unused), or null (when unknown).
 	 */
-	getUsedExports(runtime: RuntimeSpec): null | boolean | SortableSet<string>;
+	getUsedExports(
+		runtime: RuntimeSpec
+	): null | boolean | SortableSet<string, never>;
 
 	/**
 	 * Gets provided exports.
@@ -12229,7 +12189,7 @@ declare interface ExternalModuleInfo {
 	 */
 	eager: boolean;
 	module: Module;
-	runtimeCondition?: string | boolean | SortableSet<string>;
+	runtimeCondition?: string | boolean | SortableSet<string, string>;
 	nonDeferAccess: boolean;
 	index: number;
 
@@ -13234,7 +13194,7 @@ type GivenCompressOptions = Omit<Partial<CompressOptions>, "globalDefs"> & {
 
 /**
  * terser's `format` options as a caller gives them; `sourceMap` is left out,
- * as the minify writes it from the top-level `sourceMap` option.
+ * as the minify writes a map from the `SourceProcessor`'s `source` option.
  */
 declare interface GivenFormatOptions {
 	code?: boolean;
@@ -13422,18 +13382,6 @@ declare interface GivenFormatOptions {
 	wrap_iife?: boolean;
 	spidermonkey?: boolean;
 }
-
-/**
- * A source map made of sections, each a map of its own, as a caller gives it.
- */
-declare interface GivenIndexSourceMap {
-	version: number;
-	file?: null | string;
-	sections: {
-		offset: { line: number; column: number };
-		map: string | GivenSourceMap | GivenIndexSourceMap;
-	}[];
-}
 type GivenMangleOptions = Omit<Partial<DriverMangleOptions>, "properties"> & {
 	properties?: boolean | GivenPropertyMangleOptions;
 } & TerserMangleAliases;
@@ -13441,27 +13389,6 @@ type GivenPropertyMangleOptions = Omit<
 	Partial<PropertyMangleOptions>,
 	"cache"
 > & { cache?: null | NameCacheEntry } & TerserPropertyAliases;
-type GivenSourceMap = Pick<
-	RawSourceMap,
-	"version" | "names" | "sourceRoot" | "ignoreList"
-> & {
-	file?: null | string;
-	sources: (null | string)[];
-	sourcesContent?: (null | string)[];
-};
-type GivenSourceMapOptions = Omit<
-	Partial<DriverSourceMapOptions>,
-	"content"
-> & {
-	content?:
-		| null
-		| string
-		| RawSourceMap
-		| DecodedSourceMap
-		| IndexSourceMap
-		| GivenSourceMap
-		| GivenIndexSourceMap;
-};
 
 /**
  * Match glob patterns against the value, `!` in front of a pattern excludes it. Path separators are normalized to `/` on every OS, and a relative pattern matches at any depth.
@@ -15887,18 +15814,6 @@ declare interface ImportSettings {
 type ImportSource =
 	undefined | null | string | SimpleLiteral | RegExpLiteral | BigIntLiteral;
 type Imported = true | [string, string][];
-
-/**
- * a map made of sections, each a map of its own, or its JSON
- */
-declare interface IndexSourceMap {
-	version: number;
-	file?: string;
-	sections: {
-		offset: { line: number; column: number };
-		map: string | RawSourceMap | DecodedSourceMap | IndexSourceMap;
-	}[];
-}
 
 /**
  * Options for infrastructure level logging.
@@ -22592,11 +22507,6 @@ declare interface MinifyOptions {
 	};
 
 	/**
-	 * whether a source map is written, and how
-	 */
-	sourceMap?: boolean | GivenSourceMapOptions;
-
-	/**
 	 * whether the source is a module
 	 */
 	module?: boolean;
@@ -22790,7 +22700,7 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * @deprecated
 	 */
-	get usedExports(): null | boolean | SortableSet<string>;
+	get usedExports(): null | boolean | SortableSet<string, never>;
 
 	/**
 	 * Gets optimization bailout.
@@ -23809,7 +23719,7 @@ declare class ModuleGraph {
 	getUsedExports(
 		module: Module,
 		runtime: RuntimeSpec
-	): null | boolean | SortableSet<string>;
+	): null | boolean | SortableSet<string, never>;
 
 	/**
 	 * Gets pre order index.
@@ -32731,7 +32641,8 @@ declare class RuntimeChunkPlugin {
 	 */
 	apply(compiler: Compiler): void;
 }
-type RuntimeCondition = undefined | string | boolean | SortableSet<string>;
+type RuntimeCondition =
+	undefined | string | boolean | SortableSet<string, string>;
 type RuntimeId = string | number;
 declare class RuntimeModule extends Module {
 	/**
@@ -32837,7 +32748,7 @@ declare interface RuntimeRequirementsContext {
 	 */
 	codeGenerationResults: CodeGenerationResults;
 }
-type RuntimeSpec = undefined | string | SortableSet<string>;
+type RuntimeSpec = undefined | string | SortableSet<string, string>;
 
 /**
  * Represents RuntimeSpecMap.
@@ -33481,7 +33392,7 @@ declare abstract class RuntimeTemplate {
 		/**
 		 * only execute the statement in some runtimes
 		 */
-		runtimeCondition?: string | boolean | SortableSet<string>;
+		runtimeCondition?: string | boolean | SortableSet<string, string>;
 		/**
 		 * if set, will be filled with runtime requirements
 		 */
@@ -34594,7 +34505,7 @@ declare interface SortFunction<T> {
 /**
  * A subset of Set that offers sorting functionality
  */
-declare class SortableSet<T> extends Set<T> {
+declare class SortableSet<T, C = unknown> extends Set<T> {
 	/**
 	 * Create a new sortable set
 	 */
@@ -34604,17 +34515,17 @@ declare class SortableSet<T> extends Set<T> {
 	 * Sort with a comparer function
 	 */
 	sortWith(sortFn?: SortFunction<T>): void;
-	sort(): SortableSet<T>;
+	sort(): SortableSet<T, C>;
 
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R>(fn: (set: SortableSet<T>) => R): R;
+	getFromCache<R extends C>(fn: (set: SortableSet<T, C>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
 	 */
-	getFromUnorderedCache<R>(fn: (set: SortableSet<T>) => R): R;
+	getFromUnorderedCache<R extends C>(fn: (set: SortableSet<T, C>) => R): R;
 
 	/**
 	 * Returns the raw array.
@@ -37579,37 +37490,37 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = undefined> = Omit<
 	readonly node: TypedNode<TNode, T>;
 	readonly state: S;
 	within(type: P["types"]): boolean;
-	field<R = TypedNode<TNode, T>, F extends number = number>(
+	field<R extends TNode = TypedNode<TNode, T>, F extends number = number>(
 		i: number,
 		field: F & PartOf<R, P["fields"], P["field"]>,
 		n?: R
 	): TypedNode<TNode, P["items"][F]>;
-	fieldCount<R = TypedNode<TNode, T>>(
+	fieldCount<R extends TNode = TypedNode<TNode, T>>(
 		field: PartOf<R, P["fields"], P["field"]>,
 		n?: R
 	): number;
-	fieldNamed<R = TypedNode<TNode, T>, F extends number = number>(
+	fieldNamed<R extends TNode = TypedNode<TNode, T>, F extends number = number>(
 		field: F & PartOf<R, P["fields"], P["field"]>,
 		name: string,
 		n?: R
 	): TypedNode<TNode, P["items"][F]>;
-	flag<R = TypedNode<TNode, T>>(
+	flag<R extends TNode = TypedNode<TNode, T>>(
 		flag: PartOf<R, P["flags"], P["flag"]>,
 		n?: R
 	): boolean;
-	rangeOf<R = TypedNode<TNode, T>>(
+	rangeOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): null | [number, number];
-	startOf<R = TypedNode<TNode, T>>(
+	startOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): number;
-	endOf<R = TypedNode<TNode, T>>(
+	endOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): number;
-	textOf<R = TypedNode<TNode, T>>(
+	textOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["texts"], P["text"]>,
 		n?: R
 	): null | string;
@@ -41825,7 +41736,7 @@ declare namespace exports {
 			export let filterRuntime: (
 				runtime: RuntimeSpec,
 				filter: (runtime?: RuntimeSpec) => boolean
-			) => undefined | string | boolean | SortableSet<string>;
+			) => undefined | string | boolean | SortableSet<string, string>;
 			export let forEachRuntime: (
 				runtime: RuntimeSpec,
 				fn: (runtime?: string) => void,
@@ -41849,10 +41760,10 @@ declare namespace exports {
 				runtime: RuntimeSpec
 			) => RuntimeCondition;
 			export let mergeRuntimeConditionNonFalse: (
-				a: undefined | string | true | SortableSet<string>,
-				b: undefined | string | true | SortableSet<string>,
+				a: undefined | string | true | SortableSet<string, string>,
+				b: undefined | string | true | SortableSet<string, string>,
 				runtime: RuntimeSpec
-			) => undefined | string | true | SortableSet<string>;
+			) => undefined | string | true | SortableSet<string, string>;
 			export let mergeRuntimeOwned: (
 				a: RuntimeSpec,
 				b: RuntimeSpec
