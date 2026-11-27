@@ -1,0 +1,17 @@
+[
+	{
+		"relation": "respelling quote-double",
+		"contains": "&#123;&#123;old&#125;&#125;-->{{value}}",
+		"why": "a template delimiter written escaped stays escaped, so a template engine reading the page next never runs one the source kept inert; written literally, it already is one"
+	},
+	{
+		"relation": "respelling quote-single",
+		"contains": "&#123;&#123;old&#125;&#125;-->{{value}}",
+		"why": "a template delimiter written escaped stays escaped, so a template engine reading the page next never runs one the source kept inert; written literally, it already is one"
+	},
+	{
+		"relation": "respelling references",
+		"contains": "&#123;&#123;old&#125;&#125;-->{{value}}",
+		"why": "a template delimiter written escaped stays escaped, so a template engine reading the page next never runs one the source kept inert; written literally, it already is one"
+	}
+]

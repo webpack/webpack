@@ -2795,6 +2795,41 @@ exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,60] end=60"`;
 
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"{{live}} {{literal}}</\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag warning[54,54]:eof-before-tag-name warning[54,54]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text prints {"mode":"minify"} 1`] = `"<svg><style>&#123;&#123;live&#125;&#125; {{literal}}&lt;/</style></svg>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-body-ending-in-a-lone-end-tag-opener-as-text tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,54] end=54"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"/*{{old}}*/.a{content:\\"{{value}}\\"}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered prints {"mode":"minify"} 1`] = `
+"<svg><style>/*&#123;&#123;old&#125;&#125;*/.a{content:\\"{{value}}\\"}</style></svg>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,66] close[66,74|68,73] close[74,80|76,79] text[80,81] end=81"`;
+
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-heading-a-form-end-left-under-another parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
@@ -2850,6 +2885,25 @@ exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-padded-script-language prints {"mode":"minify"} 1`] = `"<!doctype html><body><script language=\\" javascript \\">console.log(\\"ok\\")</script></body>"`;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-padded-script-language tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[29,37|39,51]\\" open[21,53|22,28] text[53,70] close[70,79|72,78] end=79"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <iframe>
+|       srcdoc=\\"<!--{{old}}-->{{value}}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written parses 2`] = `"warning[0,61]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written prints {"mode":"minify"} 1`] = `
+"<iframe srcdoc=\\"<!--&#123;&#123;old&#125;&#125;-->{{value}}\\"></iframe>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written tokenizes 1`] = `"attr[8,14|16,59]\\" open[0,61|1,7] close[61,70|63,69] text[70,71] end=71"`;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-an-empty-unquoted-value-a-sort-moves-apart parses 1`] = `
 "| <!DOCTYPE html>
@@ -2916,6 +2970,25 @@ exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-
 `;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace tokenizes 1`] = `"open[0,3|1,2] text[3,26] close[26,30|28,29] text[30,31] end=31"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <div>
+|       title=\\"{{{x}}}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped parses 2`] = `"warning[0,51]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped prints {"mode":"minify"} 1`] = `
+"<div title=&#123;&#123;{x}}}></div>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-overlapping-escaped-template-delimiters-in-an-attribute-escaped tokenizes 1`] = `"attr[5,10|12,49]\\" open[0,51|1,4] close[51,57|53,56] text[57,58] end=58"`;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-a-hex-escape-before-a-newline parses 1`] = `
 "| <!DOCTYPE html>
