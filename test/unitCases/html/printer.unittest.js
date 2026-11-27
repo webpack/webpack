@@ -1010,6 +1010,25 @@ describe("SourceProcessor — reusing work across a print", () => {
 	});
 });
 
+describe("htmlMinify — a srcdoc document", () => {
+	const htmlMinify = require("../../../lib/html/htmlMinify");
+
+	it("minifies one declaring another encoding, as it is text of its page", async () => {
+		const result = await htmlMinify(
+			{
+				"page.html": fixture(
+					"html",
+					"html-minify-reads-a-srcdoc-document-as-the-text-of-its-page"
+				)
+			},
+			undefined,
+			{ as: "srcdoc" }
+		);
+		expect(result.warnings).toBeUndefined();
+		expect(result.code).toContain("<p>a & b");
+	});
+});
+
 describe("htmlMinify export", () => {
 	it("is the minifier itself, reachable from the public entry", () => {
 		const webpack = require("../../..");

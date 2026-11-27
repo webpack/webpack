@@ -2617,6 +2617,27 @@ exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-
 
 exports[`HTML syntax — invariants html-minify-reads-a-spaced-base64-flag-in-a-data-url-as-base64 tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] attr[23,26|28,73]\\" open[15,75|16,22] close[75,84|77,83] end=84"`;
 
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page parses 1`] = `
+"| <html>
+|   <head>
+|     <meta>
+|       charset=\\"windows-1252\\"
+|   <body>
+|     <p>
+|       \\"a & b\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page parses 2`] = `"warning[0,29]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page prints {"mode":"minify"} 1`] = `
+"<meta charset=windows-1252><p>a & b</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-reads-a-srcdoc-document-as-the-text-of-its-page tokenizes 1`] = `"attr[6,13|15,27]\\" open[0,29|1,5] open[29,32|30,31] text[32,41] close[41,45|43,44] text[45,46] end=46"`;
+
 exports[`HTML syntax — invariants html-minify-remove-empty-elements-keeps-a-block-between-inline-content parses 1`] = `
 "| <html>
 |   <head>

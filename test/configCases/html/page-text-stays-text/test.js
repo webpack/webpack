@@ -124,3 +124,7 @@ it("should keep text spelling a marker right after `<` as text", () => {
 	expect(html).toMatch(/<p id=angle>(?:<|&lt;)__WEBPACK_TEXT__>/);
 	expect(html).not.toMatch(/__webpack_text__/);
 });
+
+it("should keep a literal template delimiter in a foreign sheet led by a comment", () => {
+	expect(read("markup")).toContain('--token:"{{token}}"');
+});
