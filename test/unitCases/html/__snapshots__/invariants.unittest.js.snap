@@ -858,6 +858,47 @@ exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unq
 
 exports[`HTML syntax — invariants coverage-state-machine-branches-reads-an-unquoted-attribute-value-as-one-run-bet tokenizes 1`] = `"warning[6,7]:unexpected-character-in-unquoted-attribute-value warning[8,9]:unexpected-character-in-unquoted-attribute-value warning[10,11]:unexpected-character-in-unquoted-attribute-value warning[12,13]:unexpected-character-in-unquoted-attribute-value warning[14,15]:unexpected-character-in-unquoted-attribute-value warning[16,17]:unexpected-null-character attr[3,4|5,24] attr[25,26|27,28] attr[29,30|31,32] attr[33,34|35,36] attr[37,38|39,40] attr[41,42|43,45] warning[48,49]:unexpected-character-in-unquoted-attribute-value attr[46,47|48,49] open[0,50|1,2] end=50"`;
 
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order parses 1`] = `
+"| <!DOCTYPE html>
+| <html>
+|   <head>
+|     <title>
+|       \\"Order\\"
+|     \\"
+\\"
+|     <script>
+|       \\"window.order = [\\"page\\"];\\"
+|     \\"
+\\"
+|   <body>
+|     <svg svg>
+|       <svg script>
+|         <!--  a note  -->
+|         \\"window.order.push(\\"comment\\");\\"
+|       <svg script>
+|         \\"window.order.push(\\"element\\");\\"
+|         <svg g>
+|           id=\\"kept\\"
+|       <svg script>
+|         \\"window.order.push(\\"plain\\");\\"
+|     \\"
+\\"
+|     <script>
+|       \\"window.order.push(\\"last\\");\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order parses 2`] = `""`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order prints {"mode":"minify"} 1`] = `
+"<!doctype html><title>Order</title><script>window.order = [\\"page\\"];</script><svg><script>window.order.push(\\"comment\\");</script><script>window.order.push(\\"element\\");<g id=kept></g></script><script>window.order.push(\\"plain\\");</script></svg>
+<script>window.order.push(\\"last\\");</script>
+"
+`;
+
+exports[`HTML syntax — invariants html-foreign-scripts-run-in-authored-order tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] text[15,16] open[16,23|17,22] text[23,28] close[28,36|30,35] text[36,37] open[37,45|38,44] text[45,69] close[69,78|71,77] text[78,79] open[79,84|80,83] open[84,92|85,91] text[92,136] close[136,145|138,144] open[145,153|146,152] text[153,199] close[199,208|201,207] open[208,216|209,215] text[216,243] close[243,252|245,251] close[252,258|254,257] text[258,259] open[259,267|260,266] text[267,293] close[293,302|295,301] text[302,303] end=303"`;
+
 exports[`HTML syntax — invariants html-minify-a-region-printed-as-written-respells-its-attributes parses 1`] = `
 "| <html>
 |   <head>
@@ -2856,6 +2897,25 @@ exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped prints {"mode":"minify"} 1`] = `"<!doctype html><body><p title=&#123;{x}} class=&#36;{y}>&#123;{a}} &#123;{b}} &#123;{c}} &#36;{d} &#123;% e %}</p><svg><style>.b{content:\\"&lt;%= 3 %>\\"}</style></svg><p style='content : \\"&lt;%= 1 %>\\"'>s</p><button onclick='f(\\"&lt;%= 2 %>\\")  ;'>b</button></body>"`;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped tokenizes 1`] = `"doctype[0,15|10,14|-1,-1|-1,-1] open[15,21|16,20] attr[24,29|31,41]\\" attr[43,48|50,58]\\" open[21,60|22,23] text[60,116] close[116,120|118,119] open[120,125|121,124] open[125,132|126,131] text[132,160] close[160,168|162,167] close[168,174|170,173] attr[177,182|184,220]\\" open[174,222|175,176] text[222,223] close[223,227|225,226] attr[235,242|244,276]\\" open[227,278|228,234] text[278,279] close[279,288|281,287] end=288"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <p>
+|       \\"{{  a  }} {{  b }}\\"
+|     \\"
+\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace parses 2`] = `"warning[0,3]:expected-doctype-but-got-start-tag"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace prints {"mode":"minify"} 1`] = `
+"<p>&#123;{  a  }} {{  b }}</p>
+"
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace tokenizes 1`] = `"open[0,3|1,2] text[3,26] close[26,30|28,29] text[30,31] end=31"`;
 
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-merges-a-sheet-ending-in-a-hex-escape-before-a-newline parses 1`] = `
 "| <!DOCTYPE html>

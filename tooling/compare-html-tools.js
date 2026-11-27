@@ -1295,6 +1295,24 @@ const EXPECTED = [
 	},
 	{
 		relation: "respelling quote-double",
+		contains: "{{live}} &#123;{literal}}",
+		source: "test/configCases/html/page-text-stays-text/frame.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
+	{
+		relation: "respelling quote-single",
+		contains: "{{live}} &#123;{literal}}",
+		source: "test/configCases/html/page-text-stays-text/frame.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
+	{
+		relation: "respelling references",
+		contains: "{{live}} &#123;{literal}}",
+		source: "test/configCases/html/page-text-stays-text/frame.html",
+		why: TEMPLATE_DELIMITER_REFERENCES
+	},
+	{
+		relation: "respelling quote-double",
 		contains: "&#123;{ b }}</p>",
 		source:
 			"test/configCases/html/minify-html/parser-foreign-style-and-escaped-template-text/page.html",

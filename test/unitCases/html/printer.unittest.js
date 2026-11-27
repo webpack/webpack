@@ -1521,6 +1521,19 @@ describe("htmlMinify — what a second reader sees", () => {
 		}
 	});
 
+	it("keeps an escaped template delimiter escaped when collapsing whitespace", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name =
+			"keeps-escaped-template-delimiters-escaped-when-collapsing-whitespace";
+		for (const collapseWhitespace of /** @type {const} */ ([true, "all"])) {
+			const { code } = new SourceProcessor().process(source(name), {
+				mode: "minify",
+				collapseWhitespace
+			});
+			expect(code).toContain("&#123;{ a }} {{ b }}");
+		}
+	});
+
 	it("closes a CDATA section a foreign style leaves open", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
 		const name = "closes-a-cdata-section-a-foreign-style-leaves-open";

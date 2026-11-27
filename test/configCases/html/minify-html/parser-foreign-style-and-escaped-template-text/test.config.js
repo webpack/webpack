@@ -19,9 +19,9 @@ module.exports = {
 			"<svg><style>.a{color:red}.c{color:blue}<!--.b{background:url(./marker.txt)}--></style></svg>"
 		);
 		// A template delimiter the source kept escaped stays escaped.
-		expect(page).toContain('srcdoc="<p>&lt;%= a %> &#123;{ b }}</p>"');
+		expect(page).toContain('srcdoc="<p>&lt;%= a %> &#123;&#123; b }}</p>"');
 		expect(page).toContain(
-			"--c:&#39;&lt;%= c %>&#39;; --d:&#39;&#123;{d}}&#39;"
+			"--c:&#39;&lt;%= c %>&#39;; --d:&#39;&#123;&#123;d}}&#39;"
 		);
 		expect(page).not.toMatch(/<%|\{\{/);
 	}

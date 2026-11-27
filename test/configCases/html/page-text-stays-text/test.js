@@ -79,15 +79,15 @@ it("should keep text spelling an internal marker in a page exported to JavaScrip
 });
 
 it("should bundle a foreign script whose `<` is a comparison", () => {
-	expect(read("foreign")).toContain("<svg><script src=foreign.js></script></svg>");
+	expect(read("foreign")).toContain("<svg><script href=foreign.js></script></svg>");
 });
 
 it("should read a foreign body holding a comment or CDATA section by its text", () => {
 	const html = read("markup");
 	expect(html).toMatch(/rect\{fill:url\([^)]+\.svg\)\}<\/style>/);
-	expect(html).toContain("<script src=markup.js></script></svg>");
+	expect(html).toContain("<script href=markup.js></script></svg>");
 	const script = fs.readFileSync(path.resolve(__dirname, "markup.js"), "utf-8");
-	expect(script).toContain("window.markupRead=!0");
+	expect(script).toContain(`window.markupRead="&amp;"`);
 	expect(script).toContain("window.markupBoth=2");
 });
 
@@ -95,4 +95,8 @@ it("should keep a frame's live template delimiter live and its escaped one escap
 	expect(read("frame")).toContain(
 		'srcdoc="<p>{{live}} &#123;{literal}}</p><img src='
 	);
+});
+
+it("should keep a foreign script asked to be inlined external", () => {
+	expect(read("inline")).toContain("<svg><script href=inline.js></script></svg>");
 });

@@ -1202,6 +1202,9 @@ describe("keepTemplateOpenersEscaped", () => {
 			"<p>&#123;{a}} &#123;{b}}</p>"
 		],
 		["<p>{{a}}</p>", "&lt;p>{{a}}", "<p>{{a}}</p>"],
+		// overlapping delimiters keep each reference where the source had it
+		["${{", "&#36;{{", "&#36;{{"],
+		["{{{", "{{&#123;", "{{&#123;"],
 		// one the written value adds out of order escapes every one
 		["{{a}} {{b}} ${c}", "{{a}} &#123;{b}}", "&#123;{a}} &#123;{b}} &#36;{c}"]
 	])("writes %j back from %j as %j", (text, source, expected) => {
