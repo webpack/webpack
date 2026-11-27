@@ -882,6 +882,23 @@ describe("globUtils", () => {
 			);
 		});
 
+		it("compiles adjacent `**` segments as one", () => {
+			expect(createPathGlobRegExp("**/**/**/zzz")).toEqual(
+				createPathGlobRegExp("**/zzz")
+			);
+			expect(createPathGlobRegExp("a/**/**/b/**/**")).toEqual(
+				createPathGlobRegExp("a/**/b/**")
+			);
+			expect(createPathGlobPrefixRegExp("src/**/**/x", "/project")).toEqual(
+				createPathGlobPrefixRegExp("src/**/x", "/project")
+			);
+			// a path the glob fails must not backtrack across every split
+			const match = /** @type {(str: string) => boolean} */ (
+				createPathGlobMatcher("**/**/**/zzz")
+			);
+			expect(match(`${"a/".repeat(2000)}x`)).toBe(false);
+		});
+
 		it("returns null for an un-compilable pattern", () => {
 			expect(createPathGlobMatcher("**/[z-a].js")).toBeNull();
 		});
