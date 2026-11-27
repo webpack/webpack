@@ -19954,6 +19954,160 @@ declare abstract class JavascriptSyntaxPath {
 	endOf(part: number, n?: number): number;
 	textOf(part: number, n?: number): null | string;
 }
+
+/**
+ * The JavaScript tokenizer (acorn's `tokenize.js` and `tokencontext.js`): the
+ * token state and the methods that read it, which `SyntaxParser` extends.
+ */
+declare abstract class JavascriptTokenizer {
+	options: ResolvedOptionsSyntaxParser;
+	sourceFile: null | string;
+	keywords: RegExp;
+	reservedWords: RegExp;
+	reservedWordsStrict: RegExp;
+	reservedWordsStrictBind: RegExp;
+	input: string;
+	containsEsc: boolean;
+	pos: number;
+	curLine: number;
+	lineStart: number;
+	type: TokenType;
+	value: any;
+	end: number;
+	start: number;
+	endLoc?: Position;
+	startLoc?: Position;
+	lastTokStartLoc?: null | Position;
+	lastTokEndLoc?: null | Position;
+	lastTokEnd: number;
+	lastTokStart: number;
+	context: TokContextLike[];
+	exprAllowed: boolean;
+	inModule: boolean;
+	strict: boolean;
+
+	/**
+	 * Set by the parse entry points; a parser that only hands out tokens
+	 * keeps its top-level scope and reads its contexts instead.
+	 */
+	parsing: boolean;
+	regexpState: null | RegExpValidationState;
+	inTemplateElement: boolean;
+
+	/**
+	 * Whether a directive prologue starting at `start` opens with `"use strict"`.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.19.0/acorn/src/parseutil.js
+	 */
+	strictDirective(start: number): boolean;
+	unexpected(pos?: number): never;
+	initialContext(): TokContextLike[];
+
+	/**
+	 * Report a parse error, naming where in the source it was found.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/location.js
+	 */
+	raise(pos: number, message: string): never;
+
+	/**
+	 * An error the parse can go on past: `parseProgram` reports it and goes on.
+	 */
+	raiseRecoverable(pos: number, message: string): void;
+	curPosition(): undefined | Position;
+	skipLineComment(startSkip: number): void;
+	curContext(): TokContextLike;
+
+	/**
+	 * Whether a `{` here opens a block rather than an object literal, which the
+	 * token before it decides.
+	 */
+	braceIsBlock(prevType: TokenType): boolean;
+
+	/**
+	 * Whether the enclosing function is a generator. A parse reads its scope: a
+	 * method's `*` pushes no `function` context, which only the tokenizer reads.
+	 * The tokenizer alone enters no function scope, so it reads its contexts.
+	 */
+	inGeneratorContext(): boolean;
+	updateContext(prevType: TokenType): void;
+
+	/**
+	 * A module reads `<!--` as `<`, `!` and `--`, where a script, as webpack
+	 * emits a module into, reads an HTML-style comment.
+	 */
+	readHtmlOpenAsOperators(pos: number): void;
+
+	/**
+	 * Move past the current token.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
+	 */
+	next(ignoreEscapeSequenceInKeyword?: boolean): void;
+	getToken(): Token;
+	nextToken(): void;
+	readToken(code: number): void;
+	fullCharCodeAt(pos: number): number;
+	fullCharCodeAtPos(): number;
+	skipBlockComment(): void;
+	skipSpace(): void;
+	finishToken(type: TokenType, value?: any): void;
+	readTokenDot(): void;
+	readTokenSlash(): void;
+	readTokenMultModuloExp(code: number): void;
+	readTokenPipeAmp(code: number): void;
+	readTokenCaret(): void;
+	readTokenPlusMin(code: number): void;
+	readTokenLtGt(code: number): void;
+	readTokenEqExcl(code: number): void;
+	readTokenQuestion(): void;
+	readTokenNumberSign(): void;
+	getTokenFromCode(code: number): void;
+	finishOp(type: TokenType, size: number): void;
+
+	/**
+	 * Check a regexp literal's flags.
+	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/regexp.js
+	 */
+	validateRegExpFlags(state: RegExpValidationState): void;
+
+	/**
+	 * Check a regexp literal's pattern, re-reading it once a group name shows
+	 * that the named-capture goal symbol was the right one.
+	 */
+	validateRegExpPattern(state: RegExpValidationState): void;
+	readRegexp(): void;
+
+	/**
+	 * Read digits in the given radix, or `null` where none were there or the
+	 * count did not match what an escape asked for.
+	 */
+	readInt(
+		radix: number,
+		len?: number,
+		maybeLegacyOctalNumericLiteral?: boolean
+	): null | number;
+	readRadixNumber(radix: number): void;
+	readNumber(startsWithDot: boolean): void;
+	readCodePoint(): number;
+	readString(quote: number): void;
+	tryReadTemplateToken(): void;
+
+	/**
+	 * Report a bad escape, unless it sits in a tagged template, where the raw
+	 * text is still well-formed and only the cooked value is lost.
+	 */
+	invalidStringToken(position: number, message: string): void;
+	readTmplToken(): void;
+	readInvalidTemplateToken(): void;
+	readEscapedChar(inTemplate: boolean): string;
+	readHexChar(len: number): number;
+
+	/**
+	 * Read an identifier's text, recording in `containsEsc` whether any of it
+	 * was written as an escape - which stops it reading as a keyword.
+	 */
+	readWord1(): string;
+	readWord(): void;
+	[Symbol.iterator](): Iterator<Token, Token>;
+}
 declare interface JoinCacheEntry {
 	/**
 	 * cached join function
@@ -27766,7 +27920,7 @@ declare interface OptionsSyntaxParser {
 	/**
 	 * the parser itself at each token, for a reader that copies what it needs rather than taking a token of its own
 	 */
-	onTokenRead?: (parser: SyntaxParser) => void;
+	onTokenRead?: (parser: JavascriptTokenizer) => void;
 
 	/**
 	 * where comments are reported
@@ -31022,7 +31176,7 @@ declare interface ReferencedExport {
  * The cursor a regexp literal is validated through.
  */
 declare abstract class RegExpValidationState {
-	parser: SyntaxParser;
+	parser: JavascriptTokenizer;
 	validFlags: string;
 	unicodeProperties: UnicodePropertyTables;
 	source: string;
@@ -31756,7 +31910,7 @@ declare interface ResolvedOptionsSyntaxParser {
 	/**
 	 * the parser itself at each token
 	 */
-	onTokenRead: null | ((parser: SyntaxParser) => void);
+	onTokenRead: null | ((parser: JavascriptTokenizer) => void);
 
 	/**
 	 * where comments are reported
@@ -36441,37 +36595,12 @@ type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
  * overrides the hot paths.
  * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/state.js
  */
-declare class SyntaxParser {
+declare class SyntaxParser extends JavascriptTokenizer {
 	constructor(
 		options: undefined | null | Partial<OptionsSyntaxParser>,
 		input: string,
 		startPos?: number
 	);
-	options: ResolvedOptionsSyntaxParser;
-	sourceFile: null | string;
-	keywords: RegExp;
-	reservedWords: RegExp;
-	reservedWordsStrict: RegExp;
-	reservedWordsStrictBind: RegExp;
-	input: string;
-	containsEsc: boolean;
-	pos: number;
-	curLine: number;
-	lineStart: number;
-	type: TokenType;
-	value: any;
-	end: number;
-	start: number;
-	endLoc?: Position;
-	startLoc?: Position;
-	lastTokStartLoc?: null | Position;
-	lastTokEndLoc?: null | Position;
-	lastTokEnd: number;
-	lastTokStart: number;
-	context: TokContextLike[];
-	exprAllowed: boolean;
-	inModule: boolean;
-	strict: boolean;
 	potentialArrowAt: number;
 	potentialArrowInForAwait: boolean;
 	awaitIdentPos: number;
@@ -36479,130 +36608,9 @@ declare class SyntaxParser {
 	yieldPos: number;
 	labels: LabelLike[];
 	undefinedExports: Record<string, NodeLike>;
-
-	/**
-	 * Set by the parse entry points; a parser that only hands out tokens
-	 * keeps its top-level scope and reads its contexts instead.
-	 */
-	parsing: boolean;
 	scopeStack: ParserScope[];
-	regexpState: null | RegExpValidationState;
 	privateNameStack: any[];
-	inTemplateElement: boolean;
-
-	/**
-	 * Whether a directive prologue starting at `start` opens with `"use strict"`.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.19.0/acorn/src/parseutil.js
-	 */
-	strictDirective(start: number): boolean;
-	unexpected(pos?: number): never;
-	initialContext(): TokContextLike[];
 	enterScope(flags: number): void;
-
-	/**
-	 * Report a parse error, naming where in the source it was found.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/location.js
-	 */
-	raise(pos: number, message: string): never;
-
-	/**
-	 * An error the parse can go on past: `parseProgram` reports it and goes on.
-	 */
-	raiseRecoverable(pos: number, message: string): void;
-	curPosition(): undefined | Position;
-	skipLineComment(startSkip: number): void;
-	curContext(): TokContextLike;
-
-	/**
-	 * Whether a `{` here opens a block rather than an object literal, which the
-	 * token before it decides.
-	 */
-	braceIsBlock(prevType: TokenType): boolean;
-
-	/**
-	 * Whether the enclosing function is a generator. A parse reads its scope: a
-	 * method's `*` pushes no `function` context, which only the tokenizer reads.
-	 * The tokenizer alone enters no function scope, so it reads its contexts.
-	 */
-	inGeneratorContext(): boolean;
-	updateContext(prevType: TokenType): void;
-
-	/**
-	 * A module reads `<!--` as `<`, `!` and `--`, where a script, as webpack
-	 * emits a module into, reads an HTML-style comment.
-	 */
-	readHtmlOpenAsOperators(pos: number): void;
-
-	/**
-	 * Move past the current token.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/tokenize.js
-	 */
-	next(ignoreEscapeSequenceInKeyword?: boolean): void;
-	getToken(): Token;
-	nextToken(): void;
-	readToken(code: number): void;
-	fullCharCodeAt(pos: number): number;
-	fullCharCodeAtPos(): number;
-	skipBlockComment(): void;
-	skipSpace(): void;
-	finishToken(type: TokenType, value?: any): void;
-	readTokenDot(): void;
-	readTokenSlash(): void;
-	readTokenMultModuloExp(code: number): void;
-	readTokenPipeAmp(code: number): void;
-	readTokenCaret(): void;
-	readTokenPlusMin(code: number): void;
-	readTokenLtGt(code: number): void;
-	readTokenEqExcl(code: number): void;
-	readTokenQuestion(): void;
-	readTokenNumberSign(): void;
-	getTokenFromCode(code: number): void;
-	finishOp(type: TokenType, size: number): void;
-
-	/**
-	 * Check a regexp literal's flags.
-	 * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/regexp.js
-	 */
-	validateRegExpFlags(state: RegExpValidationState): void;
-
-	/**
-	 * Check a regexp literal's pattern, re-reading it once a group name shows
-	 * that the named-capture goal symbol was the right one.
-	 */
-	validateRegExpPattern(state: RegExpValidationState): void;
-	readRegexp(): void;
-
-	/**
-	 * Read digits in the given radix, or `null` where none were there or the
-	 * count did not match what an escape asked for.
-	 */
-	readInt(
-		radix: number,
-		len?: number,
-		maybeLegacyOctalNumericLiteral?: boolean
-	): null | number;
-	readRadixNumber(radix: number): void;
-	readNumber(startsWithDot: boolean): void;
-	readCodePoint(): number;
-	readString(quote: number): void;
-	tryReadTemplateToken(): void;
-
-	/**
-	 * Report a bad escape, unless it sits in a tagged template, where the raw
-	 * text is still well-formed and only the cooked value is lost.
-	 */
-	invalidStringToken(position: number, message: string): void;
-	readTmplToken(): void;
-	readInvalidTemplateToken(): void;
-	readEscapedChar(inTemplate: boolean): string;
-	readHexChar(len: number): number;
-
-	/**
-	 * Read an identifier's text, recording in `containsEsc` whether any of it
-	 * was written as an escape - which stops it reading as a keyword.
-	 */
-	readWord1(): string;
-	readWord(): void;
 	[Symbol.iterator](): Iterator<Token, Token>;
 	static tokenizer(
 		input: string,
@@ -37101,13 +37109,13 @@ declare class TokContext {
 		token: string,
 		isExpr: boolean,
 		preserveSpace?: boolean,
-		override?: (parser?: any) => void,
+		override?: (parser: JavascriptTokenizer) => void,
 		generator?: boolean
 	);
 	token: string;
 	isExpr: boolean;
 	preserveSpace: boolean;
-	override?: (parser?: any) => void;
+	override?: (parser: JavascriptTokenizer) => void;
 	generator: boolean;
 }
 
@@ -37118,7 +37126,7 @@ declare interface TokContextLike {
 	token: string;
 	isExpr: boolean;
 	preserveSpace?: boolean;
-	override?: (parser: SyntaxParser) => void;
+	override?: (parser: JavascriptTokenizer) => void;
 	generator?: boolean;
 }
 
@@ -37126,7 +37134,7 @@ declare interface TokContextLike {
  * A token as `options.onToken` receives one.
  */
 declare class Token {
-	constructor(p: SyntaxParser);
+	constructor(p: JavascriptTokenizer);
 	type: TokenType;
 	value: any;
 	start: number;
