@@ -347,7 +347,8 @@ jobs:
             jest-test262-${{ runner.os }}-
 
       # One file, one part per core of the runner at once (`--parts=auto`,
-      # TESTING_DOCS.md), where it took two runners one core each.
+      # TESTING_DOCS.md), where it took two runners one core each. Workers inherit
+      # the 2560 MB heap of `cover:test262`: 4096 MB each filled the 16 GB runner.
       - run: yarn cover:test262 --parts=auto --maxWorkers=100% --ci --cacheDirectory .jest-cache
 
       - name: Codecov

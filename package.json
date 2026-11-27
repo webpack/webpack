@@ -121,7 +121,7 @@
     "cover:integration": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,longtest,test}.js\" --coverage",
     "cover:integration:a": "yarn cover:base --testMatch \"<rootDir>/test/*.{basictest,test}.js\" --coverage",
     "cover:integration:b": "yarn cover:base --testMatch \"<rootDir>/test/*.longtest.js\" --coverage",
-    "cover:test262": "yarn cover:base --testMatch \"<rootDir>/test/specCases/test262.spectest.js\" --coverage",
+    "cover:test262": "node --expose-gc --max-old-space-size=2560 --experimental-vm-modules node_modules/jest-cli/bin/jest --workerIdleMemoryLimit=512MB --logHeapUsage --testMatch \"<rootDir>/test/specCases/test262.spectest.js\" --coverage",
     "cover:html5lib": "yarn cover:base --testMatch \"<rootDir>/test/specCases/html5lib.spectest.js\" --coverage",
     "cover:syntax-equivalence": "yarn cover:base --testMatch \"<rootDir>/test/specCases/syntaxEquivalence.spectest.js\" --coverage",
     "cover:css-parsing": "yarn cover:base --testMatch \"<rootDir>/test/specCases/cssParsing-webpack.spectest.js\" --coverage",
