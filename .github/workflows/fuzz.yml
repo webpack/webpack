@@ -27,6 +27,9 @@ jobs:
     if: github.repository == 'webpack/webpack'
     runs-on: ubuntu-latest
     timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write
     strategy:
       fail-fast: false
       matrix:
@@ -58,7 +61,41 @@ jobs:
           INPUT_SEED: ${{ inputs.seed }}
 
       - name: Fuzz ${{ matrix.syntax }}
-        run: yarn test:base --testPathPatterns="unitCases/${{ matrix.syntax }}/fuzz" --testTimeout=3000000
+        id: fuzz
+        shell: bash
+        run: yarn test:base --testPathPatterns="unitCases/${{ matrix.syntax }}/fuzz" --testTimeout=3000000 2>&1 | tee fuzz.log
         env:
           FUZZ_SEED: ${{ steps.seed.outputs.seed }}
           FUZZ_RUNS: ${{ inputs.runs || '20000' }}
+
+      # A nightly failure is a new bug nobody watches for: file it, or add to the
+      # open issue for this syntax. A manual replay reports to whoever started it.
+      - name: Open an issue
+        if: failure() && steps.fuzz.outcome == 'failure' && github.event_name == 'schedule'
+        shell: bash
+        run: |
+          title="Fuzz: ${SYNTAX} syntax bug found"
+          {
+            echo "The nightly \`Fuzz\` run found a ${SYNTAX} source that breaks an invariant: ${RUN_URL}"
+            echo
+            echo "Replay: \`FUZZ_SEED=${SEED} FUZZ_RUNS=${RUNS} yarn test:base --testPathPatterns=\"unitCases/${SYNTAX}/fuzz\" --testTimeout=3000000\`"
+            echo
+            echo '`````'
+            sed -n '/Counterexample:/,$p' fuzz.log | head -80
+            echo '`````'
+            echo
+            echo "Fix: add the shrunk source as a fixture, or a \`known\` entry if it is no bug (TESTING_DOCS.md, Fuzzing)."
+          } > issue.md
+          number="$(gh issue list --state open --search "\"${title}\" in:title" --json number --jq '.[0].number')"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file issue.md
+          else
+            gh issue create --title "$title" --body-file issue.md
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SYNTAX: ${{ matrix.syntax }}
+          SEED: ${{ steps.seed.outputs.seed }}
+          RUNS: ${{ inputs.runs || '20000' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
