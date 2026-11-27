@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Move the JavaScript tokenizer into its own `JavascriptTokenizer` class.
+Move the JavaScript tokenizer into its own `Tokenizer` class.
