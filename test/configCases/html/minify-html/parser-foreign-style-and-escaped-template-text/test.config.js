@@ -14,9 +14,9 @@ module.exports = {
 			"utf8"
 		);
 		// A comment in an SVG `<style>` is a comment node, not CSS: the URL inside
-		// it is neither resolved nor rewritten.
+		// it is neither resolved nor rewritten, and it is kept after the sheet.
 		expect(page).toContain(
-			"<svg><style>.a{color:red}<!--.b{background:url(./marker.txt)}-->.c{color:blue}</style></svg>"
+			"<svg><style>.a{color:red}.c{color:blue}<!--.b{background:url(./marker.txt)}--></style></svg>"
 		);
 		// A template delimiter the source kept escaped stays escaped.
 		expect(page).toContain('srcdoc="<p>&lt;%= a %> &#123;{ b }}</p>"');

@@ -43,7 +43,9 @@ module.exports = {
 		nested: "./nested.html",
 		charset: "./charset.html",
 		exported: "./exported.js",
-		foreign: "./foreign.html"
+		foreign: "./foreign.html",
+		markup: "./markup.html",
+		frame: "./frame.html"
 	},
 	output: {
 		filename: "[name].js"

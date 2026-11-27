@@ -1187,3 +1187,24 @@ describe("parseHtml — arcs the conformance corpus leaves out", () => {
 		expect(nodes[0].attributes[0].value).toBe("c");
 	});
 });
+
+describe("keepTemplateOpenersEscaped", () => {
+	const {
+		keepTemplateOpenersEscaped
+	} = require("../../../lib/html/syntax-parser");
+
+	it.each([
+		// each delimiter keeps the spelling it had in the source
+		["<p>{{a}} {{b}}</p>", "&lt;p>{{a}} &#123;{b}}", "<p>{{a}} &#123;{b}}</p>"],
+		[
+			"<p>{{a}} {{b}}</p>",
+			"&#123;{a}} &#123;{b}}",
+			"<p>&#123;{a}} &#123;{b}}</p>"
+		],
+		["<p>{{a}}</p>", "&lt;p>{{a}}", "<p>{{a}}</p>"],
+		// one the written value adds out of order escapes every one
+		["{{a}} {{b}} ${c}", "{{a}} &#123;{b}}", "&#123;{a}} &#123;{b}} &#36;{c}"]
+	])("writes %j back from %j as %j", (text, source, expected) => {
+		expect(keepTemplateOpenersEscaped(text, source, true)).toBe(expected);
+	});
+});

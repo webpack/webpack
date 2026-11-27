@@ -1521,6 +1521,16 @@ describe("htmlMinify — what a second reader sees", () => {
 		}
 	});
 
+	it("closes a CDATA section a foreign style leaves open", () => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		const name = "closes-a-cdata-section-a-foreign-style-leaves-open";
+		for (const mode of /** @type {const} */ (["beautify", "minify"])) {
+			const { code } = new SourceProcessor().process(source(name), { mode });
+			expect(code).toContain("]]></style></svg>");
+			expect(tree(code)).toBe(tree(source(name)));
+		}
+	});
+
 	it("keeps a script language whose padding names no JavaScript type", async () => {
 		expect(
 			await minify("keeps-a-padded-script-language", {

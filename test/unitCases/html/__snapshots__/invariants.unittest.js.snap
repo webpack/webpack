@@ -2739,6 +2739,21 @@ exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is
 
 exports[`HTML syntax — invariants html-minify-the-function-an-event-handler-is-asked-about-reports-what-a-renderer tokenizes 1`] = `"attr[3,10|12,25]\\" open[0,27|1,2] text[27,28] close[28,32|30,31] end=32"`;
 
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open parses 1`] = `
+"| <html>
+|   <head>
+|   <body>
+|     <svg svg>
+|       <svg style>
+|         \\"{{live{{literal rect{}\\""
+`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open parses 2`] = `"warning[0,5]:expected-doctype-but-got-start-tag error[60,60]:eof-in-cdata warning[60,60]:expected-closing-tag-but-got-eof"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open prints {"mode":"minify"} 1`] = `"<svg><style><![CDATA[{{live]]>&#123;{literal<![CDATA[ rect{}]]></style></svg>"`;
+
+exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-closes-a-cdata-section-a-foreign-style-leaves-open tokenizes 1`] = `"open[0,5|1,4] open[5,12|6,11] text[12,60] end=60"`;
+
 exports[`HTML syntax — invariants html-minify-what-a-second-reader-sees-keeps-a-heading-a-form-end-left-under-another parses 1`] = `
 "| <!DOCTYPE html>
 | <html>
