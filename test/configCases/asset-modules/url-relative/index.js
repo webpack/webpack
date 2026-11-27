@@ -18,3 +18,8 @@ it("should handle import.meta.url in URL()", () => {
 	expect(JSON.stringify(url)).toBe('"public/index.css?query=yes#fragment"');
 	expect(url instanceof URL).toBe(true);
 });
+
+it("should handle URL() right after a division operator", () => {
+	const result = 1 /new URL("./index.css", import.meta.url);
+	expect(result).toBeNaN();
+});
