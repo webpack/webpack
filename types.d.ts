@@ -8305,13 +8305,13 @@ declare abstract class CssSyntaxPath {
  * "normalize into a token stream" (CSS Syntax §9). It unifies the lexer and the
  * stream in one class: the `readToken` primitive lexes one token (the CSS
  * tokenizer), and the spec token-stream operations `next` / `consume` /
- * `discard` / `mark` / `restoreMark` / `discardMark` drive it from a byte
- * cursor. `parse*` entry points wrap a source string in one of these and every
+ * `discard` / `mark` / `rewind` drive it from a byte cursor. A mark is that
+ * offset, held by the caller rather than on a stack here. `parse*` entry points wrap a source string in one of these and every
  * `consume*` algorithm reads tokens from it.
  * No token buffer is kept: the cursor is a byte offset and the only state is
  * the next token (lazily tokenized once and cached until consumed). The
  * declaration-vs-qualified-rule backtracking in `consumeABlocksContents`
- * rewinds by `mark`ing / `restoreMark`ing that byte offset, which simply
+ * rewinds to a `mark`ed byte offset, which simply
  * re-tokenizes the rewound span - comment tokens are filtered here and fire
  * `onComment` once each, tracked by a monotonic high-water mark so a
  * re-tokenized span never re-fires them.
@@ -8389,27 +8389,17 @@ declare class CssTokenizer {
 	skipPreludeLeaves(): void;
 
 	/**
-	 * Mark (CSS Syntax §3 "mark") - push the current cursor position.
+	 * Mark (CSS Syntax §3 "mark") - the cursor's byte offset, for `rewind`. The
+	 * caller holds it, so discarding a mark is dropping the number.
 	 */
-	mark(): void;
+	mark(): number;
 
 	/**
-	 * Restore a mark (CSS Syntax §3 "restore a mark") - pop the last mark and
-	 * rewind the cursor to it. The rewound span is re-tokenized on the next read;
-	 * already-fired comments are not re-fired (`_commentHigh`).
-	 */
-	restoreMark(): void;
-
-	/**
-	 * Rewind the cursor to `pos`, an offset `_pos` held, as `restoreMark` does
-	 * for a mark the caller kept itself.
+	 * Restore a mark (CSS Syntax §3 "restore a mark") - rewind the cursor to `pos`,
+	 * an offset `mark` returned. The rewound span is re-tokenized on the next
+	 * read; already-fired comments are not re-fired (`_commentHigh`).
 	 */
 	rewind(pos: number): void;
-
-	/**
-	 * Discard a mark (CSS Syntax §3 "discard a mark") - pop without rewinding.
-	 */
-	discardMark(): void;
 }
 
 /**
@@ -20058,8 +20048,6 @@ declare abstract class JavascriptTokenizer {
 	start: number;
 	endLoc?: Position;
 	startLoc?: Position;
-	lastTokStartLoc?: null | Position;
-	lastTokEndLoc?: null | Position;
 	lastTokEnd: number;
 	lastTokStart: number;
 	context: TokContextLike[];
