@@ -5,7 +5,7 @@
 		"presets": [
 			"default"
 		],
-		"why": "the compressor's `pure_conversions`, on by default as terser and swc assume, takes `x + other` to run no `valueOf`, so the entry the fixture's own `valueOf` logs is dropped by contract; the option sets with it off keep it"
+		"why": "the compressor's `pure_conversions`, on by default as terser and swc assume, takes `x + other` to run no `valueOf`, so the call the fixture's own `valueOf` logs is dropped by contract; the option sets turn it off to keep it"
 	},
 	{
 		"relation": "idempotence",
