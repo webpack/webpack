@@ -141,6 +141,7 @@ Conventions every language keeps, and a new member follows:
 
 - `syntax.js` publishes the parser, the printer and `SourceProcessor` only — read a former re-export off `parser` or `printer`.
 - `syntax-tokenizer.js` holds the tokenizer (§4): the stateless `readToken` and its `consume*` helpers, and `CssTokenizer`, the token stream the parser pulls from. It reports parse errors into the tree `syntax-parser.js` names with `setParseTree`, and `syntax-parser.js` re-exports what it publishes.
+- `syntax-targets.js` holds the `ALLOWS_*` bits of `CssSyntaxTree#_targetAllows`: what every browser a print targets reads, resolved once per print, and read by the parser and the printer.
 
 ## HTML
 
