@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop six redundant HTML and JavaScript tokenizer fields.
+Drop redundant tokenizer fields and hold CSS target answers in one bit field.
