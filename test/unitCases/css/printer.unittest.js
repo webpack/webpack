@@ -123,6 +123,17 @@ describe("CssSyntax — block streaming", () => {
 	const minify = (src) =>
 		new SourceProcessor().process(src, { mode: "minify" }).code;
 
+	it("keeps the escape hiding a marker in an identifier when minifying", () => {
+		const code = minify(
+			fixture(
+				"css",
+				"css-syntax-minify-keeps-the-escape-hiding-a-marker-in-an-identifier"
+			)
+		);
+		expect(code).toContain(".\\5F_WEBPACK_CSS_PUBLIC_PATH_AUTO__{");
+		expect(code).toContain(".Abc{");
+	});
+
 	it("streams a block past the threshold and collects one under it", () => {
 		expect(
 			childCount(
