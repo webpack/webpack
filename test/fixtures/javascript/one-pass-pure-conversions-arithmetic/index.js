@@ -21,3 +21,14 @@ function wheel(e) {
 	return 3 * delta * sign;
 }
 console.log(wheel({ x: 1, y: 0 }), wheel({ x: 1, y: 2 }), wheel({ y: 1 }));
+// `new` constructs what the merged call returns, so it stays in parentheses.
+function make(t, f, a, b) {
+	var x = t ? f(a) : f(b);
+	return new x();
+}
+class Made {
+	constructor() {
+		this.k = 1;
+	}
+}
+console.log(make(1, () => Made, 1, 2).k);
