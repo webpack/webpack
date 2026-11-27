@@ -35683,7 +35683,7 @@ type StatsFactoryGetItemNameHookMap = KnownStatsFactoryGetItemNameHookMap & {
 type StatsFactoryGroup<K extends keyof exports.StatsFactoryItemKeys> =
 	K extends keyof exports.StatsFactoryGroupKeys
 		? exports.StatsFactoryGroupKeys[K]
-		: object;
+		: StatsGroup<exports.StatsFactoryItemKeys[K][1]>;
 type StatsFactoryGroupResultsHookMap = KnownStatsFactoryGroupResultsHookMap & {
 	for(
 		key: string
@@ -35752,6 +35752,11 @@ type StatsFactoryResultSortHookMap = KnownStatsFactoryResultSortHookMap & {
 		key: string
 	): SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>;
 } & HookMap<SyncBailHook<[Comparator<any>[], StatsFactoryContext], void>>;
+type StatsGroup<Item> = {
+	type?: string;
+	children?: Item[];
+	filteredChildren?: number;
+} & Record<string, StatsJsonValue>;
 type StatsJsonValue =
 	| undefined
 	| null
