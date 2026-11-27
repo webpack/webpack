@@ -1,0 +1,22 @@
+[
+	{
+		"mode": "minify",
+		"compress": {},
+		"mangle": {},
+		"format": {
+			"semicolons": false
+		},
+		"sourceType": "script",
+		"behavior": true
+	},
+	{
+		"mode": "minify",
+		"compress": false,
+		"mangle": false,
+		"format": {
+			"semicolons": false
+		},
+		"sourceType": "script",
+		"behavior": true
+	}
+]

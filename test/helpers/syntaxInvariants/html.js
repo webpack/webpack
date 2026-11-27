@@ -555,8 +555,14 @@ const htmlSpans = (html) =>
 	});
 
 /**
- * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string }} NodeRun
+ * @typedef {{ what: string, type: number, tag: string, start: number, end: number, size: number, lo: number, hi: number, context: string, rebuilt: boolean }} NodeRun
  */
+
+// §13.2.4.3's formatting elements: the ones the parser rebuilds, with no tag of
+// their own, from the list of active formatting elements.
+const FORMATTING_ELEMENTS = new Set(
+	"a b big code em font i nobr s small strike strong tt u".split(" ")
+);
 
 /**
  * The fragment context a node's children are read back in: its tag, prefixed
@@ -579,8 +585,9 @@ const SLICE_BUDGET_FACTOR = 4;
 /**
  * Every node in one document, in post-order with the size of its subtree —
  * which is what lets a subtree be read as a run rather than walked again. `lo`
- * and `hi` are how far that subtree reaches, and `context` the tag the node sat
- * in, which is what the fragment parsing algorithm needs to read it back.
+ * and `hi` are how far that subtree reaches, `context` the tag the node sat in,
+ * which is what the fragment parsing algorithm needs to read it back, and
+ * `rebuilt` whether it sits inside a formatting element the parser rebuilt.
  * @param {string} html a document
  * @param {string=} fragmentContext the element to parse it as the contents of
  * @returns {NodeRun[]} each node, children before parents
@@ -588,8 +595,10 @@ const SLICE_BUDGET_FACTOR = 4;
 const htmlNodeRuns = (html, fragmentContext) => {
 	/** @type {NodeRun[]} */
 	const runs = [];
-	/** @type {{ held: number, lo: number, hi: number, context: string }[]} */
-	const stack = [{ held: 0, lo: html.length, hi: 0, context: "" }];
+	/** @type {{ held: number, lo: number, hi: number, context: string, rebuilt: boolean }[]} */
+	const stack = [
+		{ held: 0, lo: html.length, hi: 0, context: "", rebuilt: false }
+	];
 	/** @type {Record<number, { enter: (nodePath: EXPECTED_ANY) => void, exit: (nodePath: EXPECTED_ANY) => void }>} */
 	const visitors = {};
 	for (const type of Object.values(NodeType)) {
@@ -599,7 +608,15 @@ const htmlNodeRuns = (html, fragmentContext) => {
 					held: 0,
 					lo: html.length,
 					hi: 0,
-					context: fragmentContextOf(nodePath)
+					context: fragmentContextOf(nodePath),
+					// A rebuilt element has no start tag of its own, though an end
+					// tag closing it later gives it a range.
+					rebuilt:
+						stack[stack.length - 1].rebuilt ||
+						(nodePath.type() === NodeType.Element &&
+							nodePath.rangeOf(Part.startTag) === null &&
+							_namespaceOf(nodePath.node) === Namespace.HTML &&
+							FORMATTING_ELEMENTS.has(nodePath.name()))
 				});
 			},
 			exit: (nodePath) => {
@@ -624,7 +641,8 @@ const htmlNodeRuns = (html, fragmentContext) => {
 					size,
 					lo,
 					hi,
-					context: parent.context
+					context: parent.context,
+					rebuilt: frame.rebuilt
 				});
 			}
 		};
@@ -669,6 +687,33 @@ const holdsQuirksTable = (runs, at) => {
 };
 
 /**
+ * Whether a node's range holds the source of a node outside its subtree that a
+ * rebuilt formatting element took in: the list of active formatting elements
+ * decided where that one went, and no fragment context carries that list.
+ * @param {readonly NodeRun[]} runs every node in post-order
+ * @param {readonly number[]} rebuilt every node inside a rebuilt element, by start
+ * @param {number} at the node
+ * @returns {boolean} whether a node in its range went where the list put it
+ */
+const holdsRebuiltContent = (runs, rebuilt, at) => {
+	const node = runs[at];
+	const first = at - node.size + 1;
+	let lo = 0;
+	let hi = rebuilt.length;
+	while (lo < hi) {
+		const mid = (lo + hi) >>> 1;
+		if (runs[rebuilt[mid]].start < node.start) lo = mid + 1;
+		else hi = mid;
+	}
+	for (let i = lo; i < rebuilt.length; i++) {
+		const index = rebuilt[i];
+		if (runs[index].start >= node.end) break;
+		if (index < first || index > at) return true;
+	}
+	return false;
+};
+
+/**
  * Hold each node's own source to the node it came from: the bytes between its
  * offsets, read back as the contents of the element they sat in, give that node
  * back.
@@ -679,15 +724,23 @@ const holdsQuirksTable = (runs, at) => {
  * to the fragment parsing algorithm is the spec's own answer to that, and it is
  * what the browser does for `innerHTML`.
  *
- * Two shapes are left out rather than normalized: an element the parser
- * inserted or cloned wrote no tag to slice, and an element whose end is its
+ * Three shapes are left out rather than normalized: an element the parser
+ * inserted or cloned wrote no tag to slice, an element whose end is its
  * start tag's — §13.2 leaves it there until an end tag is read — has a range
- * that does not hold its own children, so there is no slice to reparse.
+ * that does not hold its own children, so there is no slice to reparse, and a
+ * range holding what a rebuilt formatting element took in depends on a list
+ * no fragment context hands over.
  * @param {string} html a document
  * @returns {{ reports: import("./relations").Report[], read: number, skipped: number, capped: number, repeats: number }} what broke, how many answered, and what was left out
  */
 const htmlSlices = (html) => {
 	const runs = htmlNodeRuns(html);
+	/** @type {number[]} */
+	const rebuilt = [];
+	for (let at = 0; at < runs.length; at++) {
+		if (runs[at].rebuilt && runs[at].end > runs[at].start) rebuilt.push(at);
+	}
+	rebuilt.sort((a, b) => runs[a].start - runs[b].start);
 	/** @type {import("./relations").SliceCandidate[]} */
 	const candidates = [];
 	let budget = html.length * SLICE_BUDGET_FACTOR;
@@ -705,7 +758,8 @@ const htmlSlices = (html) => {
 			node.start > node.lo ||
 			node.end < node.hi ||
 			node.context === "" ||
-			holdsQuirksTable(runs, at)
+			holdsQuirksTable(runs, at) ||
+			holdsRebuiltContent(runs, rebuilt, at)
 		) {
 			skipped++;
 			continue;
@@ -839,10 +893,11 @@ const sweepRespellings = (minify, html, minified) => {
 	return reports;
 };
 
-// Inline elements an empty, attribute-less one of which renders nothing, so it
-// splits no word; one with attributes is kept, and its edges are edges.
+// Elements an empty, attribute-less one of which renders nothing, so it splits
+// no word: inline ones, and `script` and `style`, which are `display: none`. One
+// with attributes is kept, and its edges are edges.
 const EMPTY_INLINE_ELEMENTS = new Set(
-	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp small span strong sub sup time u var".split(
+	"a abbr b bdi bdo cite code data del dfn em i ins kbd label mark s samp script small span strong style sub sup time u var".split(
 		" "
 	)
 );
@@ -857,9 +912,10 @@ const EMPTY_INLINE_ELEMENTS = new Set(
  * @param {boolean} tree whether the element tree is read too
  * @param {CssOptions} cssOptions the options the sheets are minified with
  * @param {boolean=} edgesDrop whether whitespace at every element's edge may go, as `collapseWhitespace: "all"` drops it
+ * @param {boolean=} sheetsDrop whether a `<style>` whose sheet minifies to nothing may go, as a renderer under `removeEmptyElements` drops it
  * @returns {{ said: string[], sheets: string[] }} what it says, and each non-empty sheet
  */
-const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
+const htmlMeaning = (html, tree, cssOptions, edgesDrop, sheetsDrop) => {
 	/** @type {string[]} */
 	const said = [];
 	/** @type {string[]} */
@@ -921,15 +977,18 @@ const htmlMeaning = (html, tree, cssOptions, edgesDrop) => {
 			enter: (nodePath) => {
 				// Whitespace an empty inline element holds sits at both its edges.
 				if (pending && edgesDrop && /^\s*$/.test(nodePath.value())) return;
-				settle();
 				const parent = open[open.length - 1];
-				if (parent === "script") return;
 				const text = nodePath.value();
 				if (parent === "style") {
 					const css = canonicalCss(text, cssOptions);
+					// A sheet that says nothing leaves a dropped `<style>` as empty as none.
+					if (css === "" && sheetsDrop) return;
+					settle();
 					if (css !== "") sheets.push(css);
 					return;
 				}
+				settle();
+				if (parent === "script") return;
 				run += text;
 			},
 			exit: () => {}
@@ -981,8 +1040,11 @@ const meaningReports = (html, printed, options, cssOptions) => {
 		!options.removeRedundantAttributes &&
 		!options.mergeStyles;
 	const edgesDrop = options.collapseWhitespace === "all";
-	const before = htmlMeaning(html, tree, cssOptions, edgesDrop);
-	const after = htmlMeaning(printed, tree, cssOptions, edgesDrop);
+	const sheetsDrop =
+		options.removeEmptyElements === true &&
+		options.renderEmbeddedSource !== undefined;
+	const before = htmlMeaning(html, tree, cssOptions, edgesDrop, sheetsDrop);
+	const after = htmlMeaning(printed, tree, cssOptions, edgesDrop, sheetsDrop);
 	let at = 0;
 	while (at < before.said.length && before.said[at] === after.said[at]) at++;
 	if (at < before.said.length || at < after.said.length) {

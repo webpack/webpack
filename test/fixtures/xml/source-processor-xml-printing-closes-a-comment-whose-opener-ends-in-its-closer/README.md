@@ -1,0 +1,1 @@
+In XML `<!-->` opens a comment the input runs out in, though its text ends in `-->`: the closing `-->` cannot overlap the opening `<!--`. Beautifying closes it, or it holds the end tags after it (`idempotence`).

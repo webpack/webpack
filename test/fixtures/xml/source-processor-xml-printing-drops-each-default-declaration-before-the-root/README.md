@@ -1,0 +1,1 @@
+Only the first `<?xml ... ?>` is a declaration; a second one is a processing instruction with a reserved target. Minifying drops a declaration stating only the defaults when nothing printed precedes it, so it drops each such one in a row, not only the first: otherwise a second minify drops the next (`idempotence`).

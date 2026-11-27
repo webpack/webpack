@@ -1,0 +1,11 @@
+[
+	{
+		"mode": "minify",
+		"parseError": {
+			"fixture": "parseError"
+		},
+		"check": {
+			"fixture": "check"
+		}
+	}
+]

@@ -1,0 +1,1 @@
+A DOCTYPE the input runs out in, here in its internal subset though its text ends in `>`, would hold the end tags printed after it. Inside an element it is dropped, as a start tag the input ends in is; outside one nothing prints after it, so it stays (`spans`, `idempotence`).

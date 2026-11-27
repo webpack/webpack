@@ -1,0 +1,104 @@
+name: Fuzz
+
+# The unit suite replays one fixed seed; this searches new seeds at length, so
+# a red run here is a new syntax bug, reproducible from the seed it prints.
+on:
+  schedule:
+    - cron: "23 3 * * *"
+  workflow_dispatch:
+    inputs:
+      seed:
+        description: Seed to replay (random when empty)
+        required: false
+      runs:
+        description: Generated sources per syntax
+        required: false
+        default: "20000"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fuzz:
+    if: github.repository == 'webpack/webpack'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      issues: write
+    strategy:
+      fail-fast: false
+      matrix:
+        syntax: [css, html, javascript, xml]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Use Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: lts/*
+          cache: yarn
+
+      - run: node tooling/retry.js yarn --frozen-lockfile
+
+      - run: yarn link --frozen-lockfile || true
+
+      - run: yarn link webpack --frozen-lockfile
+
+      - name: Pick the seed
+        id: seed
+        run: |
+          seed="${INPUT_SEED:-$((RANDOM * 32768 + RANDOM))}"
+          echo "Seed: $seed (replay with FUZZ_SEED=$seed)" >> "$GITHUB_STEP_SUMMARY"
+          echo "seed=$seed" >> "$GITHUB_OUTPUT"
+        env:
+          INPUT_SEED: ${{ inputs.seed }}
+
+      - name: Fuzz ${{ matrix.syntax }}
+        id: fuzz
+        run: yarn test:base --testPathPatterns="unitCases/${{ matrix.syntax }}/fuzz" --testTimeout=3000000
+        env:
+          FUZZ_SEED: ${{ steps.seed.outputs.seed }}
+          FUZZ_RUNS: ${{ inputs.runs || '20000' }}
+          FUZZ_REPORT: ${{ runner.temp }}/fuzz-report.md
+
+      # A nightly failure is a new bug nobody watches for: file it, or add to the
+      # open issue for this syntax. A manual replay reports to whoever started it.
+      - name: Open an issue
+        if: failure() && steps.fuzz.outcome == 'failure' && github.event_name == 'schedule'
+        shell: bash
+        run: |
+          title="Fuzz: ${SYNTAX} syntax bug found"
+          {
+            echo "The nightly \`Fuzz\` run found a ${SYNTAX} source that breaks an invariant: ${RUN_URL}"
+            echo
+            echo "Replay: \`FUZZ_SEED=${SEED} FUZZ_RUNS=${RUNS} yarn test:base --testPathPatterns=\"unitCases/${SYNTAX}/fuzz\" --testTimeout=3000000\`"
+            echo
+            if [ -f "$REPORT" ]; then
+              cat "$REPORT"
+            else
+              echo "The run wrote no report: it timed out or crashed outside a generated source."
+            fi
+            echo
+            echo "Fix: add the shrunk source as a fixture, or a \`known\` entry if it is no bug (TESTING_DOCS.md, Fuzzing)."
+          } > issue.md
+          number="$(gh issue list --state open --search "\"${title}\" in:title" --json number --jq '.[0].number')"
+          if [ -n "$number" ]; then
+            gh issue comment "$number" --body-file issue.md
+          else
+            gh issue create --title "$title" --body-file issue.md
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          SYNTAX: ${{ matrix.syntax }}
+          REPORT: ${{ runner.temp }}/fuzz-report.md
+          SEED: ${{ steps.seed.outputs.seed }}
+          RUNS: ${{ inputs.runs || '20000' }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

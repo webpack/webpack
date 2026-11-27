@@ -270,7 +270,8 @@ describe("XmlSyntax — parsing", () => {
 			{ xml: true }
 		);
 		const root = A.child(0, document);
-		const second = A.child(1, root);
+		// The DOCTYPE stays between the two elements, where it stands.
+		const second = A.child(2, root);
 		expect(attributeValue(second, "x")).toBe("p q");
 		expect(attributeValue(second, "w")).toBe("1\n2");
 		expect(attributeValue(second, "v")).toBe("late");

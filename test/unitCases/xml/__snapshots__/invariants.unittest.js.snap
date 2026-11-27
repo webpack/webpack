@@ -5838,6 +5838,30 @@ exports[`XML syntax — invariants source-processor-svg-minification-should-writ
 
 exports[`XML syntax — invariants source-processor-svg-minification-should-write-a-smooth-cubic-only-where tokenizes 1`] = `"attr[5,10|12,38]\\" open[0,40|1,4] text[40,41] attr[47,48|50,74]\\" open[41,77|42,46]/ text[77,78] attr[84,85|87,127]\\" open[78,130|79,83]/ text[130,131] attr[137,138|140,182]\\" open[131,185|132,136]/ text[185,186] attr[192,193|195,247]\\" open[186,250|187,191]/ text[250,251] attr[257,258|260,338]\\" open[251,341|252,256]/ text[341,342] attr[348,349|351,398]\\" open[342,401|343,347]/ text[401,402] close[402,408|404,407] text[408,409] end=409"`;
 
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":5,\\"data\\":\\">\\",\\"start\\":3,\\"end\\":8}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":8,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":8}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer prints {"xml":true,"mode":"minify"} 1`] = `"<a/>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-comment-whose-opener-ends-in-its-closer tokenizes 1`] = `"open[0,3|1,2] comment[3,8|7,8] end=8"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"text\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&\\",\\"start\\":9,\\"end\\":10}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":10,\\"tagEnd\\":5,\\"nameEnd\\":5,\\"contentEnd\\":10}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended prints {"xml":true,"mode":"minify"} 1`] = `"<text>&amp;</text>"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-closes-a-start-tag-the-next-tag-ended tokenizes 1`] = `"open[0,5|1,5] close[5,9|7,8] text[9,10] end=10"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root parses 1`] = `"[{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":0,\\"end\\":21},{\\"type\\":7,\\"target\\":\\"xml\\",\\"data\\":\\"version=\\\\\\"1.0\\\\\\"\\",\\"start\\":21,\\"end\\":42}]"`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root parses 2`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root prints {"xml":true,"mode":"minify"} 1`] = `""`;
+
+exports[`XML syntax — invariants source-processor-xml-printing-drops-each-default-declaration-before-the-root tokenizes 1`] = `"comment[0,21|2,19] comment[21,42|23,40] end=42"`;
+
 exports[`XML syntax — invariants source-processor-xml-printing-keeps-a-banner-and-a-license-comment parses 1`] = `"[{\\"type\\":5,\\"data\\":\\"! Icons v1 - MIT License \\",\\"start\\":0,\\"end\\":32},{\\"type\\":3,\\"tagName\\":\\"svg\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"xmlns\\",\\"value\\":\\"http://www.w3.org/2000/svg\\",\\"nameStart\\":38,\\"nameEnd\\":43,\\"valueStart\\":45,\\"valueEnd\\":71}],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":73,\\"end\\":74},{\\"type\\":5,\\"data\\":\\" @license MIT \\",\\"start\\":74,\\"end\\":95},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":95,\\"end\\":96},{\\"type\\":3,\\"tagName\\":\\"g\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":99,\\"end\\":100},{\\"type\\":5,\\"data\\":\\"@preserve kept\\",\\"start\\":100,\\"end\\":121},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":121,\\"end\\":122},{\\"type\\":5,\\"data\\":\\" ! a space first, so inert \\",\\"start\\":122,\\"end\\":156},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":156,\\"end\\":157},{\\"type\\":3,\\"tagName\\":\\"rect\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"width\\",\\"value\\":\\"1\\",\\"nameStart\\":163,\\"nameEnd\\":168,\\"valueStart\\":170,\\"valueEnd\\":171},{\\"name\\":\\"height\\",\\"value\\":\\"1\\",\\"nameStart\\":173,\\"nameEnd\\":179,\\"valueStart\\":181,\\"valueEnd\\":182}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":157,\\"end\\":185,\\"tagEnd\\":185,\\"nameEnd\\":162,\\"contentEnd\\":185},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":185,\\"end\\":186}],\\"selfClosing\\":false,\\"start\\":96,\\"end\\":190,\\"tagEnd\\":99,\\"nameEnd\\":98,\\"contentEnd\\":186},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":190,\\"end\\":191},{\\"type\\":5,\\"data\\":\\" inert, so dropped \\",\\"start\\":191,\\"end\\":217},{\\"type\\":4,\\"data\\":\\"\\\\n\\",\\"start\\":217,\\"end\\":218}],\\"selfClosing\\":false,\\"start\\":33,\\"end\\":224,\\"tagEnd\\":73,\\"nameEnd\\":37,\\"contentEnd\\":218},{\\"type\\":5,\\"data\\":\\"!trailing banner\\",\\"start\\":225,\\"end\\":248}]"`;
 
 exports[`XML syntax — invariants source-processor-xml-printing-keeps-a-banner-and-a-license-comment parses 2`] = `""`;
@@ -19913,6 +19937,30 @@ exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-ov
 
 exports[`XML syntax — invariants xml-syntax-invariants-holds-every-relation-over-its-sources tokenizes 1`] = `"comment[0,21|2,19] attr[27,28|30,31]\\" open[21,33|22,26] open[33,40|34,39] text[40,44] close[44,52|46,51] comment[52,62|56,59] open[62,70|63,68]/ close[70,77|72,76] end=77"`;
 
+exports[`XML syntax — invariants xml-syntax-parsing-drops-a-doctype-the-input-runs-out-in-inside-an-element parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":31,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":31}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-drops-a-doctype-the-input-runs-out-in-inside-an-element parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-drops-a-doctype-the-input-runs-out-in-inside-an-element prints {"xml":true,"mode":"minify"} 1`] = `"<a/>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-drops-a-doctype-the-input-runs-out-in-inside-an-element tokenizes 1`] = `"open[0,3|1,2] doctype[3,31|13,14|-1,-1|-1,-1|16,31] end=31"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-between-two-texts-apart-from-them parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"&\\",\\"start\\":3,\\"end\\":4},{\\"type\\":6,\\"name\\":\\"a\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":4,\\"end\\":16},{\\"type\\":4,\\"data\\":\\">\\",\\"start\\":16,\\"end\\":17}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":17,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":17}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-between-two-texts-apart-from-them parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-between-two-texts-apart-from-them prints {"xml":true,"mode":"minify"} 1`] = `"<a>&amp;<!DOCTYPE a>></a>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-between-two-texts-apart-from-them tokenizes 1`] = `"open[0,3|1,2] text[3,4] doctype[4,16|14,15|-1,-1|-1,-1|-1,-1] text[16,17] end=17"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-inside-an-element-where-it-stands parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":6,\\"name\\":\\"a\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":3,\\"end\\":15}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":15,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":15}]"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-inside-an-element-where-it-stands parses 2`] = `""`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-inside-an-element-where-it-stands prints {"xml":true,"mode":"minify"} 1`] = `"<a><!DOCTYPE a></a>"`;
+
+exports[`XML syntax — invariants xml-syntax-parsing-keeps-a-doctype-inside-an-element-where-it-stands tokenizes 1`] = `"open[0,3|1,2] doctype[3,15|13,14|-1,-1|-1,-1|-1,-1] end=15"`;
+
 exports[`XML syntax — invariants xml-syntax-parsing-reports-what-an-entity-expands-to-at-its-reference parses 1`] = `"[{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":0,\\"end\\":59},{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":4,\\"data\\":\\"a\\\\nb\\\\n\\",\\"start\\":64,\\"end\\":70},{\\"type\\":3,\\"tagName\\":\\"x\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"a\\",\\"value\\":\\"1\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":70,\\"end\\":73,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1},{\\"type\\":4,\\"data\\":\\"t\\\\nc(\\",\\"start\\":70,\\"end\\":79},{\\"type\\":3,\\"tagName\\":\\"x\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"a\\",\\"value\\":\\"1\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":76,\\"end\\":79,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1},{\\"type\\":4,\\"data\\":\\"t)d\\",\\"start\\":76,\\"end\\":80},{\\"type\\":3,\\"tagName\\":\\"x\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"a\\",\\"value\\":\\"1\\",\\"nameStart\\":-1,\\"nameEnd\\":-1,\\"valueStart\\":-1,\\"valueEnd\\":-1}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":80,\\"end\\":83,\\"tagEnd\\":-1,\\"nameEnd\\":-1,\\"contentEnd\\":-1},{\\"type\\":4,\\"data\\":\\"t\\",\\"start\\":80,\\"end\\":83}],\\"selfClosing\\":false,\\"start\\":61,\\"end\\":87,\\"tagEnd\\":64,\\"nameEnd\\":63,\\"contentEnd\\":83}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-reports-what-an-entity-expands-to-at-its-reference parses 2`] = `""`;
@@ -20843,11 +20891,11 @@ exports[`XML syntax — invariants xml-syntax-parsing-should-require-a-lowercase
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-require-a-lowercase-hexadecimal-marker tokenizes 1`] = `"open[0,6|1,5] text[6,18] close[18,25|20,24] end=25"`;
 
-exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"v\\",\\"value\\":\\"&e;\\",\\"nameStart\\":6,\\"nameEnd\\":7,\\"valueStart\\":9,\\"valueEnd\\":12},{\\"name\\":\\"w\\",\\"value\\":\\"x\\\\ty\\",\\"nameStart\\":14,\\"nameEnd\\":15,\\"valueStart\\":17,\\"valueEnd\\":20}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":3,\\"end\\":23,\\"tagEnd\\":23,\\"nameEnd\\":5,\\"contentEnd\\":23},{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"v\\",\\"value\\":\\"&e;\\",\\"nameStart\\":59,\\"nameEnd\\":60,\\"valueStart\\":62,\\"valueEnd\\":65},{\\"name\\":\\"w\\",\\"value\\":\\"1&#10;2\\",\\"nameStart\\":67,\\"nameEnd\\":68,\\"valueStart\\":70,\\"valueEnd\\":77},{\\"name\\":\\"x\\",\\"value\\":\\"p\\\\r\\\\nq\\",\\"nameStart\\":79,\\"nameEnd\\":80,\\"valueStart\\":82,\\"valueEnd\\":86}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":56,\\"end\\":89,\\"tagEnd\\":89,\\"nameEnd\\":58,\\"contentEnd\\":89}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":93,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":89},{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":23,\\"end\\":56}]"`;
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag parses 1`] = `"[{\\"type\\":3,\\"tagName\\":\\"r\\",\\"namespace\\":3,\\"attributes\\":[],\\"children\\":[{\\"type\\":3,\\"tagName\\":\\"a\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"v\\",\\"value\\":\\"&e;\\",\\"nameStart\\":6,\\"nameEnd\\":7,\\"valueStart\\":9,\\"valueEnd\\":12},{\\"name\\":\\"w\\",\\"value\\":\\"x\\\\ty\\",\\"nameStart\\":14,\\"nameEnd\\":15,\\"valueStart\\":17,\\"valueEnd\\":20}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":3,\\"end\\":23,\\"tagEnd\\":23,\\"nameEnd\\":5,\\"contentEnd\\":23},{\\"type\\":6,\\"name\\":\\"r\\",\\"publicId\\":null,\\"systemId\\":null,\\"start\\":23,\\"end\\":56},{\\"type\\":3,\\"tagName\\":\\"b\\",\\"namespace\\":3,\\"attributes\\":[{\\"name\\":\\"v\\",\\"value\\":\\"&e;\\",\\"nameStart\\":59,\\"nameEnd\\":60,\\"valueStart\\":62,\\"valueEnd\\":65},{\\"name\\":\\"w\\",\\"value\\":\\"1&#10;2\\",\\"nameStart\\":67,\\"nameEnd\\":68,\\"valueStart\\":70,\\"valueEnd\\":77},{\\"name\\":\\"x\\",\\"value\\":\\"p\\\\r\\\\nq\\",\\"nameStart\\":79,\\"nameEnd\\":80,\\"valueStart\\":82,\\"valueEnd\\":86}],\\"children\\":[],\\"selfClosing\\":true,\\"start\\":56,\\"end\\":89,\\"tagEnd\\":89,\\"nameEnd\\":58,\\"contentEnd\\":89}],\\"selfClosing\\":false,\\"start\\":0,\\"end\\":93,\\"tagEnd\\":3,\\"nameEnd\\":2,\\"contentEnd\\":89}]"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag parses 2`] = `""`;
 
-exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag prints {"xml":true,"mode":"minify"} 1`] = `"<r><a v=\\"&e;\\" w=\\"x y\\"/><b v=\\"&e;\\" w=\\"1&#10;2\\" x=\\"p q\\"/></r><!DOCTYPE r [<!ENTITY e \\"late\\">]>"`;
+exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag prints {"xml":true,"mode":"minify"} 1`] = `"<r><a v=\\"&e;\\" w=\\"x y\\"/><!DOCTYPE r [<!ENTITY e \\"late\\">]><b v=\\"&e;\\" w=\\"1&#10;2\\" x=\\"p q\\"/></r>"`;
 
 exports[`XML syntax — invariants xml-syntax-parsing-should-resolve-an-xml-attribute-s-references-as-its-start-tag tokenizes 1`] = `"open[0,3|1,2] attr[6,7|9,12]\\" attr[14,15|17,20]\\" open[3,23|4,5]/ doctype[23,56|33,34|-1,-1|-1,-1|36,54] attr[59,60|62,65]\\" attr[67,68|70,77]\\" attr[79,80|82,86]\\" open[56,89|57,58]/ close[89,93|91,92] end=93"`;
 

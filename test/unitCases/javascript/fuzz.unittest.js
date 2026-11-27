@@ -1,7 +1,6 @@
 "use strict";
 
-const fc = require("fast-check");
-const { invariantFindings } = require("../../helpers/syntaxInvariants");
+const { fuzzSyntax } = require("../../helpers/syntaxFuzz");
 const syntax = require("../../helpers/syntaxInvariants/javascript");
 
 /**
@@ -87,18 +86,6 @@ const PIECES = [
 
 describe("JavaScript syntax fuzzing", () => {
 	it("holds its invariants on generated sources", () => {
-		// A fixed seed keeps CI deterministic; raise `numRuns` or change the
-		// seed locally to search further.
-		fc.assert(
-			fc.property(
-				fc
-					.array(fc.constantFrom(...PIECES), { maxLength: 32 })
-					.map((pieces) => pieces.join("")),
-				(source) => {
-					expect(invariantFindings(syntax, [["fuzz", source]])).toEqual([]);
-				}
-			),
-			{ seed: 7, numRuns: 1000 }
-		);
+		fuzzSyntax(syntax, PIECES);
 	});
 });
