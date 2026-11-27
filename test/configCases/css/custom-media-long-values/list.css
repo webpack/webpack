@@ -1,0 +1,4 @@
+@custom-media --big BIG;
+@custom-media --list LIST;
+@media (--list) { .list { color: red; } }
+.after-list { color: blue; }
