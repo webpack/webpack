@@ -33,8 +33,10 @@ function mode() {
 
 it("should fold literal reads and unread conversions as written", () => {
 	expect(joined()).toBe("a,b");
-	expect(negated(1, 0)).toBe(1);
-	expect(negated(-1, 0)).toBe(0);
+	// Read off an array, the arguments keep `negated` from folding at its calls.
+	const values = [1, -1, 0];
+	expect(negated(values[0], values[2])).toBe(1);
+	expect(negated(values[1], values[2])).toBe(0);
 	expect(() => bigint(1n)).toThrow(TypeError);
 	expect(() => bigint(2n)).toThrow(TypeError);
 	expect(picked()).toEqual({ b: 1 });

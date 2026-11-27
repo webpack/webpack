@@ -335,7 +335,6 @@ const OXC_SMALLER_BY_REASON = [
 			"swc exec: next_feedback_1_capture_1",
 			"swc exec: emotion_react_1",
 			"swc exec: terser_drop_unused_issue_t161_top_retain_15",
-			"swc exec: terser_pure_getters_impure_getter_2",
 			"swc exec: terser_destructuring_destructuring_assign_of_computed_key",
 			"swc exec: terser_issue_1447_conditional_false_stray_else_in_loop",
 			"swc exec: terser_labels_labels_3",
@@ -720,12 +719,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `loops` tests cover",
-		[
-			"terser compress: loops/drop_if_break_4",
-			"terser compress: loops/drop_if_else_break_4",
-			"terser compress: loops/issue_1532",
-			"terser compress: loops/issue_1648"
-		]
+		["terser compress: loops/issue_1532", "terser compress: loops/issue_1648"]
 	],
 	[
 		"oxc's own integration cases, several transforms combined, as oxc's `peephole/oxc.rs` tests show",
@@ -915,11 +909,7 @@ const OXC_SMALLER_BY_REASON = [
 	],
 	[
 		"oxc goes further than webpack on what terser's `pure_getters` tests cover",
-		[
-			"terser compress: pure_getters/impure_getter_1",
-			"terser compress: pure_getters/impure_getter_2",
-			"terser compress: pure_getters/issue_2313_7"
-		]
+		["terser compress: pure_getters/issue_2313_7"]
 	],
 	[
 		"boolean and conditional forms: `!a&&b` vs `a?!1:b`, `!!a` vs `a&&!0`, `x||void 0` vs `if(x)`, an `if` with or without braces, a test's branches swapped",

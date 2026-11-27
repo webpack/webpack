@@ -111,6 +111,52 @@ describe("comparators", () => {
 		});
 	});
 
+	describe("compareModulesByFullName", () => {
+		/**
+		 * @param {string} identifier module identifier
+		 * @returns {{ calls: number, identifier: () => string }} module that counts its identifier calls
+		 */
+		const createModule = (identifier) => {
+			const module = {
+				calls: 0,
+				identifier: () => {
+					module.calls++;
+					return identifier;
+				}
+			};
+			return module;
+		};
+
+		it("should order modules by their name relative to the context", () => {
+			const compare = compareModulesByFullName(
+				/** @type {EXPECTED_ANY} */ ({ context: "/app", root: {} })
+			);
+			const modules = ["/app/src/b.js", "/lib/a.js", "/app/src/a.js"].map(
+				createModule
+			);
+			modules.sort(/** @type {EXPECTED_ANY} */ (compare));
+			// "../lib/a.js" sorts before "./src/a.js"
+			expect(modules.map((m) => m.identifier())).toEqual([
+				"/lib/a.js",
+				"/app/src/a.js",
+				"/app/src/b.js"
+			]);
+		});
+
+		it("should resolve the name of each module only once per compiler", () => {
+			const compare = compareModulesByFullName(
+				/** @type {EXPECTED_ANY} */ ({ context: "/app", root: {} })
+			);
+			const modules = [];
+			for (let i = 0; i < 50; i++) {
+				modules.push(createModule(`/app/src/${(i * 7) % 50}.js`));
+			}
+			modules.sort(/** @type {EXPECTED_ANY} */ (compare));
+			modules.sort(/** @type {EXPECTED_ANY} */ (compare));
+			for (const module of modules) expect(module.calls).toBe(1);
+		});
+	});
+
 	describe("createCachedParameterizedComparator", () => {
 		it("should cache the produced comparator per argument", () => {
 			const arg = {};

@@ -25,8 +25,10 @@ it("should print `String` of a string as that string", () => {
 });
 
 it("should drop a `|0` an operand of `>>>` takes where it converts no later than before", () => {
-	expect(shifted(-1)).toBe(2147483647);
-	expect(shifted(4.7)).toBe(2);
+	// Read off an array, the arguments keep `shifted` from folding at its calls.
+	const values = [-1, 4.7];
+	expect(shifted(values[0])).toBe(2147483647);
+	expect(shifted(values[1])).toBe(2);
 });
 
 it("should write a regexp a sequence ends with as template text", () => {

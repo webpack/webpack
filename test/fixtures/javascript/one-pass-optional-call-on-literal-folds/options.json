@@ -1,0 +1,1 @@
+[{"mode":"minify","ecma":2020,"compress":{},"mangle":false,"behavior":true},{"mode":"minify","ecma":2020,"compress":{"toplevel":true,"passes":2},"mangle":true,"behavior":true}]
