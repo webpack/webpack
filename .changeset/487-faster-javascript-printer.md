@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reduce repeated JavaScript minifier work and temporary source-map allocations.
+Reduce repeated JavaScript minifier work, eval scans and source-map allocations.

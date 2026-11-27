@@ -80,6 +80,35 @@ const decodeLine = (mappings) => {
 };
 
 describe("syntax-printer", () => {
+	it("should scan each function for eval once per print", () => {
+		const findNode = SyntaxTree.prototype.findNode;
+		const find = jest.spyOn(SyntaxTree.prototype, "findNode");
+		/** @type {Set<number>} */
+		const scanned = new Set();
+		find.mockImplementation(
+			/** @this {import("../../../lib/javascript/syntax-parser").SyntaxTree} */
+			function (node, test) {
+				if (test.name === "findEvalRead") {
+					expect(scanned.has(node)).toBe(false);
+					scanned.add(node);
+				}
+				return findNode.call(this, node, test);
+			}
+		);
+		const source = fixture("javascript", "minify-eval-scan-reuse");
+		try {
+			for (const name of ["eval", "String", "\\u0065val", "eval"]) {
+				const input = source.replace("eval", name);
+				scanned.clear();
+				const { code } = minifyOnePass(input, { compress: {}, mangle: false });
+				expect(scanned.size > 0).toBe(name !== "String");
+				expect(runProgram(code)).toBe(runProgram(input));
+			}
+		} finally {
+			find.mockRestore();
+		}
+	});
+
 	it("should reuse numeric spellings across prints without changing formats", () => {
 		const source = fixture("javascript", "minify-number-spelling-reuse");
 		const options = { compress: false, mangle: false };
