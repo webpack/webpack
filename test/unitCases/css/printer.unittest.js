@@ -4096,6 +4096,18 @@ describe("CssSyntax minify — work bounded by the input's size", () => {
 		expect(code.startsWith("a{x:1-1 -1-1 ")).toBe(true);
 	});
 
+	it("parts a unicode-range's comment gaps without reading it all back", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.startsWith("@font-face{unicode-range:U+0,U+0,")).toBe(true);
+		expect(code.endsWith(",U+0,U+1}")).toBe(true);
+	});
+
 	it("parts a long custom property's tokens without reading it all back", () => {
 		const { code, seconds } = timed(
 			fixture(

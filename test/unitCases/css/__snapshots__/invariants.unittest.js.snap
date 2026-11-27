@@ -8200,6 +8200,29 @@ delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,7] colon[7,8] number[8,9] 
 212875,212876] delim[212876,212877] ident[212877,212878] left-curly-bracket[212878,212879] ident[212879,212887] colon[212887,212888] number[212888,212889] right-curly-bracket[212889,212890] end=212890"
 `;
 
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments parses 1`] = `
+"length 4600102, sha256 097c553a8e2daac4
+[[\\"at-rule\\",\\"font-face\\",[],[[\\"ident\\",\\"unicode-range\\"],\\":\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"id
+…
+,0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+1\\",1,\\"integer\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments prints {"mode":"minify"} 1`] = `
+"length 400029, sha256 ce051bb5df69de02
+@font-face{unicode-range:U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0
+…
+U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+1}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments tokenizes 1`] = `
+"length 8589163, sha256 b13f6106b703f370
+at-keyword[0,10] left-curly-bracket[10,11] ident[11,24] colon[24,25] ident[25,26] number[26,28] comment[28,32] comma[32,33] ident[33,34] number[34,36] comment[36,40] comma[40,41] ident[41,42] number[4
+…
+16] comma[800016,800017] ident[800017,800018] number[800018,800020] comment[800020,800024] comma[800024,800025] ident[800025,800026] number[800026,800028] right-curly-bracket[800028,800029] end=800029"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-at-rules-that-double-per-link parses 1`] = `
 "length 7837, sha256 3c436153561f1b47
 [[\\"at-rule\\",\\"custom-selector\\",[\\" \\",\\":\\",[\\"ident\\",\\"--s0\\"],\\" \\",\\".\\",[\\"ident\\",\\"a\\"]],null],[\\"at-rule\\",\\"custom-selector\\",[\\" \\",\\":\\",[\\"ident\\",\\"--s1\\"],\\" \\",\\":\\",[\\"ident\\",\\"--s0\\"],\\" \\",\\":\\",[\\"ident\\",\\"--s0\\"]],null],[\\"a
