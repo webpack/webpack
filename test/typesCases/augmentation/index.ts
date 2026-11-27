@@ -23,8 +23,12 @@ import type {
 	KnownUnsafeCacheData,
 	ParserState
 } from "webpack";
+import type { Compiler, Generator, Parser, ParsersAndGeneratorsByModuleType } from "webpack";
 
 declare module "webpack" {
+	interface ParsersAndGeneratorsByModuleType {
+		"my-type": [MyParser, MyParserOptions, Generator, MyGeneratorOptions];
+	}
 	interface KnownAssetModuleBuildInfo {
 		myField?: number;
 	}
@@ -78,6 +82,13 @@ declare module "webpack" {
 	}
 }
 
+declare class MyParser extends Parser {
+	constructor(strict: boolean);
+	myParse(): void;
+}
+type MyParserOptions = { strict: boolean };
+type MyGeneratorOptions = { minify: boolean };
+
 type MyField = number | undefined;
 
 const fields: MyField[] = [
@@ -129,4 +140,27 @@ declare const state: ParserState;
 const fromState: MyField = state.myField;
 const parsed: string | Buffer = state.source;
 
-export { fields, own, wrong, fromState, parsed };
+// A plugin's own module type gets its parser and options on the factory's hooks.
+const ownJavascript: ParsersAndGeneratorsByModuleType["javascript/auto"][1] = {};
+declare const compiler: Compiler;
+compiler.hooks.normalModuleFactory.tap("MyPlugin", (factory) => {
+	factory.hooks.createParser
+		.for("my-type")
+		.tap("MyPlugin", (options) => new MyParser(options.strict));
+	factory.hooks.parser.for("my-type").tap("MyPlugin", (parser, options) => {
+		parser.myParse();
+		const strict: boolean = options.strict;
+		return strict;
+	});
+	factory.hooks.createGenerator
+		.for("my-type")
+		// @ts-expect-error the generator options are `MyGeneratorOptions`
+		.tap("MyPlugin", (options) => options.strict);
+	const parser: MyParser = factory.getParser("my-type", { strict: true });
+	// @ts-expect-error the parser options are `MyParserOptions`
+	factory.getParser("my-type", { strict: "yes" });
+	// A module type no plugin registers still takes any options.
+	factory.getParser("other-type", { anything: 1 });
+});
+
+export { ownJavascript, fields, own, wrong, fromState, parsed };
