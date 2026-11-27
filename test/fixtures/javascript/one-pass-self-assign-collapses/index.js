@@ -13,8 +13,12 @@ function again(value) {
 	var kept = value + 1;
 	return (kept = kept) + kept;
 }
+function compound(value) {
+	var sum = value + 1;
+	return (sum += sum);
+}
 function other(value, next) {
 	var kept = value + 1;
 	return [(kept = next), kept];
 }
-console.log(divide(2), declared(2), again(1), other(1, 5));
+console.log(divide(2), declared(2), again(1), compound(1), other(1, 5));
