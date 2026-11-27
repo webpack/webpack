@@ -6,6 +6,10 @@ import "./a3.css";
 import "./d.css";
 import "./a4.css";
 import "./e.css";
+import "./a5.css";
+import "./f.css";
+import "./a6.css";
+import "./g.css";
 
 const fs = __non_webpack_require__("fs");
 const path = __non_webpack_require__("path");
@@ -34,6 +38,8 @@ const topLevelSelectors = (css) => {
 		} else if (c === "{") {
 			if (depth === 0) selectors.push(css.slice(start, i).trim());
 			depth++;
+		} else if (c === ";" && depth === 0) {
+			start = i + 1;
 		} else if (c === "}") {
 			depth--;
 			if (depth === 0) start = i + 1;
@@ -44,7 +50,10 @@ const topLevelSelectors = (css) => {
 
 it("should close what a module left open before the next module", () => {
 	const css = fs.readFileSync(path.join(__dirname, `bundle${__STATS_I__}.css`), "utf-8");
-	expect(topLevelSelectors(css)).toEqual([
+	// A rule with no block ends where its module does; minimized, it is dropped.
+	expect(
+		topLevelSelectors(css).filter((selector) => selector !== ".dangling")
+	).toEqual([
 		".a1",
 		".b",
 		".a2",
@@ -52,6 +61,10 @@ it("should close what a module left open before the next module", () => {
 		".a3",
 		".d",
 		".a4",
-		".e"
+		".e",
+		".a5",
+		".f",
+		".a6",
+		".g"
 	]);
 });
