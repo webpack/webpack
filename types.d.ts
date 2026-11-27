@@ -8209,6 +8209,16 @@ declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
 }
 
 /**
+ * One parsed stylesheet and the state of the walk and print reading it: the
+ * node and list columns, the streaming frames, the per-run options and caches.
+ * `S` is the tree being read; a run a visitor or renderer starts parks it in a
+ * spare (see `swapTrees`), so the outer run finds it untouched.
+ */
+declare class CssSyntaxParser extends CssTokenizer {
+	constructor();
+}
+
+/**
  * The path every visitor of a CSS `SourceProcessor` run receives, its reads
  * defaulting to the node the walk is at; outside a walk it is `A`, read by
  * passing the node a parse returned. Every field `CssParser` reads goes through
@@ -14973,6 +14983,35 @@ declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
 }
 
 /**
+ * One parsed HTML document and the state of the parse, walk and print reading
+ * it: the node and attribute columns, the tokenizer and tree builder, the
+ * per-run options and cursors. `S` is the tree being read; a run a visitor
+ * starts parks it in a spare (see `swapTrees`), so the outer run finds it
+ * untouched.
+ */
+declare class HtmlSyntaxParser extends HtmlTokenizer {
+	constructor();
+	inputHasCr: boolean;
+	nextAmpersand: number;
+	inputHasNul: boolean;
+	skipText: boolean;
+
+	/**
+	 * the insertion mode, a `MODE_*`
+	 */
+	mode: number;
+	framesetOk: boolean;
+	pendAttrStart: number;
+	pendAttrDropped: boolean;
+	fosterParenting: boolean;
+	tokenEnd: number;
+	swallowNextNewline: boolean;
+	eofInTag: boolean;
+	selfClosingAcknowledged: boolean;
+	head: number;
+}
+
+/**
  * The path every visitor of an HTML `SourceProcessor` run receives, its reads
  * defaulting to the node the walk is at; outside a walk it is `A`, read by
  * passing the node a parse returned. Every field a consumer reads goes through
@@ -15237,6 +15276,186 @@ declare interface HtmlTokenCallbacks {
 	 * read a `noscript` as raw text, as a document with scripting on does
 	 */
 	scripting?: boolean;
+}
+
+/**
+ * The WHATWG HTML tokenizer (§13.2.5), its state in fields. Each token goes to
+ * the `on*` handler of its kind, which `SyntaxParser` overrides.
+ */
+declare abstract class HtmlTokenizer {
+	/**
+	 * Handles a start tag token. Returns where to tokenize on from.
+	 */
+	onOpenTag(
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		selfClosing: boolean
+	): number;
+
+	/**
+	 * Handles an end tag token. Returns where to tokenize on from.
+	 */
+	onCloseTag(
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number
+	): number;
+
+	/**
+	 * Handles a run of character tokens.
+	 */
+	onText(input: string, start: number, end: number): void;
+
+	/**
+	 * Handles an attribute of the tag being read. Returns where to tokenize on
+	 * from, `next` (past the value's closing quote, if any) when it reads on.
+	 */
+	onAttribute(
+		input: string,
+		nameStart: number,
+		nameEnd: number,
+		valueStart: number,
+		valueEnd: number,
+		quoteType: number,
+		next: number
+	): number;
+
+	/**
+	 * Handles a comment token, which a CDATA section and a bogus comment also are.
+	 */
+	onComment(
+		input: string,
+		start: number,
+		end: number,
+		dataStart: number,
+		dataEnd: number
+	): number;
+
+	/**
+	 * Handles a DOCTYPE token. Returns where to tokenize on from.
+	 */
+	onDoctype(
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		publicStart: number,
+		publicEnd: number,
+		systemStart: number,
+		systemEnd: number,
+		forceQuirks: boolean
+	): number;
+
+	/**
+	 * Handles a parse error the tokenizer found.
+	 */
+	onParseError(
+		input: string,
+		code: string,
+		start: number,
+		end: number,
+		severity: ParseErrorSeverity
+	): void;
+
+	/**
+	 * Whether the adjusted current node is in a foreign (SVG/MathML) namespace,
+	 * where a `<![CDATA[` opens a CDATA section.
+	 */
+	isForeign(): boolean;
+
+	/**
+	 * Whether the tree builder will not switch the content mode for this start
+	 * tag, so the tokenizer stays in the data state.
+	 */
+	vetoesContentMode(name: string): boolean;
+
+	/**
+	 * Handles an XML start tag, after its attributes.
+	 */
+	onXmlOpenTag(
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		selfClosing: boolean
+	): void;
+
+	/**
+	 * Handles an XML end tag.
+	 */
+	onXmlCloseTag(
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number
+	): void;
+
+	/**
+	 * Handles a run of XML character data.
+	 */
+	onXmlText(input: string, start: number, end: number): void;
+
+	/**
+	 * Handles an attribute of the XML start tag being read.
+	 */
+	onXmlAttribute(
+		input: string,
+		nameStart: number,
+		nameEnd: number,
+		valueStart: number,
+		valueEnd: number,
+		quoteType: number
+	): void;
+
+	/**
+	 * Handles an XML comment, CDATA section or processing instruction.
+	 */
+	onXmlComment(
+		input: string,
+		start: number,
+		end: number,
+		dataStart: number,
+		dataEnd: number
+	): void;
+
+	/**
+	 * Handles an XML document type declaration.
+	 */
+	onXmlDoctype(
+		input: string,
+		start: number,
+		end: number,
+		nameStart: number,
+		nameEnd: number,
+		publicStart: number,
+		publicEnd: number,
+		systemStart: number,
+		systemEnd: number,
+		forceQuirks: boolean,
+		subsetStart: number,
+		subsetEnd: number
+	): void;
+
+	/**
+	 * Tokenize `input` from `pos`, calling this tokenizer's handlers. The input is
+	 * released afterwards, also when a handler throws.
+	 */
+	tokenize(input: string, pos: number, fragmentContext?: string): number;
+
+	/**
+	 * Tokenize XML 1.0 markup (§2.4-§4.1) into its `onXml*` handlers, so one
+	 * tree builder serves both. Never throws: a document that is not well-formed
+	 * reads on the way a lenient processor would, reporting nothing.
+	 */
+	tokenizeXml(input: string, pos: number): number;
 }
 declare interface HtmlTransformHtmlContext {
 	outputName: string;
@@ -19968,6 +20187,34 @@ declare class JavascriptSourceProcessor<
 		writes: DeferredWrite[]
 	) => string;
 	static deferredWrite: (id: number) => string;
+}
+
+/**
+ * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
+ * ships no parser dependency. `WebpackParser` below subclasses it and
+ * overrides the hot paths.
+ * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/state.js
+ */
+declare class JavascriptSyntaxParser extends JavascriptTokenizer {
+	constructor(
+		options: undefined | null | Partial<OptionsSyntaxParser>,
+		input: string,
+		startPos?: number
+	);
+	potentialArrowAt: number;
+	awaitIdentPos: number;
+	awaitPos: number;
+	yieldPos: number;
+	labels: LabelLike[];
+	undefinedExports: Record<string, NodeLike>;
+	scopeStack: ParserScope[];
+	privateNameStack: any[];
+	enterScope(flags: number): void;
+	[Symbol.iterator](): Iterator<Token, Token>;
+	static tokenizer(
+		input: string,
+		options?: Partial<OptionsSyntaxParser>
+	): JavascriptSyntaxParser;
 }
 
 /**
@@ -36057,34 +36304,6 @@ type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	exports.KnownSyncWasmModuleBuildMeta;
 
 /**
- * The ECMAScript parser webpack owns, ported from acorn 8.18.0 so the bundler
- * ships no parser dependency. `WebpackParser` below subclasses it and
- * overrides the hot paths.
- * acorn source: https://github.com/acornjs/acorn/blob/8.18.0/acorn/src/state.js
- */
-declare class SyntaxParser extends JavascriptTokenizer {
-	constructor(
-		options: undefined | null | Partial<OptionsSyntaxParser>,
-		input: string,
-		startPos?: number
-	);
-	potentialArrowAt: number;
-	awaitIdentPos: number;
-	awaitPos: number;
-	yieldPos: number;
-	labels: LabelLike[];
-	undefinedExports: Record<string, NodeLike>;
-	scopeStack: ParserScope[];
-	privateNameStack: any[];
-	enterScope(flags: number): void;
-	[Symbol.iterator](): Iterator<Token, Token>;
-	static tokenizer(
-		input: string,
-		options?: Partial<OptionsSyntaxParser>
-	): SyntaxParser;
-}
-
-/**
  * Defines the synthetic dependency location type used by this module.
  */
 declare interface SyntheticDependencyLocation {
@@ -37989,7 +38208,7 @@ type WebpackOptionsNormalizedWithDefaults = WebpackOptionsNormalized & {
  * tokenizer fast paths, import attributes and import phases (with acorn's
  * `!forNew` guard, unlike the former `acorn-import-phases` package).
  */
-declare class WebpackParser extends SyntaxParser {
+declare class WebpackParser extends JavascriptSyntaxParser {
 	constructor(
 		options: OptionsSyntaxParser & {
 			lazyComments?: CollectedComment[];
@@ -38353,7 +38572,7 @@ declare class WebpackParser extends SyntaxParser {
 	static tokenizer(
 		input: string,
 		options?: Partial<OptionsSyntaxParser>
-	): SyntaxParser;
+	): JavascriptSyntaxParser;
 }
 
 /**
@@ -40615,7 +40834,7 @@ declare namespace exports {
 				export let wordsRegexp: (words: string) => RegExp;
 				export {
 					LEGACY_ASSERT_ATTRIBUTES,
-					SyntaxParser as Parser,
+					JavascriptSyntaxParser as Parser,
 					ParserPosition,
 					ParserSourceLocation,
 					Position,
@@ -41206,7 +41425,7 @@ declare namespace exports {
 				export let unescapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
-				export { CssTokenizer as Tokenizer };
+				export { CssSyntaxParser as Parser, CssTokenizer as Tokenizer };
 			}
 			/** exposed as `webpack.css.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let printer: (
@@ -41408,6 +41627,7 @@ declare namespace exports {
 					pos?: number,
 					callbacks?: HtmlTokenCallbacks
 				) => number;
+				export { HtmlSyntaxParser as Parser };
 			}
 			/** exposed as `webpack.html.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let printer: (

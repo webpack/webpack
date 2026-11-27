@@ -141,12 +141,12 @@ Conventions every language keeps, and a new member follows:
 
 - `syntax.js` publishes the parser, the printer and `SourceProcessor` only — read a former re-export off `parser` or `printer`.
 - `syntax-tokenizer.js` holds the tokenizer (§4): the stateless `readToken` and its `consume*` helpers, and `Tokenizer`, the token stream the parser pulls from. It reports parse errors into the tree `syntax-parser.js` names with `setParseTree`, and `syntax-parser.js` re-exports what it publishes.
-- `syntax-targets.js` holds the `ALLOWS_*` bits of `SyntaxTree#_targetAllows`: what every browser a print targets reads, resolved once per print, and read by the parser and the printer.
+- `syntax-targets.js` holds the `ALLOWS_*` bits of `SyntaxParser#_targetAllows`: what every browser a print targets reads, resolved once per print, and read by the parser and the printer.
 
 ## HTML
 
-- `syntax.js` mirrors `css`, publishing the parser, the printer and `SourceProcessor` only. `syntax-tokenizer.js` holds the tokenizers and the entity table: `Tokenizer`, which `SyntaxTree` extends so each token reaches the tree builder as a method call: an HTML one through `tokenize` and the `on*` handlers, an XML one through `tokenizeXml` and the `onXml*` handlers. `syntax-parser.js` holds §13.2 tree construction.
-- `syntax-options.js` holds the `MINIFY_*` bits of `SyntaxTree#_minifyOptions`: the print's minifier options, resolved once per run, and read by the parser and the printer.
+- `syntax.js` mirrors `css`, publishing the parser, the printer and `SourceProcessor` only. `syntax-tokenizer.js` holds the tokenizers and the entity table: `Tokenizer`, which `SyntaxParser` extends so each token reaches the tree builder as a method call: an HTML one through `tokenize` and the `on*` handlers, an XML one through `tokenizeXml` and the `onXml*` handlers. `syntax-parser.js` holds §13.2 tree construction.
+- `syntax-options.js` holds the `MINIFY_*` bits of `SyntaxParser#_minifyOptions`: the print's minifier options, resolved once per run, and read by the parser and the printer.
 
 ## XML
 
