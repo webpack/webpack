@@ -148,4 +148,6 @@ it("should keep a live template delimiter in a foreign sheet's CDATA section liv
 	const html = read("markup");
 	expect(html).toContain('--cdata-live:"{{live}}"');
 	expect(html).toContain('--cdata-literal:"&amp;#123;{literal}}"');
+	// a delimiter only the section's end joins is none the page wrote
+	expect(html).toContain('--span:"&#123;{span}}"');
 });
