@@ -20,7 +20,15 @@ it("should keep text spelling an internal marker as text", () => {
 	expect(html).toContain("<p id=auto>__WEBPACK_CSS_PUBLIC_PATH_AUTO__</p>");
 	expect(html).toContain(
 		'id=frame srcdoc="<p>__WEBPACK_HTML_ASSET_URL__00__END__"></iframe>'
+	);	// after `&#`, where a reference would read the stand-in's first character
+	expect(html).toContain(
+		"<p id=reference>&#__WEBPACK_CSS_PUBLIC_PATH_AUTO__ &#x__WEBPACK_CSS_PUBLIC_PATH_AUTO__</p>"
 	);
+	expect(read("reference")).toContain(
+		"<p id=reference>&#__WEBPACK_CSS_PUBLIC_PATH_AUTO__ &#X__WEBPACK_CSS_PUBLIC_PATH_AUTO__</p>"
+	);
+	expect(html).toContain("<p id=bogus>a</p>");
+	expect(html).not.toContain("webpackhtmltext");
 });
 
 it("should keep a sheet's text spelling an internal marker inside the `<style>`", () => {
@@ -45,13 +53,14 @@ it("should not inline into foreign content and keep `</noscript>` escaped", () =
 });
 
 // the banner page is built everywhere but Windows, where its chunk name is no path
-(fs.existsSync(path.resolve(__dirname, "banner.html")) ? it : it.skip)(
-	"should keep a license banner's comment closed where it ends", () => {
-	const html = read("banner");
-	// no `<noscript>` on the page, so a raw template keeps `</noscript>` as written
-	expect(html).toContain("String.raw`</noscript>`");
-	expect(html).toContain("see a* /window.banner = 1;/*b.js.LICENSE.txt */");
-});
+if (fs.existsSync(path.resolve(__dirname, "banner.html"))) {
+	it("should keep a license banner's comment closed where it ends", () => {
+		const html = read("banner");
+		// no `<noscript>` on the page, so a raw template keeps `</noscript>` as written
+		expect(html).toContain("String.raw`</noscript>`");
+		expect(html).toContain("see a* /window.banner = 1;/*b.js.LICENSE.txt */");
+	});
+}
 
 it("should escape a URL once per level of `srcdoc` it is written into", () => {
 	const html = read("nested");

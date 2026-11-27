@@ -47,6 +47,7 @@ module.exports = {
 		foreign: "./foreign.html",
 		markup: "./markup.html",
 		frame: "./frame.html",
+		reference: "./reference.html",
 		inline: "./inline.html",
 		split: "./split.html"
 	},
