@@ -143,3 +143,9 @@ it("should keep a literal template delimiter in a foreign sheet led by a comment
 it("should keep an escaped template delimiter in a foreign sheet escaped beside a literal one in a comment", () => {
 	expect(read("markup")).not.toContain('--escaped:"{{value}}"');
 });
+
+it("should keep a live template delimiter in a foreign sheet's CDATA section live", () => {
+	const html = read("markup");
+	expect(html).toContain('--cdata-live:"{{live}}"');
+	expect(html).toContain('--cdata-literal:"&amp;#123;{literal}}"');
+});
