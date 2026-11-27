@@ -19,6 +19,21 @@ describe("xmlMinify", () => {
 		expect(xmlMinify.getEmbeddedTypes()).toContain("javascript");
 	});
 
+	it("should read a namespace declaration after its whitespace is collapsed", async () => {
+		const { code } = await xmlMinify(
+			{
+				"a.svg": fixture(
+					"xml",
+					"xml-minify-reads-a-namespace-declaration-after-whitespace-is-collapsed"
+				)
+			},
+			undefined,
+			{ collapseAttributeWhitespace: true, removeUnknownElements: true }
+		);
+		expect(code).not.toContain("<unknown");
+		expect(code).toContain("<rect");
+	});
+
 	it("should offer scripts and event handlers to the caller's renderer first", async () => {
 		const source = fixture("xml", "xml-minify-offers-scripts-and-handlers");
 		/** @type {string[]} */
