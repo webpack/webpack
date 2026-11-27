@@ -95,13 +95,14 @@ describe("syntax-printer", () => {
 				return findNode.call(this, node, test);
 			}
 		);
-		const source = fixture("javascript", "minify-eval-scan-reuse");
+		const {
+			inputs
+		} = require("../../fixtures/javascript/minify-eval-scan-reuse/fixture");
 		try {
-			for (const name of ["eval", "String", "\\u0065val", "eval"]) {
-				const input = source.replace("eval", name);
+			for (const { source: input, hasEval } of inputs) {
 				scanned.clear();
 				const { code } = minifyOnePass(input, { compress: {}, mangle: false });
-				expect(scanned.size > 0).toBe(name !== "String");
+				expect(scanned.size > 0).toBe(hasEval);
 				expect(runProgram(code)).toBe(runProgram(input));
 			}
 		} finally {
