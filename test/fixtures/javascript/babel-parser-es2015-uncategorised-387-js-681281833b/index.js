@@ -1,0 +1,1 @@
+export new Foo();

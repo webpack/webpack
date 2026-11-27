@@ -1,0 +1,2 @@
+//@flow
+instance.method()<_>();

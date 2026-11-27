@@ -1,0 +1,2 @@
+interface I {};
+interface I {};

@@ -1,0 +1,1 @@
+throw { message: "Error" }

@@ -1,0 +1,4 @@
+class Foo {
+  @abc
+  constructor(){}
+}

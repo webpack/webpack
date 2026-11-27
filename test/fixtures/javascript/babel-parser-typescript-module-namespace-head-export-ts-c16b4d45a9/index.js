@@ -1,0 +1,1 @@
+export namespace X.Y {}

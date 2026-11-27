@@ -1,0 +1,1 @@
+declare module "foo" { declare export default number|string; }

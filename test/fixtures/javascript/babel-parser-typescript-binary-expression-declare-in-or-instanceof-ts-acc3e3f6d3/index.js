@@ -1,0 +1,1 @@
+declare instanceof declare in {};

@@ -1,0 +1,4 @@
+@abc
+class Foo {
+
+}

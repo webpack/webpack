@@ -1,0 +1,1 @@
+function normal(x, y = 10) {}

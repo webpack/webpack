@@ -1,0 +1,1 @@
+if (morning) function a(){}

@@ -1,0 +1,1 @@
+var foo = async function(promise) { await promise; }

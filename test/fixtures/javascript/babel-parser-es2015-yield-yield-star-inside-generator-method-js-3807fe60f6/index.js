@@ -1,0 +1,1 @@
+var x = { *test () { yield *v } };

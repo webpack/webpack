@@ -1,0 +1,1 @@
+interface ? true : false;

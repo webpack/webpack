@@ -1,0 +1,1 @@
+declare interface I {}

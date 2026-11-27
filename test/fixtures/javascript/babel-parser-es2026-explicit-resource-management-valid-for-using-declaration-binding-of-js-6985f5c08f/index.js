@@ -1,0 +1,3 @@
+{
+  for (using of = reader();;);
+}

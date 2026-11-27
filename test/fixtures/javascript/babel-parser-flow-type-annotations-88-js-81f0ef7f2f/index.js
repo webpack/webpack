@@ -1,0 +1,1 @@
+var identity: <T>(x: T, ...y:T[]) => T

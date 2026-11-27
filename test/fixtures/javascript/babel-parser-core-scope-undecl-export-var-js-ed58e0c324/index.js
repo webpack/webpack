@@ -1,0 +1,4 @@
+{
+  var encrypt
+}
+export { encrypt }

@@ -1,0 +1,2 @@
+foo.interface;
+interface.foo;

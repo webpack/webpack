@@ -1,0 +1,1 @@
+import.sync("./foo.js");

@@ -1,0 +1,1 @@
+var Foo = @foo class Foo {}

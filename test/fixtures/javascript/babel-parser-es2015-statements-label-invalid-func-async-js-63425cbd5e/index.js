@@ -1,0 +1,1 @@
+foo: async function bar() {}

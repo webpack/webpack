@@ -1,0 +1,3 @@
+const A = () => {
+  new.target;
+}

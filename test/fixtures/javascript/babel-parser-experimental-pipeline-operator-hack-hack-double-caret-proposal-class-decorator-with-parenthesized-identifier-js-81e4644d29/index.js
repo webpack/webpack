@@ -1,0 +1,1 @@
+value |> @(foo) class { constructor () { ^^; } }

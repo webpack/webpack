@@ -1,0 +1,1 @@
+(function() { "use strict"; f(yield v) })

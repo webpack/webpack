@@ -1,0 +1,1 @@
+function* bar() { yield class {} }

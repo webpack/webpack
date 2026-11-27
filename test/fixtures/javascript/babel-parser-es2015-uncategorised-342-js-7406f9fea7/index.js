@@ -1,0 +1,1 @@
+x = { set method(val) v = val }

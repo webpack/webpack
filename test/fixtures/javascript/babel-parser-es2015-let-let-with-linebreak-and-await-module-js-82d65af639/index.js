@@ -1,0 +1,2 @@
+let
+await 0;

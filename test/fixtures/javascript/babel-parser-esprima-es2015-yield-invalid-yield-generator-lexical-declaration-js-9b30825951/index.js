@@ -1,0 +1,1 @@
+function *g() { let yield; }

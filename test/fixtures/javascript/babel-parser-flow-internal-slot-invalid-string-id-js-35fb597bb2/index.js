@@ -1,0 +1,1 @@
+interface C { [["K"]]: string }

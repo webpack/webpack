@@ -1,0 +1,2 @@
+declare export let
+if

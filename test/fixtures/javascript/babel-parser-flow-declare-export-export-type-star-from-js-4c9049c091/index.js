@@ -1,0 +1,1 @@
+declare module "foo" { declare export type * from "bar"; }

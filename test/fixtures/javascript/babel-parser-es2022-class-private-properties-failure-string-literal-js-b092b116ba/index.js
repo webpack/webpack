@@ -1,0 +1,3 @@
+class Foo {
+  #"p" = x
+}

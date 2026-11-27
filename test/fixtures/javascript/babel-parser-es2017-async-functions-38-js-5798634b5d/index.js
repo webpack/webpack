@@ -1,0 +1,1 @@
+const { async: foo } = bar;

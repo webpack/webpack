@@ -1,0 +1,1 @@
+function hello() { "use strict"; var implements; }

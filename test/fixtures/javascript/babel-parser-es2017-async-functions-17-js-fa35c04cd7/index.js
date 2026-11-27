@@ -1,0 +1,1 @@
+f(a, async promise => await promise)

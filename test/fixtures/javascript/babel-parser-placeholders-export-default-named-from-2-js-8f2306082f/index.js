@@ -1,0 +1,1 @@
+export %%NAME%% from "file";

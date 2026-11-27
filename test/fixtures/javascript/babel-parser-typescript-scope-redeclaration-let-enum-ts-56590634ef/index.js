@@ -1,0 +1,2 @@
+let Foo;
+enum Foo {}

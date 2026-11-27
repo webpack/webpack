@@ -1,0 +1,2 @@
+async
+function foo() { }

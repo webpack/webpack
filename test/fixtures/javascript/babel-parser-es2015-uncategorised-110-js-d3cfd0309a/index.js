@@ -1,0 +1,1 @@
+for (let x of list) process(x);

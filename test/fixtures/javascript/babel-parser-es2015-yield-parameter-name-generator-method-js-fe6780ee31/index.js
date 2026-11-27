@@ -1,0 +1,1 @@
+({ *method(yield) {} });

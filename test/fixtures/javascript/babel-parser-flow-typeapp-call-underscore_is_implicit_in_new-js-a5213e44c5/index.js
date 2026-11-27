@@ -1,0 +1,2 @@
+//@flow
+new test<_>();

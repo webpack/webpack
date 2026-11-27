@@ -1,0 +1,2 @@
+export { a };
+function a() {}

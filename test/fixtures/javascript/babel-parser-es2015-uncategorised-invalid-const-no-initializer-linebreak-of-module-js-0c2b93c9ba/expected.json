@@ -1,0 +1,14 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "Unexpected token",
+		"presets": ["format", "beautify"],
+		"why": "This fixture exercises invalid const syntax and parser recovery; its recovered tree cannot be required to print as valid JavaScript."
+	},
+	{
+		"relation": "meaning",
+		"contains": "Program body",
+		"presets": ["format", "beautify"],
+		"why": "This fixture exercises invalid const syntax and parser recovery; its recovered tree cannot be required to print as valid JavaScript."
+	}
+]

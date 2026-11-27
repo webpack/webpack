@@ -1,0 +1,1 @@
+class A {a(enum){}}

@@ -1,0 +1,2 @@
+enum E of xxx {
+}

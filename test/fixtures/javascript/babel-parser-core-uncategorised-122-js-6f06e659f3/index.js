@@ -1,0 +1,1 @@
+universe[galaxyName, otherUselessName]

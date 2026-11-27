@@ -1,0 +1,1 @@
+sampleTag`left${0}\u{\u{0}`

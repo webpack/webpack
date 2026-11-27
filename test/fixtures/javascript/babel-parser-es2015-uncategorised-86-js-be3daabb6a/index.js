@@ -1,0 +1,2 @@
+export { encrypt }
+function encrypt () {}

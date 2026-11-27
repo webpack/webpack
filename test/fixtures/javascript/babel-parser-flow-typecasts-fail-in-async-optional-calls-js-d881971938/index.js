@@ -1,0 +1,1 @@
+async?.(bar: string) => {}

@@ -1,0 +1,2 @@
+var A;
+interface A {}

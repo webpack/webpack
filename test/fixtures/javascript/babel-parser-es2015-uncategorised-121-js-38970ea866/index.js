@@ -1,0 +1,1 @@
+class A {*gen(v) { yield v; }}

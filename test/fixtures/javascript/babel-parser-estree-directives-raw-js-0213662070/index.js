@@ -1,0 +1,1 @@
+"use\x20strict";

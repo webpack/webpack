@@ -1,0 +1,1 @@
+import %%DEFAULT%% from %%FILE%%;

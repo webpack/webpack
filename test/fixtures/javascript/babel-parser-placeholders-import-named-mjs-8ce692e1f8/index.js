@@ -1,0 +1,1 @@
+import { %%NAMED%% } from "file";

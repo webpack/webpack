@@ -1,0 +1,1 @@
+opaque potato ID = number;

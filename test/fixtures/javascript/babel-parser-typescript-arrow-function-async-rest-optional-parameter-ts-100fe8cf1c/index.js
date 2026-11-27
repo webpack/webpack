@@ -1,0 +1,1 @@
+async(...args?: any[]) : any => {}

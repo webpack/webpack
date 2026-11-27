@@ -1,0 +1,1 @@
+export { %%NAME%% as alias };

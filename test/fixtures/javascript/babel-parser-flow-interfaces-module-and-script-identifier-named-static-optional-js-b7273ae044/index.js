@@ -1,0 +1,1 @@
+interface B { static?: number }

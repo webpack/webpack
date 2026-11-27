@@ -1,0 +1,2 @@
+export { A };
+interface A {}

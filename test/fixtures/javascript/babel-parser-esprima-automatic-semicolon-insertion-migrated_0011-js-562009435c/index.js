@@ -1,0 +1,2 @@
+(function(){ return // Comment
+x; })

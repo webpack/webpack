@@ -1,0 +1,1 @@
+try { } finally { cleanup(stuff) }

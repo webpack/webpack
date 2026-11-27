@@ -1,0 +1,13 @@
+a ? b ? async(1) : c => d : e;
+a ? b ? async((x)) : c => (d) : e;
+a ? async(1) : c => d;
+a ? (b, b) : c => d;
+a ? b ? async(({ x })) : c => d : e;
+a ? b ? (({ x })) : c => d : e;
+a ? b ? async([(x)]) : c => d : e;
+a ? b ? ({ y: (x) }) : c => d : e;
+a ? b ? async([1]) : c => d : e;
+a ? b ? async(...(x)) : c => d : e;
+a ? async(...x, y) : c => d;
+a ? b ? async((x) = 1) : c => d : e;
+a ? (b): c => { let x; let x; } : e;

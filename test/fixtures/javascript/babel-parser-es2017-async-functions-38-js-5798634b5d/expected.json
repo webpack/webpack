@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "rename-only",
+		"presets": ["default"],
+		"why": "known bug: name ranking uses source frequencies before compression, so remangling can choose different names without changing behavior"
+	}
+]

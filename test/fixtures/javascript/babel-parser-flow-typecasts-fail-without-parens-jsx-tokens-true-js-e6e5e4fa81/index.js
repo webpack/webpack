@@ -1,0 +1,1 @@
+<div propA={[key: value]} />
