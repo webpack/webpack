@@ -112,3 +112,9 @@ it("should keep the URL an element in a foreign script's body is rewritten to", 
 	expect(html).toMatch(/<script href=markup\d*\.js><image href=[0-9a-f]+\.svg/);
 	expect(html).not.toContain("./dot.svg");
 });
+
+it("should read a foreign sheet holding an element and keep the element", () => {
+	const html = read("markup");
+	expect(html).toMatch(/circle\{fill:url\([0-9a-f]+\.svg\)\}/);
+	expect(html).toMatch(/<g id=inside/);
+});
