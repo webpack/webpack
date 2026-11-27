@@ -128,3 +128,7 @@ it("should keep text spelling a marker right after `<` as text", () => {
 it("should keep a literal template delimiter in a foreign sheet led by a comment", () => {
 	expect(read("markup")).toContain('--token:"{{token}}"');
 });
+
+it("should keep an escaped template delimiter in a foreign sheet escaped beside a literal one in a comment", () => {
+	expect(read("markup")).not.toContain('--escaped:"{{value}}"');
+});
