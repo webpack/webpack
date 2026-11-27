@@ -1521,6 +1521,27 @@ describe("htmlMinify — what a second reader sees", () => {
 		}
 	});
 
+	it.each([
+		"keeps-a-foreign-style-mixing-template-delimiters-as-written-when-rendered",
+		"keeps-a-srcdoc-whose-escaped-template-delimiter-a-render-drops-as-written"
+	])("%s", (name) => {
+		const { SourceProcessor } = require("../../../lib/html/syntax");
+		// a renderer dropping comments, and the escaped delimiter in one with them
+		const { code } = new SourceProcessor().process(source(name), {
+			mode: "minify",
+			renderEmbeddedSource: (
+				/** @type {string} */ body,
+				/** @type {{ type: string }} */ { type }
+			) =>
+				type === "css"
+					? body.replace(/\/\*[\s\S]*?\*\//g, "")
+					: type === "html"
+						? body.replace(/<!--[\s\S]*?-->/g, "")
+						: undefined
+		});
+		expect(code).toBe(source(name));
+	});
+
 	it("keeps overlapping escaped template delimiters in an attribute escaped", () => {
 		const { SourceProcessor } = require("../../../lib/html/syntax");
 		const { code } = new SourceProcessor().process(

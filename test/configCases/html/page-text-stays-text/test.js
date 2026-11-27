@@ -106,3 +106,9 @@ it("should keep `</noscript>` escaped in a sheet inlined after page text spellin
 	expect(html).toContain('content:"<\\/noscript><b>bold</b>"');
 	expect(html.match(/<\/noscript/gi)).toHaveLength(1);
 });
+
+it("should keep the URL an element in a foreign script's body is rewritten to", () => {
+	const html = read("markup");
+	expect(html).toMatch(/<script href=markup\d*\.js><image href=[0-9a-f]+\.svg/);
+	expect(html).not.toContain("./dot.svg");
+});
