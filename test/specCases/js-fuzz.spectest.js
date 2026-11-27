@@ -41,7 +41,7 @@ const REQUIRE_SOURCES_PER_SEED = 200;
  * @returns {number} the random option sets per generated program
  */
 const randomOptionSetsPerProgram = (raw) => {
-	if (raw === undefined || raw === "") return 4;
+	if (raw === undefined || raw === "") return 6;
 	const count = Number(raw);
 	if (!Number.isSafeInteger(count) || count < 0) {
 		throw new Error(

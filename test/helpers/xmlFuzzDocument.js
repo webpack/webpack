@@ -1,6 +1,6 @@
 "use strict";
 
-const MAX_DEPTH = 6;
+const MAX_DEPTH = 8;
 const ELEMENTS = [
 	"root",
 	"node",
@@ -13,7 +13,12 @@ const ELEMENTS = [
 	"svg",
 	"path",
 	"book",
-	"title"
+	"title",
+	"section",
+	"chapter",
+	"author",
+	"defs",
+	"desc"
 ];
 const PREFIXES = ["", "", "", "ns", "x", "a"];
 const ATTRIBUTES = [
@@ -26,7 +31,12 @@ const ATTRIBUTES = [
 	"href",
 	"role",
 	"data-x",
-	"data-y"
+	"data-y",
+	"xml:space",
+	"xmlns",
+	"xmlns:xlink",
+	"preserveAspectRatio",
+	"viewBox"
 ];
 const TEXTS = [
 	"alpha",
@@ -39,7 +49,9 @@ const TEXTS = [
 	"&#169;",
 	"&ent;",
 	"&amp;",
-	"&lt;tag&gt;"
+	"&lt;tag&gt;",
+	"entity-like &name; text",
+	"spacing   and   runs"
 ];
 const XML_DECLARATIONS = [
 	'<?xml version="1.0"?>',
@@ -54,6 +66,7 @@ const DOCUMENT_TYPES = [
 	'<!DOCTYPE root SYSTEM "about:legacy-compat">',
 	'<!DOCTYPE root [<!ENTITY ent "value">]>',
 	'<!DOCTYPE root [<!ENTITY ent "v&amp;a"><!ENTITY e2 "x">]>',
+	"<!DOCTYPE root [<!ELEMENT root ANY><!ATTLIST root id ID #IMPLIED>]>",
 	""
 ];
 
@@ -127,16 +140,26 @@ const createXmlDocumentGenerator = (seed, createRandom) => {
 	 * @returns {string} a processing instruction
 	 */
 	const processingInstruction = () =>
-		`<?${pick(random, ["pi", "x", "meta", "proc"])} ${escapeText(pick(random, ["a=1", "name='x'", "x y"]))}?>`;
+		`<?${pick(random, ["pi", "x", "meta", "proc"])} ${escapeText(
+			pick(random, ["a=1", "name='x'", "x y", 'k="v" flag="1"', "path='a/b'"])
+		)}?>`;
 	/**
 	 * @returns {string} a comment
 	 */
-	const comment = () => `<!-- ${pick(random, ["a", "b c", "xml", "note"])} -->`;
+	const comment = () =>
+		`<!-- ${pick(random, ["a", "b c", "xml", "note", "todo", "meta data"])} -->`;
 	/**
 	 * @returns {string} a CDATA section
 	 */
 	const cdata = () =>
-		`<![CDATA[${pick(random, ["x<y", "a&b", "raw text", "line\nbreak", "1 < 2 & 3 > 2"])}]]>`;
+		`<![CDATA[${pick(random, [
+			"x<y",
+			"a&b",
+			"raw text",
+			"line\nbreak",
+			"1 < 2 & 3 > 2",
+			"more blocks"
+		])}]]>`;
 	/**
 	 * @param {boolean} hasEntityDeclaration whether the document declares `ent`
 	 * @returns {string} attributes for one element
@@ -155,7 +178,7 @@ const createXmlDocumentGenerator = (seed, createRandom) => {
 		if (chance(0.35)) {
 			out.push('xmlns:xlink="http://www.w3.org/1999/xlink"');
 		}
-		for (let i = 0; i < below(5); i++) {
+		for (let i = 0; i < below(7); i++) {
 			const base = pick(random, [...ATTRIBUTES, "xml:lang", "xlink:href"]);
 			const name = qualifiedName(base);
 			if (names.has(name)) {
@@ -177,12 +200,12 @@ const createXmlDocumentGenerator = (seed, createRandom) => {
 	const node = (depth, hasEntityDeclaration) => {
 		const elementName = qualifiedName(pick(random, ELEMENTS));
 		const attrs = attributes(hasEntityDeclaration);
-		if (depth >= MAX_DEPTH || chance(0.2)) {
+		if (depth >= MAX_DEPTH || chance(0.15)) {
 			return `<${elementName}${attrs}/>`;
 		}
 		let body = "";
-		for (let i = 0; i < below(6) + 1; i++) {
-			const kind = below(10);
+		for (let i = 0; i < below(9) + 1; i++) {
+			const kind = below(12);
 			if (kind < 2) {
 				body += text(depth, hasEntityDeclaration);
 			} else if (kind === 2) {
@@ -198,6 +221,10 @@ const createXmlDocumentGenerator = (seed, createRandom) => {
 						? ["&ent;", "&#x26;", "&amp;"]
 						: ["&#x26;", "&amp;"]
 				);
+			} else if (kind === 6) {
+				body += `${comment()}${text(depth, hasEntityDeclaration)}`;
+			} else if (kind === 7) {
+				body += `${cdata()}${chance(0.5) ? text(depth, hasEntityDeclaration) : comment()}`;
 			} else {
 				body += node(depth + 1, hasEntityDeclaration);
 			}

@@ -1880,7 +1880,7 @@ ${uses.join("\n")}
 		/** @type {string[]} */
 		const statements = [];
 		if (isModule && chance(0.7)) statements.push(imports(context));
-		const count = 6 + below(8);
+		const count = 8 + below(12);
 		for (let i = 0; i < count; i++) {
 			const declared = context.bindings.length;
 			const written = statement(context);

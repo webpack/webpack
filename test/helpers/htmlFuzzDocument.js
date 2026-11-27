@@ -27,7 +27,7 @@ const {
 } = require("../../lib/html/data");
 const { createStylesheetGenerator } = require("./cssFuzzStylesheet");
 
-const MAX_DEPTH = 6;
+const MAX_DEPTH = 7;
 
 // Elements a document gives a shape of their own, written by `special`; the
 // rest are written as plain containers.
@@ -355,7 +355,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 			);
 		}
 		let out = "";
-		const count = below(4);
+		const count = below(6);
 		for (let i = 0; i < count; i++) {
 			const name = pick(random, names);
 			out += `${pick(random, [" ", " ", "\n", "  ", "/"])}${respell(name)}`;
@@ -370,6 +370,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 	const text = () => {
 		let out = pick(random, WORDS);
 		if (chance(0.3)) out += pick(random, REFERENCES);
+		if (chance(0.2)) out += pick(random, [...WORDS, ...REFERENCES]);
 		return out;
 	};
 
@@ -380,7 +381,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 	 */
 	const content = (depth, space) => {
 		let out = "";
-		const count = below(depth >= MAX_DEPTH ? 2 : 5);
+		const count = below(depth >= MAX_DEPTH ? 3 : 6);
 		for (let i = 0; i < count; i++) out += node(depth, space);
 		return out;
 	};
@@ -421,7 +422,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 	 */
 	const table = (depth) => {
 		let out = `<table${attributes("table", "html")}>`;
-		const parts = below(5);
+		const parts = below(7);
 		for (let i = 0; i < parts; i++) {
 			const part = pick(random, TABLE_PARTS);
 			out += `<${respell(part)}${attributes(part, "html")}>`;
@@ -436,7 +437,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 	 * @returns {string} one construct the tree builder handles on its own path
 	 */
 	const special = (depth) => {
-		switch (below(13)) {
+		switch (below(15)) {
 			case 0:
 				return table(depth);
 			case 1: {
@@ -513,6 +514,15 @@ const createDocumentGenerator = (seed, createRandom) => {
 					"ul",
 					"pre"
 				])}>${text()}`;
+			case 12:
+				return `<picture><source srcset="a 1x, b 2x" media="(min-width:1px)"><img src="a" alt=${quoted(
+					text()
+				)}></picture>`;
+			case 13:
+				return `<details${chance(0.5) ? " open" : ""}><summary>${text()}</summary>${content(
+					depth + 1,
+					"html"
+				)}</details>`;
 			default:
 				return pick(random, COMMENTS);
 		}
@@ -524,7 +534,7 @@ const createDocumentGenerator = (seed, createRandom) => {
 	 * @returns {string} one node: text, a comment, an element or a special construct
 	 */
 	const node = (depth, space) => {
-		const kind = below(10);
+		const kind = below(12);
 		if (kind < 3) return text();
 		if (kind === 3) return pick(random, COMMENTS);
 		if (space === "svg") {
@@ -548,7 +558,10 @@ const createDocumentGenerator = (seed, createRandom) => {
 			}
 			return element(pick(random, MATHML_ELEMENTS), depth, "math");
 		}
-		if (kind < 6 && depth < MAX_DEPTH) return special(depth);
+		if (kind < 7 && depth < MAX_DEPTH) return special(depth);
+		if (kind === 10) {
+			return `<noscript>${chance(0.5) ? text() : content(depth + 1, "html")}</noscript>`;
+		}
 		return element(pick(random, ELEMENTS), depth, "html");
 	};
 
