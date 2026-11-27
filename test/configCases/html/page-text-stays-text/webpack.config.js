@@ -39,7 +39,8 @@ module.exports = {
 		text: "./text.html",
 		sheet: "./sheet.html",
 		noscript: "./noscript.html",
-		banner: "./banner.html",
+		// its chunk is named with a `*`, which no Windows path can hold
+		...(process.platform !== "win32" && { banner: "./banner.html" }),
 		nested: "./nested.html",
 		charset: "./charset.html",
 		exported: "./exported.js",

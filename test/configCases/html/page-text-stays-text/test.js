@@ -44,7 +44,9 @@ it("should not inline into foreign content and keep `</noscript>` escaped", () =
 	expect(html).toContain("<math><script src=plain.js></script></math>");
 });
 
-it("should keep a license banner's comment closed where it ends", () => {
+// the banner page is built everywhere but Windows, where its chunk name is no path
+(fs.existsSync(path.resolve(__dirname, "banner.html")) ? it : it.skip)(
+	"should keep a license banner's comment closed where it ends", () => {
 	const html = read("banner");
 	// no `<noscript>` on the page, so a raw template keeps `</noscript>` as written
 	expect(html).toContain("String.raw`</noscript>`");
