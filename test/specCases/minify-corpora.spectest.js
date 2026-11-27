@@ -1077,8 +1077,6 @@ const REFUSED_BY_REFERENCE = {
 		"a `let` in a `for` head is scoped to the loop, so it may shadow an outer `let`",
 	"Cannot convert a BigInt value to a number":
 		"terser's compressor throws on a BigInt operation that throws only when it runs",
-	"Division by zero":
-		"terser's compressor throws on a BigInt division by zero that throws only when it runs",
 	// terser reads identifier characters off the running V8's Unicode tables.
 	...(!/\p{ID_Start}/u.test("\u088F") && {
 		"First identifier char is an invalid identifier char":

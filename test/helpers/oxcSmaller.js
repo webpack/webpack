@@ -382,7 +382,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc drops more unreachable code, as oxc's `peephole/remove_dead_code.rs` tests show",
 		[
-			"oxc minifier: peephole/remove_dead_code.rs:remove_unused_expressions_in_sequence:20a45768",
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_block:655d338f",
 			"oxc minifier: peephole/remove_dead_code.rs:test_remove_no_op_labelled_statement:0b6582b2",
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_useless_for:7a6e18e6",
@@ -993,7 +992,6 @@ const OXC_SMALLER_BY_REASON = [
 	[
 		"oxc's output is wrong: it calls a method read through `(0, o.f)`, `(t = o.f)` or an arrow returning it as a method of `o`, and an `eval` so read as a direct `eval`",
 		[
-			"swc exec: indirect_eval_1",
 			"oxc minifier: peephole/oxc.rs:tagged_template:9c57704f",
 			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_assignment_expression:daa71f8e"
 		]
@@ -1241,8 +1239,7 @@ const OXC_SMALLER_BY_REASON = [
 			"oxc minifier: ecmascript/may_have_side_effects.rs:closure_compiler_tests:1858505e",
 			"oxc minifier: ecmascript/may_have_side_effects.rs:test_class_expression:3d0fe40c",
 			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:0afd5ce2",
-			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:2f9eb778",
-			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:604850f8"
+			"oxc minifier: peephole/remove_unused_expression.rs:remove_unused_class_expression:2f9eb778"
 		]
 	],
 	[
@@ -1293,11 +1290,25 @@ const OXC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"oxc's output is wrong: it drops a call to a `@__NO_SIDE_EFFECTS__` function after a write gives the binding another function, as its own test keeps it",
+		"oxc simplifies numeric coercions and arithmetic constants",
 		[
-			"oxc minifier: peephole/remove_unused_expression.rs:no_side_effects_reassigned:75f9c6b9",
-			"oxc minifier: peephole/remove_unused_expression.rs:no_side_effects_reassigned:96f457e0",
-			"oxc minifier: peephole/remove_unused_expression.rs:no_side_effects_reassigned:1c5ef0b6"
+			"terser compress: numbers/evaluate_1",
+			"terser compress: numbers/evaluate_2",
+			"terser compress: reduce_vars/iife_new",
+			"swc exec: terser_reduce_vars_iife_new",
+			"swc minifier: fixture/issues/12634/input.js",
+			"oxc minifier: ecmascript/is_literal_value.rs:test_binary_expressions:216308f1",
+			"oxc minifier: peephole/fold_constants.rs:test_fold_int32_add_sub:4f2d04d3"
+		]
+	],
+	[
+		"oxc turns switches and their shared return or throw into expressions",
+		[
+			"terser compress: switch/if_else7",
+			"oxc minifier: peephole/esbuild.rs:prune_empty_case_before_default:138c63ba",
+			"oxc minifier: peephole/minimize_conditions.rs:test_substitute_return:a8ef0b7a",
+			"oxc minifier: peephole/minimize_conditions.rs:test_substitute_break_for_throw:8e4078ea",
+			"oxc minifier: peephole/minimize_statements.rs:test_handle_switch_statement:8ad4ca33"
 		]
 	]
 ];
