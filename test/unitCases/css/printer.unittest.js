@@ -4188,4 +4188,18 @@ describe("CssSyntax minify — work bounded by the input's size", () => {
 		expect(code).toContain(":--s30{top:0}");
 		expect(warnings).toEqual([expect.stringContaining("left as written")]);
 	});
+
+	it("leaves custom media names whose alternatives copy past the size bound as written", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain"
+			),
+			{ transforms: { customMedia: true } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain("(--m11)");
+		expect(warnings).toEqual([expect.stringContaining("left as written")]);
+	});
 });

@@ -8223,6 +8223,29 @@ at-keyword[0,16] whitespace[16,17] colon[17,18] ident[18,22] whitespace[22,23] d
  left-curly-bracket[2370,2371] ident[2371,2372] left-curly-bracket[2372,2373] ident[2373,2376] colon[2376,2377] number[2377,2378] right-curly-bracket[2378,2379] right-curly-bracket[2379,2380] end=2380"
 `;
 
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain parses 1`] = `
+"length 12113, sha256 80d08df76cf8f54e
+[[\\"at-rule\\",\\"custom-media\\",[\\" \\",[\\"ident\\",\\"--m0\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"color\\"]],\\",\\",[\\"()\\",[\\"ident\\",\\"monochrome\\"]]],null],[\\"at-rule\\",\\"custom-media\\",[\\" \\",[\\"ident\\",\\"--m1\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"color\\"]],\\",\\",
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain prints {"mode":"minify"} 1`] = `
+"length 10635, sha256 182b3dafffc573eb
+@custom-media --m0 (color),(monochrome);@custom-media --m1 (color),(monochrome);@custom-media --m2 (color),(monochrome);@custom-media --m3 (color),(monochrome);@custom-media --m4 (color),(monochrome);
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa){a{top:0}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain tokenizes 1`] = `
+"length 4688, sha256 7e68471eb1a65447
+at-keyword[0,13] whitespace[13,14] ident[14,18] whitespace[18,19] left-parenthesis[19,20] ident[20,25] right-parenthesis[25,26] comma[26,27] left-parenthesis[27,28] ident[28,38] right-parenthesis[38,3
+…
+et[10625,10626] ident[10626,10627] left-curly-bracket[10627,10628] ident[10628,10631] colon[10631,10632] number[10632,10633] right-curly-bracket[10633,10634] right-curly-bracket[10634,10635] end=10635"
+`;
+
 exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument parses 1`] = `
 "length 975, sha256 13054fee5ccb8696
 [[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"radial-gradient\\",[\\"string\\",\\"a                                                                                           
