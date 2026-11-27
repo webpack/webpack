@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Move the JavaScript tokenizer into a `JavascriptTokenizer` class the experimental `Parser` extends.
+Move the JavaScript tokenizer into its own `JavascriptTokenizer` class.
