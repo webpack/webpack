@@ -266,13 +266,10 @@ describe("CssSyntax — the token stream", () => {
 			undefined,
 			(input, start, end) => seen.push(input.slice(start, end))
 		);
-		// A discarded mark leaves the cursor where it was.
-		stream.mark();
-		stream.discardMark();
-		stream.mark();
+		const mark = stream.mark();
 		expect(stream.consume().start).toBe(5);
 		expect(stream.consume().type).toBe(TokenType.Whitespace);
-		stream.restoreMark();
+		stream.rewind(mark);
 		// The rewound span is lexed again, comments included, without re-firing.
 		expect(peek(stream)).toEqual([TokenType.Ident, "a"]);
 		stream.consume();
