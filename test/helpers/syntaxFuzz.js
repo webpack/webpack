@@ -5,6 +5,7 @@
 
 "use strict";
 
+const fs = require("fs");
 const fc = require("fast-check");
 const { invariantFindings } = require("./syntaxInvariants");
 
@@ -74,6 +75,47 @@ const unexplainedFindings = (source, findings, known) => {
 };
 
 /**
+ * What a generated source broke that no known finding explains.
+ */
+class FindingsError extends Error {
+	/**
+	 * @param {string[]} findings each unexplained finding
+	 */
+	constructor(findings) {
+		super(findings.join("\n\n"));
+		this.name = "FindingsError";
+	}
+}
+
+/**
+ * @param {string} text what a Markdown code block shows
+ * @returns {string} the block, its fence longer than any backtick run inside
+ */
+const codeBlock = (text) => {
+	const runs = text.match(/`+/g) || [];
+	const longest = Math.max(2, ...runs.map((run) => run.length));
+	const fence = "`".repeat(longest + 1);
+	return `${fence}\n${text}\n${fence}`;
+};
+
+/**
+ * @param {string} source the shrunk source that broke the invariants
+ * @param {string} broke what broke, one finding per paragraph
+ * @param {number} seed the seed the run took
+ * @returns {string} a Markdown report showing the source and what broke
+ */
+const fuzzReport = (source, broke, seed) =>
+	[
+		`Seed ${seed} generated a source that breaks the invariants.`,
+		"#### Source",
+		codeBlock(source),
+		"As a JSON string, every character visible:",
+		codeBlock(JSON.stringify(source)),
+		"#### What broke",
+		codeBlock(broke)
+	].join("\n\n");
+
+/**
  * Joins random sequences of a syntax's pieces into sources and holds each to
  * the invariants its fixtures are held to; a failure shrinks to the shortest.
  * @param {SyntaxInvariants} syntax the syntax's answers
@@ -83,26 +125,37 @@ const unexplainedFindings = (source, findings, known) => {
  */
 const fuzzSyntax = (syntax, pieces, options = {}) => {
 	const { known = [], maxLength = 32 } = options;
-	fc.assert(
+	const seed = numberFrom(process.env.FUZZ_SEED, SEED);
+	const details = fc.check(
 		fc.property(
 			fc
 				.array(fc.constantFrom(...pieces), { maxLength })
 				.map((parts) => parts.join("")),
 			(source) => {
-				expect(
-					unexplainedFindings(
-						source,
-						invariantFindings(syntax, [["fuzz", source]]),
-						known
-					)
-				).toEqual([]);
+				const left = unexplainedFindings(
+					source,
+					invariantFindings(syntax, [["fuzz", source]]),
+					known
+				);
+				if (left.length > 0) throw new FindingsError(left);
 			}
 		),
-		{
-			seed: numberFrom(process.env.FUZZ_SEED, SEED),
-			numRuns: numberFrom(process.env.FUZZ_RUNS, RUNS)
-		}
+		{ seed, numRuns: numberFrom(process.env.FUZZ_RUNS, RUNS) }
 	);
+	if (!details.failed) return;
+	const [source] = /** @type {[string]} */ (details.counterexample);
+	const error = details.errorInstance;
+	// A crash shows where it came from; a finding's repro is all there is to see.
+	const broke =
+		error instanceof FindingsError
+			? error.message
+			: String(error instanceof Error ? error.stack : error);
+	const report = fuzzReport(source, broke, seed);
+	// The Fuzz workflow files this as the issue body.
+	if (process.env.FUZZ_REPORT) {
+		fs.writeFileSync(process.env.FUZZ_REPORT, report);
+	}
+	throw new Error(report);
 };
 
 module.exports = { fuzzSyntax };
