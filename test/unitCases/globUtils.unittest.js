@@ -882,6 +882,32 @@ describe("globUtils", () => {
 			);
 		});
 
+		it("compiles adjacent `**` segments as one", () => {
+			expect(createPathGlobRegExp("**/**/**/zzz")).toEqual(
+				createPathGlobRegExp("**/zzz")
+			);
+			expect(createPathGlobRegExp("a/**/**/b/**/**")).toEqual(
+				createPathGlobRegExp("a/**/b/**")
+			);
+			expect(createPathGlobPrefixRegExp("src/**/**/x", "/project")).toEqual(
+				createPathGlobPrefixRegExp("src/**/x", "/project")
+			);
+			// a path the glob fails must not backtrack across every split
+			const match = /** @type {(str: string) => boolean} */ (
+				createPathGlobMatcher("**/**/**/zzz")
+			);
+			expect(match(`${"a/".repeat(2000)}x`)).toBe(false);
+		});
+
+		it("spans the `\\\\` a UNC path opens with by a leading `**`", () => {
+			// `path.win32.matchesGlob` matches each of these
+			for (const pattern of ["**/zzz", "**/**/zzz", "**"]) {
+				expect(
+					createPathGlobRegExp(pattern).test("\\\\server\\share\\zzz")
+				).toBe(true);
+			}
+		});
+
 		it("returns null for an un-compilable pattern", () => {
 			expect(createPathGlobMatcher("**/[z-a].js")).toBeNull();
 		});
