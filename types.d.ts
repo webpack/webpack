@@ -119,6 +119,7 @@ import {
 	AsyncSeriesHook,
 	AsyncSeriesWaterfallHook,
 	HookMap,
+	HookMapInterceptor,
 	IfSet,
 	MultiHook,
 	SyncBailHook,
@@ -6654,6 +6655,50 @@ declare class CopyPlugin {
 	};
 }
 type CreateData = NormalModuleCreateData & { settings: ModuleSettings };
+type CreateGeneratorHook<T extends string> =
+	T extends keyof exports.ParsersAndGeneratorsByModuleType
+		? SyncBailHook<
+				[exports.ParsersAndGeneratorsByModuleType[T][3]],
+				exports.ParsersAndGeneratorsByModuleType[T][2]
+			>
+		: SyncBailHook<[GeneratorOptions], Generator>;
+
+/**
+ * The `createGenerator` hooks, each over its module type's `ParsersAndGeneratorsByModuleType` entry.
+ */
+declare interface CreateGeneratorHookMap {
+	name?: string;
+	for<T extends string>(key: T): CreateGeneratorHook<T>;
+	get<T extends string>(key: T): undefined | CreateGeneratorHook<T>;
+	intercept(
+		interceptor: HookMapInterceptor<
+			SyncBailHook<[GeneratorOptions], Generator>,
+			string
+		>
+	): void;
+}
+type CreateParserHook<T extends string> =
+	T extends keyof exports.ParsersAndGeneratorsByModuleType
+		? SyncBailHook<
+				[exports.ParsersAndGeneratorsByModuleType[T][1]],
+				exports.ParsersAndGeneratorsByModuleType[T][0]
+			>
+		: SyncBailHook<[ParserOptions], Parser>;
+
+/**
+ * The `createParser` hooks, each over its module type's `ParsersAndGeneratorsByModuleType` entry.
+ */
+declare interface CreateParserHookMap {
+	name?: string;
+	for<T extends string>(key: T): CreateParserHook<T>;
+	get<T extends string>(key: T): undefined | CreateParserHook<T>;
+	intercept(
+		interceptor: HookMapInterceptor<
+			SyncBailHook<[ParserOptions], Parser>,
+			string
+		>
+	): void;
+}
 
 /**
  * Defines the create read stream fs implementation type used by this module.
@@ -13012,6 +13057,34 @@ declare class Generator<TModule extends NormalModule = NormalModule> {
 		requestShortener?: RequestShortener
 	): string;
 }
+type GeneratorHook<T extends string> =
+	T extends keyof exports.ParsersAndGeneratorsByModuleType
+		? SyncHook<
+				[
+					exports.ParsersAndGeneratorsByModuleType[T][2],
+					exports.ParsersAndGeneratorsByModuleType[T][3]
+				]
+			>
+		: SyncHook<[Generator, GeneratorOptions]>;
+
+/**
+ * The `generator` hooks, each over its module type's `ParsersAndGeneratorsByModuleType` entry.
+ */
+declare interface GeneratorHookMap {
+	name?: string;
+	for<T extends string>(key: T): GeneratorHook<T>;
+	get<T extends string>(key: T): undefined | GeneratorHook<T>;
+	intercept(
+		interceptor: HookMapInterceptor<
+			SyncHook<[Generator, GeneratorOptions]>,
+			string
+		>
+	): void;
+}
+
+/**
+ * The options of a generator whose module type `ParsersAndGeneratorsByModuleType` does not name.
+ */
 declare interface GeneratorOptions {
 	[index: string]: any;
 }
@@ -25224,86 +25297,22 @@ declare interface NormalModuleCreateData<T extends string = string> {
 	/**
 	 * the parser used
 	 */
-	parser: (Record<"javascript/auto", JavascriptParser> &
-		Record<"javascript/dynamic", JavascriptParser> &
-		Record<"javascript/esm", JavascriptParser> &
-		Record<"json", JsonParser> &
-		Record<"asset", AssetParser> &
-		Record<"asset/inline", AssetParser> &
-		Record<"asset/resource", AssetParser> &
-		Record<"asset/source", AssetSourceParser> &
-		Record<"asset/bytes", AssetBytesParser> &
-		Record<"webassembly/async", AsyncWebAssemblyParser> &
-		Record<"webassembly/sync", WebAssemblyParser> &
-		Record<"css", CssParser> &
-		Record<"css/auto", CssParser> &
-		Record<"css/module", CssParser> &
-		Record<"css/global", CssParser> &
-		Record<"html", HtmlParser> &
-		Record<string, Parser>)[T];
+	parser: ParserAndGeneratorOf<T>[0];
 
 	/**
 	 * the options of the parser used
 	 */
-	parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
-		Record<"javascript/dynamic", JavascriptParserOptions> &
-		Record<"javascript/esm", JavascriptParserOptions> &
-		Record<"json", JsonParserOptions> &
-		Record<"asset", AssetParserOptions> &
-		Record<"asset/inline", EmptyParserOptions> &
-		Record<"asset/resource", EmptyParserOptions> &
-		Record<"asset/source", EmptyParserOptions> &
-		Record<"asset/bytes", EmptyParserOptions> &
-		Record<"webassembly/async", EmptyParserOptions> &
-		Record<"webassembly/sync", EmptyParserOptions> &
-		Record<"css", CssParserOptions> &
-		Record<"css/auto", CssModuleParserOptions> &
-		Record<"css/module", CssModuleParserOptions> &
-		Record<"css/global", CssModuleParserOptions> &
-		Record<"html", EmptyParserOptions> &
-		Record<string, ParserOptions>)[T];
+	parserOptions?: ParserAndGeneratorOf<T>[1];
 
 	/**
 	 * the generator used
 	 */
-	generator: (Record<"javascript/auto", JavascriptGenerator> &
-		Record<"javascript/dynamic", JavascriptGenerator> &
-		Record<"javascript/esm", JavascriptGenerator> &
-		Record<"json", JsonGenerator> &
-		Record<"asset", AssetGenerator> &
-		Record<"asset/inline", AssetGenerator> &
-		Record<"asset/resource", AssetGenerator> &
-		Record<"asset/source", AssetSourceGenerator> &
-		Record<"asset/bytes", AssetBytesGenerator> &
-		Record<"webassembly/async", Generator> &
-		Record<"webassembly/sync", Generator> &
-		Record<"css", CssGenerator> &
-		Record<"css/auto", CssGenerator> &
-		Record<"css/module", CssGenerator> &
-		Record<"css/global", CssGenerator> &
-		Record<"html", HtmlGenerator> &
-		Record<string, Generator>)[T];
+	generator: ParserAndGeneratorOf<T>[2];
 
 	/**
 	 * the options of the generator used
 	 */
-	generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
-		Record<"javascript/dynamic", EmptyGeneratorOptions> &
-		Record<"javascript/esm", EmptyGeneratorOptions> &
-		Record<"json", JsonGeneratorOptions> &
-		Record<"asset", AssetGeneratorOptions> &
-		Record<"asset/inline", AssetGeneratorOptions> &
-		Record<"asset/resource", AssetGeneratorOptions> &
-		Record<"asset/source", EmptyGeneratorOptions> &
-		Record<"asset/bytes", EmptyGeneratorOptions> &
-		Record<"webassembly/async", EmptyGeneratorOptions> &
-		Record<"webassembly/sync", EmptyGeneratorOptions> &
-		Record<"css", CssGeneratorOptions> &
-		Record<"css/auto", CssModuleGeneratorOptions> &
-		Record<"css/module", CssModuleGeneratorOptions> &
-		Record<"css/global", CssModuleGeneratorOptions> &
-		Record<"html", HtmlGeneratorOptions> &
-		Record<string, GeneratorOptions>)[T];
+	generatorOptions?: ParserAndGeneratorOf<T>[3];
 
 	/**
 	 * options used for resolving requests from this module
@@ -25336,232 +25345,10 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 		 * @since 5.110.0
 		 */
 		prepareModuleType: HookMap<AsyncSeriesHook<[]>>;
-		createParser: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[JavascriptParserOptions], JavascriptParser>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[JavascriptParserOptions], JavascriptParser>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[JavascriptParserOptions], JavascriptParser>
-				> &
-				Record<"json", SyncBailHook<[JsonParserOptions], JsonParser>> &
-				Record<"asset", SyncBailHook<[AssetParserOptions], AssetParser>> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[EmptyParserOptions], AssetParser>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[EmptyParserOptions], AssetParser>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[EmptyParserOptions], AssetSourceParser>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[EmptyParserOptions], AssetBytesParser>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[EmptyParserOptions], AsyncWebAssemblyParser>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[EmptyParserOptions], WebAssemblyParser>
-				> &
-				Record<"css", SyncBailHook<[CssParserOptions], CssParser>> &
-				Record<"css/auto", SyncBailHook<[CssModuleParserOptions], CssParser>> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssModuleParserOptions], CssParser>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssModuleParserOptions], CssParser>
-				> &
-				Record<"html", SyncBailHook<[EmptyParserOptions], HtmlParser>> &
-				Record<string, SyncBailHook<[ParserOptions], Parser>>
-		>;
-		parser: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[JavascriptParser, JavascriptParserOptions], void>
-				> &
-				Record<"json", SyncBailHook<[JsonParser, JsonParserOptions], void>> &
-				Record<"asset", SyncBailHook<[AssetParser, AssetParserOptions], void>> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[AssetParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[AssetParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[AssetSourceParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[AssetBytesParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[AsyncWebAssemblyParser, EmptyParserOptions], void>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[WebAssemblyParser, EmptyParserOptions], void>
-				> &
-				Record<"css", SyncBailHook<[CssParser, CssParserOptions], void>> &
-				Record<
-					"css/auto",
-					SyncBailHook<[CssParser, CssModuleParserOptions], void>
-				> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssParser, CssModuleParserOptions], void>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssParser, CssModuleParserOptions], void>
-				> &
-				Record<"html", SyncBailHook<[HtmlParser, EmptyParserOptions], void>> &
-				Record<string, SyncBailHook<[Parser, ParserOptions], void>>
-		>;
-		createGenerator: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[EmptyGeneratorOptions], JavascriptGenerator>
-				> &
-				Record<"json", SyncBailHook<[JsonGeneratorOptions], JsonGenerator>> &
-				Record<"asset", SyncBailHook<[AssetGeneratorOptions], AssetGenerator>> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[AssetGeneratorOptions], AssetGenerator>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[AssetGeneratorOptions], AssetGenerator>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[EmptyGeneratorOptions], AssetSourceGenerator>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[EmptyGeneratorOptions], AssetBytesGenerator>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[EmptyGeneratorOptions], Generator>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[EmptyGeneratorOptions], Generator>
-				> &
-				Record<"css", SyncBailHook<[CssGeneratorOptions], CssGenerator>> &
-				Record<
-					"css/auto",
-					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
-				> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssModuleGeneratorOptions], CssGenerator>
-				> &
-				Record<"html", SyncBailHook<[HtmlGeneratorOptions], HtmlGenerator>> &
-				Record<string, SyncBailHook<[GeneratorOptions], Generator>>
-		>;
-		generator: TypedHookMap<
-			Record<
-				"javascript/auto",
-				SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>
-			> &
-				Record<
-					"javascript/dynamic",
-					SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"javascript/esm",
-					SyncBailHook<[JavascriptGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"json",
-					SyncBailHook<[JsonGenerator, JsonGeneratorOptions], void>
-				> &
-				Record<
-					"asset",
-					SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>
-				> &
-				Record<
-					"asset/inline",
-					SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>
-				> &
-				Record<
-					"asset/resource",
-					SyncBailHook<[AssetGenerator, AssetGeneratorOptions], void>
-				> &
-				Record<
-					"asset/source",
-					SyncBailHook<[AssetSourceGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"asset/bytes",
-					SyncBailHook<[AssetBytesGenerator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"webassembly/async",
-					SyncBailHook<[Generator, EmptyGeneratorOptions], void>
-				> &
-				Record<
-					"webassembly/sync",
-					SyncBailHook<[Generator, EmptyGeneratorOptions], void>
-				> &
-				Record<"css", SyncBailHook<[CssGenerator, CssGeneratorOptions], void>> &
-				Record<
-					"css/auto",
-					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
-				> &
-				Record<
-					"css/module",
-					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
-				> &
-				Record<
-					"css/global",
-					SyncBailHook<[CssGenerator, CssModuleGeneratorOptions], void>
-				> &
-				Record<
-					"html",
-					SyncBailHook<[HtmlGenerator, HtmlGeneratorOptions], void>
-				> &
-				Record<string, SyncBailHook<[Generator, GeneratorOptions], void>>
-		>;
+		createParser: CreateParserHookMap;
+		parser: ParserHookMap;
+		createGenerator: CreateGeneratorHookMap;
+		generator: GeneratorHookMap;
 		/**
 		 * @since 5.81.0
 		 */
@@ -25610,160 +25397,32 @@ declare abstract class NormalModuleFactory extends ModuleFactory {
 	 */
 	getParser<T extends string>(
 		type: T,
-		parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
-			Record<"javascript/dynamic", JavascriptParserOptions> &
-			Record<"javascript/esm", JavascriptParserOptions> &
-			Record<"json", JsonParserOptions> &
-			Record<"asset", AssetParserOptions> &
-			Record<"asset/inline", EmptyParserOptions> &
-			Record<"asset/resource", EmptyParserOptions> &
-			Record<"asset/source", EmptyParserOptions> &
-			Record<"asset/bytes", EmptyParserOptions> &
-			Record<"webassembly/async", EmptyParserOptions> &
-			Record<"webassembly/sync", EmptyParserOptions> &
-			Record<"css", CssParserOptions> &
-			Record<"css/auto", CssModuleParserOptions> &
-			Record<"css/module", CssModuleParserOptions> &
-			Record<"css/global", CssModuleParserOptions> &
-			Record<"html", EmptyParserOptions> &
-			Record<string, ParserOptions>)[T]
-	): (Record<"javascript/auto", JavascriptParser> &
-		Record<"javascript/dynamic", JavascriptParser> &
-		Record<"javascript/esm", JavascriptParser> &
-		Record<"json", JsonParser> &
-		Record<"asset", AssetParser> &
-		Record<"asset/inline", AssetParser> &
-		Record<"asset/resource", AssetParser> &
-		Record<"asset/source", AssetSourceParser> &
-		Record<"asset/bytes", AssetBytesParser> &
-		Record<"webassembly/async", AsyncWebAssemblyParser> &
-		Record<"webassembly/sync", WebAssemblyParser> &
-		Record<"css", CssParser> &
-		Record<"css/auto", CssParser> &
-		Record<"css/module", CssParser> &
-		Record<"css/global", CssParser> &
-		Record<"html", HtmlParser> &
-		Record<string, Parser>)[T];
+		parserOptions?: ParserAndGeneratorOf<T>[1]
+	): ParserAndGeneratorOf<T>[0];
 
 	/**
 	 * Creates a parser from the provided type.
 	 */
 	createParser<T extends string>(
 		type: T,
-		parserOptions?: (Record<"javascript/auto", JavascriptParserOptions> &
-			Record<"javascript/dynamic", JavascriptParserOptions> &
-			Record<"javascript/esm", JavascriptParserOptions> &
-			Record<"json", JsonParserOptions> &
-			Record<"asset", AssetParserOptions> &
-			Record<"asset/inline", EmptyParserOptions> &
-			Record<"asset/resource", EmptyParserOptions> &
-			Record<"asset/source", EmptyParserOptions> &
-			Record<"asset/bytes", EmptyParserOptions> &
-			Record<"webassembly/async", EmptyParserOptions> &
-			Record<"webassembly/sync", EmptyParserOptions> &
-			Record<"css", CssParserOptions> &
-			Record<"css/auto", CssModuleParserOptions> &
-			Record<"css/module", CssModuleParserOptions> &
-			Record<"css/global", CssModuleParserOptions> &
-			Record<"html", EmptyParserOptions> &
-			Record<string, ParserOptions>)[T]
-	): (Record<"javascript/auto", JavascriptParser> &
-		Record<"javascript/dynamic", JavascriptParser> &
-		Record<"javascript/esm", JavascriptParser> &
-		Record<"json", JsonParser> &
-		Record<"asset", AssetParser> &
-		Record<"asset/inline", AssetParser> &
-		Record<"asset/resource", AssetParser> &
-		Record<"asset/source", AssetSourceParser> &
-		Record<"asset/bytes", AssetBytesParser> &
-		Record<"webassembly/async", AsyncWebAssemblyParser> &
-		Record<"webassembly/sync", WebAssemblyParser> &
-		Record<"css", CssParser> &
-		Record<"css/auto", CssParser> &
-		Record<"css/module", CssParser> &
-		Record<"css/global", CssParser> &
-		Record<"html", HtmlParser> &
-		Record<string, Parser>)[T];
+		parserOptions?: ParserAndGeneratorOf<T>[1]
+	): ParserAndGeneratorOf<T>[0];
 
 	/**
 	 * Returns generator.
 	 */
 	getGenerator<T extends string>(
 		type: T,
-		generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
-			Record<"javascript/dynamic", EmptyGeneratorOptions> &
-			Record<"javascript/esm", EmptyGeneratorOptions> &
-			Record<"json", JsonGeneratorOptions> &
-			Record<"asset", AssetGeneratorOptions> &
-			Record<"asset/inline", AssetGeneratorOptions> &
-			Record<"asset/resource", AssetGeneratorOptions> &
-			Record<"asset/source", EmptyGeneratorOptions> &
-			Record<"asset/bytes", EmptyGeneratorOptions> &
-			Record<"webassembly/async", EmptyGeneratorOptions> &
-			Record<"webassembly/sync", EmptyGeneratorOptions> &
-			Record<"css", CssGeneratorOptions> &
-			Record<"css/auto", CssModuleGeneratorOptions> &
-			Record<"css/module", CssModuleGeneratorOptions> &
-			Record<"css/global", CssModuleGeneratorOptions> &
-			Record<"html", HtmlGeneratorOptions> &
-			Record<string, GeneratorOptions>)[T]
-	): (Record<"javascript/auto", JavascriptGenerator> &
-		Record<"javascript/dynamic", JavascriptGenerator> &
-		Record<"javascript/esm", JavascriptGenerator> &
-		Record<"json", JsonGenerator> &
-		Record<"asset", AssetGenerator> &
-		Record<"asset/inline", AssetGenerator> &
-		Record<"asset/resource", AssetGenerator> &
-		Record<"asset/source", AssetSourceGenerator> &
-		Record<"asset/bytes", AssetBytesGenerator> &
-		Record<"webassembly/async", Generator> &
-		Record<"webassembly/sync", Generator> &
-		Record<"css", CssGenerator> &
-		Record<"css/auto", CssGenerator> &
-		Record<"css/module", CssGenerator> &
-		Record<"css/global", CssGenerator> &
-		Record<"html", HtmlGenerator> &
-		Record<string, Generator>)[T];
+		generatorOptions?: ParserAndGeneratorOf<T>[3]
+	): ParserAndGeneratorOf<T>[2];
 
 	/**
 	 * Creates a generator.
 	 */
 	createGenerator<T extends string>(
 		type: T,
-		generatorOptions?: (Record<"javascript/auto", EmptyGeneratorOptions> &
-			Record<"javascript/dynamic", EmptyGeneratorOptions> &
-			Record<"javascript/esm", EmptyGeneratorOptions> &
-			Record<"json", JsonGeneratorOptions> &
-			Record<"asset", AssetGeneratorOptions> &
-			Record<"asset/inline", AssetGeneratorOptions> &
-			Record<"asset/resource", AssetGeneratorOptions> &
-			Record<"asset/source", EmptyGeneratorOptions> &
-			Record<"asset/bytes", EmptyGeneratorOptions> &
-			Record<"webassembly/async", EmptyGeneratorOptions> &
-			Record<"webassembly/sync", EmptyGeneratorOptions> &
-			Record<"css", CssGeneratorOptions> &
-			Record<"css/auto", CssModuleGeneratorOptions> &
-			Record<"css/module", CssModuleGeneratorOptions> &
-			Record<"css/global", CssModuleGeneratorOptions> &
-			Record<"html", HtmlGeneratorOptions> &
-			Record<string, GeneratorOptions>)[T]
-	): (Record<"javascript/auto", JavascriptGenerator> &
-		Record<"javascript/dynamic", JavascriptGenerator> &
-		Record<"javascript/esm", JavascriptGenerator> &
-		Record<"json", JsonGenerator> &
-		Record<"asset", AssetGenerator> &
-		Record<"asset/inline", AssetGenerator> &
-		Record<"asset/resource", AssetGenerator> &
-		Record<"asset/source", AssetSourceGenerator> &
-		Record<"asset/bytes", AssetBytesGenerator> &
-		Record<"webassembly/async", Generator> &
-		Record<"webassembly/sync", Generator> &
-		Record<"css", CssGenerator> &
-		Record<"css/auto", CssGenerator> &
-		Record<"css/module", CssGenerator> &
-		Record<"css/global", CssGenerator> &
-		Record<"html", HtmlGenerator> &
-		Record<string, Generator>)[T];
+		generatorOptions?: ParserAndGeneratorOf<T>[3]
+	): ParserAndGeneratorOf<T>[2];
 
 	/**
 	 * Returns the resolver.
@@ -28793,6 +28452,35 @@ declare class Parser<TModule extends NormalModule = NormalModule> {
 		state: ParserState<NormalModule>
 	): ParserState<NormalModule>;
 }
+type ParserAndGeneratorOf<T extends string> =
+	T extends keyof exports.ParsersAndGeneratorsByModuleType
+		? exports.ParsersAndGeneratorsByModuleType[T]
+		: [Parser, ParserOptions, Generator, GeneratorOptions];
+type ParserHook<T extends string> =
+	T extends keyof exports.ParsersAndGeneratorsByModuleType
+		? SyncHook<
+				[
+					exports.ParsersAndGeneratorsByModuleType[T][0],
+					exports.ParsersAndGeneratorsByModuleType[T][1]
+				]
+			>
+		: SyncHook<[Parser, ParserOptions]>;
+
+/**
+ * The `parser` hooks, each over its module type's `ParsersAndGeneratorsByModuleType` entry.
+ */
+declare interface ParserHookMap {
+	name?: string;
+	for<T extends string>(key: T): ParserHook<T>;
+	get<T extends string>(key: T): undefined | ParserHook<T>;
+	intercept(
+		interceptor: HookMapInterceptor<SyncHook<[Parser, ParserOptions]>, string>
+	): void;
+}
+
+/**
+ * The options of a parser whose module type `ParsersAndGeneratorsByModuleType` does not name.
+ */
 declare interface ParserOptions {
 	[index: string]: any;
 }
@@ -33894,6 +33582,24 @@ declare interface Selector<A, B> {
 	(input: A): undefined | null | B;
 }
 type SemVerRangeItem = undefined | string | number;
+type SerializableClassConstructor<T extends SerializingInstance> =
+	| {
+			new (
+				...params: never[]
+			): T &
+				SerializingInstance & {
+					deserialize(
+						context: ObjectDeserializerContextObjectMiddlewareObject_3
+					): void;
+				};
+			deserialize?: undefined;
+	  }
+	| {
+			new (...params: never[]): T;
+			deserialize(
+				context: ObjectDeserializerContextObjectMiddlewareObject_3
+			): T;
+	  };
 
 /**
  * Represents Serializer.
@@ -33943,6 +33649,14 @@ declare abstract class SerializerMiddleware<
 		data: SerializedType,
 		context: Context
 	): DeserializedType | Promise<DeserializedType>;
+}
+
+/**
+ * An instance that writes itself. Methods, so a class may narrow its context
+ * to the values it writes.
+ */
+declare interface SerializingInstance {
+	serialize(context: ObjectSerializerContextObjectMiddlewareObject_4): void;
 }
 type ServerLazyCompilationBackend = ServerImportHttp | ServerImportHttps;
 declare interface SetIterator<T> extends IteratorObject<T, undefined> {
@@ -39868,6 +39582,94 @@ declare namespace exports {
 	}
 
 	/**
+	 * The parser and generator of each module type, with the options each is created from: `[parser, parser options, generator, generator options]`.
+	 * A plugin types its own module type by declaration merging: `declare module "webpack" { interface ParsersAndGeneratorsByModuleType { "my-type": [MyParser, MyParserOptions, MyGenerator, MyGeneratorOptions] } }`.
+	 */
+	export interface ParsersAndGeneratorsByModuleType {
+		"javascript/auto": [
+			JavascriptParser,
+			JavascriptParserOptions,
+			JavascriptGenerator,
+			EmptyGeneratorOptions
+		];
+		"javascript/dynamic": [
+			JavascriptParser,
+			JavascriptParserOptions,
+			JavascriptGenerator,
+			EmptyGeneratorOptions
+		];
+		"javascript/esm": [
+			JavascriptParser,
+			JavascriptParserOptions,
+			JavascriptGenerator,
+			EmptyGeneratorOptions
+		];
+		json: [JsonParser, JsonParserOptions, JsonGenerator, JsonGeneratorOptions];
+		asset: [
+			AssetParser,
+			AssetParserOptions,
+			AssetGenerator,
+			AssetGeneratorOptions
+		];
+		"asset/inline": [
+			AssetParser,
+			EmptyParserOptions,
+			AssetGenerator,
+			AssetGeneratorOptions
+		];
+		"asset/resource": [
+			AssetParser,
+			EmptyParserOptions,
+			AssetGenerator,
+			AssetGeneratorOptions
+		];
+		"asset/source": [
+			AssetSourceParser,
+			EmptyParserOptions,
+			AssetSourceGenerator,
+			EmptyGeneratorOptions
+		];
+		"asset/bytes": [
+			AssetBytesParser,
+			EmptyParserOptions,
+			AssetBytesGenerator,
+			EmptyGeneratorOptions
+		];
+		"webassembly/async": [
+			AsyncWebAssemblyParser,
+			EmptyParserOptions,
+			Generator,
+			EmptyGeneratorOptions
+		];
+		"webassembly/sync": [
+			WebAssemblyParser,
+			EmptyParserOptions,
+			Generator,
+			EmptyGeneratorOptions
+		];
+		css: [CssParser, CssParserOptions, CssGenerator, CssGeneratorOptions];
+		"css/auto": [
+			CssParser,
+			CssModuleParserOptions,
+			CssGenerator,
+			CssModuleGeneratorOptions
+		];
+		"css/module": [
+			CssParser,
+			CssModuleParserOptions,
+			CssGenerator,
+			CssModuleGeneratorOptions
+		];
+		"css/global": [
+			CssParser,
+			CssModuleParserOptions,
+			CssGenerator,
+			CssModuleGeneratorOptions
+		];
+		html: [HtmlParser, EmptyParserOptions, HtmlGenerator, HtmlGeneratorOptions];
+	}
+
+	/**
 	 * The `[object, data]` `extract` receives for each object key, which also types that key's `getItemFactory` data and `result` value.
 	 * A plugin types its own keys by declaration merging: `declare module "webpack" { interface StatsFactoryExtractKeys { "myPlugin.data": [MyObject, MyData] } }`.
 	 */
@@ -41864,9 +41666,9 @@ declare namespace exports {
 			export { MEASURE_START_OPERATION, MEASURE_END_OPERATION };
 		}
 		export const makeSerializable: <
-			T extends { new (...params: never[]): object }
+			C extends SerializableClassConstructor<SerializingInstance>
 		>(
-			Constructor: T,
+			Constructor: C,
 			request: string | (string | [string, null | string])[],
 			name?: null | string
 		) => void;
