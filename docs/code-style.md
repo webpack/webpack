@@ -10,7 +10,7 @@ Spell names out in full (functions, variables, parameters, properties): `insertH
 
 **Name a class for what it does, and the file for the class.** The name says the idea, and ends in the suffix its kind uses — `*Plugin`, `*Dependency`, `*RuntimeModule`, `*Warning`, `*Error`, `*Module`, `*Factory`, `*Generator`, `*Parser`, `*Template` (546 of 668 PascalCase files in `lib/`). A file exporting one class takes that name; where the two disagree, rename whichever is wrong — often the file. Exempt: core nouns (`Compiler`, `Chunk`), helper and data-structure modules, and any module exporting several things.
 
-**A name never** invents a role suffix (`lib/` has no `*Controller`, `*Manager`, `*Service` or `*Util` — a class that controls a thing is the thing), carries a `Webpack` prefix where the bare word is free, or repeats another class in `lib/`, since a stack trace and `types.d.ts` show the name alone.
+**A name never** invents a role suffix (`lib/` has no `*Controller`, `*Manager`, `*Service` or `*Util` — a class that controls a thing is the thing), carries a `Webpack` prefix where the bare word is free, or repeats another class in `lib/`, since a stack trace and `types.d.ts` show the name alone. The one exception is a language's syntax layer (`lib/{css,html,javascript}/syntax*.js`), where the namespace names the language: it declares `Tokenizer`, `SyntaxTree` or `SyntaxPath`, not `CssTokenizer`. `types.d.ts` publishes a class whose name another directory also declares as `<Directory><Name>` (`CssTokenizer`), exported under the bare name in its namespace; `yarn lint:class-names` fails a repeat two directories cannot tell apart, or whose qualified name another class holds.
 
 ## Path regexps and helpers live in one file
 

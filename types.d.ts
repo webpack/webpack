@@ -7666,7 +7666,7 @@ type CssNormalModule = NormalModule & {
 };
 declare interface CssParseOptions {
 	/**
-	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `CssTokenizer` so the outer parser's comment tracker still sees magic comments inside the consumed range
+	 * optional comment-token callback (string input only); the public `parse*` entry points use it to build the `Tokenizer` so the outer parser's comment tracker still sees magic comments inside the consumed range
 	 */
 	comment?: (input: string, start: number, end: number) => number;
 
@@ -24620,7 +24620,7 @@ declare abstract class MultiWatching {
 
 /**
  * A mutable lexer token. The `next` / `consume` hot path reuses a single
- * instance per `CssTokenizer` (the lexer writes into it instead of allocating
+ * instance per `Tokenizer` (the lexer writes into it instead of allocating
  * one object per token), which also keeps the parser's `t.type` reads
  * monomorphic. All fields are present from construction so the shape never
  * transitions; type-specific fields (`isId` / `contentStart` / `contentEnd` /
@@ -41206,7 +41206,7 @@ declare namespace exports {
 				export let unescapeIdentifier: MakeCacheableResult<string> & {
 					bindCache: BindCache<string>;
 				};
-				export { CssTokenizer };
+				export { CssTokenizer as Tokenizer };
 			}
 			/** exposed as `webpack.css.syntax.printer`; unstable API @experimental */ export namespace printer {
 				export let printer: (

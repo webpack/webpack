@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Drop unused syntax-tree fields; hold CSS and HTML print options in bit fields.
+Trim syntax-tree fields and drop the language prefix from syntax-layer classes.

@@ -60,6 +60,11 @@ const ROOT_PATH = path.resolve(root);
 // Where the hand-written option types that are not a plugin's own live.
 const DECLARATIONS_DIRECTORY = path.resolve(root, declarations);
 
+// A class's name qualified by its `lib/` directory (`css` + `Tokenizer` is
+// `CssTokenizer`), the one `findName` tries first when the bare name clashes.
+/** @type {WeakMap<string[], string>} */
+const directoryQualifiedNames = new WeakMap();
+
 /** @type {Map<string, string> | undefined} */
 let declaring;
 
@@ -1146,7 +1151,24 @@ const collectTypes = ({ program, checker, options }) => {
 		if (!name1 && !name2) {
 			result.unshift(AnonymousType);
 		}
-		return [...new Set(result.filter((x) => x !== undefined))];
+		const symbolName = [...new Set(result.filter((x) => x !== undefined))];
+		if (
+			name1 &&
+			valueDeclaration &&
+			valueDeclaration.kind === ts.SyntaxKind.ClassDeclaration
+		) {
+			const parts = path
+				.relative(ROOT_PATH, valueDeclaration.getSourceFile().fileName)
+				.split(path.sep);
+			if (parts.length > 2 && parts[0] === "lib") {
+				const directory = parts[parts.length - 2]
+					.split(/[^A-Za-z0-9]+/)
+					.map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+					.join("");
+				directoryQualifiedNames.set(symbolName, `${directory}${name1}`);
+			}
+		}
+		return symbolName;
 	};
 
 	// WHY: a schema property written as a bare `$ref` says what its target says,
@@ -2536,15 +2558,21 @@ const nameTypes = ({ options, parsedCollectedTypes, exposedType }) => {
 	 * @returns {string} the chosen name
 	 */
 	const findName = (symbolName, requeueOnConflict = false) => {
+		const qualified = directoryQualifiedNames.get(symbolName);
 		const key = symbolName.join(" ");
 		for (const wishedName of Object.keys(nameMapping)) {
 			if (nameMapping[wishedName].test(key)) {
 				symbolName = [wishedName, ...symbolName];
 			}
 		}
-		let name;
+		/** @type {string[]} */
+		const candidates = [];
 		for (let i = 1; i <= symbolName.length; i++) {
-			name = joinIdentifier(symbolName.slice(0, i));
+			candidates.push(joinIdentifier(symbolName.slice(0, i)));
+		}
+		if (qualified !== undefined) candidates.splice(1, 0, qualified);
+		let name;
+		for (name of candidates) {
 			if (!usedNames.has(name)) {
 				usedNames.add(name);
 				return name;
