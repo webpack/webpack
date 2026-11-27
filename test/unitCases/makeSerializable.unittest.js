@@ -23,10 +23,6 @@ const reading = (values) => {
 };
 
 class ReadByInstance {
-	// A static `deserialize` left unset is not one to call.
-	/** @type {undefined} */
-	static deserialize = undefined;
-
 	constructor() {
 		/** @type {string | undefined} */
 		this.value = undefined;
@@ -46,6 +42,9 @@ class ReadByInstance {
 		this.value = /** @type {string} */ (read());
 	}
 }
+// A static `deserialize` left unset is not one to call. Defined outside the
+// class, as Node 10 does not parse a static class field.
+Reflect.defineProperty(ReadByInstance, "deserialize", { value: undefined });
 makeSerializable(ReadByInstance, REQUEST, "ReadByInstance");
 
 class ReadByClass {
