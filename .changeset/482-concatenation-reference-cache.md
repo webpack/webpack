@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Reuse decoded module references when concatenating modules.
+Reuse decoded module references and incoming connections when concatenating modules.
