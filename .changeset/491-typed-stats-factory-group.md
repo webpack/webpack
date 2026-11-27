@@ -2,4 +2,4 @@
 "webpack": patch
 ---
 
-Type a stats group of an array path without a declared group type.
+Let plugins type their own fields on stats groups, parser state and build info.
