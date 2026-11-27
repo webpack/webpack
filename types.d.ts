@@ -8213,6 +8213,7 @@ declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
  * node and list columns, the streaming frames, the per-run options and caches.
  * `S` is the tree being read; a run a visitor or renderer starts parks it in a
  * spare (see `swapTrees`), so the outer run finds it untouched.
+ * @experimental exposed as `webpack.css.syntax.parser.Parser`; unstable API
  */
 declare class CssSyntaxParser extends CssTokenizer {
 	constructor();
@@ -14988,6 +14989,7 @@ declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
  * per-run options and cursors. `S` is the tree being read; a run a visitor
  * starts parks it in a spare (see `swapTrees`), so the outer run finds it
  * untouched.
+ * @experimental exposed as `webpack.html.syntax.parser.Parser`; unstable API
  */
 declare class HtmlSyntaxParser extends HtmlTokenizer {
 	constructor();
