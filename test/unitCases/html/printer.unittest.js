@@ -913,6 +913,23 @@ describe("SourceProcessor — reusing work across a print", () => {
 		);
 	});
 
+	it("does not carry a style attribute's result into a renderer with other options", () => {
+		const html = fixture(
+			"html",
+			"source-processor-reusing-work-across-a-print-does-not-carry-a-style-attribute-s"
+		);
+		const plain = { renderEmbeddedSource: builtinEmbeddedRenderer() };
+		expect(minify(html, plain)).toMatchSnapshot();
+		expect(
+			minify(html, {
+				renderEmbeddedSource: builtinEmbeddedRenderer({
+					convertLengthUnits: true
+				})
+			})
+		).toMatchSnapshot();
+		expect(minify(html, plain)).toMatchSnapshot();
+	});
+
 	it("marks each stylesheet it offers as one embedded in this document", async () => {
 		const html = fixture(
 			"html",
