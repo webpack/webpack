@@ -34408,12 +34408,12 @@ declare class SortableSet<T, C = unknown> extends Set<T> {
 	/**
 	 * Get data from cache
 	 */
-	getFromCache<R>(fn: (set: SortableSet<T, C>) => R): R;
+	getFromCache<R extends C>(fn: (set: SortableSet<T, C>) => R): R;
 
 	/**
 	 * Get data from cache (ignoring sorting)
 	 */
-	getFromUnorderedCache<R>(fn: (set: SortableSet<T, C>) => R): R;
+	getFromUnorderedCache<R extends C>(fn: (set: SortableSet<T, C>) => R): R;
 
 	/**
 	 * Returns the raw array.
@@ -37479,37 +37479,37 @@ type TypedNodePath<TPath, TNode, P extends NodeParts, T, S = undefined> = Omit<
 	readonly node: TypedNode<TNode, T>;
 	readonly state: S;
 	within(type: P["types"]): boolean;
-	field<R = TypedNode<TNode, T>, F extends number = number>(
+	field<R extends TNode = TypedNode<TNode, T>, F extends number = number>(
 		i: number,
 		field: F & PartOf<R, P["fields"], P["field"]>,
 		n?: R
 	): TypedNode<TNode, P["items"][F]>;
-	fieldCount<R = TypedNode<TNode, T>>(
+	fieldCount<R extends TNode = TypedNode<TNode, T>>(
 		field: PartOf<R, P["fields"], P["field"]>,
 		n?: R
 	): number;
-	fieldNamed<R = TypedNode<TNode, T>, F extends number = number>(
+	fieldNamed<R extends TNode = TypedNode<TNode, T>, F extends number = number>(
 		field: F & PartOf<R, P["fields"], P["field"]>,
 		name: string,
 		n?: R
 	): TypedNode<TNode, P["items"][F]>;
-	flag<R = TypedNode<TNode, T>>(
+	flag<R extends TNode = TypedNode<TNode, T>>(
 		flag: PartOf<R, P["flags"], P["flag"]>,
 		n?: R
 	): boolean;
-	rangeOf<R = TypedNode<TNode, T>>(
+	rangeOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): null | [number, number];
-	startOf<R = TypedNode<TNode, T>>(
+	startOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): number;
-	endOf<R = TypedNode<TNode, T>>(
+	endOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["parts"], P["part"]>,
 		n?: R
 	): number;
-	textOf<R = TypedNode<TNode, T>>(
+	textOf<R extends TNode = TypedNode<TNode, T>>(
 		part: PartOf<R, P["texts"], P["text"]>,
 		n?: R
 	): null | string;

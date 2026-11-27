@@ -747,6 +747,29 @@ const isInternalTypeParameter = (checker, type) => {
 };
 
 /**
+ * A type parameter's constraint. `getConstraint` gives the base one, none for
+ * `R extends C` where `C` has none, so `C` is then taken as declared; else its
+ * constraint is kept, instantiated where the declaration is used as another.
+ * @param {ts.TypeChecker} checker the type checker
+ * @param {ts.Type} type a type parameter
+ * @returns {ts.Type | undefined} its constraint
+ */
+const declaredConstraint = (checker, type) => {
+	const constraint = type.getConstraint();
+	if (constraint) return constraint;
+	const decl = getDeclaration(type.symbol);
+	const node =
+		decl && ts.isTypeParameterDeclaration(decl)
+			? ts.getEffectiveConstraintOfTypeParameter(decl)
+			: undefined;
+	if (node) {
+		const declared = checker.getTypeFromTypeNode(node);
+		if (declared.getFlags() & ts.TypeFlags.TypeParameter) return declared;
+	}
+	return undefined;
+};
+
+/**
  * A dropped type parameter is written as its constraint, widened from
  * literals, so `T extends "a" | "b"` reads `string`.
  * @param {ts.TypeChecker} checker the type checker
@@ -1507,7 +1530,7 @@ const collectTypes = ({ program, checker, options }) => {
 			return {
 				type: "typeParameter",
 				name: type.symbol.name,
-				constraint: type.getConstraint(),
+				constraint: declaredConstraint(checker, type),
 				defaultValue: type.getDefault()
 			};
 		}

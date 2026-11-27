@@ -347,6 +347,17 @@ describe("util/SortableSet", () => {
 			expect(label).toBe("two");
 		});
 
+		it("refuses, in the published types too, a cache function its type does not name", () => {
+			// WHY: `types.d.ts` is generated, and once printed `getFromCache<R>`
+			// without `extends C`, which only this check of the package sees.
+			const { SortableSet: PublishedSortableSet } = require("webpack").util;
+			/** @type {import("webpack").util.SortableSet<number, number[]>} */
+			const set = new PublishedSortableSet([1, 2]);
+			// @ts-expect-error a set caching arrays caches no string
+			const label = set.getFromCache(() => "two");
+			expect(label).toBe("two");
+		});
+
 		it("caches any value on a set that names nothing it caches", () => {
 			/** @type {SortableSet<number>} */
 			const set = new SortableSet([1, 2]);
