@@ -1618,6 +1618,12 @@
           "experimental": true,
           "added": "5.54.0"
         },
+        "incremental": {
+          "description": "Reuse the module graph between watch builds while rebuilding changed modules and their dependencies.",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.114.0"
+        },
         "css": {
           "description": "Enable css support. `\"auto\"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.",
           "anyOf": [
@@ -1756,6 +1762,12 @@
           "type": "boolean",
           "experimental": true,
           "added": "5.54.0"
+        },
+        "incremental": {
+          "description": "Reuse the module graph between watch builds while rebuilding changed modules and their dependencies.",
+          "type": "boolean",
+          "experimental": true,
+          "added": "5.114.0"
         },
         "css": {
           "description": "Enable css support. `\"auto\"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.",

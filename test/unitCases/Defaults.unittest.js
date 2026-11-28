@@ -124,6 +124,21 @@ const getDefaultConfig = (config) => {
 };
 
 describe("snapshots", () => {
+	it("keeps incremental watch opt-in with future defaults", () => {
+		expect(
+			getDefaultConfig({
+				mode: "development",
+				experiments: { futureDefaults: true }
+			}).experiments.incremental
+		).toBe(false);
+		expect(
+			getDefaultConfig({
+				mode: "development",
+				experiments: { incremental: true }
+			}).experiments.incremental
+		).toBe(true);
+	});
+
 	const baseConfig = getDefaultConfig({ mode: "none" });
 
 	it("should have the correct base config", () => {
@@ -153,6 +168,7 @@ describe("snapshots", () => {
 		    "deferImport": false,
 		    "futureDefaults": false,
 		    "html": "auto",
+		    "incremental": false,
 		    "lazyCompilation": undefined,
 		    "sourceImport": false,
 		    "syncWebAssembly": false,
