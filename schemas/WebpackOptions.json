@@ -8420,12 +8420,6 @@
           "type": "number",
           "minimum": 0,
           "added": "5.113.0"
-        },
-        "maxRetries": {
-          "description": "Times a call whose thread exits (out of memory, `process.exit`) is sent to another thread; after that it runs on the main thread and the error is logged, so the build does not fail. Defaults to `3`.",
-          "type": "number",
-          "minimum": 0,
-          "added": "5.114.0"
         }
       }
     },

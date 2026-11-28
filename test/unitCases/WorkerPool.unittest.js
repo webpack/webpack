@@ -1299,7 +1299,7 @@ describe("WorkerPool", () => {
 			const compiler = createCompiler(async (compiler) => {
 				result = await compiler.worker(TARGET).run("crash");
 			});
-			compiler.options.experiments.threads = { max: 1, maxRetries: 1 };
+			compiler.options.experiments.threads = { max: 1 };
 			/** @type {string[]} */
 			const errors = [];
 			compiler.hooks.infrastructureLog.tap("test", (origin, type, args) => {
@@ -1316,39 +1316,6 @@ describe("WorkerPool", () => {
 				);
 			} finally {
 				await close(compiler);
-			}
-		});
-
-		it("keeps each compiler's retry policy on the shared pool", async () => {
-			const first = createCompiler(async (compiler) => {
-				await compiler.worker(TARGET).run("add", 1, 2);
-			});
-			first.options.experiments.threads = { max: 1, maxRetries: 3 };
-			/** @type {unknown} */
-			let result;
-			const second = createCompiler(async (compiler) => {
-				result = await compiler.worker(TARGET).run("crash");
-			});
-			second.options.experiments.threads = { max: 1, maxRetries: 0 };
-			/** @type {string[]} */
-			const errors = [];
-			second.hooks.infrastructureLog.tap("test", (origin, type, args) => {
-				if (type === "error") errors.push((args || []).join(" "));
-				return true;
-			});
-			try {
-				await run(first);
-				await run(second);
-				expect(second._getWorkerPool()).toBe(first._getWorkerPool());
-				expect(result).toBe("main thread");
-				// `maxRetries: 0`: the first exit falls back, whatever the first compiler set
-				expect(
-					/** @type {WorkerPool} */ (second._getWorkerPool()).stats.crashed
-				).toBe(1);
-				expect(errors).toHaveLength(1);
-			} finally {
-				await close(second);
-				await close(first);
 			}
 		});
 
