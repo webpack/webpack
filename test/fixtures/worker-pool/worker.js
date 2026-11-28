@@ -46,11 +46,26 @@ module.exports.throwPlain = () => {
 	throw { message: "plain", code: 7 };
 };
 
-// Exits only on a thread: the pool's main-thread fallback must not end the test process.
-module.exports.crash = (ms = 0) => {
-	const { isMainThread } = require("worker_threads");
+// Whether this runs on a thread the pool spawned. `isMainThread` is not enough:
+// under `jest --workerThreads` (the Bun job) the test itself runs on a thread.
+const onPoolThread = () => {
+	try {
+		const { workerData } = require("worker_threads");
+		const { WORKER_DATA_KIND } = require("../../../lib/worker/protocol");
 
-	if (isMainThread) return "main thread";
+		return (
+			workerData !== null &&
+			typeof workerData === "object" &&
+			workerData.kind === WORKER_DATA_KIND
+		);
+	} catch (_err) {
+		return false;
+	}
+};
+
+// Exits only on a pool thread: the main-thread fallback must not end the test process.
+module.exports.crash = (ms = 0) => {
+	if (!onPoolThread()) return "main thread";
 	return new Promise((resolve) => {
 		setTimeout(() => process.exit(3), ms);
 	});
@@ -60,7 +75,7 @@ module.exports.crash = (ms = 0) => {
 module.exports.rpcThenCrashOnce = async (context, marker) => {
 	const fs = require("fs");
 
-	if (fs.existsSync(marker)) {
+	if (fs.existsSync(marker) || !onPoolThread()) {
 		// still waiting when the first attempt's call settles
 		await context.callMain("wait", [300]);
 		return "retried";
@@ -75,7 +90,7 @@ module.exports.rpcThenCrashOnce = async (context, marker) => {
 module.exports.crashOnce = (marker) => {
 	const fs = require("fs");
 
-	if (fs.existsSync(marker)) return "retried";
+	if (fs.existsSync(marker) || !onPoolThread()) return "retried";
 	fs.writeFileSync(marker, "");
 	process.exit(3);
 };
