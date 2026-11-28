@@ -870,6 +870,19 @@ describe("WorkerPool", () => {
 			}
 		});
 
+		it("still runs a crashed call on the main thread when its report throws", async () => {
+			const pool = createThreadPool({
+				max: 1,
+				maxRetries: 0,
+				onFallback: () => {
+					throw new Error("report failed");
+				}
+			});
+			expect(await pool.run(TARGET, "crash", [])).toBe("main thread");
+			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+			await pool.end();
+		});
+
 		it("does not retry a call that throws", async () => {
 			const onFallback = jest.fn();
 			const pool = createThreadPool({ max: 1, onFallback });
