@@ -1873,7 +1873,7 @@ declare class Chunk {
 	ids: null | ChunkId[];
 	debugId: number;
 	name?: null | string;
-	idNameHints: SortableSet<string, never>;
+	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
 	filenameTemplate?:
 		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
@@ -2060,7 +2060,7 @@ declare class Chunk {
 	/**
 	 * Gets groups iterable.
 	 */
-	get groupsIterable(): SortableSet<ChunkGroup, never>;
+	get groupsIterable(): SortableSet<ChunkGroup>;
 
 	/**
 	 * Disconnects from groups.
@@ -2808,7 +2808,7 @@ declare abstract class ChunkGroup {
 	 * Registers an async entrypoint that is rooted in this chunk group.
 	 */
 	addAsyncEntrypoint(entrypoint: Entrypoint): boolean;
-	get asyncEntrypointsIterable(): SortableSet<ChunkGroup, never>;
+	get asyncEntrypointsIterable(): SortableSet<ChunkGroup>;
 
 	/**
 	 * Returns the async dependency blocks that create or reference this group.
@@ -5281,7 +5281,7 @@ declare class Compiler {
 	 * @since 5.113.0
 	 * @experimental
 	 */
-	worker<M extends WorkerModule = WorkerDefaultModule>(
+	worker<M extends Record<string, unknown> = WorkerDefaultModule>(
 		workerPath: string | URL,
 		options?: WorkerOptions
 	): Worker<M>;
@@ -11859,9 +11859,7 @@ declare abstract class ExportsInfo {
 	/**
 	 * Returns set of used exports, or true (when namespace object is used), or false (when unused), or null (when unknown).
 	 */
-	getUsedExports(
-		runtime: RuntimeSpec
-	): null | boolean | SortableSet<string, never>;
+	getUsedExports(runtime: RuntimeSpec): null | boolean | SortableSet<string>;
 
 	/**
 	 * Gets provided exports.
@@ -13835,21 +13833,7 @@ declare interface HotUpdateCssManifest {
 	l?: ChunkId[];
 	n?: Record<ChunkId, string>;
 }
-
-/**
- * The manifest a runtime downloads first in a hot update; every download handler gets it
- * whole, so a plugin adds a field here for its own handler. It is sent as JSON; the field stays open so a
- * plugin's interface-typed value, which carries no index signature, still fits.
- */
-declare interface HotUpdateManifest {
-	[index: string]: unknown;
-	c: ChunkId[];
-	r: ChunkId[];
-	m: ModuleId[];
-	f?: ChunkId[];
-	s?: ModuleId[];
-	css?: HotUpdateCssManifest;
-}
+type HotUpdateManifest = exports.KnownHotUpdateManifest & Record<string, any>;
 
 /**
  * What a plugin needs to fill its manifest field.
@@ -22955,7 +22939,7 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * @deprecated
 	 */
-	get usedExports(): null | boolean | SortableSet<string, never>;
+	get usedExports(): null | boolean | SortableSet<string>;
 
 	/**
 	 * Gets optimization bailout.
@@ -23974,7 +23958,7 @@ declare class ModuleGraph {
 	getUsedExports(
 		module: Module,
 		runtime: RuntimeSpec
-	): null | boolean | SortableSet<string, never>;
+	): null | boolean | SortableSet<string>;
 
 	/**
 	 * Gets pre order index.
@@ -34386,7 +34370,7 @@ declare interface SortFunction<T> {
 /**
  * A subset of Set that offers sorting functionality
  */
-declare class SortableSet<T, C = unknown> extends Set<T> {
+declare class SortableSet<T, C = never> extends Set<T> {
 	/**
 	 * Create a new sortable set
 	 */
@@ -38634,7 +38618,9 @@ declare interface WithOptions {
  * @since 5.113.0
  * @experimental
  */
-declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
+declare abstract class Worker<
+	M extends Record<string, unknown> = WorkerDefaultModule
+> {
 	/**
 	 * Calls one export of the module.
 	 */
@@ -38665,14 +38651,6 @@ declare interface WorkerDefaultModule {
 		| CloneableValue[]
 		| CloneableObject
 		| Promise<CloneableValue>;
-}
-
-/**
- * Constraint for a worker module: any exports. Only the ones a caller runs
- * need to be functions.
- */
-declare interface WorkerModule {
-	[index: string]: unknown;
 }
 
 /**
@@ -39175,6 +39153,43 @@ declare namespace exports {
 		 * true when a node core module is read through `process.getBuiltinModule()`
 		 */
 		builtinGetter?: boolean;
+	}
+
+	/**
+	 * The manifest a runtime downloads first in a hot update, sent as JSON; every download handler
+	 * gets it whole, so a plugin adds a field here for its own handler.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownHotUpdateManifest { myField?: MyType } }`.
+	 */
+	export interface KnownHotUpdateManifest {
+		/**
+		 * the chunks the update changes
+		 */
+		c: ChunkId[];
+
+		/**
+		 * the chunks the update removes
+		 */
+		r: ChunkId[];
+
+		/**
+		 * the modules the update removes
+		 */
+		m: ModuleId[];
+
+		/**
+		 * the chunks the client must load so a module whose only loaded chunk left a runtime keeps an installed owner
+		 */
+		f?: ChunkId[];
+
+		/**
+		 * the unchanged modules the update ships for clients that lack them
+		 */
+		s?: ModuleId[];
+
+		/**
+		 * the CSS chunks the update removes and loads
+		 */
+		css?: HotUpdateCssManifest;
 	}
 
 	/**
