@@ -52,7 +52,6 @@ const BY_DESIGN = [
 			"oxc minifier: peephole/obscure_edge_cases.rs:test_advanced_esm_patterns:0ddaacbd",
 			"oxc minifier: peephole/obscure_edge_cases.rs:test_advanced_esm_patterns:1e4702f5",
 			"oxc minifier: peephole/remove_dead_code.rs:test_fold_block:e9c3eac6",
-			"swc minifier: fixture/projects/jquery/5/input.js",
 			"swc minifier: fixture/issues/string-from-char-code-uint16/input.js"
 		]
 	],
