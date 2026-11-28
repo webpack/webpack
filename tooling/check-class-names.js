@@ -5,16 +5,18 @@
 
 "use strict";
 
-// Fails `yarn lint` when two classes under lib/ share a name, as AGENTS.md
-// forbids: `generate-types.js` then has to invent one for the published
-// `types.d.ts`, and the order-dependent names it falls back to (`…Class_1`)
-// renumber when an unrelated file is added. Node builtins only.
+// Fails `yarn lint` when two classes under lib/ share a name `generate-types.js`
+// cannot tell apart by directory: it publishes such classes in `types.d.ts` as
+// `<Directory><Name>`, and otherwise falls back to names that renumber.
 
 const fs = require("fs");
 const path = require("path");
 
 const LIB_ROOT = path.resolve(__dirname, "../lib");
 const CLASS_DECLARATION_REGEXP = /^class ([A-Za-z_$][\w$]*)/gm;
+// A language's syntax layer, the only place a class name may repeat: its
+// namespace (`webpack.css.syntax.parser`) already names the language.
+const SYNTAX_LAYER_REGEXP = /^(?:css|html|javascript)\/syntax[^/]*\.js$/;
 
 /**
  * Maps every top-level class declared under a directory to the files declaring it.
@@ -51,9 +53,34 @@ const collectClassDeclarations = (directory, declarations = new Map()) => {
 	return declarations;
 };
 
+/**
+ * The name `generate-types.js` gives a class whose bare name clashes.
+ * @param {string} name the class name
+ * @param {string} file its file, relative to `LIB_ROOT`
+ * @returns {string | undefined} `<Directory><Name>`, undefined for a file in `lib/` itself
+ */
+const qualifiedName = (name, file) => {
+	const parts = file.split("/");
+	if (parts.length < 2) return undefined;
+	const directory = parts[parts.length - 2]
+		.split(/[^A-Za-z0-9]+/)
+		.map((word) => `${word.charAt(0).toUpperCase()}${word.slice(1)}`)
+		.join("");
+	return `${directory}${name}`;
+};
+
 const declarations = collectClassDeclarations(LIB_ROOT);
 const collisions = [...declarations]
-	.filter(([, files]) => files.length > 1)
+	.filter(([name, files]) => {
+		if (files.length < 2) return false;
+		if (files.some((file) => !SYNTAX_LAYER_REGEXP.test(file))) return true;
+		const qualified = files.map((file) => qualifiedName(name, file));
+		return (
+			qualified.some(
+				(other) => other === undefined || declarations.has(other)
+			) || new Set(qualified).size !== qualified.length
+		);
+	})
 	.sort(([a], [b]) => a.localeCompare(b));
 
 if (collisions.length > 0) {
@@ -62,9 +89,11 @@ if (collisions.length > 0) {
 	}
 
 	console.error(
-		`Rename ${collisions.length === 1 ? "it" : "each"} so no two classes in lib/ share a name (see "Naming" in AGENTS.md). Keep the export key to leave the public surface unchanged.`
+		`Rename ${collisions.length === 1 ? "it" : "each"}: only a syntax layer's classes (lib/{css,html,javascript}/syntax*.js) may share a name, one per directory, and none may be another class's name with the directory in front (see "Naming" in docs/code-style.md).`
 	);
 	process.exitCode = 1;
 } else {
-	console.log(`lib/ declares ${declarations.size} classes, all unique`);
+	console.log(
+		`lib/ declares ${declarations.size} class names, each one types.d.ts can tell apart`
+	);
 }

@@ -20,7 +20,7 @@ const {
 	parseARule,
 	parseAStylesheet,
 	parseAStylesheetsContents,
-	CssTokenizer
+	Tokenizer
 } = require("../../../lib/css/syntax-parser");
 
 describe("CssSyntax — parser entry points", () => {
@@ -64,9 +64,9 @@ describe("CssSyntax — parser entry points", () => {
 		).toBeDefined();
 	});
 
-	it("accepts a pre-built CssTokenizer as input", () => {
+	it("accepts a pre-built Tokenizer as input", () => {
 		const ss = parseAStylesheet(
-			new CssTokenizer(
+			new Tokenizer(
 				fixture(
 					"css",
 					"css-syntax-parser-entry-points-accepts-a-pre-built-token-stream-as-input"
