@@ -13,5 +13,18 @@ function key(label) {
 	}
 })[key("getter")];
 ({ a: key("value") })[key("valued")];
+// A prototype the literal sets may answer the key by a getter.
+try {
+	({
+		__proto__: {
+			get a() {
+				throw new Error("inherited");
+			}
+		}
+	})[key("inherited")];
+} catch (error) {
+	console.log(error.message);
+}
+({ __proto__: null, b: 1 })[key("null prototype")];
 var read = { a: 3 }[key("read")];
 console.log(read);
