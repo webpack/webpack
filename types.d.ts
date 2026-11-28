@@ -1873,7 +1873,7 @@ declare class Chunk {
 	ids: null | ChunkId[];
 	debugId: number;
 	name?: null | string;
-	idNameHints: SortableSet<string, never>;
+	idNameHints: SortableSet<string>;
 	preventIntegration: boolean;
 	filenameTemplate?:
 		string | ((pathData: PathDataChunk, assetInfo?: AssetInfo) => string);
@@ -2060,7 +2060,7 @@ declare class Chunk {
 	/**
 	 * Gets groups iterable.
 	 */
-	get groupsIterable(): SortableSet<ChunkGroup, never>;
+	get groupsIterable(): SortableSet<ChunkGroup>;
 
 	/**
 	 * Disconnects from groups.
@@ -2808,7 +2808,7 @@ declare abstract class ChunkGroup {
 	 * Registers an async entrypoint that is rooted in this chunk group.
 	 */
 	addAsyncEntrypoint(entrypoint: Entrypoint): boolean;
-	get asyncEntrypointsIterable(): SortableSet<ChunkGroup, never>;
+	get asyncEntrypointsIterable(): SortableSet<ChunkGroup>;
 
 	/**
 	 * Returns the async dependency blocks that create or reference this group.
@@ -11849,9 +11849,7 @@ declare abstract class ExportsInfo {
 	/**
 	 * Returns set of used exports, or true (when namespace object is used), or false (when unused), or null (when unknown).
 	 */
-	getUsedExports(
-		runtime: RuntimeSpec
-	): null | boolean | SortableSet<string, never>;
+	getUsedExports(runtime: RuntimeSpec): null | boolean | SortableSet<string>;
 
 	/**
 	 * Gets provided exports.
@@ -22931,7 +22929,7 @@ declare class Module extends DependenciesBlock {
 	/**
 	 * @deprecated
 	 */
-	get usedExports(): null | boolean | SortableSet<string, never>;
+	get usedExports(): null | boolean | SortableSet<string>;
 
 	/**
 	 * Gets optimization bailout.
@@ -23950,7 +23948,7 @@ declare class ModuleGraph {
 	getUsedExports(
 		module: Module,
 		runtime: RuntimeSpec
-	): null | boolean | SortableSet<string, never>;
+	): null | boolean | SortableSet<string>;
 
 	/**
 	 * Gets pre order index.
@@ -34362,7 +34360,7 @@ declare interface SortFunction<T> {
 /**
  * A subset of Set that offers sorting functionality
  */
-declare class SortableSet<T, C = unknown> extends Set<T> {
+declare class SortableSet<T, C = never> extends Set<T> {
 	/**
 	 * Create a new sortable set
 	 */

@@ -2,6 +2,8 @@
 
 const SortableSet = require("../../lib/util/SortableSet");
 
+/** @typedef {SortableSet<number, number | number[] | undefined>} CachingSet a set caching what these tests ask of it */
+
 describe("util/SortableSet", () => {
 	it("can be constructed like a normal Set", () => {
 		const sortableSet = new SortableSet(
@@ -40,16 +42,17 @@ describe("util/SortableSet", () => {
 
 	describe("caching", () => {
 		/**
-		 * @param {SortableSet<number>} set the set asked
+		 * @param {CachingSet} set the set asked
 		 * @returns {number} how many items it holds
 		 */
 		const size = (set) => set.size;
 
 		it("answers a repeated question from the cache", () => {
+			/** @type {CachingSet} */
 			const sortableSet = new SortableSet([1, 2, 3]);
 			let calls = 0;
 			/**
-			 * @param {SortableSet<number>} set the set asked
+			 * @param {CachingSet} set the set asked
 			 * @returns {number} how many items it holds
 			 */
 			const counted = (set) => {
@@ -65,6 +68,7 @@ describe("util/SortableSet", () => {
 		});
 
 		it("holds one function's answer without a map", () => {
+			/** @type {CachingSet} */
 			const sortableSet = new SortableSet([1, 2, 3]);
 			sortableSet.getFromUnorderedCache(size);
 			// The point of the pair of slots: a set asked by one function, which is
@@ -76,14 +80,14 @@ describe("util/SortableSet", () => {
 
 		it("keeps every answer once a second function asks", () => {
 			/**
-			 * @param {SortableSet<number>} set the set asked
-			 * @param {(set: SortableSet<number>) => number} fn what to ask it
+			 * @param {CachingSet} set the set asked
+			 * @param {(set: CachingSet) => number} fn what to ask it
 			 * @returns {number} the answer
 			 */
 			const ordered = (set, fn) => set.getFromCache(fn);
 			/**
-			 * @param {SortableSet<number>} set the set asked
-			 * @param {(set: SortableSet<number>) => number} fn what to ask it
+			 * @param {CachingSet} set the set asked
+			 * @param {(set: CachingSet) => number} fn what to ask it
 			 * @returns {number} the answer
 			 */
 			const unordered = (set, fn) => set.getFromUnorderedCache(fn);
@@ -91,7 +95,7 @@ describe("util/SortableSet", () => {
 			for (const get of [ordered, unordered]) {
 				const calls = { size: 0, first: 0, last: 0 };
 				/**
-				 * @param {SortableSet<number>} set the set asked
+				 * @param {CachingSet} set the set asked
 				 * @returns {number} how many items it holds
 				 */
 				const countedSize = (set) => {
@@ -99,7 +103,7 @@ describe("util/SortableSet", () => {
 					return set.size;
 				};
 				/**
-				 * @param {SortableSet<number>} set the set asked
+				 * @param {CachingSet} set the set asked
 				 * @returns {number} its first item
 				 */
 				const first = (set) => {
@@ -107,13 +111,14 @@ describe("util/SortableSet", () => {
 					return [...set][0];
 				};
 				/**
-				 * @param {SortableSet<number>} set the set asked
+				 * @param {CachingSet} set the set asked
 				 * @returns {number} its last item
 				 */
 				const last = (set) => {
 					calls.last++;
 					return [...set][set.size - 1];
 				};
+				/** @type {CachingSet} */
 				const sortableSet = new SortableSet([1, 2, 3]);
 				expect(get(sortableSet, countedSize)).toBe(3);
 				expect(get(sortableSet, first)).toBe(1);
@@ -128,6 +133,7 @@ describe("util/SortableSet", () => {
 		});
 
 		it("recomputes an answer of undefined, as a map lookup did", () => {
+			/** @type {CachingSet} */
 			const sortableSet = new SortableSet([1, 2, 3]);
 			let calls = 0;
 			/**
@@ -146,7 +152,7 @@ describe("util/SortableSet", () => {
 		});
 
 		it("forgets both caches when its membership changes", () => {
-			/** @type {((set: SortableSet<number>) => void)[]} */
+			/** @type {((set: CachingSet) => void)[]} */
 			const changes = [
 				(set) => {
 					set.add(4);
@@ -159,10 +165,11 @@ describe("util/SortableSet", () => {
 				}
 			];
 			for (const change of changes) {
+				/** @type {CachingSet} */
 				const sortableSet = new SortableSet([1, 2, 3]);
 				let calls = 0;
 				/**
-				 * @param {SortableSet<number>} set the set asked
+				 * @param {CachingSet} set the set asked
 				 * @returns {number} how many items it holds
 				 */
 				const counted = (set) => {
@@ -180,10 +187,11 @@ describe("util/SortableSet", () => {
 		});
 
 		it("forgets a map of answers too when its membership changes", () => {
+			/** @type {CachingSet} */
 			const sortableSet = new SortableSet([1, 2, 3]);
 			const calls = { size: 0, first: 0 };
 			/**
-			 * @param {SortableSet<number>} set the set asked
+			 * @param {CachingSet} set the set asked
 			 * @returns {number} how many items it holds
 			 */
 			const countedSize = (set) => {
@@ -191,7 +199,7 @@ describe("util/SortableSet", () => {
 				return set.size;
 			};
 			/**
-			 * @param {SortableSet<number>} set the set asked
+			 * @param {CachingSet} set the set asked
 			 * @returns {number} its first item
 			 */
 			const first = (set) => {
@@ -207,10 +215,11 @@ describe("util/SortableSet", () => {
 		});
 
 		it("forgets only the order-dependent cache when sorted", () => {
+			/** @type {CachingSet} */
 			const sortableSet = new SortableSet([3, 1, 2]);
 			const calls = { ordered: 0, unordered: 0 };
 			/**
-			 * @param {SortableSet<number>} set the set asked
+			 * @param {CachingSet} set the set asked
 			 * @returns {number} its first item, which sorting moves
 			 */
 			const firstOrdered = (set) => {
@@ -218,7 +227,7 @@ describe("util/SortableSet", () => {
 				return [...set][0];
 			};
 			/**
-			 * @param {SortableSet<number>} set the set asked
+			 * @param {CachingSet} set the set asked
 			 * @returns {number} how many items it holds, which sorting does not move
 			 */
 			const sizeUnordered = (set) => {
@@ -234,10 +243,11 @@ describe("util/SortableSet", () => {
 		});
 
 		it("keeps what it cached across an add or a delete that changes nothing", () => {
+			/** @type {CachingSet} */
 			const sortableSet = new SortableSet([3, 1, 2]);
 			let calls = 0;
 			/**
-			 * @param {SortableSet<number>} set the set asked
+			 * @param {CachingSet} set the set asked
 			 * @returns {number[]} its items
 			 */
 			const items = (set) => {
@@ -309,16 +319,19 @@ describe("util/SortableSet", () => {
 	// `@ts-expect-error` fails that check once the line it marks compiles.
 	describe("cache types", () => {
 		/**
-		 * The set as an array, as webpack's own `getArray` helpers take a set.
+		 * The set as an array, as webpack's own `getArray` helpers take a set:
+		 * generic over what it caches, so it takes any set.
 		 * @template T
-		 * @param {SortableSet<T>} set the set
+		 * @template C
+		 * @param {SortableSet<T, C>} set the set
 		 * @returns {T[]} its items
 		 */
 		const getArray = (set) => [...set];
 
 		/**
 		 * How many items a set holds, for any set.
-		 * @param {SortableSet<number>} set the set
+		 * @template C
+		 * @param {SortableSet<number, C>} set the set
 		 * @returns {number} its size
 		 */
 		const countOf = (set) => set.size;
@@ -334,9 +347,6 @@ describe("util/SortableSet", () => {
 			const count = set.getFromUnorderedCache(countOf);
 			expect(items).toEqual([3, 1, 2]);
 			expect(count).toBe(3);
-			/** @type {SortableSet<number>} */
-			const plain = set;
-			expect(plain.size).toBe(3);
 		});
 
 		it("caches only what a set says it caches", () => {
@@ -358,15 +368,12 @@ describe("util/SortableSet", () => {
 			expect(label).toBe("two");
 		});
 
-		it("caches any value on a set that names nothing it caches", () => {
+		it("caches nothing on a set that names nothing it caches", () => {
 			/** @type {SortableSet<number>} */
 			const set = new SortableSet([1, 2]);
-			/** @type {string} */
+			// @ts-expect-error a set naming no cache type caches no answer
 			const label = set.getFromCache(() => "two");
-			/** @type {number[]} */
-			const items = set.getFromCache(getArray);
 			expect(label).toBe("two");
-			expect(items).toEqual([1, 2]);
 		});
 
 		it("answers each function with that function's own type", () => {
