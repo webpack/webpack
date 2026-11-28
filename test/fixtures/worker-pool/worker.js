@@ -56,6 +56,21 @@ module.exports.crash = (ms = 0) => {
 	});
 };
 
+// Asks the main thread for something slow, then exits before it answers, the first time only.
+module.exports.rpcThenCrashOnce = async (context, marker) => {
+	const fs = require("fs");
+
+	if (fs.existsSync(marker)) {
+		// still waiting when the first attempt's call settles
+		await context.callMain("wait", [300]);
+		return "retried";
+	}
+	fs.writeFileSync(marker, "");
+	context.callMain("wait", [150]).catch(() => {});
+	await new Promise((resolve) => setTimeout(resolve, 10));
+	process.exit(3);
+};
+
 // Exits the first time only, marked by `marker` existing.
 module.exports.crashOnce = (marker) => {
 	const fs = require("fs");
