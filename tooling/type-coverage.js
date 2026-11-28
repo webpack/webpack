@@ -1058,6 +1058,30 @@ const isInBound = (node) => {
 };
 
 /**
+ * Returns whether a type node is the whole type of a `catch` clause's
+ * variable, as `catch (error: unknown)` or a JSDoc `@type` on it writes it:
+ * what a `throw` hands on, which any value may be, so `unknown` is its real
+ * type, as `ThrownValue` is.
+ * @param {ts.Node} node the type node
+ * @returns {boolean} whether it types a caught value
+ */
+const isCaughtType = (node) => {
+	let { parent } = node;
+	if (parent && ts.isJSDocTypeExpression(parent)) {
+		const tag = parent.parent;
+		if (!tag || !ts.isJSDocTypeTag(tag) || !tag.parent) return false;
+		// A JSDoc comment hangs off the declaration it documents.
+		parent = tag.parent.parent;
+	}
+	return Boolean(
+		parent &&
+		ts.isVariableDeclaration(parent) &&
+		parent.parent &&
+		ts.isCatchClause(parent.parent)
+	);
+};
+
+/**
  * Returns the escape hatch a type node writes, as the type it stands for and
  * its spelling. An `object` constraining or testing a type, as in
  * `@template {object} T`, says only that it is no primitive.
@@ -1073,7 +1097,7 @@ const escapeHatchOf = (node) => {
 		case ts.SyntaxKind.JSDocUnknownType:
 			return { kind: "any", spelling: "?" };
 		case ts.SyntaxKind.UnknownKeyword:
-			return isInBound(node)
+			return isInBound(node) || isCaughtType(node)
 				? undefined
 				: { kind: "unknown", spelling: "unknown" };
 		case ts.SyntaxKind.ObjectKeyword:
@@ -1315,7 +1339,7 @@ for (const column of COLUMNS) {
 	}
 }
 report +=
-	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written: a type argument a call leaves to inference that comes out `any`, whether a lib signature defaults it, as in `const map = new Map()` and `Array(5)`, or a generic call infers it from an `any` argument; and `const list = []`. An identifier that only holds an `any` written in the project's files is not counted again, as the `any` row counts it where it is written; an `any` a lib signature returns, such as `JSON.parse`'s, is counted in neither row.\n";
+	"\n`any` counts `EXPECTED_ANY`, a written `any` and JSDoc's `*` and `?` for any type. `unknown` counts a written `unknown`; `ThrownValue`, the `unknown` a `throw` or a rejected promise hands on, is left out, as is an `unknown` typing a `catch` clause's variable. `object` counts `EXPECTED_OBJECT` and `Object`, `Function` counts `EXPECTED_FUNCTION`. Untyped counts the `any` TypeScript infers where no type is written: a type argument a call leaves to inference that comes out `any`, whether a lib signature defaults it, as in `const map = new Map()` and `Array(5)`, or a generic call infers it from an `any` argument; and `const list = []`. An identifier that only holds an `any` written in the project's files is not counted again, as the `any` row counts it where it is written; an `any` a lib signature returns, such as `JSON.parse`'s, is counted in neither row.\n";
 if (base && !baseCountsFile) {
 	report +=
 		"\nThe base's untyped identifiers were not counted, as `--base-counts` was not given.\n";
