@@ -3135,6 +3135,14 @@ describe("CssSyntax minify — text a rewrite keeps inside its string or url", (
 		);
 	});
 
+	it("reads an escaped CRLF in a string as one newline when ordering a list", () => {
+		const css = fixture(
+			"css",
+			"css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf"
+		);
+		expect(minifyFor(css)).toBe('.b,[b="x\\\r\n],.z,["]{top:0}');
+	});
+
 	it("does not decode a data url's percent-escape into the half of another", () => {
 		// Read once, `%%32%41` is the text `%2A`, which must not become `*`.
 		const name =
@@ -3955,5 +3963,284 @@ describe("CssSyntax minify — a namespace after a url or an escaped brace", () 
 				)
 			)
 		).toBe('.a{}@import u\\72 l(a{b);@namespace "urn:x";div{color:red}');
+	});
+});
+
+describe("CssSyntax minify — text inside a token stays inside it", () => {
+	/**
+	 * @param {string} name the fixture's name
+	 * @returns {string} its minified serialization
+	 */
+	const minified = (name) => minifyFor(fixture("css", name));
+
+	it.each([
+		["", '.tip{margin:a\\"url(x ")" ";color:red}body{display:none;x:");top:0}'],
+		[
+			"-2",
+			'.tip{margin:a\\(url(x ")" ";color:red}body{display:none;x:");top:0}'
+		],
+		[
+			"-3",
+			'.tip{margin:a\\"url(x ")" ";color:red}body{display:none;x:");top:0}'
+		]
+	])(
+		"reads an escaped code point before `url(` as part of a function's name (%s)",
+		(suffix, out) => {
+			expect(
+				minified(
+					`css-syntax-minify-an-escaped-code-point-before-url-names-a-function${suffix}`
+				)
+			).toBe(out);
+		}
+	);
+
+	it("lets a stray closer in a call close nothing", () => {
+		const name = "css-syntax-minify-a-stray-closer-in-a-call-closes-nothing";
+		expect(minified(name)).toBe(
+			".a{margin:f(];color:red}body{display:none}.c{y:z});top:0}"
+		);
+		expect(minified(`${name}-2`)).toBe(
+			".a{margin:f(];color:red);top:0}.b{top:1}.c{top:2}"
+		);
+	});
+
+	it("ends a selector's string at a newline", () => {
+		expect(
+			minified("css-syntax-minify-a-newline-ends-a-string-in-a-selector-list")
+		).toBe('"a,.a{}body{display:none}.c{",.b,.z"x\n{top:0}.q{top:3}');
+	});
+
+	it("keeps a bad url apart from a folded call before it", () => {
+		expect(
+			minified("css-syntax-minify-a-bad-url-stands-apart-from-a-folded-call")
+		).toBe(
+			".a{margin:1px url(a b}body{display:none)0 1px url(a b}body{display:none)0}"
+		);
+	});
+
+	it("reads no layer name out of a url holding a brace", () => {
+		expect(
+			minified("css-syntax-minify-a-layer-named-by-a-url-holding-a-brace")
+		).toBe(
+			"@layer url(data:,x{y){.a{top:0}}.m{top:1}@layer url(data:,x{z){.b{top:1}}.next{top:2}"
+		);
+	});
+
+	it("keeps the comment parting a unicode range's `/` and `*`", () => {
+		const name = "css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens";
+		expect(minified(name)).toBe(".a{unicode-range:U+0//**/*x}.next{top:0}");
+		expect(minified(`${name}-2`)).toBe(
+			"@font-face{unicode-range:U+0//**/*x}.next{top:0}"
+		);
+	});
+});
+
+describe("CssSyntax minify — work bounded by the input's size", () => {
+	// Each of these once took quadratic or exponential work, tens of seconds or
+	// more; the fixed print takes a fraction of this, far from the bound.
+	const SECONDS = 3;
+	// The most a print may add by writing out nesting, prefixed copies and custom
+	// names, for an input this small.
+	const MOST = 2 << 20;
+
+	/**
+	 * @param {string} source the stylesheet
+	 * @param {import("../../../lib/css/syntax-parser").CssProcessOptions=} options print options
+	 * @returns {{ code: string, seconds: number, warnings: string[] }} the print, how long it took and what it reported
+	 */
+	const timed = (source, options = {}) => {
+		/** @type {string[]} */
+		const warnings = [];
+		const start = process.hrtime.bigint();
+		const { code } = new SourceProcessor().process(source, {
+			mode: "minify",
+			...options,
+			warning: (message) => {
+				warnings.push(message);
+			}
+		});
+		const seconds = Number(process.hrtime.bigint() - start) / 1e9;
+		return { code, seconds, warnings };
+	};
+
+	it("splits a gradient's position off a long first argument", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code).toContain("radial-gradient(");
+	});
+
+	it("reads a long number in a zero-percentage sum", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-zero-percent-sum-of-a-long-number"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code).toMatch(/^\.a\{transform:translate\(calc\(0% \+ 1+\)/);
+	});
+
+	it("parts a long value's tokens without reading it all back", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-a-long-value-of-tokens-that-fuse"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.startsWith("a{x:1-1 -1-1 ")).toBe(true);
+	});
+
+	it("parts a unicode-range's comment gaps without reading it all back", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.startsWith("@font-face{unicode-range:U+0,U+0,")).toBe(true);
+		expect(code.endsWith(",U+0,U+1}")).toBe(true);
+	});
+
+	it("parts a long custom property's tokens without reading it all back", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-a-long-custom-property-value"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.startsWith("a{--x:a a a")).toBe(true);
+	});
+
+	it("joins a run of same-selector rules into blocks of bounded size", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-a-run-of-same-selector-rules"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		const written = new Set(code.match(/--p\d+:1/g));
+		/** @type {number[]} */
+		const missing = [];
+		for (let i = 0; i < 16000; i++) {
+			if (!written.has(`--p${i}:1`)) missing.push(i);
+		}
+		expect(missing).toEqual([]);
+	});
+
+	it("reads a rule only against earlier ones declaring what it does", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-same-selector-rules-parted-by-others"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code).toContain(".a{--p19999:1}.b19999{top:0}");
+	});
+
+	it("asks a bounded number of earlier writes of a property about a later one", () => {
+		const { code, seconds } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-one-property-written-again-and-again"
+			)
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code).toContain("pppppp:x19999");
+	});
+
+	it("leaves nesting past the size bound nested, and says so", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-nesting-that-doubles-per-level"
+			),
+			{ environment: { browsers: ["chrome 100"] } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		// The rules past the bound stay inside the one written out before them.
+		expect(code).toContain("{top:0}}");
+		expect(warnings).toEqual([expect.stringContaining("left nested")]);
+	});
+
+	it("leaves the nested rules past the size bound in one copy of their parent", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound"
+			),
+			{ environment: { browsers: ["chrome 100"] } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain("{.c0{top:0}.c1{top:1px}");
+		expect(code).toContain(" .c1023{top:1023px}");
+		expect(warnings).toEqual([expect.stringContaining("left nested")]);
+	});
+
+	it("writes no prefixed copy of a nested at-rule past the size bound, and says so", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-prefixed-copies-of-nested-at-rules"
+			),
+			{ environment: { browsers: ["chrome 100", "firefox 60"] } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain("@-moz-document url-prefix(){");
+		expect(warnings).toEqual([expect.stringContaining("not written")]);
+	});
+
+	it("writes no prefixed copy of a nested rule past the size bound, and says so", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-prefixed-copies-of-nested-rules"
+			),
+			{ environment: { browsers: ["chrome 100", "firefox 60"] } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain("a:-webkit-autofill{");
+		expect(warnings).toEqual([expect.stringContaining("not written")]);
+	});
+
+	it("leaves a custom name past the size bound as written, and says so", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-custom-at-rules-that-double-per-link"
+			),
+			{ transforms: { customMedia: true, customSelectors: true } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain(":--s30{top:0}");
+		expect(warnings).toEqual([expect.stringContaining("left as written")]);
+	});
+
+	it("leaves custom media names whose alternatives copy past the size bound as written", () => {
+		const { code, seconds, warnings } = timed(
+			fixture(
+				"css",
+				"css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain"
+			),
+			{ transforms: { customMedia: true } }
+		);
+		expect(seconds).toBeLessThan(SECONDS);
+		expect(code.length).toBeLessThan(MOST);
+		expect(code).toContain("(--m11)");
+		expect(warnings).toEqual([expect.stringContaining("left as written")]);
 	});
 });

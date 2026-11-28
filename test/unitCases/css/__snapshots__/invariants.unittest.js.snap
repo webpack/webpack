@@ -5047,6 +5047,14 @@ exports[`CSS syntax — invariants css-syntax-minify-a-2009-flexbox-property-und
 
 exports[`CSS syntax — invariants css-syntax-minify-a-2009-flexbox-property-under-its-own-display-keeps-the-7 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,21] colon[21,22] number[22,23] semicolon[23,24] ident[24,42] colon[42,43] ident[43,51] semicolon[51,52] ident[52,66] colon[66,67] ident[67,73] semicolon[73,74] ident[74,81] colon[81,82] ident[82,93] semicolon[93,94] ident[94,102] colon[102,103] ident[103,109] right-curly-bracket[109,110] end=110"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-stands-apart-from-a-folded-call parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]],[\\"error\\",\\"bad-url\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"],\\" \\",[\\"function\\",\\"calc\\",[\\"dimension\\",\\"1\\",1,\\"integer\\",\\"px\\"]],[\\"error\\",\\"bad-url\\"],\\" \\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-stands-apart-from-a-folded-call parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-stands-apart-from-a-folded-call prints {"mode":"minify"} 1`] = `".a{margin:1px url(a b}body{display:none)0 1px url(a b}body{display:none)0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-stands-apart-from-a-folded-call tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,9] colon[9,10] function[10,15] dimension[15,18|16,18] right-parenthesis[18,19] bad-url[19,45] whitespace[45,46] number[46,47] whitespace[47,48] function[48,53] dimension[53,56|54,56] right-parenthesis[56,57] bad-url[57,83] whitespace[83,84] number[84,85] right-curly-bracket[85,86] end=86"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"p\\"]],[\\".\\",[\\"ident\\",\\"q\\"],[\\"{}\\",[\\"ident\\",\\"content\\"],\\":\\",[\\"string\\",\\")}.x{color:red}\\"]],[\\"error\\",\\"bad-url\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-bad-url-the-input-ran-out-in-is-closed parses 2`] = `"warning[37,38]:unexpected-character-in-url error[38,38]:eof-in-qualified-rule"`;
@@ -5408,6 +5416,22 @@ exports[`CSS syntax — invariants css-syntax-minify-a-color-mix-the-target-cann
 exports[`CSS syntax — invariants css-syntax-minify-a-color-mix-the-target-cannot-read-writes-the-color-it-mixes prints {"mode":"minify"} 1`] = `"a{color:color(srgb .5 0 .5)}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-color-mix-the-target-cannot-read-writes-the-color-it-mixes tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,7] colon[7,8] function[8,18] ident[18,20] whitespace[20,21] ident[21,25] comma[25,26] ident[26,29] comma[29,30] ident[30,34] right-parenthesis[34,35] right-curly-bracket[35,36] end=36"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"unicode-range\\"],\\":\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\"/\\",\\"*\\",[\\"ident\\",\\"x\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"next\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens prints {"mode":"minify"} 1`] = `".a{unicode-range:U+0//**/*x}.next{top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,16] colon[16,17] ident[17,18] number[18,20] delim[20,21] comment[21,25] delim[25,26] ident[26,27] right-curly-bracket[27,28] delim[28,29] ident[29,33] left-curly-bracket[33,34] ident[34,37] colon[37,38] number[38,39] right-curly-bracket[39,40] end=40"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens-2 parses 1`] = `"[[\\"at-rule\\",\\"font-face\\",[],[[\\"ident\\",\\"unicode-range\\"],\\":\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\"/\\",\\"*\\",[\\"ident\\",\\"x\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"next\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens-2 prints {"mode":"minify"} 1`] = `"@font-face{unicode-range:U+0//**/*x}.next{top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-comment-parts-a-unicode-range-s-tokens-2 tokenizes 1`] = `"at-keyword[0,10] left-curly-bracket[10,11] ident[11,24] colon[24,25] ident[25,26] number[26,28] delim[28,29] comment[29,33] delim[33,34] ident[34,35] right-curly-bracket[35,36] delim[36,37] ident[37,41] left-curly-bracket[41,42] ident[42,45] colon[45,46] number[46,47] right-curly-bracket[47,48] end=48"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-declaration-list-holding-a-block-too-big-to-collect-composes parses 1`] = `
 "length 309644, sha256 d582a3732fdf49c1
@@ -6600,6 +6624,14 @@ exports[`CSS syntax — invariants css-syntax-minify-a-later-value-no-engine-rea
 
 exports[`CSS syntax — invariants css-syntax-minify-a-later-value-no-engine-reads-keeps-the-one-before-it-keeps-10 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,18] colon[18,19] function[19,35] ident[35,38] comma[38,39] ident[39,43] right-parenthesis[43,44] semicolon[44,45] ident[45,61] colon[61,62] function[62,78] ident[78,89] whitespace[89,90] ident[90,102] comma[102,103] ident[103,107] right-parenthesis[107,108] right-curly-bracket[108,109] end=109"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-layer-named-by-a-url-holding-a-brace parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"url\\",\\"data:,x{y\\"]],[\\".\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"m\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"url\\",\\"data:,x{z\\"]],[\\".\\",[\\"ident\\",\\"b\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"next\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-layer-named-by-a-url-holding-a-brace parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-layer-named-by-a-url-holding-a-brace prints {"mode":"minify"} 1`] = `"@layer url(data:,x{y){.a{top:0}}.m{top:1}@layer url(data:,x{z){.b{top:1}}.next{top:2}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-layer-named-by-a-url-holding-a-brace tokenizes 1`] = `"at-keyword[0,6] whitespace[6,7] url[7,21|11,20] left-curly-bracket[21,22] delim[22,23] ident[23,24] left-curly-bracket[24,25] ident[25,28] colon[28,29] number[29,30] right-curly-bracket[30,31] right-curly-bracket[31,32] delim[32,33] ident[33,34] left-curly-bracket[34,35] ident[35,38] colon[38,39] number[39,40] right-curly-bracket[40,41] at-keyword[41,47] whitespace[47,48] url[48,62|52,61] left-curly-bracket[62,63] delim[63,64] ident[64,65] left-curly-bracket[65,66] ident[66,69] colon[69,70] number[70,71] right-curly-bracket[71,72] right-curly-bracket[72,73] delim[73,74] ident[74,78] left-curly-bracket[78,79] ident[79,82] colon[82,83] number[83,84] right-curly-bracket[84,85] end=85"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-layer-statement-takes-the-block-leaves-layer-a-b-layer-b-x parses 1`] = `"[[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"],\\",\\",[\\"ident\\",\\"b\\"]],null],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"b\\"]],[\\".\\",[\\"ident\\",\\"x\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"at-rule\\",\\"layer\\",[\\" \\",[\\"ident\\",\\"a\\"]],[\\".\\",[\\"ident\\",\\"y\\"],[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-layer-statement-takes-the-block-leaves-layer-a-b-layer-b-x parses 2`] = `""`;
@@ -6987,6 +7019,17 @@ exports[`CSS syntax — invariants css-syntax-minify-a-nested-selector-opening-o
 exports[`CSS syntax — invariants css-syntax-minify-a-nested-selector-opening-on-a-combinator-writes-the-next prints {"mode":"minify"} 1`] = `"a{+b{top:0}}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-nested-selector-opening-on-a-combinator-writes-the-next tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] delim[2,3] ident[3,4] left-curly-bracket[4,5] ident[5,8] colon[8,9] number[9,10] right-curly-bracket[10,11] right-curly-bracket[11,12] end=12"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-newline-ends-a-string-in-a-selector-list parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"z\\"],[\\"error\\",\\"bad-string\\"],\\" \\",\\",\\",[\\"string\\",\\"a,.a{}body{display:none}.c{\\"],\\",\\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"q\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"3\\",3,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-newline-ends-a-string-in-a-selector-list parses 2`] = `"warning[4,5]:newline-in-string"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-newline-ends-a-string-in-a-selector-list prints {"mode":"minify"} 1`] = `
+"\\"a,.a{}body{display:none}.c{\\",.b,.z\\"x
+{top:0}.q{top:3}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-newline-ends-a-string-in-a-selector-list tokenizes 1`] = `"delim[0,1] ident[1,2] bad-string[2,4] whitespace[4,5] comma[5,6] string[6,35] comma[35,36] delim[36,37] ident[37,38] left-curly-bracket[38,39] ident[39,42] colon[42,43] number[43,44] right-curly-bracket[44,45] delim[45,46] ident[46,47] left-curly-bracket[47,48] ident[48,51] colon[51,52] number[52,53] right-curly-bracket[53,54] end=54"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-none-parting-a-layer-position parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"mask\\"],\\":\\",[\\"ident\\",\\"right\\"],\\" \\",[\\"ident\\",\\"none\\"],\\" \\",[\\"ident\\",\\"bottom\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"mask\\"],\\":\\",[\\"percentage\\",\\"50\\",50,\\"integer\\"],\\" \\",[\\"ident\\",\\"none\\"],\\" \\",[\\"percentage\\",\\"50\\",50,\\"integer\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"-webkit-mask\\"],\\":\\",[\\"ident\\",\\"top\\"],\\" \\",[\\"ident\\",\\"none\\"],\\" \\",[\\"ident\\",\\"left\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"d\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"dimension\\",\\"10\\",10,\\"integer\\",\\"px\\"],\\" \\",[\\"ident\\",\\"none\\"],\\" \\",[\\"dimension\\",\\"20\\",20,\\"integer\\",\\"px\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"e\\"]],[[\\"ident\\",\\"mask\\"],\\":\\",[\\"ident\\",\\"none\\"],\\" \\",[\\"ident\\",\\"right\\"],\\" \\",[\\"ident\\",\\"bottom\\"]]],[\\"qualified rule\\",[[\\"ident\\",\\"f\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"ident\\",\\"red\\"],\\" \\",[\\"ident\\",\\"none\\"],\\" \\",[\\"ident\\",\\"right\\"]]]]"`;
 
@@ -7380,6 +7423,22 @@ exports[`CSS syntax — invariants css-syntax-minify-a-slot-holding-its-own-init
 
 exports[`CSS syntax — invariants css-syntax-minify-a-slot-holding-its-own-initial-takes-a-layer-s-position-size-8 tokenizes 1`] = `"ident[0,1] left-curly-bracket[1,2] ident[2,12] colon[12,13] ident[13,16] whitespace[16,17] ident[17,28] right-curly-bracket[28,29] end=29"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"function\\",\\"f\\",[\\"error\\",\\"]\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],[\\"error\\",\\"}\\"],[\\"ident\\",\\"body\\"],[\\"{}\\",[\\"ident\\",\\"display\\"],\\":\\",[\\"ident\\",\\"none\\"]],\\".\\",[\\"ident\\",\\"c\\"],[\\"{}\\",[\\"ident\\",\\"y\\"],\\":\\",[\\"ident\\",\\"z\\"]]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing prints {"mode":"minify"} 1`] = `".a{margin:f(];color:red}body{display:none}.c{y:z});top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,9] colon[9,10] function[10,12] right-square-bracket[12,13] semicolon[13,14] ident[14,19] colon[19,20] ident[20,23] right-curly-bracket[23,24] ident[24,28] left-curly-bracket[28,29] ident[29,36] colon[36,37] ident[37,41] right-curly-bracket[41,42] delim[42,43] ident[43,44] left-curly-bracket[44,45] ident[45,46] colon[46,47] ident[47,48] right-curly-bracket[48,49] right-parenthesis[49,50] right-curly-bracket[50,51] delim[51,52] ident[52,53] left-curly-bracket[53,54] ident[54,57] colon[57,58] number[58,59] right-curly-bracket[59,60] end=60"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"function\\",\\"f\\",[\\"error\\",\\"]\\"],\\";\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"]]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"c\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"2\\",2,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing-2 prints {"mode":"minify"} 1`] = `".a{margin:f(];color:red);top:0}.b{top:1}.c{top:2}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-a-stray-closer-in-a-call-closes-nothing-2 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,9] colon[9,10] function[10,12] right-square-bracket[12,13] semicolon[13,14] ident[14,19] colon[19,20] ident[20,23] right-parenthesis[23,24] right-curly-bracket[24,25] delim[25,26] ident[26,27] left-curly-bracket[27,28] ident[28,31] colon[31,32] number[32,33] right-curly-bracket[33,34] delim[34,35] ident[35,36] left-curly-bracket[36,37] ident[37,40] colon[40,41] number[41,42] right-curly-bracket[42,43] delim[43,44] ident[44,45] left-curly-bracket[45,46] ident[46,49] colon[49,50] number[50,51] right-curly-bracket[51,52] end=52"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-a-supports-condition-s-outer-parentheses-keeps-them-around-a parses 1`] = `"[[\\"at-rule\\",\\"supports\\",[\\" \\",[\\"()\\",[\\"()\\",[\\"ident\\",\\"display\\"],\\":\\",[\\"ident\\",\\"grid\\"]],\\" \\",[\\"{}\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"b\\"],\\":\\",[\\"ident\\",\\"c\\"]]]]],null]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-a-supports-condition-s-outer-parentheses-keeps-them-around-a parses 2`] = `""`;
@@ -7720,6 +7779,30 @@ exports[`CSS syntax — invariants css-syntax-minify-a-value-rewrite-s-guards-wr
 
 exports[`CSS syntax — invariants css-syntax-minify-a-value-rewrite-s-guards-writes-a-unicode-range-wildcard-only tokenizes 1`] = `"at-keyword[0,10] left-curly-bracket[10,11] ident[11,24] colon[24,25] ident[25,26] number[26,29] delim[29,30] delim[30,31] comma[31,32] ident[32,33] delim[33,34] delim[34,35] delim[35,36] comma[36,37] ident[37,38] dimension[38,46|43,46] comma[46,47] ident[47,48] dimension[48,52|50,52] comma[52,53] ident[53,54] number[54,57] dimension[57,60|59,60] right-curly-bracket[60,61] end=61"`;
 
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"tip\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"function\\",\\"a\\\\\\"url\\",[\\"ident\\",\\"x\\"],\\" \\",[\\"string\\",\\")\\"],\\" \\",[\\"string\\",\\";color:red}body{display:none;x:\\"],\\" \\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"tip\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function prints {"mode":"minify"} 1`] = `".tip{margin:a\\\\\\"url(x \\")\\" \\";color:red}body{display:none;x:\\");top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function tokenizes 1`] = `"delim[0,1] ident[1,4] left-curly-bracket[4,5] ident[5,11] colon[11,12] function[12,19] ident[19,20] whitespace[20,21] string[21,24] whitespace[24,25] string[25,58] whitespace[58,59] right-parenthesis[59,60] right-curly-bracket[60,61] delim[61,62] ident[62,65] left-curly-bracket[65,66] ident[66,69] colon[69,70] number[70,71] right-curly-bracket[71,72] end=72"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-2 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"tip\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"function\\",\\"a(url\\",[\\"ident\\",\\"x\\"],\\" \\",[\\"string\\",\\")\\"],\\" \\",[\\"string\\",\\";color:red}body{display:none;x:\\"],\\" \\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"tip\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-2 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-2 prints {"mode":"minify"} 1`] = `".tip{margin:a\\\\(url(x \\")\\" \\";color:red}body{display:none;x:\\");top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-2 tokenizes 1`] = `"delim[0,1] ident[1,4] left-curly-bracket[4,5] ident[5,11] colon[11,12] function[12,19] ident[19,20] whitespace[20,21] string[21,24] whitespace[24,25] string[25,58] whitespace[58,59] right-parenthesis[59,60] right-curly-bracket[60,61] delim[61,62] ident[62,65] left-curly-bracket[65,66] ident[66,69] colon[69,70] number[70,71] right-curly-bracket[71,72] end=72"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-3 parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"tip\\"]],[[\\"ident\\",\\"margin\\"],\\":\\",[\\"function\\",\\"a\\\\\\"url\\",[\\"ident\\",\\"x\\"],\\" \\",[\\"string\\",\\")\\"],\\" \\",[\\"string\\",\\";color:red}body{display:none;x:\\"],\\" \\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"tip\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-3 parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-3 prints {"mode":"minify"} 1`] = `".tip{margin:a\\\\\\"url(x \\")\\" \\";color:red}body{display:none;x:\\");top:0}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-an-escaped-code-point-before-url-names-a-function-3 tokenizes 1`] = `"delim[0,1] ident[1,4] left-curly-bracket[4,5] ident[5,11] colon[11,12] function[12,21] ident[21,22] whitespace[22,23] string[23,26] whitespace[26,27] string[27,60] whitespace[60,61] right-parenthesis[61,62] right-curly-bracket[62,63] delim[63,64] ident[64,67] left-curly-bracket[67,68] ident[68,71] colon[71,72] number[72,73] right-curly-bracket[73,74] end=74"`;
+
 exports[`CSS syntax — invariants css-syntax-minify-an-escaped-important-is-part-of-the-value-merges-a-grid parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"grid-template-rows\\"],\\":\\",[\\"ident\\",\\"x!important\\"],\\";\\",[\\"ident\\",\\"grid-template-columns\\"],\\":\\",[\\"ident\\",\\"y\\"],\\";\\",[\\"ident\\",\\"grid-template-areas\\"],\\":\\",[\\"ident\\",\\"none\\"]]]]"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-an-escaped-important-is-part-of-the-value-merges-a-grid parses 2`] = `""`;
@@ -8047,6 +8130,308 @@ exports[`CSS syntax — invariants css-syntax-minify-blocks-that-stream-inside-a
 exports[`CSS syntax — invariants css-syntax-minify-blocks-that-stream-inside-another-prints-p-supports prints {"mode":"minify"} 1`] = `".P{@supports()}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-blocks-that-stream-inside-another-prints-p-supports tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] at-keyword[3,12] left-parenthesis[12,13] whitespace[13,14] left-parenthesis[14,15] end=15"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-custom-property-value parses 1`] = `
+"length 3600058, sha256 3a61e1c728ea157e
+[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--x\\"],\\":\\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",
+…
+[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\",[\\"ident\\",\\"a\\"],\\" \\"]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-custom-property-value parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-custom-property-value prints {"mode":"minify"} 1`] = `
+"length 400006, sha256 640c27d77084cd6c
+a{--x:a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a 
+…
+a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a a}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-custom-property-value tokenizes 1`] = `
+"length 9177947, sha256 42f6673a7abca826
+ident[0,1] left-curly-bracket[1,2] ident[2,5] colon[5,6] ident[6,7] whitespace[7,8] ident[8,9] whitespace[9,10] ident[10,11] whitespace[11,12] ident[12,13] whitespace[13,14] ident[14,15] whitespace[15
+…
+99999,400000] ident[400000,400001] whitespace[400001,400002] ident[400002,400003] whitespace[400003,400004] ident[400004,400005] whitespace[400005,400006] right-curly-bracket[400006,400007] end=400007"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-value-of-tokens-that-fuse parses 1`] = `
+"length 2900083, sha256 3aeafabb92555cd3
+[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"x\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"n
+…
+ber\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"],[\\"number\\",\\"-1\\",-1,\\"integer\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-value-of-tokens-that-fuse parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-value-of-tokens-that-fuse prints {"mode":"minify"} 1`] = `
+"length 250006, sha256 54d20cc1c1040098
+a{x:1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1
+…
+1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1-1 -1}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-long-value-of-tokens-that-fuse tokenizes 1`] = `
+"length 2089029, sha256 bcf9ca59cf01ef2c
+ident[0,1] left-curly-bracket[1,2] ident[2,3] colon[3,4] number[4,5] number[5,7] number[7,9] number[9,11] number[11,13] number[13,15] number[15,17] number[17,19] number[19,21] number[21,23] number[23,
+…
+ number[199991,199993] number[199993,199995] number[199995,199997] number[199997,199999] number[199999,200001] number[200001,200003] number[200003,200005] right-curly-bracket[200005,200006] end=200006"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-run-of-same-selector-rules parses 1`] = `
+"length 1476891, sha256 929907b273c0beab
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--p0\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--p1\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"qualified rule\\",[\\".
+…
+,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--p15998\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--p15999\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-run-of-same-selector-rules parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-run-of-same-selector-rules prints {"mode":"minify"} 1`] = `
+"length 165079, sha256 ede9de9663349803
+.a{--p0:1;--p1:1;--p2:1;--p3:1;--p4:1;--p5:1;--p6:1;--p7:1;--p8:1;--p9:1;--p10:1;--p11:1;--p12:1;--p13:1;--p14:1;--p15:1;--p16:1;--p17:1;--p18:1;--p19:1;--p20:1;--p21:1;--p22:1;--p23:1;--p24:1;--p25:1
+…
+1;--p15982:1;--p15983:1;--p15984:1;--p15985:1;--p15986:1;--p15987:1;--p15988:1;--p15989:1;--p15990:1;--p15991:1;--p15992:1;--p15993:1;--p15994:1;--p15995:1;--p15996:1;--p15997:1;--p15998:1;--p15999:1}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-run-of-same-selector-rules tokenizes 1`] = `
+"length 2677895, sha256 b819bde4b3241cae
+delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,7] colon[7,8] number[8,9] right-curly-bracket[9,10] delim[10,11] ident[11,12] left-curly-bracket[12,13] ident[13,17] colon[17,18] number[18,19] ri
+…
+212875,212876] delim[212876,212877] ident[212877,212878] left-curly-bracket[212878,212879] ident[212879,212887] colon[212887,212888] number[212888,212889] right-curly-bracket[212889,212890] end=212890"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments parses 1`] = `
+"length 4600102, sha256 097c553a8e2daac4
+[[\\"at-rule\\",\\"font-face\\",[],[[\\"ident\\",\\"unicode-range\\"],\\":\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"id
+…
+,0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+0\\",0,\\"integer\\"],\\",\\",[\\"ident\\",\\"U\\"],[\\"number\\",\\"+1\\",1,\\"integer\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments prints {"mode":"minify"} 1`] = `
+"length 400029, sha256 ce051bb5df69de02
+@font-face{unicode-range:U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0
+…
+U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+0,U+1}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-a-unicode-range-parted-by-comments tokenizes 1`] = `
+"length 8589163, sha256 b13f6106b703f370
+at-keyword[0,10] left-curly-bracket[10,11] ident[11,24] colon[24,25] ident[25,26] number[26,28] comment[28,32] comma[32,33] ident[33,34] number[34,36] comment[36,40] comma[40,41] ident[41,42] number[4
+…
+16] comma[800016,800017] ident[800017,800018] number[800018,800020] comment[800020,800024] comma[800024,800025] ident[800025,800026] number[800026,800028] right-curly-bracket[800028,800029] end=800029"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-at-rules-that-double-per-link parses 1`] = `
+"length 7837, sha256 3c436153561f1b47
+[[\\"at-rule\\",\\"custom-selector\\",[\\" \\",\\":\\",[\\"ident\\",\\"--s0\\"],\\" \\",\\".\\",[\\"ident\\",\\"a\\"]],null],[\\"at-rule\\",\\"custom-selector\\",[\\" \\",\\":\\",[\\"ident\\",\\"--s1\\"],\\" \\",\\":\\",[\\"ident\\",\\"--s0\\"],\\" \\",\\":\\",[\\"ident\\",\\"--s0\\"]],null],[\\"a
+…
+ule\\",[\\":\\",[\\"ident\\",\\"--s30\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"at-rule\\",\\"media\\",[\\" \\",[\\"()\\",[\\"ident\\",\\"--m30\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-at-rules-that-double-per-link parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-at-rules-that-double-per-link prints {"mode":"minify"} 1`] = `
+"length 2377, sha256 3880f1d0abf9d74f
+@custom-selector :--s0 .a;@custom-selector :--s1 :--s0 :--s0;@custom-selector :--s2 :--s1 :--s1;@custom-selector :--s3 :--s2 :--s2;@custom-selector :--s4 :--s3 :--s3;@custom-selector :--s5 :--s4 :--s4
+…
+5);@custom-media --m27 (--m26) and (--m26);@custom-media --m28 (--m27) and (--m27);@custom-media --m29 (--m28) and (--m28);@custom-media --m30 (--m29) and (--m29);:--s30{top:0}@media (--m30){a{top:0}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-at-rules-that-double-per-link tokenizes 1`] = `
+"length 15914, sha256 645209fa5538d880
+at-keyword[0,16] whitespace[16,17] colon[17,18] ident[18,22] whitespace[22,23] delim[23,24] ident[24,25] semicolon[25,26] at-keyword[26,42] whitespace[42,43] colon[43,44] ident[44,48] whitespace[48,49
+…
+ left-curly-bracket[2370,2371] ident[2371,2372] left-curly-bracket[2372,2373] ident[2373,2376] colon[2376,2377] number[2377,2378] right-curly-bracket[2378,2379] right-curly-bracket[2379,2380] end=2380"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain parses 1`] = `
+"length 12113, sha256 80d08df76cf8f54e
+[[\\"at-rule\\",\\"custom-media\\",[\\" \\",[\\"ident\\",\\"--m0\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"color\\"]],\\",\\",[\\"()\\",[\\"ident\\",\\"monochrome\\"]]],null],[\\"at-rule\\",\\"custom-media\\",[\\" \\",[\\"ident\\",\\"--m1\\"],\\" \\",[\\"()\\",[\\"ident\\",\\"color\\"]],\\",\\",
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\\"]]],[[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain prints {"mode":"minify"} 1`] = `
+"length 10635, sha256 182b3dafffc573eb
+@custom-media --m0 (color),(monochrome);@custom-media --m1 (color),(monochrome);@custom-media --m2 (color),(monochrome);@custom-media --m3 (color),(monochrome);@custom-media --m4 (color),(monochrome);
+…
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa){a{top:0}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-custom-media-alternatives-in-one-chain tokenizes 1`] = `
+"length 4688, sha256 7e68471eb1a65447
+at-keyword[0,13] whitespace[13,14] ident[14,18] whitespace[18,19] left-parenthesis[19,20] ident[20,25] right-parenthesis[25,26] comma[26,27] left-parenthesis[27,28] ident[28,38] right-parenthesis[38,3
+…
+et[10625,10626] ident[10626,10627] left-curly-bracket[10627,10628] ident[10628,10631] colon[10631,10632] number[10632,10633] right-curly-bracket[10633,10634] right-curly-bracket[10634,10635] end=10635"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument parses 1`] = `
+"length 975, sha256 13054fee5ccb8696
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"background\\"],\\":\\",[\\"function\\",\\"radial-gradient\\",[\\"string\\",\\"a                                                                                           
+…
+                                                                                                                                        \\"],[\\"function\\",\\"f\\"],\\",\\",[\\"ident\\",\\"red\\"],\\",\\",[\\"ident\\",\\"blue\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument prints {"mode":"minify"} 1`] = `
+"length 849, sha256 2ace6f44a3edae07
+.a{background:radial-gradient(\\"a                                                                                                                                                                        
+…
+                                                                                                                                                                                         \\"f(),red,blue)}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-gradient-position-after-a-long-first-argument tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,13] colon[13,14] function[14,30] string[30,835] function[835,837] right-parenthesis[837,838] comma[838,839] ident[839,842] comma[842,843] ident[843,847] right-parenthesis[847,848] right-curly-bracket[848,849] end=849"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound parses 1`] = `
+"length 105255, sha256 ad712fd4510b0597
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+…
+,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c1022\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"1022\\",1022,\\"integer\\",\\"px\\"]],\\".\\",[\\"ident\\",\\"c1023\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"dimension\\",\\"1023\\",1023,\\"integer\\",\\"px\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound prints {"mode":"minify"} 1`] = `
+"length 32597, sha256 889bf38534a027bc
+.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+…
+}.c1013{top:1013px}.c1014{top:1014px}.c1015{top:1015px}.c1016{top:1016px}.c1017{top:1017px}.c1018{top:1018px}.c1019{top:1019px}.c1020{top:1020px}.c1021{top:1021px}.c1022{top:1022px}.c1023{top:1023px}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nested-rules-left-nested-past-the-bound tokenizes 1`] = `
+"length 180324, sha256 1756dd300c856a6a
+delim[0,1] ident[1,16385] left-curly-bracket[16385,16386] delim[16386,16387] ident[16387,16389] left-curly-bracket[16389,16390] ident[16390,16393] colon[16393,16394] dimension[16394,16397|16395,16397]
+…
+ ident[32581,32586] left-curly-bracket[32586,32587] ident[32587,32590] colon[32590,32591] dimension[32591,32597|32595,32597] right-curly-bracket[32597,32598] right-curly-bracket[32598,32599] end=32599"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nesting-that-doubles-per-level parses 1`] = `
+"length 545, sha256 a9e050d69d8088a3
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"x\\"]],[\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}
+…
+,\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",\\"&\\",\\" \\",\\"&\\",[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nesting-that-doubles-per-level parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nesting-that-doubles-per-level prints {"mode":"minify"} 1`] = `".x{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{& &{top:0}}}}}}}}}}}}}}}}}}}}}}}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-nesting-that-doubles-per-level tokenizes 1`] = `
+"length 2490, sha256 506e8f9f87e0c833
+delim[0,1] ident[1,2] left-curly-bracket[2,3] delim[3,4] whitespace[4,5] delim[5,6] left-curly-bracket[6,7] delim[7,8] whitespace[8,9] delim[9,10] left-curly-bracket[10,11] delim[11,12] whitespace[12,
+…
+y-bracket[122,123] right-curly-bracket[123,124] right-curly-bracket[124,125] right-curly-bracket[125,126] right-curly-bracket[126,127] right-curly-bracket[127,128] right-curly-bracket[128,129] end=129"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-one-property-written-again-and-again parses 1`] = `
+"length 908928, sha256 55e1017544692f43
+[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x0\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x1\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x2\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x3\\"],
+…
+\\"x19995\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x19996\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x19997\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x19998\\"],\\";\\",[\\"ident\\",\\"pppppp\\"],\\":\\",[\\"ident\\",\\"x19999\\"],\\";\\"]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-one-property-written-again-and-again parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-one-property-written-again-and-again prints {"mode":"minify"} 1`] = `
+"length 268892, sha256 04c5e55bae88b6f9
+a{pppppp:x0;pppppp:x1;pppppp:x2;pppppp:x3;pppppp:x4;pppppp:x5;pppppp:x6;pppppp:x7;pppppp:x8;pppppp:x9;pppppp:x10;pppppp:x11;pppppp:x12;pppppp:x13;pppppp:x14;pppppp:x15;pppppp:x16;pppppp:x17;pppppp:x18
+…
+985;pppppp:x19986;pppppp:x19987;pppppp:x19988;pppppp:x19989;pppppp:x19990;pppppp:x19991;pppppp:x19992;pppppp:x19993;pppppp:x19994;pppppp:x19995;pppppp:x19996;pppppp:x19997;pppppp:x19998;pppppp:x19999}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-one-property-written-again-and-again tokenizes 1`] = `
+"length 1690311, sha256 341b49402b586a93
+ident[0,1] left-curly-bracket[1,2] ident[2,8] colon[8,9] ident[9,11] semicolon[11,12] ident[12,18] colon[18,19] ident[19,21] semicolon[21,22] ident[22,28] colon[28,29] ident[29,31] semicolon[31,32] id
+…
+colon[268870,268871] ident[268871,268877] semicolon[268877,268878] ident[268878,268884] colon[268884,268885] ident[268885,268891] semicolon[268891,268892] right-curly-bracket[268892,268893] end=268893"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-at-rules parses 1`] = `
+"length 1575, sha256 4b7704dbe90e90fe
+[[\\"at-rule\\",\\"document\\",[\\" \\",[\\"function\\",\\"url-prefix\\"]],[[\\"at-keyword\\",\\"document\\"],\\" \\",[\\"function\\",\\"url-prefix\\"],[\\"{}\\",[\\"at-keyword\\",\\"document\\"],\\" \\",[\\"function\\",\\"url-prefix\\"],[\\"{}\\",[\\"at-keyword\\",\\"docum
+…
+cument\\"],\\" \\",[\\"function\\",\\"url-prefix\\"],[\\"{}\\",[\\"at-keyword\\",\\"document\\"],\\" \\",[\\"function\\",\\"url-prefix\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]]]]]]]]]]]]]]]]]]]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-at-rules parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-at-rules prints {"mode":"minify"} 1`] = `
+"length 584, sha256 687d9137a913724c
+@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-pr
+…
+efix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){@document url-prefix(){a{top:0}}}}}}}}}}}}}}}}}}}}}}}}}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-at-rules tokenizes 1`] = `
+"length 3489, sha256 40bc66d54c50a6ac
+at-keyword[0,9] whitespace[9,10] function[10,21] right-parenthesis[21,22] left-curly-bracket[22,23] at-keyword[23,32] whitespace[32,33] function[33,44] right-parenthesis[44,45] left-curly-bracket[45,4
+…
+y-bracket[577,578] right-curly-bracket[578,579] right-curly-bracket[579,580] right-curly-bracket[580,581] right-curly-bracket[581,582] right-curly-bracket[582,583] right-curly-bracket[583,584] end=584"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-rules parses 1`] = `
+"length 984, sha256 0d94866ad926a54c
+[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"]],[[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"],[\\"{}\\",[\\"id
+…
+dent\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"],[\\"{}\\",[\\"ident\\",\\"a\\"],\\":\\",[\\"ident\\",\\"autofill\\"],[\\"{}\\",[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]]]]]]]]]]]]]]]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-rules parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-rules prints {"mode":"minify"} 1`] = `"a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{a:autofill{top:0}}}}}}}}}}}}}}}}}}}}"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-prefixed-copies-of-nested-rules tokenizes 1`] = `
+"length 2015, sha256 e0aa494a537d55c4
+ident[0,1] colon[1,2] ident[2,10] left-curly-bracket[10,11] ident[11,12] colon[12,13] ident[13,21] left-curly-bracket[21,22] ident[22,23] colon[23,24] ident[24,32] left-curly-bracket[32,33] ident[33,3
+…
+y-bracket[238,239] right-curly-bracket[239,240] right-curly-bracket[240,241] right-curly-bracket[241,242] right-curly-bracket[242,243] right-curly-bracket[243,244] right-curly-bracket[244,245] end=245"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-same-selector-rules-parted-by-others parses 1`] = `
+"length 3697781, sha256 99b496ea8295745f
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--p0\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b0\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]],[\\"qualified rule\\",[\\".
+…
+,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"--p19999\\"],\\":\\",[\\"number\\",\\"1\\",1,\\"integer\\"]]],[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"b19999\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-same-selector-rules-parted-by-others parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-same-selector-rules-parted-by-others prints {"mode":"minify"} 1`] = `
+"length 537780, sha256 bb793884a73637b5
+.a{--p0:1}.b0{top:0}.a{--p1:1}.b1{top:0}.a{--p2:1}.b2{top:0}.a{--p3:1}.b3{top:0}.a{--p4:1}.b4{top:0}.a{--p5:1}.b5{top:0}.a{--p6:1}.b6{top:0}.a{--p7:1}.b7{top:0}.a{--p8:1}.b8{top:0}.a{--p9:1}.b9{top:0}
+…
+p:0}.a{--p19993:1}.b19993{top:0}.a{--p19994:1}.b19994{top:0}.a{--p19995:1}.b19995{top:0}.a{--p19996:1}.b19996{top:0}.a{--p19997:1}.b19997{top:0}.a{--p19998:1}.b19998{top:0}.a{--p19999:1}.b19999{top:0}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-same-selector-rules-parted-by-others tokenizes 1`] = `
+"length 6876559, sha256 7e776bdb2a5f1823
+delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,7] colon[7,8] number[8,9] right-curly-bracket[9,10] delim[10,11] ident[11,13] left-curly-bracket[13,14] ident[14,17] colon[17,18] number[18,19] ri
+…
+537765,537766] delim[537766,537767] ident[537767,537773] left-curly-bracket[537773,537774] ident[537774,537777] colon[537777,537778] number[537778,537779] right-curly-bracket[537779,537780] end=537780"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-zero-percent-sum-of-a-long-number parses 1`] = `
+"length 200216, sha256 c8b485ba0bc176d4
+[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"transform\\"],\\":\\",[\\"function\\",\\"translate\\",[\\"function\\",\\"calc\\",[\\"percentage\\",\\"0\\",0,\\"integer\\"],\\" \\",\\"+\\",\\" \\",[\\"number\\",\\"1111111111111111111111111111111111111
+…
+111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111\\",null,\\"integer\\"]],\\",\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]]"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-zero-percent-sum-of-a-long-number parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-zero-percent-sum-of-a-long-number prints {"mode":"minify"} 1`] = `
+"length 200036, sha256 08bcb39d24f1e7ed
+.a{transform:translate(calc(0% + 11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111
+…
+11111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111111))}"
+`;
+
+exports[`CSS syntax — invariants css-syntax-minify-bounded-work-zero-percent-sum-of-a-long-number tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,12] colon[12,13] function[13,23] function[23,28] percentage[28,30] whitespace[30,31] delim[31,32] whitespace[32,33] number[33,200033] right-parenthesis[200033,200034] comma[200034,200035] number[200035,200036] right-parenthesis[200036,200037] right-curly-bracket[200037,200038] end=200038"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-color-mix-declines-a-mix-where-a-gray-states-a-hue-of-its-own parses 1`] = `"[[\\"qualified rule\\",[[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"function\\",\\"color-mix\\",[\\"ident\\",\\"in\\"],\\" \\",[\\"ident\\",\\"hsl\\"],\\",\\",[\\"function\\",\\"hwb\\",[\\"number\\",\\"322.26\\",322.26,\\"number\\"],\\" \\",[\\"percentage\\",\\"56.57\\",56.57,\\"number\\"],\\" \\",[\\"percentage\\",\\"49.83\\",49.83,\\"number\\"]],\\" \\",[\\"percentage\\",\\"7.3\\",7.3,\\"number\\"],\\",\\",[\\"function\\",\\"oklch\\",[\\"number\\",\\".280497\\",0.280497,\\"number\\"],\\" \\",[\\"number\\",\\".052616\\",0.052616,\\"number\\"],\\" \\",[\\"number\\",\\"353.043\\",353.043,\\"number\\"]]]]]]"`;
 
@@ -15881,6 +16266,14 @@ exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside
 exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-2 prints {"mode":"minify"} 1`] = `".a{color-scheme:light dark;color:light-dark(red,blue);background:url(data:image/svg+xml,<svg/>)}"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-2 tokenizes 1`] = `"delim[0,1] ident[1,2] left-curly-bracket[2,3] ident[3,15] colon[15,16] ident[16,21] whitespace[21,22] ident[22,26] semicolon[26,27] ident[27,32] colon[32,33] function[33,44] ident[44,47] comma[47,48] ident[48,52] right-parenthesis[52,53] semicolon[53,54] ident[54,64] colon[64,65] url[65,99|69,98] right-curly-bracket[99,100] end=100"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf parses 1`] = `"[[\\"qualified rule\\",[[\\"[]\\",[\\"ident\\",\\"b\\"],\\"=\\",[\\"string\\",\\"x],.z,[\\"]],\\",\\",\\".\\",[\\"ident\\",\\"b\\"]],[[\\"ident\\",\\"top\\"],\\":\\",[\\"number\\",\\"0\\",0,\\"integer\\"]]]]"`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf parses 2`] = `""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf prints {"mode":"minify"} 1`] = `"\\".b,[b=\\\\\\"x\\\\\\\\\\\\r\\\\n],.z,[\\\\\\"]{top:0}\\""`;
+
+exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-an-escaped-crlf tokenizes 1`] = `"left-square-bracket[0,1] ident[1,2] delim[2,3] string[3,15] right-square-bracket[15,16] comma[16,17] delim[17,18] ident[18,19] left-curly-bracket[19,20] ident[20,23] colon[23,24] number[24,25] right-curly-bracket[25,26] end=26"`;
 
 exports[`CSS syntax — invariants css-syntax-minify-text-a-rewrite-keeps-inside-its-string-or-url-keeps-the parses 1`] = `"[[\\"qualified rule\\",[\\".\\",[\\"ident\\",\\"a\\"]],[[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"red\\"],\\";\\",\\".\\",[\\"ident\\",\\"b \\"],\\" \\",[\\"{}\\",[\\"ident\\",\\"color\\"],\\":\\",[\\"ident\\",\\"blue\\"]]]]]"`;
 

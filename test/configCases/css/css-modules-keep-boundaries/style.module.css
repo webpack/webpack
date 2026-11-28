@@ -1,0 +1,28 @@
+@value local-slash: 1px/;
+@value slash from "./values.module.css";
+@value v-string "a:b";
+@value v-url url(http://example.com/a.png);
+.local-value {
+	width: local-slash*2;
+}
+.imported-value {
+	width: slash*2;
+}
+.colon-string {
+	content: v-string;
+}
+.colon-url {
+	background: v-url;
+}
+.function-marker :local(div\ )/* .evil { color: red } */ {
+	color: green;
+}
+.declaration-colon {
+	animation-name:global(foo);
+}
+.bare-marker/:global*{
+	color: red;
+}
+.after {
+	color: blue;
+}

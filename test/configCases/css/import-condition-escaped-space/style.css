@@ -1,0 +1,4 @@
+@import url("./imported.css") supports(--x:\ );
+.after {
+	color: blue;
+}

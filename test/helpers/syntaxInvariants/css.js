@@ -822,8 +822,17 @@ const EXPECTED = [
 	{
 		relation: "agreement",
 		contains: "css-tree unparsed \\, tool nothing",
-		source: "parsing/cases/revers-solidus.css",
+		source: [
+			"parsing/cases/revers-solidus.css",
+			"css/import-media-trailing-backslash/b.css"
+		],
 		why: "a lone `\\` opens no `{}` block, so the spec drops it as a rule without one; css-tree keeps it as raw text"
+	},
+	{
+		relation: "agreement",
+		contains: "css-tree unparsed .dangling, tool nothing",
+		source: "css/unclosed-at-module-end/a5.css",
+		why: "a selector the input ends in opens no `{}` block, so the spec drops it as a rule without one; css-tree keeps it as raw text"
 	},
 	{
 		relation: "agreement",

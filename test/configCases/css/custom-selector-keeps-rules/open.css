@@ -1,0 +1,5 @@
+@custom-selector :--open .x\
+;
+:--open {
+	color: red;
+}

@@ -1,0 +1,13 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-> -webkit-autofill a:-webkit-autofill",
+		"presets": ["legacy"],
+		"why": "the copies stop at a bound on the input's size, and a second print reads the first's larger output, so it writes more of them before it stops"
+	},
+	{
+		"relation": "agreement",
+		"contains": "css-tree a: autofill{a:autofill",
+		"why": "css-tree reads a nested rule opening on a type selector and a `:` as a declaration, where CSS Syntax 3 reads a rule"
+	}
+]

@@ -1,0 +1,8 @@
+[
+	{
+		"relation": "idempotence",
+		"contains": "-> -moz-document url-prefix(){@-moz-document",
+		"presets": ["legacy"],
+		"why": "the copies stop at a bound on the input's size, and a second print reads the first's larger output, so it writes more of them before it stops"
+	}
+]

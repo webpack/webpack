@@ -1,0 +1,5 @@
+@custom-selector :--inner .y[title="*/ .evil { color: red } /*"];
+@custom-selector :--outer .x /* :--inner */;
+:--outer {
+	color: green;
+}

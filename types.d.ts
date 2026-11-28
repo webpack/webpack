@@ -8041,6 +8041,11 @@ declare interface CssPrintOptions {
 	) => undefined | string;
 
 	/**
+	 * called with what the print left undone where writing it out would have grown the output past a bound on the input's size: rules nested past that are left nested, prefixed copies past it are not written, and `@custom-media` and `@custom-selector` names past it are left as written. Only read while printing
+	 */
+	warning?: (message: string) => void;
+
+	/**
 	 * open the stylesheet with `@charset "UTF-8"` exactly when its output holds a non-ASCII character, so it is read as UTF-8 wherever it is served, and write a string's hex escape of a character past U+FFFF as the character, which costs fewer bytes once compressed; for a stylesheet that is a file of its own, as `@charset` is read only as one's opening bytes. Off by default, and only read while printing
 	 */
 	declareCharset?: boolean;
@@ -8164,6 +8169,11 @@ declare interface CssProcessOptions {
 	 * collects what `renderEmbeddedSource` would be offered instead of offering it, for a caller whose renderer is asynchronous: the print leaves a marker for each and `finish` puts the answers in their place, so one parse serves both. Takes precedence over `renderEmbeddedSource`
 	 */
 	deferEmbeddedSource?: DeferredEmbeddedSource[];
+
+	/**
+	 * called with what the print left undone where writing it out would have grown the output past a bound on the input's size: rules nested past that are left nested, prefixed copies past it are not written, and `@custom-media` and `@custom-selector` names past it are left as written. Only read while printing
+	 */
+	warning?: (message: string) => void;
 
 	/**
 	 * close a custom property's value the input ran out in, which is otherwise left open as the engine keeps it, for output that text is appended to (as a minimizer's banner is). Only read while printing
