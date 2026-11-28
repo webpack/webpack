@@ -5281,7 +5281,7 @@ declare class Compiler {
 	 * @since 5.113.0
 	 * @experimental
 	 */
-	worker<M extends WorkerModule = WorkerDefaultModule>(
+	worker<M extends Record<string, unknown> = WorkerDefaultModule>(
 		workerPath: string | URL,
 		options?: WorkerOptions
 	): Worker<M>;
@@ -38618,7 +38618,9 @@ declare interface WithOptions {
  * @since 5.113.0
  * @experimental
  */
-declare abstract class Worker<M extends WorkerModule = WorkerDefaultModule> {
+declare abstract class Worker<
+	M extends Record<string, unknown> = WorkerDefaultModule
+> {
 	/**
 	 * Calls one export of the module.
 	 */
@@ -38649,14 +38651,6 @@ declare interface WorkerDefaultModule {
 		| CloneableValue[]
 		| CloneableObject
 		| Promise<CloneableValue>;
-}
-
-/**
- * Constraint for a worker module: any exports. Only the ones a caller runs
- * need to be functions.
- */
-declare interface WorkerModule {
-	[index: string]: unknown;
 }
 
 /**
