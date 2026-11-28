@@ -164,6 +164,9 @@ const compareWatchCompilation = (
 					path: path.join(outputDirectory, String(index))
 				}
 			});
+			expect(freshCompiler.options.experiments.incremental).toBe(
+				compilers[index].options.experiments.incremental
+			);
 			freshCompiler.hooks.finishMake.tap(
 				{ name: "CompareWatchCompilation", stage: Infinity },
 				assertModuleGraph

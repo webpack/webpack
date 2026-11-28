@@ -54,7 +54,7 @@ This is the canonical repository map. **When you add, rename or remove a top-lev
   - `lib/util/` — helpers no one subsystem owns (a data structure, an algorithm, something several directories share): e.g. `dataURL` (reads/writes `data:` URLs; helpers a minifier drives a caller's `renderEmbeddedSource` through), `RequestShortener` (context-relative requests in user-facing messages), `terminalColors` (color detection and escape wrappers for all terminal output — `ProgressPlugin`, `nodeConsole`, webpack-cli via `webpack.cli`). A helper only one subsystem uses lives there (`semver` → `lib/sharing/`, `numberHash` → `lib/ids/`, `deterministicGrouping` → `lib/optimize/`), so a directory's contents show what it is made of.
   - `lib/wasm/` — WebAssembly's async path, plus `EnableWasmLoadingPlugin` and `wasmModuleFilename`, which neither path owns. Both paths' dependencies are `lib/dependencies/wasm/`, since they share `WebAssemblyImportDependency`.
   - `lib/wasm-sync/` — the sync WebAssembly path, kept apart until the next major release removes it.
-  - `lib/watch/` — watch mode: the watching handles a compiler returns, and `WatchIgnorePlugin`.
+  - `lib/watch/` — watch mode: the watching handles a compiler returns, `WatchIgnorePlugin`, and experimental module graph reuse in `Incremental` ([docs](./incremental.md)).
   - `lib/worker/` — the compiler-owned thread pool behind `compiler.worker`: `WorkerPlugin` sets up the per-root `WorkerFarm`, which creates the pool and facades lazily; here too are the pool's scheduling and lifecycle and the wire protocol. Generic mechanism only; its spec is [docs/worker-pool.md](./worker-pool.md).
 - `hot/` — browser-side HMR runtime (not Node tooling).
 - `bin/` — `webpack` CLI entry point.

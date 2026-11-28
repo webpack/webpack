@@ -217,6 +217,18 @@ fixture whose dependencies do not depend on build history. Keep runtime assertio
 `test.config.js`. See [the watch dependency fixture](./test/watchCases/cache/watch-dependencies/)
 for examples.
 
+`WatchIncrementalTestCases` and `WatchNonIncrementalTestCases` run the same
+`watchCases/` corpus with `experiments.incremental` forced to `true` and `false`,
+including fixtures that set it explicitly. Both default `sideEffects` and
+`concatenateModules` to `false`, while preserving explicit fixture optimizations.
+Unsupported configurations exercise the normal-build fallback in the enabled
+suite. Each step compares against a fresh compiler with the same incremental
+option. The fresh compiler has no previous graph to reuse. The existing
+comparison exceptions still apply.
+
+The standard `WatchTestCases` and `WatchCacheUnaffectedTestCases` keep their own
+configuration. CI discovers all four through the `*.longtest.js` glob.
+
 **Snapshot printed code; assert everything else.** When the thing tested _is_ generated output — bundles, minified CSS/HTML, serialized ASTs, stats text — use `toMatchSnapshot()`, not `expect(...).toBe(...)` on fragments (which pins one substring and ignores every other byte). For behavior, invariants, equivalences and error paths use explicit `expect`s; a snapshot there only records what happened to be true. Never snapshot a value some machine can't produce (a snapshot skipped without an optional browser or native binary is reported obsolete and fails the run there), and keep control characters out of snapshots (one NUL makes git treat the file as binary and hide its diff).
 
 ## Example Test Case Structure

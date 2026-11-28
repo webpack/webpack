@@ -9,6 +9,7 @@ require("../helpers/warmup-webpack");
 /**
  * @typedef {object} SuiteConfig
  * @property {string} name suite name
+ * @property {boolean=} incremental override experiments.incremental for every fixture
  * @property {EXPECTED_ANY=} experiments experiments overrides
  * @property {EXPECTED_ANY=} optimization optimization overrides
  */
@@ -341,6 +342,10 @@ const describeCases = (config) => {
 												config.optimization[key];
 										}
 									}
+								}
+								if (config.incremental !== undefined) {
+									if (!options.experiments) options.experiments = {};
+									options.experiments.incremental = config.incremental;
 								}
 							};
 							if (Array.isArray(options)) {
@@ -680,6 +685,11 @@ const describeCases = (config) => {
 									/** @type {Map<Compiler, Stats>} */
 									const latestStats = new Map();
 									for (const child of compilers) {
+										if (config.incremental !== undefined) {
+											expect(child.options.experiments.incremental).toBe(
+												config.incremental
+											);
+										}
 										child.hooks.watchRun.tap("WatchTestCasesTest", () => {
 											buildCount.started++;
 											childBuilds.set(child, (childBuilds.get(child) || 0) + 1);

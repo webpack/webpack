@@ -1852,7 +1852,7 @@ const main = async () => {
 			JSON.parse(fs.readFileSync(schemaFile, "utf8"))
 		);
 		const name = path.relative(SCHEMAS_DIRECTORY, schemaFile);
-		if (!deepEqual(committed, generated)) {
+		if (!write && !deepEqual(committed, generated)) {
 			const differences = findDifferences(committed, generated);
 			failures.push(
 				`${name}: ${differences.length} difference(s)\n${differences

@@ -7,6 +7,13 @@ const {
 } = require("../../lib/config/normalization");
 
 describe("getNormalizedWebpackOptions", () => {
+	it.each([true, false])("preserves incremental watch %s", (incremental) => {
+		expect(
+			getNormalizedWebpackOptions({ experiments: { incremental } }).experiments
+				.incremental
+		).toBe(incremental);
+	});
+
 	describe("file URLs", () => {
 		const directory = path.resolve("/dir");
 		const url = pathToFileURL(directory).href;

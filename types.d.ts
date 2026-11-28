@@ -11316,6 +11316,13 @@ declare interface Experiments {
 	cacheUnaffected?: boolean;
 
 	/**
+	 * Reuse the module graph between watch builds while rebuilding changed modules and their dependencies.
+	 * @since 5.114.0
+	 * @experimental
+	 */
+	incremental?: boolean;
+
+	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
 	 * @since 5.66.0
 	 * @experimental
@@ -11410,6 +11417,13 @@ declare interface ExperimentsNormalized {
 	 * @experimental
 	 */
 	cacheUnaffected?: boolean;
+
+	/**
+	 * Reuse the module graph between watch builds while rebuilding changed modules and their dependencies.
+	 * @since 5.114.0
+	 * @experimental
+	 */
+	incremental?: boolean;
 
 	/**
 	 * Enable css support. `"auto"` (the default) enables the built-in CSS support unless a loader is registered for CSS files.
