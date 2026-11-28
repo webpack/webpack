@@ -346,8 +346,8 @@ jobs:
             jest-test262-${{ runner.os }}-${{ hashFiles('**/yarn.lock', '**/jest.config.js') }}-
             jest-test262-${{ runner.os }}-
 
-      # One file, one part per core of the runner at once (`--parts=auto`,
-      # TESTING_DOCS.md), where it took two runners one core each.
+      # One file, one part per core of the runner at once, as its memory allows
+      # (`--parts=auto`, TESTING_DOCS.md), where it took two runners one core each.
       - run: yarn cover:test262 --parts=auto --maxWorkers=100% --ci --cacheDirectory .jest-cache
 
       - name: Codecov

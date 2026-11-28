@@ -78,11 +78,35 @@ const config = {
 
 // `--parts=<n>` runs every matched file in n parallel workers at once, each
 // told its part through `test/helpers/testParts.js`; setup runs once.
-// `--parts=auto` takes one part per core the machine has.
+// `--parts=auto` takes one part per core, but no more than the memory feeds.
 const partsArg = process.argv.find((arg) => arg.startsWith("--parts="));
 const partsValue = partsArg ? partsArg.slice("--parts=".length) : "1";
-const parts =
-	partsValue === "auto" ? require("os").cpus().length : Number(partsValue);
+
+// What one part of test262 takes at its peak: 1.6 GB of heap, plus coverage
+// and the code outside the heap. More parts than this fits swap, then die.
+const PART_MEMORY = 3.5 * 1024 ** 3;
+
+/**
+ * Counts the parts `--parts=auto` runs on this machine: one per core, as long
+ * as the memory, a container's limit included, holds `PART_MEMORY` per part.
+ * @returns {number} how many parts to run at once
+ */
+const autoParts = () => {
+	const os = require("os");
+
+	const cores = os.cpus().length;
+	let memory = os.totalmem();
+	const limit =
+		typeof os.constrainedMemory === "function" ? os.constrainedMemory() : 0;
+	if (limit > 0 && limit < memory) memory = limit;
+	const count = Math.max(1, Math.min(cores, Math.floor(memory / PART_MEMORY)));
+	process.stderr.write(
+		`--parts=auto: ${count} parts for ${cores} cores and ${(memory / 1024 ** 3).toFixed(1)} GiB\n`
+	);
+	return count;
+};
+
+const parts = partsValue === "auto" ? autoParts() : Number(partsValue);
 // Jest reads these only from the top level and warns when a project sets them.
 const { coverageReporters, ...projectConfig } = config;
 
