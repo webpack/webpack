@@ -11,7 +11,9 @@ module.exports = {
 		);
 		expect(code).not.toContain('"circle"');
 		expect(code).toContain('if(!flag)log.push("else")');
-		expect(code).toContain('found:{log.push("one");break found}');
+		// A `break` ending a case of the `switch`'s own label leaves it alike.
+		expect(code).not.toContain("found:");
+		expect(code).toContain('function(log){log.push("one");return log}');
 		expect(code).not.toContain('"two"');
 		expect(code).toContain('1===at()?log.push("at"):log.push("one")');
 		expect(code).toContain("if(flag)break");
