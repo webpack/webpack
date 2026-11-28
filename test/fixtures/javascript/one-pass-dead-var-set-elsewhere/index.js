@@ -11,7 +11,7 @@ function value(list) {
 		var total = 5;
 		for (;;);
 	}
-	total = run("value");
+	total = console.log("value");
 	return total === undefined;
 }
 // A read, a compound write or a destructuring keeps the declaration.

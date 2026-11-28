@@ -4,7 +4,7 @@ function run(label) {
 	console.log(label);
 	return label;
 }
-new RegExp("x", "g", run("extra"));
+new RegExp("x", "g", console.log("extra"));
 new RegExp("y", "i", 1, 2);
 // A pattern that throws, or one read, stays.
 try {
