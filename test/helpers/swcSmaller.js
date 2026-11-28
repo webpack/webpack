@@ -356,10 +356,6 @@ const SWC_SMALLER_BY_REASON = [
 		]
 	],
 	[
-		"swc drops a `|0` beside a shift unconditionally: `(a|0)>>>b` reads `b` after `a`'s own conversion runs, which `a>>>b` defers past `b`'s read, reordering a conversion with side effects where `a` is not provably already a primitive",
-		["swc minifier: fixture/issues/12186/nested-bitwise/input.js"]
-	],
-	[
 		"swc drops or moves an operation converting a value that may be an object or a symbol, which runs its `valueOf` or `toString` or throws, as oxc keeps it",
 		[
 			"swc minifier: fixture/issues/5680/input.js",
@@ -708,10 +704,7 @@ const SWC_SMALLER_BY_REASON = [
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/member_expr` tests cover",
-		[
-			"swc minifier: fixture/member_expr/seq/input.js",
-			"swc minifier: fixture/member_expr/undetermined_prop/input.js"
-		]
+		["swc minifier: fixture/member_expr/seq/input.js"]
 	],
 	[
 		"swc goes further than webpack on what swc's `fixture/object-factory-inline-cost` tests cover",
