@@ -226,6 +226,7 @@ const PRINTERS = {
 // many workers; a fixture's file follows from its name alone, so adding one
 // moves no other fixture's snapshots.
 const SHARDS = 4;
+const SKIPS_BABEL_CORPUS = process.versions.deno !== undefined;
 
 /**
  * @param {string} name a fixture's directory name
@@ -260,7 +261,13 @@ const describeFixtures = (shard) => {
 			expected
 		} of fixtures("javascript")) {
 			if (shardOf(name) !== shard) continue;
-			describe(name, () => {
+			// Babel's corpus runs the same parser and printer code on every runtime;
+			// Deno skips it, as its runs there take the runtimes job past its timeout.
+			const register =
+				SKIPS_BABEL_CORPUS && name.startsWith("babel-parser-")
+					? describe.skip
+					: describe;
+			register(name, () => {
 				it("tokenizes", () => {
 					expect(
 						snapshotOf(
