@@ -2430,7 +2430,7 @@ describe("one-pass minify of statement sequences", () => {
 					"javascript",
 					"one-pass-minify-of-statement-sequences-should-fold-a-switch-on-a-sequence-known-6"
 				),
-				"function s(c,s,w){switch(c(),42){case s():w()}}"
+				"function s(c,s,w){if(c(),42===s())w()}"
 			],
 			[
 				fixture(
@@ -2444,7 +2444,7 @@ describe("one-pass minify of statement sequences", () => {
 					"javascript",
 					"one-pass-minify-of-statement-sequences-should-fold-a-switch-on-a-sequence-known-8"
 				),
-				"function s(c,s){switch(c(),s()){case 13:s()}}"
+				"function s(c,s){if(c(),s()===13)s()}"
 			]
 		];
 		for (const [source, expected] of cases) {
