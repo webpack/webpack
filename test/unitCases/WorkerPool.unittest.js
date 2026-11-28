@@ -766,13 +766,141 @@ describe("WorkerPool", () => {
 			expect(pool.stats.workers).toBe(1);
 		});
 
-		it("rejects or replaces the calls of a thread that crashed", async () => {
-			const pool = createThreadPool({ max: 1 });
-			await expect(pool.run(TARGET, "crash", [])).rejects.toThrow(
-				/exited with code 3 during crash/
-			);
-			expect(pool.stats.crashed).toBe(1);
+		it("retries a crashed call, then runs it on the main thread", async () => {
+			/** @type {Error[]} */
+			const fallbacks = [];
+			const pool = createThreadPool({
+				max: 1,
+				onFallback: (error) => fallbacks.push(error)
+			});
+			expect(await pool.run(TARGET, "crash", [])).toBe("main thread");
+			// the first run and three retries
+			expect(pool.stats.crashed).toBe(4);
+			expect(fallbacks).toHaveLength(1);
+			expect(fallbacks[0].message).toMatch(/exited with code 3 during crash/);
 			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+			await pool.end();
+		});
+
+		it("answers from a retry when the next thread does not crash", async () => {
+			const marker = path.join(
+				require("os").tmpdir(),
+				`webpack-worker-pool-crash-${process.pid}-${Date.now()}`
+			);
+			const onFallback = jest.fn();
+			const pool = createThreadPool({ max: 1, onFallback });
+			try {
+				expect(await pool.run(TARGET, "crashOnce", [marker])).toBe("retried");
+				expect(pool.stats.crashed).toBe(1);
+				expect(onFallback).not.toHaveBeenCalled();
+			} finally {
+				try {
+					require("fs").unlinkSync(marker);
+				} catch (error) {
+					if (/** @type {NodeJS.ErrnoException} */ (error).code !== "ENOENT") {
+						throw error;
+					}
+				}
+				await pool.end();
+			}
+		});
+
+		it("runs a crashed call on the main thread at once with maxRetries 0", async () => {
+			const onFallback = jest.fn();
+			const pool = createThreadPool({ max: 1, maxRetries: 0, onFallback });
+			expect(await pool.run(TARGET, "crash", [])).toBe("main thread");
+			expect(pool.stats.crashed).toBe(1);
+			expect(onFallback).toHaveBeenCalledTimes(1);
+			await pool.end();
+		});
+
+		it("takes the retry policy of each call over the pool's", async () => {
+			const poolFallback = jest.fn();
+			const callFallback = jest.fn();
+			const pool = createThreadPool({ max: 1, onFallback: poolFallback });
+			expect(
+				await pool.runJob(TARGET, "crash", [], {
+					maxRetries: 0,
+					onFallback: callFallback
+				})
+			).toBe("main thread");
+			expect(pool.stats.crashed).toBe(1);
+			expect(callFallback).toHaveBeenCalledTimes(1);
+			expect(poolFallback).not.toHaveBeenCalled();
+			await pool.end();
+		});
+
+		it("ignores a main-thread call that settles after its thread exited", async () => {
+			const marker = path.join(
+				require("os").tmpdir(),
+				`webpack-worker-pool-rpc-crash-${process.pid}-${Date.now()}`
+			);
+			const pool = createThreadPool({ max: 1 });
+			/** @type {number[]} */
+			const blocked = [];
+			const counts = () => {
+				for (const worker of pool._workers) {
+					for (const call of worker.calls.values()) return call.blocked;
+				}
+				return -1;
+			};
+			try {
+				const value = await pool.runJob(TARGET, "rpcThenCrashOnce", [marker], {
+					rpc: (method, args) =>
+						new Promise((resolve) => {
+							setTimeout(() => {
+								blocked.push(counts());
+								resolve(0);
+							}, /** @type {number} */ (args[0]));
+						})
+				});
+				expect(value).toBe("retried");
+				expect(pool.stats.crashed).toBe(1);
+				// the retry's own call is still awaited when it settles
+				expect(blocked[blocked.length - 1]).toBe(1);
+			} finally {
+				try {
+					require("fs").unlinkSync(marker);
+				} catch (error) {
+					if (/** @type {NodeJS.ErrnoException} */ (error).code !== "ENOENT") {
+						throw error;
+					}
+				}
+				await pool.end();
+			}
+		});
+
+		it("still runs a crashed call on the main thread when its report throws", async () => {
+			const pool = createThreadPool({
+				max: 1,
+				maxRetries: 0,
+				onFallback: () => {
+					throw new Error("report failed");
+				}
+			});
+			expect(await pool.run(TARGET, "crash", [])).toBe("main thread");
+			expect(await pool.run(TARGET, "add", [1, 2])).toBe(3);
+			await pool.end();
+		});
+
+		it("does not retry a call that throws", async () => {
+			const onFallback = jest.fn();
+			const pool = createThreadPool({ max: 1, onFallback });
+			await expect(pool.run(TARGET, "fail", [])).rejects.toThrow();
+			expect(pool.stats.crashed).toBe(0);
+			expect(onFallback).not.toHaveBeenCalled();
+			await pool.end();
+		});
+
+		it("rejects a call whose thread crashes while the pool ends", async () => {
+			const onFallback = jest.fn();
+			const pool = createThreadPool({ max: 1, onFallback });
+			await pool.warmup([TARGET], 1);
+			const crashing = pool.run(TARGET, "crash", [50]);
+			const ending = pool.end();
+			await expect(crashing).rejects.toThrow(/exited with code 3 during crash/);
+			await ending;
+			expect(onFallback).not.toHaveBeenCalled();
 		});
 
 		it("rejects a missing export on a thread", async () => {
@@ -1164,6 +1292,65 @@ describe("WorkerPool", () => {
 				);
 			return compiler;
 		};
+
+		it("logs a crashed call that ran on the main thread and finishes the build", async () => {
+			/** @type {unknown} */
+			let result;
+			const compiler = createCompiler(async (compiler) => {
+				result = await compiler.worker(TARGET).run("crash");
+			});
+			compiler.options.experiments.threads = { max: 1, maxRetries: 1 };
+			/** @type {string[]} */
+			const errors = [];
+			compiler.hooks.infrastructureLog.tap("test", (origin, type, args) => {
+				if (type === "error")
+					errors.push(`${origin}: ${(args || []).join(" ")}`);
+				return true;
+			});
+			try {
+				await run(compiler);
+				expect(result).toBe("main thread");
+				expect(errors).toHaveLength(1);
+				expect(errors[0]).toMatch(
+					/^WorkerFarm: Worker \d+ exited with code 3 during crash.*; the call ran on the main thread instead$/
+				);
+			} finally {
+				await close(compiler);
+			}
+		});
+
+		it("keeps each compiler's retry policy on the shared pool", async () => {
+			const first = createCompiler(async (compiler) => {
+				await compiler.worker(TARGET).run("add", 1, 2);
+			});
+			first.options.experiments.threads = { max: 1, maxRetries: 3 };
+			/** @type {unknown} */
+			let result;
+			const second = createCompiler(async (compiler) => {
+				result = await compiler.worker(TARGET).run("crash");
+			});
+			second.options.experiments.threads = { max: 1, maxRetries: 0 };
+			/** @type {string[]} */
+			const errors = [];
+			second.hooks.infrastructureLog.tap("test", (origin, type, args) => {
+				if (type === "error") errors.push((args || []).join(" "));
+				return true;
+			});
+			try {
+				await run(first);
+				await run(second);
+				expect(second._getWorkerPool()).toBe(first._getWorkerPool());
+				expect(result).toBe("main thread");
+				// `maxRetries: 0`: the first exit falls back, whatever the first compiler set
+				expect(
+					/** @type {WorkerPool} */ (second._getWorkerPool()).stats.crashed
+				).toBe(1);
+				expect(errors).toHaveLength(1);
+			} finally {
+				await close(second);
+				await close(first);
+			}
+		});
 
 		it("keeps idle threads alive while on and lets them retire when off", async () => {
 			const pool = createPool({ max: 1, idleTimeout: 20 });

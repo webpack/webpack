@@ -198,7 +198,7 @@ Ordering rules:
 - At `max`, a loader job goes to the thread with the fewest running loader jobs, up to its `parallelJobs`. These two loader-aware hooks (`blocked` and `parallelJobs`) are the deliberate price of one queue: split queues would lose the deterministic order above.
 - A queued plain call keeps the head of the queue: when every thread is busy, later loader jobs wait even if a thread still has loader capacity. This is head-of-line blocking; one FIFO queue trades loader throughput for strict call order.
 - When a call settles, its thread goes idle and dispatch continues.
-- On exit, the thread is removed. Its in-flight call rejects with `Worker <id> exited with code <code> during <method>`. The next queued call spawns a replacement.
+- On exit, the thread is removed and the next queued call spawns a replacement. A thread that exits (out of memory, `process.exit`) must not fail the build, so its in-flight calls go back to the end of the queue, up to `maxRetries` times each (default 3). The policy travels with each call (`runJob` options, else the pool's), so compilers sharing the pool keep their own `threads.maxRetries`. After that the call runs inline on the main thread, and the call's `onFallback` receives `Worker <id> exited with code <code> during <method>`; the compiler that made the call logs it as an infrastructure error. A main-thread call that settles after its thread exited leaves the retried call's `blocked` count alone. While the pool ends, the call rejects with that error instead. A call that throws is not retried: it settled. A native crash (a segfault) is a signal to the whole process, so no thread contains it; code that can crash that way belongs on the main thread.
 - A synchronous `postMessage` failure rejects that call; the thread stays usable.
 
 ## Lifecycle
@@ -237,11 +237,12 @@ module.exports = {
 };
 ```
 
-| Value             | Effect                                                  |
-| ----------------- | ------------------------------------------------------- |
-| `false` (default) | Every call runs directly on the main thread.            |
-| `true`            | `{ max: cores - 1 }`.                                   |
-| `max: n`          | `min(floor(n), cores - 1)`; `0` runs every call inline. |
+| Value             | Effect                                                                     |
+| ----------------- | -------------------------------------------------------------------------- |
+| `false` (default) | Every call runs directly on the main thread.                               |
+| `true`            | `{ max: cores - 1 }`.                                                      |
+| `max: n`          | `min(floor(n), cores - 1)`; `0` runs every call inline.                    |
+| `maxRetries: n`   | Retries of a call whose thread exited, then the main thread (default `3`). |
 
 `cores` is `os.availableParallelism()` when available (Node 18.14+), else `os.cpus().length`, and `1` when `os.cpus()` returns nothing; the result is clamped to at least 0. This is how minimizer-webpack-plugin counts its `parallel` workers, so `max` never exceeds the cores either. Plain calls keep an idle thread for 30 seconds; RPC jobs use the pool's `loaderPoolTimeout` (500 ms). When `worker_threads` is unavailable, the compiler emits a warning on each compilation and `compiler.worker()` calls run directly on the main thread.
 
