@@ -64,6 +64,8 @@ module.exports = {
 									? { ...info, runtimeCondition: overrideRuntimeCondition }
 									: info
 							);
+						// the list is cached per seal, so drop it to build the patched one
+						concatenated._concatenationLists = undefined;
 						try {
 							const hash = createHash("xxhash64");
 							concatenated.updateHash(hash, {
@@ -73,6 +75,7 @@ module.exports = {
 							return /** @type {string} */ (hash.digest("hex"));
 						} finally {
 							concatenated._createConcatenationList = original;
+							concatenated._concatenationLists = undefined;
 						}
 					};
 
