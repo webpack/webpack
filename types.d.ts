@@ -13825,21 +13825,7 @@ declare interface HotUpdateCssManifest {
 	l?: ChunkId[];
 	n?: Record<ChunkId, string>;
 }
-
-/**
- * The manifest a runtime downloads first in a hot update; every download handler gets it
- * whole, so a plugin adds a field here for its own handler. It is sent as JSON; the field stays open so a
- * plugin's interface-typed value, which carries no index signature, still fits.
- */
-declare interface HotUpdateManifest {
-	[index: string]: unknown;
-	c: ChunkId[];
-	r: ChunkId[];
-	m: ModuleId[];
-	f?: ChunkId[];
-	s?: ModuleId[];
-	css?: HotUpdateCssManifest;
-}
+type HotUpdateManifest = exports.KnownHotUpdateManifest & Record<string, any>;
 
 /**
  * What a plugin needs to fill its manifest field.
@@ -39153,6 +39139,43 @@ declare namespace exports {
 		 * true when a node core module is read through `process.getBuiltinModule()`
 		 */
 		builtinGetter?: boolean;
+	}
+
+	/**
+	 * The manifest a runtime downloads first in a hot update, sent as JSON; every download handler
+	 * gets it whole, so a plugin adds a field here for its own handler.
+	 * A plugin types its own fields by declaration merging: `declare module "webpack" { interface KnownHotUpdateManifest { myField?: MyType } }`.
+	 */
+	export interface KnownHotUpdateManifest {
+		/**
+		 * the chunks the update changes
+		 */
+		c: ChunkId[];
+
+		/**
+		 * the chunks the update removes
+		 */
+		r: ChunkId[];
+
+		/**
+		 * the modules the update removes
+		 */
+		m: ModuleId[];
+
+		/**
+		 * the chunks the client must load so a module whose only loaded chunk left a runtime keeps an installed owner
+		 */
+		f?: ChunkId[];
+
+		/**
+		 * the unchanged modules the update ships for clients that lack them
+		 */
+		s?: ModuleId[];
+
+		/**
+		 * the CSS chunks the update removes and loads
+		 */
+		css?: HotUpdateCssManifest;
 	}
 
 	/**
