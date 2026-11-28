@@ -12,7 +12,7 @@ const {
 	NodeType,
 	parseAListOfComponentValues,
 	readToken,
-	CssTokenizer,
+	Tokenizer,
 	TokenType
 } = require("../../../lib/css/syntax-parser");
 
@@ -158,7 +158,7 @@ describe("CssSyntax — the token the lexer reuses", () => {
 	];
 
 	it("carries exactly the fields it was built with", () => {
-		const stream = new CssTokenizer(
+		const stream = new Tokenizer(
 			fixture(
 				"css",
 				"css-syntax-minify-the-value-transforms-rejection-paths-a-named-color-the-14"
@@ -168,7 +168,7 @@ describe("CssSyntax — the token the lexer reuses", () => {
 	});
 
 	it("has every field set before a token is read, and after", () => {
-		const stream = new CssTokenizer(
+		const stream = new Tokenizer(
 			fixture(
 				"css",
 				"css-syntax-the-token-the-lexer-reuses-has-every-field-set-before-a-token-is-read"
@@ -246,7 +246,7 @@ describe("CssSyntax — the token stream", () => {
 	const { _S } = require("../../../lib/css/syntax-parser");
 
 	/**
-	 * @param {CssTokenizer} stream a stream
+	 * @param {Tokenizer} stream a stream
 	 * @returns {[number, string]} the next token's type and source text
 	 */
 	const peek = (stream) => {
@@ -257,7 +257,7 @@ describe("CssSyntax — the token stream", () => {
 	it("fires each comment once, even when a mark rewinds over it", () => {
 		/** @type {string[]} */
 		const seen = [];
-		const stream = new CssTokenizer(
+		const stream = new Tokenizer(
 			fixture(
 				"css",
 				"css-syntax-the-token-stream-fires-each-comment-once-even-when-a-mark-rewinds"
@@ -341,7 +341,7 @@ describe("CssSyntax — the token stream", () => {
 	});
 
 	it("steps over whitespace without lexing it, unless a token is cached", () => {
-		const stream = new CssTokenizer(
+		const stream = new Tokenizer(
 			fixture(
 				"css",
 				"css-syntax-the-token-stream-steps-over-whitespace-without-lexing-it-unless-a"
@@ -360,7 +360,7 @@ describe("CssSyntax — the token stream", () => {
 		 * @returns {[number, string]} the next token after skipping prelude leaves
 		 */
 		const afterPrelude = (src) => {
-			const stream = new CssTokenizer(src);
+			const stream = new Tokenizer(src);
 			stream.skipPreludeLeaves();
 			return peek(stream);
 		};
@@ -416,7 +416,7 @@ describe("CssSyntax — the token stream", () => {
 	});
 
 	it("does not step over a prelude while a token is cached", () => {
-		const stream = new CssTokenizer(
+		const stream = new Tokenizer(
 			fixture(
 				"css",
 				"css-syntax-the-token-stream-steps-over-a-selector-prelude-up-to-what-has-to-be"
@@ -428,7 +428,7 @@ describe("CssSyntax — the token stream", () => {
 	});
 
 	it("parses on from where an existing stream stands", () => {
-		const stream = new CssTokenizer(
+		const stream = new Tokenizer(
 			fixture(
 				"css",
 				"css-syntax-the-token-stream-parses-on-from-where-an-existing-stream-stands"
