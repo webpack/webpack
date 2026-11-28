@@ -26,6 +26,8 @@ A fresh module graph is used when the previous build has errors, child
 compilations, other module kinds, loaders, dynamic entries or custom `make` taps.
 Multiple modified files, removed files, invalidations without changed files and
 changes outside existing module resources use the normal build path.
+Changes to resolver description files also use the normal build path, even when
+those files are imported as modules.
 `module.unsafeCache: true`, side-effects optimization, concatenation and deferred imports disable
 reuse. HMR and plugins that change the graph or add late entries are outside this
 first experiment's supported scope.

@@ -1,0 +1,4 @@
+{
+	"private": true,
+	"browser": { "./a.js": "./b.js" }
+}
