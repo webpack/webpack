@@ -132,6 +132,8 @@ A hint reuses existing reporting: `SizeLimitsPlugin` and `DuplicatePackagesPlugi
 
 Use the most specific real type, in `test/` too. `EXPECTED_ANY`, `EXPECTED_OBJECT`, `EXPECTED_FUNCTION` (aliases for `any`, `object`, `Function`) are **only** for a value that genuinely can be any value/object/function. `unknown` is for a type you can't yet name (then narrow); prefer a real one such as `import("…").Foo`. When a function's output type depends on its input, use a generic (`@template`) rather than widening.
 
+Never write `@ts-ignore`, and don't silence a type error with `@ts-expect-error` either: fix the type, or the code, so it type-checks. `@ts-expect-error` belongs only in a type test, to prove a wrong use is refused (a guard that fails once that use type-checks), and one per behavior is enough.
+
 ### Naming
 
 Spell names out in full (`attributeCount`, not `attrCnt`), beyond abbreviations the codebase already uses pervasively. Name a class for what it does, with its kind's suffix (`*Plugin`, `*Dependency`, …), and the file for the class; a name never invents a role suffix (`*Manager`, `*Util`), takes a `Webpack` prefix or repeats another `lib/` class, except a syntax layer's `Tokenizer`, `SyntaxParser` and `SyntaxPath`, which drop the language. Exceptions and reasons: [docs/code-style.md](./docs/code-style.md#naming).
