@@ -6165,7 +6165,7 @@ const {
 	Flag,
 	NodeType,
 	Part,
-	_SyntaxTree: SyntaxTree,
+	SyntaxTree,
 	WebpackParser
 } = require("../../../lib/javascript/syntax-parser");
 
@@ -7710,7 +7710,7 @@ describe("JavaScript SourceProcessor", () => {
 
 describe("WebpackParser writing a SyntaxTree", () => {
 	const {
-		_SyntaxTree: SyntaxTree,
+		SyntaxTree,
 		WebpackParser
 	} = require("../../../lib/javascript/syntax-parser");
 
@@ -8442,7 +8442,7 @@ describe("parseProgram", () => {
 
 	it("refuses a tree a visitor hands `A` to read", () => {
 		const {
-			_SyntaxTree: SyntaxTree,
+			SyntaxTree,
 			readParsedTree
 		} = require("../../../lib/javascript/syntax-parser");
 		expect(() =>
@@ -9139,9 +9139,7 @@ describe("fromEstreeObject", () => {
 	});
 
 	it("hands its tree back on the next parse", () => {
-		const {
-			_SyntaxTree: SyntaxTree
-		} = require("../../../lib/javascript/syntax-parser");
+		const { SyntaxTree } = require("../../../lib/javascript/syntax-parser");
 		const { parseProgram } = require("../../../lib/javascript/syntax").parser;
 		const program = /** @type {import("estree").Program} */ (
 			/** @type {unknown} */ ({

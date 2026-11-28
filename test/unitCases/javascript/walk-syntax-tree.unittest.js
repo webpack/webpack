@@ -526,9 +526,7 @@ describe("a syntax tree written from ESTree objects", () => {
 		);
 		expect(program).not.toBe(0);
 		tree.release();
-		const {
-			_SyntaxTree: SyntaxTree
-		} = require("../../../lib/javascript/syntax-parser");
+		const { SyntaxTree } = require("../../../lib/javascript/syntax-parser");
 
 		const strict = new SyntaxTree();
 		// without skipping, the type the tree lacks is an error
@@ -644,7 +642,7 @@ describe("a hook with path taps", () => {
 
 describe("a syntax tree node retyped with an empty record", () => {
 	const {
-		_SyntaxTree: SyntaxTree,
+		SyntaxTree,
 		NodeType
 	} = require("../../../lib/javascript/syntax-parser");
 

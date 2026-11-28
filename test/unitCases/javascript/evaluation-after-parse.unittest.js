@@ -11,7 +11,7 @@ const {
 	takeParsedTree
 } = require("../../../lib/javascript/syntax-parser");
 
-/** @typedef {import("../../../lib/javascript/syntax-parser")._SyntaxTree} SyntaxTree */
+/** @typedef {import("../../../lib/javascript/syntax-parser").SyntaxTree} SyntaxTree */
 /** @typedef {import("../../../lib/javascript/BasicEvaluatedExpression")} BasicEvaluatedExpression */
 /** @typedef {import("../../../lib/module/Parser").ParserState} ParserState */
 /** @typedef {import("../../../lib/javascript/JavascriptParser").ParseOptions} ParseOptions */

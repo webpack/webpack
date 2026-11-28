@@ -1297,7 +1297,7 @@ declare abstract class BasicEvaluatedExpression {
 	 * Set's the expression to a node of a syntax tree, its object made only
 	 * when `expression` is first read.
 	 */
-	setNode(tree: ColumnarSyntaxTree, node: number): BasicEvaluatedExpression;
+	setNode(tree: SyntaxTree, node: number): BasicEvaluatedExpression;
 }
 type BeforeContextResolveData = ContextResolveData & ContextOptions;
 
@@ -3603,560 +3603,6 @@ declare interface ColorsOptions {
 	 * force use colors
 	 */
 	useColor?: boolean;
-}
-
-/**
- * A JavaScript syntax tree held as a struct of arrays: a node is an integer
- * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
- */
-declare abstract class ColumnarSyntaxTree {
-	/**
-	 * Hands the columns back once nothing reads the tree: the next tree reuses
-	 * small ones, and a large one's ArrayBuffers are freed at once, where they
-	 * would otherwise outlast the parse into the work after it.
-	 */
-	release(): void;
-
-	/**
-	 * Forgets every node, keeping the columns for the next tree.
-	 */
-	reset(): void;
-	add(type: number, start: number, end: number): number;
-
-	/**
-	 * Sets one field of a node: a child node, an array of them for a list,
-	 * `0` or null where ESTree has null.
-	 */
-	set(
-		node: number,
-		name: string,
-		value?:
-			| null
-			| string
-			| number
-			| bigint
-			| boolean
-			| RegExp
-			| { cooked?: null | string; raw: string }
-			| (null | number)[]
-	): void;
-
-	/**
-	 * Writes a node from its record, each slot a child node, a list from
-	 * `addList` or a value from `addValue`, `0` or left out for none.
-	 */
-	addNode<T extends string = string>(
-		type: number | TreeTypeCode<T>,
-		start: number,
-		end: number,
-		flags: number,
-		slot0?: null | number,
-		slot1?: null | number,
-		slot2?: null | number,
-		slot3?: null | number
-	): TreeNode<T>;
-
-	/**
-	 * `addNode` for a node whose record holds no slot, as `this`.
-	 */
-	addNode0<T extends string = string>(
-		type: number | TreeTypeCode<T>,
-		start: number,
-		end: number,
-		flags: number
-	): TreeNode<T>;
-
-	/**
-	 * `addNode` for a node whose record holds two slots, as a member
-	 * expression or a call does, written without reading its slot count.
-	 */
-	addNode2<T extends string = string>(
-		type: number | TreeTypeCode<T>,
-		start: number,
-		end: number,
-		flags: number,
-		slot0: number,
-		slot1: number
-	): TreeNode<T>;
-
-	/**
-	 * `addNode` for a literal, its value and raw text written in place, as a
-	 * parse writes one for every string and number.
-	 */
-	addLiteralNode(
-		start: number,
-		end: number,
-		value: TreeValue,
-		raw: string
-	): TreeNode<"Literal">;
-
-	/**
-	 * `addNode` for a node whose record is one value, as an identifier's name.
-	 */
-	addValueNode<T extends string = string>(
-		type: number | TreeTypeCode<T>,
-		start: number,
-		end: number,
-		value: TreeValue
-	): TreeNode<T>;
-	addValue(
-		value?:
-			| null
-			| string
-			| number
-			| bigint
-			| boolean
-			| RegExp
-			| { cooked?: null | string; raw: string }
-	): number;
-	addList(items: number[], count: number): number;
-
-	/**
-	 * Retypes a node whose record the new type reads the same, as an
-	 * expression the parser then reads as a pattern.
-	 */
-	setType(node: number, type: number): void;
-
-	/**
-	 * Retypes a node whose record the new type lays out otherwise, as a `while`
-	 * turned into a `for`: it keeps its id and gets an empty record of the new type.
-	 * @experimental `javascript.syntax` tree; unstable API
-	 */
-	setTypeEmpty(node: number, type: number): void;
-
-	/**
-	 * Sets the slot a node's record holds a part in.
-	 */
-	setPart(part: number, node: number, text: string): void;
-
-	/**
-	 * Writes a parsed node and everything under it, children before their
-	 * parent in source order, as the parser writes; a child already written
-	 * stands as its id.
-	 */
-	addEstree(root: EstreeInput, input?: string, skipUnknown?: boolean): number;
-
-	/**
-	 * Writes a node a plugin built while this tree is read into it, keeping
-	 * the lazy objects already made reading the columns the write may grow.
-	 */
-	appendEstree(object: EstreeInput, input: string): number;
-
-	/**
-	 * Grows the columns once to hold this many more nodes, slots, lists and
-	 * list items, where writing a tree of a known size would double them,
-	 * copying each column every time.
-	 */
-	reserve(nodes: number, slots: number, lists: number, items: number): void;
-
-	/**
-	 * The ESTree object of a node of this tree, the same object each time:
-	 * the lazy one once `lazyEstree` was asked for, else as `toEstreeObject`
-	 * builds it without options.
-	 */
-	estree(
-		node: number
-	):
-		| null
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| SpreadElement
-		| PrivateIdentifier
-		| Super
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration
-		| MethodDefinition
-		| PropertyDefinition
-		| VariableDeclarator
-		| Program
-		| AssignmentProperty
-		| Property
-		| CatchClause
-		| ClassBody
-		| ImportSpecifier
-		| ImportDefaultSpecifier
-		| ImportNamespaceSpecifier
-		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| TemplateElement;
-
-	/**
-	 * The ESTree object of a node of this tree as `toEstreeObject` builds it,
-	 * the same object for the same options. A long node reads each child from
-	 * the tree when its field is first read: a release copies what they read.
-	 */
-	estreeObject(
-		node: number,
-		options?: EstreeObjectOptions,
-		input?: string
-	):
-		| null
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| SpreadElement
-		| PrivateIdentifier
-		| Super
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration
-		| MethodDefinition
-		| PropertyDefinition
-		| VariableDeclarator
-		| Program
-		| AssignmentProperty
-		| Property
-		| CatchClause
-		| ClassBody
-		| ImportSpecifier
-		| ImportDefaultSpecifier
-		| ImportNamespaceSpecifier
-		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| TemplateElement;
-
-	/**
-	 * A node's ESTree object, as `estree` makes it: a path's way to an object
-	 * for code that still reads one.
-	 */
-	object(
-		node: number
-	):
-		| null
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| SpreadElement
-		| PrivateIdentifier
-		| Super
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration
-		| MethodDefinition
-		| PropertyDefinition
-		| VariableDeclarator
-		| Program
-		| AssignmentProperty
-		| Property
-		| CatchClause
-		| ClassBody
-		| ImportSpecifier
-		| ImportDefaultSpecifier
-		| ImportNamespaceSpecifier
-		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| TemplateElement;
-
-	/**
-	 * The lazy ESTree object of a node: it builds a child's object the first
-	 * time its field is read, so a node nothing reads gets none. From then on
-	 * `estree` serves these objects for every node of this tree.
-	 */
-	lazyEstree(
-		node: number
-	):
-		| null
-		| ImportDeclaration
-		| ExportNamedDeclaration
-		| ExportAllDeclaration
-		| ImportExpressionImport
-		| UnaryExpression
-		| ArrayExpression
-		| ArrowFunctionExpression
-		| AssignmentExpression
-		| AwaitExpression
-		| BinaryExpression
-		| SimpleCallExpression
-		| NewExpression
-		| ChainExpression
-		| ClassExpression
-		| ConditionalExpression
-		| FunctionExpression
-		| Identifier
-		| SimpleLiteral
-		| RegExpLiteral
-		| BigIntLiteral
-		| LogicalExpression
-		| MemberExpression
-		| MetaProperty
-		| ObjectExpression
-		| SequenceExpression
-		| TaggedTemplateExpression
-		| TemplateLiteral
-		| ThisExpression
-		| UpdateExpression
-		| YieldExpression
-		| SpreadElement
-		| PrivateIdentifier
-		| Super
-		| FunctionDeclaration
-		| VariableDeclaration
-		| ClassDeclaration
-		| ExpressionStatement
-		| BlockStatement
-		| StaticBlock
-		| EmptyStatement
-		| DebuggerStatement
-		| WithStatement
-		| ReturnStatement
-		| LabeledStatement
-		| BreakStatement
-		| ContinueStatement
-		| IfStatement
-		| SwitchStatement
-		| ThrowStatement
-		| TryStatement
-		| WhileStatement
-		| DoWhileStatement
-		| ForStatement
-		| ForInStatement
-		| ForOfStatement
-		| ExportDefaultDeclaration
-		| MethodDefinition
-		| PropertyDefinition
-		| VariableDeclarator
-		| Program
-		| AssignmentProperty
-		| Property
-		| CatchClause
-		| ClassBody
-		| ImportSpecifier
-		| ImportDefaultSpecifier
-		| ImportNamespaceSpecifier
-		| ExportSpecifier
-		| ObjectPattern
-		| ArrayPattern
-		| RestElement
-		| AssignmentPattern
-		| SwitchCase
-		| TemplateElement;
-
-	/**
-	 * Records that the legacy `assert` keyword opens a declaration's attributes.
-	 */
-	markLegacyAssert(node: number): void;
-	legacyAssert(node: number): boolean;
-
-	/**
-	 * Where the text reads `<!--` as `<`, `!` and `--`, as only a module does;
-	 * a script, the source's text set in one, would read a comment from there.
-	 */
-	htmlOpensAsOperators(): ReadonlyArray<number>;
-
-	/**
-	 * The node a lazy object of this tree stands for, the way back from `lazyEstree`.
-	 */
-	nodeOf(object: NodeEstreeIndex): number;
-
-	/**
-	 * The columns a reader of this tree's nodes keeps reading after the tree is
-	 * released and reused: a release copies them for it, as for a lazy object.
-	 */
-	pinSource(): LazySource;
-
-	/**
-	 * Lets a release skip copying the columns for readers of nodes the text
-	 * parses back to: such a reader parses the text again if it reads later.
-	 */
-	setRebuild(rebuild: () => ColumnarSyntaxTree): void;
-
-	/**
-	 * The source an evaluation of a node reads: unpinned when a rebuild can
-	 * make the node again, so a release copies nothing for it.
-	 */
-	evaluationSource(node: number): LazySource;
-	type(node: number): number;
-	start(node: number): number;
-	end(node: number): number;
-	range(node: number): [number, number];
-	name(node: number): string;
-	value(
-		node: number
-	):
-		| undefined
-		| null
-		| string
-		| number
-		| bigint
-		| boolean
-		| RegExp
-		| { cooked?: null | string; raw: string };
-	fieldCount(field: number, node: number): number;
-
-	/**
-	 * Walks a node and what it holds, each before its children in field order.
-	 */
-	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
-	field(i: number, field: number, node: number): number;
-	flag(flag: number, node: number): boolean;
-
-	/**
-	 * Pushes a node's children in its fields' order, holes left out, for a
-	 * walk that reaches every node without naming each type's fields.
-	 */
-	pushChildren(node: number, out: number[]): void;
-
-	/**
-	 * Writes a node's children as `pushChildren` pushes them, from `at` on, so
-	 * a walk can reuse one list as its stack without resizing it.
-	 */
-	writeChildren(node: number, out: number[], at: number): number;
-	textOf(part: number, node: number): null | string;
 }
 type CommentJavascriptParser = CommentImport & {
 	start: number;
@@ -8219,10 +7665,9 @@ declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
 }
 
 /**
- * One parsed stylesheet and the state of the walk and print reading it: the
- * node and list columns, the streaming frames, the per-run options and caches.
- * `S` is the tree being read; a run a visitor or renderer starts parks it in a
- * spare (see `swapTrees`), so the outer run finds it untouched.
+ * The state of the walk and print reading one stylesheet: the streaming frames,
+ * the per-run options and caches; the columns are its `SyntaxTree`. A run a
+ * visitor or renderer starts parks it in a spare (see `swapTrees`).
  * @experimental exposed as `webpack.css.syntax.parser.Parser`; unstable API
  */
 declare class CssSyntaxParser extends CssTokenizer {
@@ -14994,11 +14439,9 @@ declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
 }
 
 /**
- * One parsed HTML document and the state of the parse, walk and print reading
- * it: the node and attribute columns, the tokenizer and tree builder, the
- * per-run options and cursors. `S` is the tree being read; a run a visitor
- * starts parks it in a spare (see `swapTrees`), so the outer run finds it
- * untouched.
+ * The state of the parse, walk and print reading one HTML document: the
+ * tokenizer and tree builder, the per-run options and cursors; the columns are
+ * its `SyntaxTree`. A run a visitor starts parks it in a spare (see `swapTrees`).
  * @experimental exposed as `webpack.html.syntax.parser.Parser`; unstable API
  */
 declare class HtmlSyntaxParser extends HtmlTokenizer {
@@ -21316,7 +20759,7 @@ declare interface LazySource {
 	/**
 	 * parses the same text into a new tree, for a reader after the release
 	 */
-	rebuild?: () => ColumnarSyntaxTree;
+	rebuild?: () => SyntaxTree;
 
 	/**
 	 * the source of that tree, once a reader asked for it
@@ -28683,7 +28126,7 @@ declare interface ParsedTree {
 	/**
 	 * the tree
 	 */
-	tree: ColumnarSyntaxTree;
+	tree: SyntaxTree;
 
 	/**
 	 * its program
@@ -36316,6 +35759,563 @@ type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	exports.KnownSyncWasmModuleBuildMeta;
 
 /**
+ * A JavaScript syntax tree held as a struct of arrays: a node is an integer
+ * id from 1, `0` is no node, and it reads as the CSS and HTML paths do.
+ * @experimental exposed as `webpack.javascript.syntax.parser.SyntaxTree`; unstable API
+ */
+declare class SyntaxTree {
+	constructor();
+
+	/**
+	 * Hands the columns back once nothing reads the tree: the next tree reuses
+	 * small ones, and a large one's ArrayBuffers are freed at once, where they
+	 * would otherwise outlast the parse into the work after it.
+	 */
+	release(): void;
+
+	/**
+	 * Forgets every node, keeping the columns for the next tree.
+	 */
+	reset(): void;
+	add(type: number, start: number, end: number): number;
+
+	/**
+	 * Sets one field of a node: a child node, an array of them for a list,
+	 * `0` or null where ESTree has null.
+	 */
+	set(
+		node: number,
+		name: string,
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| { cooked?: null | string; raw: string }
+			| (null | number)[]
+	): void;
+
+	/**
+	 * Writes a node from its record, each slot a child node, a list from
+	 * `addList` or a value from `addValue`, `0` or left out for none.
+	 */
+	addNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		flags: number,
+		slot0?: null | number,
+		slot1?: null | number,
+		slot2?: null | number,
+		slot3?: null | number
+	): TreeNode<T>;
+
+	/**
+	 * `addNode` for a node whose record holds no slot, as `this`.
+	 */
+	addNode0<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		flags: number
+	): TreeNode<T>;
+
+	/**
+	 * `addNode` for a node whose record holds two slots, as a member
+	 * expression or a call does, written without reading its slot count.
+	 */
+	addNode2<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		flags: number,
+		slot0: number,
+		slot1: number
+	): TreeNode<T>;
+
+	/**
+	 * `addNode` for a literal, its value and raw text written in place, as a
+	 * parse writes one for every string and number.
+	 */
+	addLiteralNode(
+		start: number,
+		end: number,
+		value: TreeValue,
+		raw: string
+	): TreeNode<"Literal">;
+
+	/**
+	 * `addNode` for a node whose record is one value, as an identifier's name.
+	 */
+	addValueNode<T extends string = string>(
+		type: number | TreeTypeCode<T>,
+		start: number,
+		end: number,
+		value: TreeValue
+	): TreeNode<T>;
+	addValue(
+		value?:
+			| null
+			| string
+			| number
+			| bigint
+			| boolean
+			| RegExp
+			| { cooked?: null | string; raw: string }
+	): number;
+	addList(items: number[], count: number): number;
+
+	/**
+	 * Retypes a node whose record the new type reads the same, as an
+	 * expression the parser then reads as a pattern.
+	 */
+	setType(node: number, type: number): void;
+
+	/**
+	 * Retypes a node whose record the new type lays out otherwise, as a `while`
+	 * turned into a `for`: it keeps its id and gets an empty record of the new type.
+	 * @experimental `javascript.syntax` tree; unstable API
+	 */
+	setTypeEmpty(node: number, type: number): void;
+
+	/**
+	 * Sets the slot a node's record holds a part in.
+	 */
+	setPart(part: number, node: number, text: string): void;
+
+	/**
+	 * Writes a parsed node and everything under it, children before their
+	 * parent in source order, as the parser writes; a child already written
+	 * stands as its id.
+	 */
+	addEstree(root: EstreeInput, input?: string, skipUnknown?: boolean): number;
+
+	/**
+	 * Writes a node a plugin built while this tree is read into it, keeping
+	 * the lazy objects already made reading the columns the write may grow.
+	 */
+	appendEstree(object: EstreeInput, input: string): number;
+
+	/**
+	 * Grows the columns once to hold this many more nodes, slots, lists and
+	 * list items, where writing a tree of a known size would double them,
+	 * copying each column every time.
+	 */
+	reserve(nodes: number, slots: number, lists: number, items: number): void;
+
+	/**
+	 * The ESTree object of a node of this tree, the same object each time:
+	 * the lazy one once `lazyEstree` was asked for, else as `toEstreeObject`
+	 * builds it without options.
+	 */
+	estree(
+		node: number
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * The ESTree object of a node of this tree as `toEstreeObject` builds it,
+	 * the same object for the same options. A long node reads each child from
+	 * the tree when its field is first read: a release copies what they read.
+	 */
+	estreeObject(
+		node: number,
+		options?: EstreeObjectOptions,
+		input?: string
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * A node's ESTree object, as `estree` makes it: a path's way to an object
+	 * for code that still reads one.
+	 */
+	object(
+		node: number
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * The lazy ESTree object of a node: it builds a child's object the first
+	 * time its field is read, so a node nothing reads gets none. From then on
+	 * `estree` serves these objects for every node of this tree.
+	 */
+	lazyEstree(
+		node: number
+	):
+		| null
+		| ImportDeclaration
+		| ExportNamedDeclaration
+		| ExportAllDeclaration
+		| ImportExpressionImport
+		| UnaryExpression
+		| ArrayExpression
+		| ArrowFunctionExpression
+		| AssignmentExpression
+		| AwaitExpression
+		| BinaryExpression
+		| SimpleCallExpression
+		| NewExpression
+		| ChainExpression
+		| ClassExpression
+		| ConditionalExpression
+		| FunctionExpression
+		| Identifier
+		| SimpleLiteral
+		| RegExpLiteral
+		| BigIntLiteral
+		| LogicalExpression
+		| MemberExpression
+		| MetaProperty
+		| ObjectExpression
+		| SequenceExpression
+		| TaggedTemplateExpression
+		| TemplateLiteral
+		| ThisExpression
+		| UpdateExpression
+		| YieldExpression
+		| SpreadElement
+		| PrivateIdentifier
+		| Super
+		| FunctionDeclaration
+		| VariableDeclaration
+		| ClassDeclaration
+		| ExpressionStatement
+		| BlockStatement
+		| StaticBlock
+		| EmptyStatement
+		| DebuggerStatement
+		| WithStatement
+		| ReturnStatement
+		| LabeledStatement
+		| BreakStatement
+		| ContinueStatement
+		| IfStatement
+		| SwitchStatement
+		| ThrowStatement
+		| TryStatement
+		| WhileStatement
+		| DoWhileStatement
+		| ForStatement
+		| ForInStatement
+		| ForOfStatement
+		| ExportDefaultDeclaration
+		| MethodDefinition
+		| PropertyDefinition
+		| VariableDeclarator
+		| Program
+		| AssignmentProperty
+		| Property
+		| CatchClause
+		| ClassBody
+		| ImportSpecifier
+		| ImportDefaultSpecifier
+		| ImportNamespaceSpecifier
+		| ExportSpecifier
+		| ObjectPattern
+		| ArrayPattern
+		| RestElement
+		| AssignmentPattern
+		| SwitchCase
+		| TemplateElement;
+
+	/**
+	 * Records that the legacy `assert` keyword opens a declaration's attributes.
+	 */
+	markLegacyAssert(node: number): void;
+	legacyAssert(node: number): boolean;
+
+	/**
+	 * Where the text reads `<!--` as `<`, `!` and `--`, as only a module does;
+	 * a script, the source's text set in one, would read a comment from there.
+	 */
+	htmlOpensAsOperators(): ReadonlyArray<number>;
+
+	/**
+	 * The node a lazy object of this tree stands for, the way back from `lazyEstree`.
+	 */
+	nodeOf(object: NodeEstreeIndex): number;
+
+	/**
+	 * The columns a reader of this tree's nodes keeps reading after the tree is
+	 * released and reused: a release copies them for it, as for a lazy object.
+	 */
+	pinSource(): LazySource;
+
+	/**
+	 * Lets a release skip copying the columns for readers of nodes the text
+	 * parses back to: such a reader parses the text again if it reads later.
+	 */
+	setRebuild(rebuild: () => SyntaxTree): void;
+
+	/**
+	 * The source an evaluation of a node reads: unpinned when a rebuild can
+	 * make the node again, so a release copies nothing for it.
+	 */
+	evaluationSource(node: number): LazySource;
+	type(node: number): number;
+	start(node: number): number;
+	end(node: number): number;
+	range(node: number): [number, number];
+	name(node: number): string;
+	value(
+		node: number
+	):
+		| undefined
+		| null
+		| string
+		| number
+		| bigint
+		| boolean
+		| RegExp
+		| { cooked?: null | string; raw: string };
+	fieldCount(field: number, node: number): number;
+
+	/**
+	 * Walks a node and what it holds, each before its children in field order.
+	 */
+	findNode(node: number, test: (node: number) => undefined | boolean): boolean;
+	field(i: number, field: number, node: number): number;
+	flag(flag: number, node: number): boolean;
+
+	/**
+	 * Pushes a node's children in its fields' order, holes left out, for a
+	 * walk that reaches every node without naming each type's fields.
+	 */
+	pushChildren(node: number, out: number[]): void;
+
+	/**
+	 * Writes a node's children as `pushChildren` pushes them, from `at` on, so
+	 * a walk can reuse one list as its stack without resizing it.
+	 */
+	writeChildren(node: number, out: number[], at: number): number;
+	textOf(part: number, node: number): null | string;
+}
+
+/**
  * Defines the synthetic dependency location type used by this module.
  */
 declare interface SyntheticDependencyLocation {
@@ -38226,7 +38226,7 @@ declare class WebpackParser extends JavascriptSyntaxParser {
 			lazyComments?: CollectedComment[];
 			importPhases?: boolean;
 			moduleFallback?: boolean;
-			syntaxTree?: ColumnarSyntaxTree;
+			syntaxTree?: SyntaxTree;
 			typescript?: boolean;
 			typeRanges?: number[];
 		},
@@ -40687,18 +40687,15 @@ declare namespace exports {
 				) => number;
 				export let nonASCIIwhitespace: RegExp;
 				export let parseProgram: _functionSyntaxParserFunction_1;
-				export let parsedTree: () => null | ColumnarSyntaxTree;
+				export let parsedTree: () => null | SyntaxTree;
 				export let printEarlyIn: (early: Map<number, number>) => void;
-				export let readParsedTree: (
-					tree: ColumnarSyntaxTree,
-					input: string
-				) => void;
+				export let readParsedTree: (tree: SyntaxTree, input: string) => void;
 				export let releaseParserCaches: () => void;
 				export let syntaxTreeOfEstree: (
 					program: NodeEstreeIndex,
 					input: string
-				) => { tree: ColumnarSyntaxTree; program: number };
-				export let takeParsedTree: () => null | ColumnarSyntaxTree;
+				) => { tree: SyntaxTree; program: number };
+				export let takeParsedTree: () => null | SyntaxTree;
 				export let toEstreeObject: (
 					node: number,
 					options?: EstreeObjectOptions
@@ -40835,7 +40832,7 @@ declare namespace exports {
 					export let coalesce: TokenType;
 				}
 				export let walkSyntaxTree: (
-					tree: ColumnarSyntaxTree,
+					tree: SyntaxTree,
 					program: number,
 					input: string,
 					visitors: CompiledVisitorBucket<JavascriptSyntaxPath>[],
@@ -40851,6 +40848,7 @@ declare namespace exports {
 					ParserSourceLocation,
 					Position,
 					ScopeLog,
+					SyntaxTree,
 					TokContext,
 					Token,
 					TokenType,
@@ -40881,7 +40879,7 @@ declare namespace exports {
 					text: string,
 					options: JavascriptProcessOptions
 				) => {
-					tree: ColumnarSyntaxTree;
+					tree: SyntaxTree;
 					program: number;
 					text: string;
 					options: NodePrintOptions;

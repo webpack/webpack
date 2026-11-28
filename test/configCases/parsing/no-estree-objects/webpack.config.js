@@ -2,9 +2,7 @@
 
 const webpack = require("../../../../");
 const BasicEvaluatedExpression = require("../../../../lib/javascript/BasicEvaluatedExpression");
-const {
-	_SyntaxTree: SyntaxTree
-} = require("../../../../lib/javascript/syntax-parser");
+const { SyntaxTree } = require("../../../../lib/javascript/syntax-parser");
 
 /** @import { Compiler, javascript, Configuration } from "../../../../" */
 /** @typedef {javascript.JavascriptParser} JavascriptParser */

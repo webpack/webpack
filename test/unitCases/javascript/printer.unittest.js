@@ -266,7 +266,7 @@ const {
 const {
 	Field,
 	NodeType,
-	_SyntaxTree: SyntaxTree,
+	SyntaxTree,
 	readParsedTree
 } = require("../../../lib/javascript/syntax-parser");
 
