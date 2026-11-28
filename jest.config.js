@@ -97,7 +97,11 @@ const autoParts = () => {
 	const cores = os.cpus().length;
 	let memory = os.totalmem();
 	const limit =
-		typeof os.constrainedMemory === "function" ? os.constrainedMemory() : 0;
+		// eslint-disable-next-line n/no-unsupported-features/node-builtins
+		typeof process.constrainedMemory === "function"
+			? // eslint-disable-next-line n/no-unsupported-features/node-builtins
+				process.constrainedMemory()
+			: 0;
 	if (limit > 0 && limit < memory) memory = limit;
 	const count = Math.max(1, Math.min(cores, Math.floor(memory / PART_MEMORY)));
 	process.stderr.write(
