@@ -8209,10 +8209,9 @@ declare class CssSourceProcessor<TState = undefined> extends SourceProcessor<
 }
 
 /**
- * One parsed stylesheet and the state of the walk and print reading it: the
- * node and list columns, the streaming frames, the per-run options and caches.
- * `S` is the tree being read; a run a visitor or renderer starts parks it in a
- * spare (see `swapTrees`), so the outer run finds it untouched.
+ * The state of the walk and print reading one stylesheet: the streaming frames,
+ * the per-run options and caches; the columns are its `SyntaxTree`. A run a
+ * visitor or renderer starts parks it in a spare (see `swapTrees`).
  * @experimental exposed as `webpack.css.syntax.parser.Parser`; unstable API
  */
 declare class CssSyntaxParser extends CssTokenizer {
@@ -14984,15 +14983,13 @@ declare class HtmlSourceProcessor<TState = undefined> extends SourceProcessor<
 }
 
 /**
- * One parsed HTML document and the state of the parse, walk and print reading
- * it: the node and attribute columns, the tokenizer and tree builder, the
- * per-run options and cursors. `S` is the tree being read; a run a visitor
- * starts parks it in a spare (see `swapTrees`), so the outer run finds it
- * untouched.
+ * The state of the parse, walk and print reading one HTML document: the
+ * tokenizer and tree builder, the per-run options and cursors; the columns are
+ * its `SyntaxTree`. A run a visitor starts parks it in a spare (see `swapTrees`).
  * @experimental exposed as `webpack.html.syntax.parser.Parser`; unstable API
  */
 declare class HtmlSyntaxParser extends HtmlTokenizer {
-	constructor();
+	constructor(tree: SyntaxTree);
 	inputHasCr: boolean;
 	nextAmpersand: number;
 	inputHasNul: boolean;
@@ -36304,6 +36301,13 @@ declare interface SyncModuleIdsPluginOptions {
 type SyncWasmModuleBuildMeta = exports.KnownBuildMeta &
 	Record<string, any> &
 	exports.KnownSyncWasmModuleBuildMeta;
+
+/**
+ * The node and attribute columns one parse writes: the document as typed-array
+ * columns indexed by node and attribute id. `T` is the tree being read; a nested
+ * run parks it in a spare beside the parser's (see `swapTrees`).
+ */
+declare abstract class SyntaxTree {}
 
 /**
  * Defines the synthetic dependency location type used by this module.
