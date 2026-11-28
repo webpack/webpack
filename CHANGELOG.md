@@ -1,5 +1,115 @@
 # webpack
 
+## 5.114.0
+
+### Minor Changes
+
+- Minify JavaScript with webpack's own minifier, `webpack.javascript.jsMinify`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23532](https://github.com/webpack/webpack/pull/23532))
+
+- Add `experiments.threads` and `compiler.worker()` for crash-safe shared plugin threads. (by [@alexander-akait](https://github.com/alexander-akait) in [#23374](https://github.com/webpack/webpack/pull/23374))
+
+- Skip a side-effect-free `export *` passthrough that also exports `default`. (by [@hai-x](https://github.com/hai-x) in [#23518](https://github.com/webpack/webpack/pull/23518))
+
+- Shorten CSS further and add the `renameKeyframes` and `rebaseZIndex` options. (by [@alexander-akait](https://github.com/alexander-akait) in [#23514](https://github.com/webpack/webpack/pull/23514))
+
+- Add `optimization.concatenateModules.crossChunkImports` for native ESM imports. (by [@alexander-akait](https://github.com/alexander-akait) in [#23491](https://github.com/webpack/webpack/pull/23491))
+
+- Shrink the runtime and add `objectAssign`, `domIterable` and `domAppendRemove`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23494](https://github.com/webpack/webpack/pull/23494))
+
+### Patch Changes
+
+- Handle JavaScript edge cases in parsing, printing, and dependency scanning. (by [@alexander-akait](https://github.com/alexander-akait) in [#23597](https://github.com/webpack/webpack/pull/23597))
+
+- Free restored cache buffers after the persistent cache unpacks pack content. (by [@alexander-akait](https://github.com/alexander-akait) in [#23485](https://github.com/webpack/webpack/pull/23485))
+
+- Keep `ns.sub.member` read from `export * as sub`, not a sibling `export *`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23550](https://github.com/webpack/webpack/pull/23550))
+
+- Keep barrel imports resolved when export usage analysis is disabled. (by [@alexander-akait](https://github.com/alexander-akait) in [#23558](https://github.com/webpack/webpack/pull/23558))
+
+- Fix CSS and HTML parser and minifier bugs found by syntax tests and fuzzing. (by [@aryanraj45](https://github.com/aryanraj45) in [#23489](https://github.com/webpack/webpack/pull/23489))
+
+- Map every statement the JavaScript minifier joins into a sequence. (by [@alexander-akait](https://github.com/alexander-akait) in [#23498](https://github.com/webpack/webpack/pull/23498))
+
+- Restore minification for SVG files imported with `asset/source`. (by [@alexander-akait](https://github.com/alexander-akait) in [#23500](https://github.com/webpack/webpack/pull/23500))
+
+- Resolve a lazy import() to the latest evaluation of a self-accepting module. (by [@hai-x](https://github.com/hai-x) in [#23517](https://github.com/webpack/webpack/pull/23517))
+
+- Fix hot updates lost to a repeated hash, a removed chunk or a reordered import. (by [@aryanraj45](https://github.com/aryanraj45) in [#23551](https://github.com/webpack/webpack/pull/23551))
+
+- Match a fresh build's warnings and "Did you mean" hints after a watch rebuild. (by [@aryanraj45](https://github.com/aryanraj45) in [#23555](https://github.com/webpack/webpack/pull/23555))
+
+- Match global and sticky regexps in warning and stats filters on every test. (by [@alexander-akait](https://github.com/alexander-akait) in [#23595](https://github.com/webpack/webpack/pull/23595))
+
+- Compile adjacent `**` glob segments as one to avoid slow backtracking. (by [@alexander-akait](https://github.com/alexander-akait) in [#23598](https://github.com/webpack/webpack/pull/23598))
+
+- Reduce JavaScript printer work and retained memory. (by [@alexander-akait](https://github.com/alexander-akait) in [#23492](https://github.com/webpack/webpack/pull/23492))
+
+- Speed up JavaScript parsing. (by [@alexander-akait](https://github.com/alexander-akait) in [#23493](https://github.com/webpack/webpack/pull/23493))
+
+- Speed up CSS minification of long comma-separated values. (by [@alexander-akait](https://github.com/alexander-akait) in [#23521](https://github.com/webpack/webpack/pull/23521))
+
+- Speed up HTML parsing. (by [@alexander-akait](https://github.com/alexander-akait) in [#23579](https://github.com/webpack/webpack/pull/23579))
+
+- Rename the CSS `TokenStream` to `Tokenizer` and unify syntax-layer class names. (by [@alexander-akait](https://github.com/alexander-akait) in [#23609](https://github.com/webpack/webpack/pull/23609))
+
+- Fold more code when minifying, drop unread arithmetic, and fix wrong output. (by [@alexander-akait](https://github.com/alexander-akait) in [#23495](https://github.com/webpack/webpack/pull/23495))
+
+- Preserve valid update and assignment targets when minifying JavaScript. (by [@0Cymantek0](https://github.com/0Cymantek0) in [#23573](https://github.com/webpack/webpack/pull/23573))
+
+- Keep each compiler's hash function its own, and hash module ids with it. (by [@alexander-akait](https://github.com/alexander-akait) in [#23486](https://github.com/webpack/webpack/pull/23486))
+
+- Read and write text in the encoding of an HTML page not in UTF-8. (by [@alexander-akait](https://github.com/alexander-akait) in [#23501](https://github.com/webpack/webpack/pull/23501))
+
+- Warn when a file is emitted, copied or cleaned outside of output.path. (by [@alexander-akait](https://github.com/alexander-akait) in [#23504](https://github.com/webpack/webpack/pull/23504))
+
+- Stabilize XML fuzz idempotence across merged text runs. (by [@alexander-akait](https://github.com/alexander-akait) in [#23524](https://github.com/webpack/webpack/pull/23524))
+
+- Keep the latest hot update outside of output.path until a newer one replaces it. (by [@alexander-akait](https://github.com/alexander-akait) in [#23507](https://github.com/webpack/webpack/pull/23507))
+
+- Warn when a base64 hash digest is used in an output filename. (by [@alexander-akait](https://github.com/alexander-akait) in [#23508](https://github.com/webpack/webpack/pull/23508))
+
+- Treat a file written through a link out of output.path as written outside of it. (by [@alexander-akait](https://github.com/alexander-akait) in [#23511](https://github.com/webpack/webpack/pull/23511))
+
+- Check linked output files before writing and clean their actual destinations. (by [@alexander-akait](https://github.com/alexander-akait) in [#23520](https://github.com/webpack/webpack/pull/23520))
+
+- Keep tagged templates and escapes of a script inlined into a non-UTF-8 page. (by [@alexander-akait](https://github.com/alexander-akait) in [#23522](https://github.com/webpack/webpack/pull/23522))
+
+- Put composed rules in CSS text and sheet modules, and external @import in text. (by [@alexander-akait](https://github.com/alexander-akait) in [#23531](https://github.com/webpack/webpack/pull/23531))
+
+- Type JavaScript minimizer options, experiments and plugin instances. (by [@alexander-akait](https://github.com/alexander-akait) in [#23487](https://github.com/webpack/webpack/pull/23487))
+
+- Reuse decoded module references, incoming connections, concatenation lists and unchanged inner-module scope analysis when concatenating modules, with fewer allocations. (by [@bjohansebas](https://github.com/bjohansebas) in [#23482](https://github.com/webpack/webpack/pull/23482))
+
+- Type the JavaScript minimizer's compress, mangle and source map options. (by [@alexander-akait](https://github.com/alexander-akait) in [#23505](https://github.com/webpack/webpack/pull/23505))
+
+- Keep a rest array a class instance field reads shared when minifying. (by [@alexander-akait](https://github.com/alexander-akait) in [#23512](https://github.com/webpack/webpack/pull/23512))
+
+- Build a SortableSet faster, and keep its order and caches across no-op changes. (by [@alexander-akait](https://github.com/alexander-akait) in [#23510](https://github.com/webpack/webpack/pull/23510))
+
+- Speed up restoring the persistent cache. (by [@hai-x](https://github.com/hai-x) in [#23526](https://github.com/webpack/webpack/pull/23526))
+
+- Reduce repeated JavaScript minifier work, eval scans and source-map allocations. (by [@alexander-akait](https://github.com/alexander-akait) in [#23544](https://github.com/webpack/webpack/pull/23544))
+
+- Reduce import allocations and repeated star-reexport copying and analysis. (by [@alexander-akait](https://github.com/alexander-akait) in [#23594](https://github.com/webpack/webpack/pull/23594))
+
+- Keep HTML pages, minified markup and ESM output reading as their source does. (by [@alexander-akait](https://github.com/alexander-akait) in [#23589](https://github.com/webpack/webpack/pull/23589))
+
+- Restore a cached ParserPosition as a ParserPosition. (by [@alexander-akait](https://github.com/alexander-akait) in [#23577](https://github.com/webpack/webpack/pull/23577))
+
+- Type `module.hot.data` and the minifier's `sourceMap.content` precisely. (by [@alexander-akait](https://github.com/alexander-akait) in [#23577](https://github.com/webpack/webpack/pull/23577))
+
+- Resolve each module name once when sorting modules by full name. (by [@g4lb](https://github.com/g4lb) in [#23586](https://github.com/webpack/webpack/pull/23586))
+
+- Type SortableSet caches and drop the minifier's unread `sourceMap` option type. (by [@alexander-akait](https://github.com/alexander-akait) in [#23592](https://github.com/webpack/webpack/pull/23592))
+
+- Let plugins type their own fields on stats groups, parser state and build info. (by [@alexander-akait](https://github.com/alexander-akait) in [#23602](https://github.com/webpack/webpack/pull/23602))
+
+- Keep strings, comments and names from turning into code in generated JavaScript. (by [@alexander-akait](https://github.com/alexander-akait) in [#23606](https://github.com/webpack/webpack/pull/23606))
+
+- Let plugins type the parser and generator of their own module types. (by [@alexander-akait](https://github.com/alexander-akait) in [#23608](https://github.com/webpack/webpack/pull/23608))
+
+- Keep CSS text as text and bound the work one stylesheet can cause. (by [@alexander-akait](https://github.com/alexander-akait) in [#23611](https://github.com/webpack/webpack/pull/23611))
+
 ## 5.113.0
 
 ### Minor Changes
